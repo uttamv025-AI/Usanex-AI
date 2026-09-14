@@ -1,50 +1,29 @@
-from sqlalchemy import create_engine, Column, Integer, String
-from sqlalchemy.orm import declarative_base, sessionmaker
+import os
 
-DATABASE_URL = "sqlite:///./usanex.db"
+from sqlalchemy import create_engine
+from sqlalchemy.orm import DeclarativeBase, sessionmaker
+
+
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+if not DATABASE_URL:
+    raise RuntimeError(
+        "DATABASE_URL environment variable is not configured."
+    )
+
 
 engine = create_engine(
     DATABASE_URL,
-    connect_args={"check_same_thread": False}
+    pool_pre_ping=True,
 )
+
 
 SessionLocal = sessionmaker(
-    autocommit=False,
+    bind=engine,
     autoflush=False,
-    bind=engine
+    autocommit=False,
 )
 
-Base = declarative_base()
 
-
-class User(Base):
-    __tablename__ = "users"
-
-    id = Column(Integer, primary_key=True, index=True)
-
-    user_id = Column(
-        String(20),
-        unique=True,
-        index=True,
-        nullable=False
-    )
-
-    name = Column(
-        String(100),
-        nullable=False
-    )
-
-    mobile = Column(
-        String(20),
-        unique=True,
-        index=True,
-        nullable=False
-    )
-
-    password_hash = Column(
-        String(255),
-        nullable=False
-    )
-
-
-Base.metadata.create_all(bind=engine)
+class Base(DeclarativeBase):
+    pass
