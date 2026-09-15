@@ -1,0 +1,1266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Search • Usanex</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #05070b;
+            color: #ffffff;
+        }
+
+        .app {
+            width: 100%;
+            max-width: 600px;
+            min-height: 100vh;
+            margin: auto;
+
+            background:
+                radial-gradient(
+                    circle at top,
+                    #141b2b 0%,
+                    #080b12 35%,
+                    #05070b 70%
+                );
+
+            padding-bottom: 90px;
+        }
+
+
+        /* =========================
+           HEADER
+        ========================= */
+
+        .header {
+            height: 68px;
+
+            display: flex;
+            align-items: center;
+
+            padding: 0 17px;
+
+            border-bottom:
+                1px solid rgba(255,255,255,.07);
+
+            background:
+                rgba(5,7,11,.82);
+
+            backdrop-filter: blur(18px);
+
+            position: sticky;
+            top: 0;
+
+            z-index: 20;
+        }
+
+
+        .back-btn {
+            width: 40px;
+            height: 40px;
+
+            border-radius: 13px;
+
+            border:
+                1px solid rgba(255,255,255,.09);
+
+            background: #101520;
+
+            color: white;
+
+            font-size: 26px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            cursor: pointer;
+
+            transition: .2s;
+        }
+
+        .back-btn:active {
+            transform: scale(.92);
+        }
+
+
+        .brand {
+            display: flex;
+            align-items: center;
+
+            margin-left: 12px;
+
+            gap: 9px;
+        }
+
+
+        .brand-logo {
+            width: 34px;
+            height: 34px;
+
+            border-radius: 10px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #ffffff,
+                    #aeb6c7
+                );
+
+            color: #05070b;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 19px;
+            font-weight: 900;
+
+            box-shadow:
+                0 5px 20px
+                rgba(255,255,255,.08);
+        }
+
+
+        .brand-name {
+            font-size: 20px;
+            font-weight: 800;
+
+            letter-spacing: .3px;
+        }
+
+
+        /* =========================
+           SEARCH AREA
+        ========================= */
+
+        .search-area {
+            padding: 24px 17px 10px;
+        }
+
+
+        .page-title {
+            font-size: 27px;
+            font-weight: 800;
+
+            margin-bottom: 6px;
+        }
+
+
+        .page-subtitle {
+            color: #7f899b;
+
+            font-size: 13px;
+
+            margin-bottom: 18px;
+        }
+
+
+        .search-box {
+            height: 54px;
+
+            display: flex;
+            align-items: center;
+
+            padding: 0 15px;
+
+            background:
+                rgba(18,24,35,.88);
+
+            border:
+                1px solid rgba(255,255,255,.08);
+
+            border-radius: 17px;
+
+            box-shadow:
+                0 12px 35px
+                rgba(0,0,0,.22);
+
+            transition: .2s;
+        }
+
+
+        .search-box:focus-within {
+            border-color:
+                rgba(255,255,255,.22);
+
+            box-shadow:
+                0 12px 40px
+                rgba(0,0,0,.35);
+        }
+
+
+        .search-icon {
+            font-size: 20px;
+
+            color: #8993a5;
+
+            margin-right: 10px;
+        }
+
+
+        #searchInput {
+            width: 100%;
+
+            border: none;
+            outline: none;
+
+            background: transparent;
+
+            color: white;
+
+            font-size: 15px;
+        }
+
+
+        #searchInput::placeholder {
+            color: #697386;
+        }
+
+
+        .clear-btn {
+            width: 30px;
+            height: 30px;
+
+            border: none;
+            border-radius: 50%;
+
+            background: #202735;
+
+            color: #aeb7c8;
+
+            font-size: 16px;
+
+            cursor: pointer;
+
+            display: none;
+        }
+
+
+        /* =========================
+           RESULTS
+        ========================= */
+
+        .results-area {
+            padding: 10px 17px;
+        }
+
+
+        .result-heading {
+            color: #737d90;
+
+            font-size: 12px;
+
+            font-weight: 700;
+
+            letter-spacing: 1px;
+
+            margin: 8px 3px 12px;
+
+            display: none;
+        }
+
+
+        .results {
+            display: flex;
+            flex-direction: column;
+
+            gap: 10px;
+        }
+
+
+        .user-card {
+            min-height: 76px;
+
+            display: flex;
+            align-items: center;
+
+            padding: 12px;
+
+            border-radius: 18px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(20,27,39,.95),
+                    rgba(12,17,26,.95)
+                );
+
+            border:
+                1px solid rgba(255,255,255,.07);
+
+            box-shadow:
+                0 10px 30px
+                rgba(0,0,0,.20);
+
+            animation:
+                cardIn .25s ease;
+        }
+
+
+        @keyframes cardIn {
+
+            from {
+                opacity: 0;
+                transform: translateY(7px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+        }
+
+
+        /* =========================
+           AVATAR
+        ========================= */
+
+        .avatar {
+            width: 52px;
+            height: 52px;
+
+            flex-shrink: 0;
+
+            border-radius: 50%;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #252e40,
+                    #101520
+                );
+
+            border:
+                2px solid rgba(255,255,255,.10);
+
+            overflow: hidden;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            color: #dce2ec;
+
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+
+            object-fit: cover;
+
+            display: none;
+        }
+
+
+        /* =========================
+           USER DETAILS
+        ========================= */
+
+        .user-details {
+            flex: 1;
+
+            min-width: 0;
+
+            margin-left: 12px;
+        }
+
+
+        .user-name {
+            font-size: 16px;
+
+            font-weight: 700;
+
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+
+        .user-id {
+            margin-top: 5px;
+
+            color: #7f899b;
+
+            font-size: 12px;
+
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+
+        /* =========================
+           VIEW BUTTON
+        ========================= */
+
+        .view-btn {
+            height: 38px;
+
+            padding: 0 15px;
+
+            border: none;
+
+            border-radius: 12px;
+
+            background: #ffffff;
+
+            color: #05070b;
+
+            font-size: 13px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            flex-shrink: 0;
+
+            transition: .2s;
+        }
+
+
+        .view-btn:active {
+            transform: scale(.94);
+        }
+
+
+        /* =========================
+           EMPTY STATE
+        ========================= */
+
+        .empty {
+            display: none;
+
+            text-align: center;
+
+            padding: 65px 25px 40px;
+
+            color: #737d90;
+        }
+
+
+        .empty-icon {
+            width: 66px;
+            height: 66px;
+
+            margin: auto auto 17px;
+
+            border-radius: 20px;
+
+            background: #101520;
+
+            border:
+                1px solid rgba(255,255,255,.07);
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 28px;
+        }
+
+
+        .empty-title {
+            color: #c7cedb;
+
+            font-size: 16px;
+
+            font-weight: 700;
+
+            margin-bottom: 7px;
+        }
+
+
+        .empty-text {
+            font-size: 13px;
+
+            line-height: 1.6;
+        }
+
+
+        /* =========================
+           LOADING
+        ========================= */
+
+        .loading {
+            display: none;
+
+            text-align: center;
+
+            padding: 35px 20px;
+
+            color: #7f899b;
+
+            font-size: 13px;
+        }
+
+
+        .spinner {
+            width: 25px;
+            height: 25px;
+
+            margin: 0 auto 12px;
+
+            border-radius: 50%;
+
+            border:
+                2px solid #303848;
+
+            border-top-color: #ffffff;
+
+            animation:
+                spin .8s linear infinite;
+        }
+
+
+        @keyframes spin {
+
+            to {
+                transform: rotate(360deg);
+            }
+
+        }
+
+
+        /* =========================
+           ERROR
+        ========================= */
+
+        .error {
+            display: none;
+
+            margin-top: 15px;
+
+            padding: 13px 15px;
+
+            border-radius: 13px;
+
+            background:
+                rgba(120,30,30,.16);
+
+            border:
+                1px solid rgba(255,80,80,.12);
+
+            color: #ff9b9b;
+
+            font-size: 13px;
+
+            text-align: center;
+        }
+
+
+        /* =========================
+           BOTTOM NAV
+        ========================= */
+
+        .bottom-nav {
+            position: fixed;
+
+            bottom: 0;
+            left: 50%;
+
+            transform:
+                translateX(-50%);
+
+            width: 100%;
+            max-width: 600px;
+
+            height: 72px;
+
+            background:
+                rgba(7,9,14,.94);
+
+            backdrop-filter: blur(20px);
+
+            border-top:
+                1px solid rgba(255,255,255,.08);
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content:
+                space-around;
+
+            z-index: 30;
+        }
+
+
+        .nav-item {
+            color: #687286;
+
+            text-align: center;
+
+            font-size: 11px;
+
+            cursor: pointer;
+
+            min-width: 55px;
+        }
+
+
+        .nav-icon {
+            font-size: 21px;
+
+            margin-bottom: 4px;
+        }
+
+
+        .nav-item.active {
+            color: #ffffff;
+        }
+
+
+        .plus {
+            width: 48px;
+            height: 48px;
+
+            margin: auto;
+
+            border-radius: 15px;
+
+            background: #ffffff;
+
+            color: #05070b;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            font-size: 28px;
+        }
+
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 420px) {
+
+            .page-title {
+                font-size: 24px;
+            }
+
+            .user-card {
+                padding: 10px;
+            }
+
+            .avatar {
+                width: 49px;
+                height: 49px;
+            }
+
+            .user-name {
+                font-size: 15px;
+            }
+
+            .view-btn {
+                padding: 0 13px;
+            }
+
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+<div class="app">
+
+
+    <!-- HEADER -->
+
+    <header class="header">
+
+        <button
+            class="back-btn"
+            onclick="goHome()">
+
+            ‹
+
+        </button>
+
+
+        <div class="brand">
+
+            <div class="brand-logo">
+                U
+            </div>
+
+            <div class="brand-name">
+                Usanex
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- SEARCH -->
+
+    <section class="search-area">
+
+        <h1 class="page-title">
+            Search
+        </h1>
+
+        <p class="page-subtitle">
+            Find people using their User ID or phone number
+        </p>
+
+
+        <div class="search-box">
+
+            <span class="search-icon">
+                🔍
+            </span>
+
+
+            <input
+                id="searchInput"
+                type="text"
+                autocomplete="off"
+                placeholder="User ID or phone number"
+            >
+
+
+            <button
+                id="clearBtn"
+                class="clear-btn"
+                onclick="clearSearch()">
+
+                ×
+
+            </button>
+
+        </div>
+
+
+        <div
+            id="errorBox"
+            class="error">
+        </div>
+
+    </section>
+
+
+    <!-- RESULTS -->
+
+    <section class="results-area">
+
+        <div
+            id="resultHeading"
+            class="result-heading">
+
+            PEOPLE
+
+        </div>
+
+
+        <div
+            id="loading"
+            class="loading">
+
+            <div class="spinner"></div>
+
+            Searching...
+
+        </div>
+
+
+        <div
+            id="results"
+            class="results">
+        </div>
+
+
+        <div
+            id="empty"
+            class="empty">
+
+            <div class="empty-icon">
+                🔍
+            </div>
+
+            <div class="empty-title">
+                No users found
+            </div>
+
+            <div class="empty-text">
+                Try searching with a different
+                User ID or phone number.
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- BOTTOM NAV -->
+
+    <nav class="bottom-nav">
+
+        <div
+            class="nav-item active"
+            onclick="goHome()">
+
+            <div class="nav-icon">
+                ⌂
+            </div>
+
+            Home
+
+        </div>
+
+
+        <div class="nav-item">
+
+            <div class="nav-icon">
+                ▶
+            </div>
+
+            Reels
+
+        </div>
+
+
+        <div class="nav-item">
+
+            <div class="plus">
+                +
+            </div>
+
+        </div>
+
+
+        <div class="nav-item">
+
+            <div class="nav-icon">
+                ▣
+            </div>
+
+            Coll
+
+        </div>
+
+
+        <div class="nav-item">
+
+            <div class="nav-icon">
+                ●
+            </div>
+
+            Profile
+
+        </div>
+
+    </nav>
+
+</div>
+
+
+<script>
+
+const API =
+    "https://usanex-ai.onrender.com";
+
+
+const searchInput =
+    document.getElementById("searchInput");
+
+const results =
+    document.getElementById("results");
+
+const empty =
+    document.getElementById("empty");
+
+const loading =
+    document.getElementById("loading");
+
+const errorBox =
+    document.getElementById("errorBox");
+
+const resultHeading =
+    document.getElementById("resultHeading");
+
+const clearBtn =
+    document.getElementById("clearBtn");
+
+
+let searchTimer = null;
+
+
+/* =========================
+   SEARCH INPUT
+========================= */
+
+searchInput.addEventListener(
+    "input",
+    function(){
+
+        const value =
+            this.value.trim();
+
+
+        clearTimeout(searchTimer);
+
+
+        clearBtn.style.display =
+            value ? "block" : "none";
+
+
+        if(!value){
+
+            results.innerHTML = "";
+
+            empty.style.display =
+                "none";
+
+            loading.style.display =
+                "none";
+
+            resultHeading.style.display =
+                "none";
+
+            errorBox.style.display =
+                "none";
+
+            return;
+        }
+
+
+        searchTimer =
+            setTimeout(
+                () => searchUsers(value),
+                400
+            );
+
+    }
+);
+
+
+/* =========================
+   SEARCH USERS
+========================= */
+
+async function searchUsers(query){
+
+    loading.style.display =
+        "block";
+
+    empty.style.display =
+        "none";
+
+    errorBox.style.display =
+        "none";
+
+    results.innerHTML = "";
+
+    resultHeading.style.display =
+        "none";
+
+
+    try {
+
+        const response =
+            await fetch(
+                API +
+                "/api/search?q=" +
+                encodeURIComponent(query)
+            );
+
+
+        if(!response.ok){
+
+            throw new Error(
+                "Server error"
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        loading.style.display =
+            "none";
+
+
+        if(
+            !data.ok ||
+            !data.users ||
+            data.users.length === 0
+        ){
+
+            empty.style.display =
+                "block";
+
+            return;
+        }
+
+
+        resultHeading.style.display =
+            "block";
+
+
+        data.users.forEach(
+            user => {
+
+                createUserCard(user);
+
+            }
+        );
+
+
+    }
+    catch(error){
+
+        console.error(error);
+
+
+        loading.style.display =
+            "none";
+
+
+        errorBox.textContent =
+            "Server connection failed. Please try again.";
+
+
+        errorBox.style.display =
+            "block";
+
+    }
+
+}
+
+
+/* =========================
+   CREATE USER CARD
+========================= */
+
+function createUserCard(user){
+
+    const card =
+        document.createElement("div");
+
+    card.className =
+        "user-card";
+
+
+    /* AVATAR */
+
+    const avatar =
+        document.createElement("div");
+
+    avatar.className =
+        "avatar";
+
+
+    const initial =
+        document.createElement("span");
+
+    initial.textContent =
+        (
+            user.name ||
+            "U"
+        )
+        .charAt(0)
+        .toUpperCase();
+
+
+    avatar.appendChild(initial);
+
+
+    if(user.profile_photo){
+
+        const img =
+            document.createElement("img");
+
+
+        img.src =
+            user.profile_photo;
+
+
+        img.onload =
+            function(){
+
+                initial.style.display =
+                    "none";
+
+                img.style.display =
+                    "block";
+
+            };
+
+
+        img.onerror =
+            function(){
+
+                img.remove();
+
+            };
+
+
+        avatar.appendChild(img);
+
+    }
+
+
+    /* DETAILS */
+
+    const details =
+        document.createElement("div");
+
+    details.className =
+        "user-details";
+
+
+    const name =
+        document.createElement("div");
+
+    name.className =
+        "user-name";
+
+    name.textContent =
+        user.name ||
+        "Usanex User";
+
+
+    const userId =
+        document.createElement("div");
+
+    userId.className =
+        "user-id";
+
+    userId.textContent =
+        "ID: " +
+        (
+            user.user_id ||
+            "---"
+        );
+
+
+    details.appendChild(name);
+    details.appendChild(userId);
+
+
+    /* VIEW BUTTON */
+
+    const viewBtn =
+        document.createElement("button");
+
+    viewBtn.className =
+        "view-btn";
+
+    viewBtn.textContent =
+        "View";
+
+
+    viewBtn.onclick =
+        function(){
+
+            openProfile(
+                user.user_id
+            );
+
+        };
+
+
+    card.appendChild(avatar);
+
+    card.appendChild(details);
+
+    card.appendChild(viewBtn);
+
+
+    results.appendChild(card);
+
+}
+
+
+/* =========================
+   OPEN PROFILE
+========================= */
+
+function openProfile(userId){
+
+    /*
+      Profile page next step me
+      banaya jayega.
+    */
+
+    alert(
+        "Selected User ID: " +
+        userId
+    );
+
+}
+
+
+/* =========================
+   CLEAR SEARCH
+========================= */
+
+function clearSearch(){
+
+    searchInput.value = "";
+
+    clearBtn.style.display =
+        "none";
+
+    results.innerHTML = "";
+
+    empty.style.display =
+        "none";
+
+    loading.style.display =
+        "none";
+
+    errorBox.style.display =
+        "none";
+
+    resultHeading.style.display =
+        "none";
+
+    searchInput.focus();
+
+}
+
+
+/* =========================
+   HOME
+========================= */
+
+function goHome(){
+
+    window.location.href =
+        "/home";
+
+}
+
+</script>
+
+</body>
+</html>
