@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
 
 <meta name="viewport"
@@ -14,7 +15,7 @@
 <style>
 
 /* =========================
-   BASIC
+   RESET
 ========================= */
 
 *{
@@ -29,7 +30,7 @@ body{
     width:100%;
     height:100%;
     overflow:hidden;
-    font-family:Arial, sans-serif;
+    font-family:Arial,sans-serif;
     background:#dceeff;
 }
 
@@ -47,7 +48,7 @@ body{
     width:100%;
     max-width:520px;
     height:100vh;
-    background:#ffffff;
+    background:#fff;
     position:relative;
     overflow:hidden;
 }
@@ -58,51 +59,72 @@ body{
 ========================= */
 
 .header{
-    height:66px;
+    height:58px;
+
     display:flex;
     align-items:center;
-    padding:8px 14px;
-    gap:7px;
-    background:#ffffff;
+
+    padding:7px 11px;
+
+    gap:5px;
+
+    background:#fff;
+
+    border-bottom:1px solid #edf5fa;
 }
 
 
 /* MENU */
 
 .menu{
-    width:31px;
-    font-size:25px;
+    width:28px;
+
+    font-size:21px;
+
     color:#164875;
+
     cursor:pointer;
+
     line-height:1;
+
+    text-align:center;
 }
 
 
 /* LOGO */
 
 .logo{
+    flex:1;
+
     display:flex;
     align-items:center;
-    gap:7px;
-    flex:1;
+
+    gap:6px;
 }
 
 .logo-box{
-    width:44px;
-    height:44px;
-    border-radius:12px;
+    width:36px;
+    height:36px;
+
+    border-radius:10px;
+
     background:#1685e5;
-    color:#ffffff;
+
+    color:#fff;
+
     display:flex;
-    justify-content:center;
     align-items:center;
-    font-size:26px;
+    justify-content:center;
+
+    font-size:21px;
     font-weight:bold;
 }
 
 .logo-text{
-    font-size:22px;
+    font-size:19px;
+
     font-weight:700;
+
     color:#123f6b;
 }
 
@@ -110,13 +132,17 @@ body{
 /* HEADER BUTTON */
 
 .header-btn{
-    width:30px;
-    height:30px;
+    width:28px;
+    height:28px;
+
     border-radius:50%;
+
     display:flex;
     align-items:center;
     justify-content:center;
+
     cursor:pointer;
+
     position:relative;
 }
 
@@ -125,7 +151,9 @@ body{
 
 .money{
     color:#167ddd;
-    font-size:21px;
+
+    font-size:18px;
+
     font-weight:bold;
 }
 
@@ -134,55 +162,35 @@ body{
 
 .notification{
     color:#123f6b;
-    font-size:20px;
+
+    font-size:17px;
 }
 
 
-/* NOTIFICATION BADGE */
+/* BADGE */
 
 .badge{
     position:absolute;
-    top:-3px;
-    right:-3px;
+
+    top:-2px;
+    right:-2px;
+
+    width:14px;
+    height:14px;
+
+    border-radius:50%;
 
     background:#ef4d54;
-    color:white;
 
-    width:17px;
-    height:17px;
+    color:#fff;
 
-    border-radius:50%;
-
-    font-size:9px;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-
-    font-weight:bold;
-}
-
-
-/* PROFILE */
-
-.profile-mini{
-    width:35px;
-    height:35px;
-
-    border-radius:50%;
-
-    background:#1685e5;
-    color:white;
+    font-size:8px;
 
     display:flex;
-    justify-content:center;
     align-items:center;
+    justify-content:center;
 
-    font-size:19px;
     font-weight:bold;
-
-    border:3px solid #e5f4ff;
-
-    cursor:pointer;
 }
 
 
@@ -191,12 +199,12 @@ body{
 ========================= */
 
 .content{
-    height:calc(100vh - 135px);
+    height:calc(100vh - 123px);
 
     overflow-y:auto;
     overflow-x:hidden;
 
-    padding:7px 13px 100px;
+    padding:7px 11px 90px;
 
     scrollbar-width:none;
 }
@@ -211,36 +219,38 @@ body{
 ========================= */
 
 .search{
-    height:47px;
+    height:42px;
 
-    border-radius:25px;
+    border-radius:22px;
 
     background:#edf7ff;
 
     display:flex;
     align-items:center;
 
-    padding:0 16px;
+    padding:0 13px;
 
-    margin-bottom:15px;
+    margin-bottom:11px;
 }
 
 .search-icon{
-    font-size:22px;
+    font-size:18px;
+
     color:#64849d;
 
-    margin-right:9px;
+    margin-right:7px;
 }
 
 .search input{
+    width:100%;
+
     border:0;
     outline:0;
 
     background:transparent;
 
-    width:100%;
+    font-size:14px;
 
-    font-size:17px;
     color:#345;
 }
 
@@ -258,11 +268,11 @@ body{
 
     border:1px solid #cce7f8;
 
-    border-radius:20px;
+    border-radius:16px;
 
-    padding:14px 11px 12px;
+    padding:10px 9px;
 
-    margin-bottom:16px;
+    margin-bottom:13px;
 }
 
 
@@ -272,13 +282,14 @@ body{
     display:flex;
 
     align-items:center;
+
     justify-content:space-between;
 
-    margin:0 7px 3px;
+    margin:0 5px 2px;
 }
 
 .mood-title{
-    font-size:21px;
+    font-size:17px;
 
     font-weight:bold;
 
@@ -288,7 +299,7 @@ body{
 .more{
     color:#0877d1;
 
-    font-size:14px;
+    font-size:11px;
 
     font-weight:bold;
 
@@ -296,14 +307,14 @@ body{
 }
 
 
-/* MOOD SUBTITLE */
+/* SUBTITLE */
 
 .mood-sub{
-    margin:0 7px 10px;
+    margin:0 5px 8px;
 
     color:#728b9e;
 
-    font-size:13px;
+    font-size:11px;
 }
 
 
@@ -312,7 +323,7 @@ body{
 .mood-list{
     display:flex;
 
-    gap:6px;
+    gap:5px;
 
     overflow-x:auto;
 
@@ -327,21 +338,20 @@ body{
 /* MOOD ITEM */
 
 .mood-item{
-    min-width:72px;
-    height:100px;
+    min-width:64px;
+    height:78px;
 
-    background:#ffffff;
+    background:#fff;
 
     border:1px solid #d9ebf7;
 
-    border-radius:16px;
+    border-radius:13px;
 
     display:flex;
 
     flex-direction:column;
 
     align-items:center;
-
     justify-content:center;
 
     cursor:pointer;
@@ -351,8 +361,8 @@ body{
 /* MOOD EMOJI */
 
 .mood-emoji{
-    width:45px;
-    height:45px;
+    width:34px;
+    height:34px;
 
     border-radius:50%;
 
@@ -363,13 +373,13 @@ body{
     align-items:center;
     justify-content:center;
 
-    font-size:27px;
+    font-size:20px;
 
-    margin-bottom:7px;
+    margin-bottom:5px;
 }
 
 .mood-name{
-    font-size:11px;
+    font-size:9px;
 
     font-weight:bold;
 
@@ -378,20 +388,21 @@ body{
 
 
 /* =========================
-   STORIES
+   SECTION
 ========================= */
 
 .section-head{
     display:flex;
 
-    justify-content:space-between;
     align-items:center;
 
-    margin:7px 3px 9px;
+    justify-content:space-between;
+
+    margin:5px 3px 7px;
 }
 
 .section-title{
-    font-size:20px;
+    font-size:17px;
 
     color:#123f6b;
 
@@ -401,37 +412,36 @@ body{
 .view-all{
     color:#0877d1;
 
-    font-weight:bold;
+    font-size:11px;
 
-    font-size:13px;
+    font-weight:bold;
 
     cursor:pointer;
 }
 
 
-/* STORIES */
+/* =========================
+   STORIES
+========================= */
 
 .stories{
     display:flex;
 
-    gap:9px;
+    gap:8px;
 
     overflow-x:auto;
 
     scrollbar-width:none;
 
-    margin-bottom:17px;
+    margin-bottom:13px;
 }
 
 .stories::-webkit-scrollbar{
     display:none;
 }
 
-
-/* STORY */
-
 .story{
-    min-width:68px;
+    min-width:58px;
 
     text-align:center;
 
@@ -439,46 +449,43 @@ body{
 }
 
 .story-circle{
-    width:57px;
-    height:57px;
+    width:48px;
+    height:48px;
 
     border-radius:50%;
 
     background:#e5f5ff;
 
-    border:3px solid #1786df;
+    border:2px solid #1786df;
 
     display:flex;
 
-    justify-content:center;
     align-items:center;
+    justify-content:center;
 
     color:#087bd7;
 
-    font-size:20px;
+    font-size:16px;
 
     font-weight:bold;
 
     margin:auto;
 }
 
-
-/* ADD STORY */
-
 .add-story{
     background:#1685e5;
 
-    color:white;
+    color:#fff;
 
-    font-size:28px;
+    font-size:23px;
 }
 
 .story-name{
-    font-size:10px;
+    font-size:9px;
 
     color:#526f83;
 
-    margin-top:5px;
+    margin-top:4px;
 }
 
 
@@ -489,11 +496,11 @@ body{
 .post{
     background:#f1faff;
 
-    border-radius:17px;
+    border-radius:14px;
 
-    padding:12px;
+    padding:10px;
 
-    margin-bottom:12px;
+    margin-bottom:9px;
 }
 
 .post-head{
@@ -501,18 +508,18 @@ body{
 
     align-items:center;
 
-    gap:8px;
+    gap:7px;
 }
 
 .post-avatar{
-    width:37px;
-    height:37px;
+    width:32px;
+    height:32px;
 
     border-radius:50%;
 
     background:#1685e5;
 
-    color:white;
+    color:#fff;
 
     display:flex;
 
@@ -521,7 +528,7 @@ body{
 
     font-weight:bold;
 
-    font-size:18px;
+    font-size:15px;
 }
 
 .post-name{
@@ -529,105 +536,15 @@ body{
 
     color:#123f6b;
 
-    font-size:14px;
+    font-size:12px;
 }
 
 .post-text{
-    margin-top:9px;
+    margin-top:7px;
 
     color:#456;
 
-    font-size:13px;
-}
-
-
-/* =========================
-   BOTTOM NAV
-========================= */
-
-.bottom-nav{
-    position:absolute;
-
-    left:9px;
-    right:9px;
-
-    bottom:6px;
-
-    height:65px;
-
-    border-radius:23px;
-
-    background:rgba(255,255,255,0.97);
-
-    box-shadow:
-        0 3px 18px rgba(0,0,0,.10);
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:space-around;
-
-    z-index:10;
-}
-
-
-/* NAV ITEM */
-
-.nav-item{
-    width:48px;
-
-    text-align:center;
-
-    color:#72899a;
-
-    cursor:pointer;
-
-    font-size:10px;
-
-    font-weight:bold;
-}
-
-.nav-icon{
-    display:block;
-
-    font-size:20px;
-
-    margin-bottom:2px;
-}
-
-.nav-item.active{
-    color:#087bd7;
-}
-
-
-/* =========================
-   PLUS BUTTON
-========================= */
-
-.plus{
-    width:52px;
-    height:52px;
-
-    border-radius:50%;
-
-    background:#1685e5;
-
-    color:white;
-
-    font-size:29px;
-
-    display:flex;
-
-    align-items:center;
-    justify-content:center;
-
-    box-shadow:
-        0 4px 12px rgba(0,120,220,.3);
-
-    margin-top:-23px;
-
-    border:4px solid white;
+    font-size:11px;
 }
 
 
@@ -638,31 +555,120 @@ body{
 .camera{
     position:absolute;
 
-    right:15px;
-    bottom:80px;
+    right:13px;
+    bottom:75px;
 
-    width:47px;
-    height:47px;
+    width:40px;
+    height:40px;
 
     border-radius:50%;
 
     background:#1685e5;
 
-    border:4px solid white;
+    border:3px solid #fff;
 
     box-shadow:
-        0 3px 12px rgba(0,0,0,.15);
+        0 3px 10px rgba(0,0,0,.15);
 
     display:flex;
 
     align-items:center;
     justify-content:center;
 
-    font-size:20px;
+    font-size:17px;
 
     z-index:11;
 
     cursor:pointer;
+}
+
+
+/* =========================
+   BOTTOM NAV
+========================= */
+
+.bottom-nav{
+    position:absolute;
+
+    left:8px;
+    right:8px;
+
+    bottom:5px;
+
+    height:60px;
+
+    border-radius:20px;
+
+    background:rgba(255,255,255,.98);
+
+    box-shadow:
+        0 3px 18px rgba(0,0,0,.10);
+
+    display:flex;
+
+    align-items:center;
+    justify-content:space-around;
+
+    z-index:10;
+}
+
+
+/* NAV ITEM */
+
+.nav-item{
+    width:44px;
+
+    text-align:center;
+
+    color:#72899a;
+
+    cursor:pointer;
+
+    font-size:8px;
+
+    font-weight:bold;
+}
+
+.nav-icon{
+    display:block;
+
+    font-size:17px;
+
+    margin-bottom:2px;
+}
+
+.nav-item.active{
+    color:#087bd7;
+}
+
+
+/* =========================
+   PLUS
+========================= */
+
+.plus{
+    width:46px;
+    height:46px;
+
+    border-radius:50%;
+
+    background:#1685e5;
+
+    color:#fff;
+
+    font-size:25px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    box-shadow:
+        0 4px 12px rgba(0,120,220,.3);
+
+    margin-top:-21px;
+
+    border:3px solid #fff;
 }
 
 
@@ -673,27 +679,27 @@ body{
 @media(max-width:360px){
 
     .header{
-        padding:7px 10px;
-        gap:5px;
+        padding:6px 8px;
     }
 
     .logo-box{
-        width:40px;
-        height:40px;
-        font-size:24px;
-    }
+        width:34px;
+        height:34px;
 
-    .logo-text{
         font-size:20px;
     }
 
+    .logo-text{
+        font-size:18px;
+    }
+
     .content{
-        padding-left:10px;
-        padding-right:10px;
+        padding-left:9px;
+        padding-right:9px;
     }
 
     .mood-item{
-        min-width:69px;
+        min-width:61px;
     }
 
 }
@@ -703,12 +709,13 @@ body{
    NO OUTER SCROLL
 ========================= */
 
-body,
-html{
+html,
+body{
     overscroll-behavior:none;
 }
 
 </style>
+
 </head>
 
 
@@ -717,9 +724,9 @@ html{
 <div class="app">
 
 
-<!-- ==================================
+<!-- =========================
      HEADER
-================================== -->
+========================= -->
 
 <div class="header">
 
@@ -728,9 +735,7 @@ html{
 
     <div class="menu"
          onclick="openMenu()">
-
         ☰
-
     </div>
 
 
@@ -773,24 +778,13 @@ html{
     </div>
 
 
-    <!-- PROFILE -->
-
-    <div class="profile-mini"
-         onclick="openProfile()"
-         id="miniAvatar">
-
-        U
-
-    </div>
-
-
 </div>
 
 
 
-<!-- ==================================
+<!-- =========================
      CONTENT
-================================== -->
+========================= -->
 
 <div class="content">
 
@@ -805,7 +799,7 @@ html{
 
         <input
             type="text"
-            placeholder="Search..."
+            placeholder="Search Usanex..."
             oninput="searchUsers(this.value)"
         >
 
@@ -813,12 +807,11 @@ html{
 
 
 
-    <!-- ==================================
-         YOUR MOOD
-    ================================== -->
+    <!-- =========================
+         MOOD
+    ========================= -->
 
     <div class="mood">
-
 
         <div class="mood-head">
 
@@ -837,16 +830,12 @@ html{
 
 
         <div class="mood-sub">
-
             How are you feeling today?
-
         </div>
 
 
         <div class="mood-list">
 
-
-            <!-- GOOD -->
 
             <div class="mood-item"
                  onclick="selectMood('Good')">
@@ -862,8 +851,6 @@ html{
             </div>
 
 
-            <!-- SAD -->
-
             <div class="mood-item"
                  onclick="selectMood('Sad')">
 
@@ -877,8 +864,6 @@ html{
 
             </div>
 
-
-            <!-- EMOTIONAL -->
 
             <div class="mood-item"
                  onclick="selectMood('Emotional')">
@@ -894,8 +879,6 @@ html{
             </div>
 
 
-            <!-- MOTIVATION -->
-
             <div class="mood-item"
                  onclick="selectMood('Motivation')">
 
@@ -909,8 +892,6 @@ html{
 
             </div>
 
-
-            <!-- OTHER -->
 
             <div class="mood-item"
                  onclick="selectMood('Other')">
@@ -932,9 +913,9 @@ html{
 
 
 
-    <!-- ==================================
+    <!-- =========================
          STORIES
-    ================================== -->
+    ========================= -->
 
     <div class="section-head">
 
@@ -955,8 +936,6 @@ html{
     <div class="stories">
 
 
-        <!-- ADD STORY -->
-
         <div class="story"
              onclick="addStory()">
 
@@ -971,8 +950,6 @@ html{
         </div>
 
 
-        <!-- STORY 1 -->
-
         <div class="story">
 
             <div class="story-circle">
@@ -986,8 +963,6 @@ html{
         </div>
 
 
-        <!-- STORY 2 -->
-
         <div class="story">
 
             <div class="story-circle">
@@ -1000,8 +975,6 @@ html{
 
         </div>
 
-
-        <!-- STORY 3 -->
 
         <div class="story">
 
@@ -1020,9 +993,9 @@ html{
 
 
 
-    <!-- ==================================
-         RECENT POSTS
-    ================================== -->
+    <!-- =========================
+         POSTS
+    ========================= -->
 
     <div class="section-head">
 
@@ -1040,10 +1013,7 @@ html{
     </div>
 
 
-    <!-- POST -->
-
     <div class="post">
-
 
         <div class="post-head">
 
@@ -1059,11 +1029,30 @@ html{
 
 
         <div class="post-text">
-
             Welcome to Usanex 🎉
+        </div>
+
+    </div>
+
+
+    <div class="post">
+
+        <div class="post-head">
+
+            <div class="post-avatar">
+                U
+            </div>
+
+            <div class="post-name">
+                Usanex
+            </div>
 
         </div>
 
+
+        <div class="post-text">
+            Connect, share and enjoy with Usanex.
+        </div>
 
     </div>
 
@@ -1072,9 +1061,9 @@ html{
 
 
 
-<!-- ==================================
+<!-- =========================
      CAMERA
-================================== -->
+========================= -->
 
 <div class="camera"
      onclick="openCamera()">
@@ -1085,14 +1074,12 @@ html{
 
 
 
-<!-- ==================================
-     BOTTOM NAVIGATION
-================================== -->
+<!-- =========================
+     BOTTOM NAV
+========================= -->
 
 <div class="bottom-nav">
 
-
-    <!-- HOME -->
 
     <div class="nav-item active"
          onclick="goHome()">
@@ -1106,8 +1093,6 @@ html{
     </div>
 
 
-    <!-- REELS -->
-
     <div class="nav-item"
          onclick="openReels()">
 
@@ -1120,8 +1105,6 @@ html{
     </div>
 
 
-    <!-- CREATE -->
-
     <div class="nav-item"
          onclick="createPost()">
 
@@ -1131,8 +1114,6 @@ html{
 
     </div>
 
-
-    <!-- CALLS -->
 
     <div class="nav-item"
          onclick="openCalls()">
@@ -1145,8 +1126,6 @@ html{
 
     </div>
 
-
-    <!-- PROFILE -->
 
     <div class="nav-item"
          onclick="openProfile()">
@@ -1167,38 +1146,26 @@ html{
 
 
 
-<!-- ==================================
-     JAVASCRIPT
-================================== -->
-
 <script>
-
 
 /* =========================
    USER DATA
 ========================= */
 
 let user = {
-
-    name: "User",
-
-    user_id: "",
-
-    mobile: ""
-
+    name:"User",
+    user_id:"",
+    mobile:""
 };
-
 
 try{
 
     const savedUser =
         localStorage.getItem("usanex_user");
 
-
     if(savedUser){
 
-        user =
-            JSON.parse(savedUser);
+        user = JSON.parse(savedUser);
 
     }
 
@@ -1209,25 +1176,8 @@ try{
 }
 
 
-
 /* =========================
-   PROFILE ICON
-========================= */
-
-const firstLetter =
-    (user.name || "U")
-    .charAt(0)
-    .toUpperCase();
-
-
-document.getElementById(
-    "miniAvatar"
-).textContent = firstLetter;
-
-
-
-/* =========================
-   HEADER FUNCTIONS
+   HEADER
 ========================= */
 
 function openMenu(){
@@ -1251,23 +1201,13 @@ function openNotifications(){
 }
 
 
-function openProfile(){
-
-    alert("Profile");
-
-}
-
-
-
 /* =========================
    MOOD
 ========================= */
 
 function selectMood(mood){
 
-    alert(
-        "Mood selected: " + mood
-    );
+    alert("Mood selected: " + mood);
 
 }
 
@@ -1277,7 +1217,6 @@ function showMoreMood(){
     alert("More moods");
 
 }
-
 
 
 /* =========================
@@ -1298,7 +1237,6 @@ function viewStories(){
 }
 
 
-
 /* =========================
    POSTS
 ========================= */
@@ -1310,16 +1248,13 @@ function viewPosts(){
 }
 
 
-
 /* =========================
    SEARCH
 ========================= */
 
 function searchUsers(value){
 
-    if(
-        value.trim() === ""
-    ){
+    if(value.trim() === ""){
 
         return;
 
@@ -1333,7 +1268,6 @@ function searchUsers(value){
 }
 
 
-
 /* =========================
    CAMERA
 ========================= */
@@ -1345,9 +1279,8 @@ function openCamera(){
 }
 
 
-
 /* =========================
-   BOTTOM NAV
+   NAVIGATION
 ========================= */
 
 function goHome(){
@@ -1379,6 +1312,12 @@ function openCalls(){
 
 }
 
+
+function openProfile(){
+
+    alert("Profile");
+
+}
 
 </script>
 
