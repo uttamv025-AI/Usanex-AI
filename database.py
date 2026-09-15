@@ -1,7 +1,8 @@
 import os
 
 from sqlalchemy import create_engine
-from sqlalchemy.orm import DeclarativeBase, sessionmaker
+String 
+from sqlalchemy.orm import DeclarativeBase, sessionmaker,mapped,mapped_column
 
 
 DATABASE_URL = os.getenv("DATABASE_URL")
@@ -26,4 +27,34 @@ SessionLocal = sessionmaker(
 
 
 class Base(DeclarativeBase):
+    class User(Base):
+    __tablename__ = "users"
+
+    id: Mapped[int] = mapped_column(
+        primary_key=True,
+        autoincrement=True
+    )
+
+    user_id: Mapped[str] = mapped_column(
+        String(20),
+        unique=True,
+        index=True,
+        nullable=False
+    )
+
+    name: Mapped[str] = mapped_column(
+        String(100),
+        nullable=False
+    )
+
+    mobile: Mapped[str] = mapped_column(
+        String(15),
+        unique=True,
+        nullable=False
+    )
+
+    password_hash: Mapped[str] = mapped_column(
+        String(255),
+        nullable=False
+    )
     pass
