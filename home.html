@@ -2,2450 +2,1057 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 <title>Usanex</title>
 
 <style>
-
 *{
     box-sizing:border-box;
     margin:0;
     padding:0;
+    -webkit-tap-highlight-color:transparent;
+}
+
+html,body{
+    width:100%;
+    height:100%;
+    overflow:hidden;
 }
 
 body{
-    font-family:
-    Inter,
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    Arial,
-    sans-serif;
-
-    min-height:100vh;
-
-    background:
-    linear-gradient(
-        145deg,
-        #e2f3ff 0%,
-        #f9fdff 48%,
-        #dcefff 100%
-    );
-
-    color:#123b64;
-
-    padding:10px;
+    font-family:Inter,system-ui,Arial,sans-serif;
+    background:linear-gradient(145deg,#e3f3ff,#f8fcff,#dcefff);
+    color:#12365c;
 }
 
+/* ================= APP ================= */
 
 .app{
-    width:min(500px,100%);
-    min-height:calc(100vh - 20px);
-
-    margin:auto;
-
-    background:rgba(255,255,255,.96);
-
-    border-radius:30px;
-
+    width:100%;
+    height:100dvh;
+    display:flex;
+    flex-direction:column;
     overflow:hidden;
-
-    position:relative;
-
-    box-shadow:
-    0 20px 65px
-    rgba(39,105,157,.18);
-
-    padding-bottom:86px;
+    background:rgba(255,255,255,.55);
 }
 
-
-/* =====================================================
-   HEADER
-===================================================== */
+/* ================= HEADER ================= */
 
 .header{
-
-    height:76px;
-
+    height:64px;
+    flex-shrink:0;
     display:flex;
-
     align-items:center;
-
-    gap:11px;
-
-    padding:13px 16px;
-
-    background:
-    rgba(255,255,255,.96);
-
+    padding:8px 13px;
+    gap:10px;
 }
-
 
 .menu{
-
-    width:42px;
-    height:42px;
-
+    width:34px;
+    height:34px;
     border:0;
     background:none;
-
-    font-size:31px;
-
-    color:#103e6d;
-
-    cursor:pointer;
+    font-size:27px;
+    color:#174b7c;
 }
-
 
 .brand{
-
     display:flex;
-
     align-items:center;
-
-    gap:9px;
-
+    gap:7px;
     flex:1;
-
 }
-
 
 .logo{
-
-    width:47px;
-    height:47px;
-
-    border-radius:14px;
-
-    background:
-    linear-gradient(
-        135deg,
-        #168cff,
-        #0862d3
-    );
-
-    color:white;
-
+    width:39px;
+    height:39px;
+    border-radius:11px;
     display:grid;
-
     place-items:center;
-
-    font-size:28px;
-
+    background:linear-gradient(145deg,#168bff,#0865d8);
+    color:white;
+    font-size:23px;
     font-weight:900;
-
-    box-shadow:
-    0 7px 18px
-    rgba(8,112,220,.25);
 }
-
 
 .brand-name{
-
-    font-size:23px;
-
+    font-size:20px;
     font-weight:850;
-
-    color:#0a3970;
-
+    color:#073b72;
 }
 
-
-/* MONETIZATION */
-
-.monetization{
-
-    height:40px;
-
-    padding:0 10px;
-
-    border-radius:13px;
-
-    border:1px solid #cce6f8;
-
-    background:#f2faff;
-
-    color:#0869d8;
-
+.header-actions{
     display:flex;
-
     align-items:center;
-
-    gap:5px;
-
-    font-size:11px;
-
-    font-weight:800;
-
-    cursor:pointer;
-
+    gap:7px;
 }
 
-
-.head-btn{
-
-    width:42px;
-    height:42px;
-
-    border-radius:14px;
-
-    border:1px solid #d4e8f6;
-
-    background:#f5fbff;
-
-    font-size:19px;
-
-    cursor:pointer;
-
+.header-btn{
+    width:34px;
+    height:34px;
+    border:0;
+    border-radius:50%;
+    background:transparent;
     position:relative;
-
+    font-size:21px;
+    color:#123f6c;
 }
 
+.money{
+    font-size:20px;
+    font-weight:900;
+}
 
 .badge{
-
     position:absolute;
-
-    top:-5px;
-
-    right:-4px;
-
-    min-width:18px;
-
-    height:18px;
-
-    border-radius:50%;
-
-    background:#ff4655;
-
-    color:#fff;
-
+    top:-1px;
+    right:-1px;
+    min-width:16px;
+    height:16px;
+    border-radius:10px;
+    background:#ed4b50;
+    color:white;
     font-size:9px;
-
     display:grid;
-
     place-items:center;
-
-    font-weight:800;
-
 }
 
+.profile-mini{
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    background:linear-gradient(145deg,#168bff,#0865d8);
+    color:white;
+    display:grid;
+    place-items:center;
+    font-weight:800;
+    font-size:17px;
+    border:3px solid #e8f5ff;
+}
 
-/* =====================================================
-   CONTENT
-===================================================== */
+/* ================= SCROLL AREA ================= */
 
 .content{
-
-    padding:5px 17px 25px;
-
+    flex:1;
+    min-height:0;
+    overflow-y:auto;
+    overflow-x:hidden;
+    padding:0 13px 88px;
+    scrollbar-width:none;
 }
 
+.content::-webkit-scrollbar{
+    display:none;
+}
 
-/* =====================================================
-   SEARCH
-===================================================== */
+/* ================= SEARCH ================= */
 
 .search{
-
-    width:100%;
-
-    height:51px;
-
-    border-radius:17px;
-
-    border:1px solid #d5e9f7;
-
-    background:#f1f8fd;
-
-    outline:none;
-
-    padding:0 17px;
-
-    font-size:15px;
-
-    color:#183e62;
-
-}
-
-
-.search:focus{
-
-    border-color:#1584ed;
-
-    box-shadow:
-    0 0 0 4px
-    rgba(21,132,237,.08);
-
-}
-
-
-/* =====================================================
-   MOOD
-===================================================== */
-
-.mood-box{
-
-    margin-top:17px;
-
-    padding:17px 11px 12px;
-
-    border-radius:22px;
-
-    background:
-    linear-gradient(
-        135deg,
-        #eaf7ff,
-        #f5fbff
-    );
-
-    border:1px solid #d5ebfa;
-
-}
-
-
-.mood-head{
-
+    height:45px;
+    border-radius:24px;
+    background:#eaf5fd;
+    border:1px solid #d5eafa;
     display:flex;
-
-    justify-content:space-between;
-
     align-items:center;
-
-    padding:0 5px 13px;
-
+    padding:0 14px;
+    margin:2px 0 10px;
 }
 
-
-.mood-head h2{
-
+.search span{
     font-size:20px;
-
-    color:#0b3970;
-
+    color:#6385a2;
 }
 
-
-.mood-head p{
-
-    color:#7892a7;
-
-    font-size:11px;
-
-    margin-top:3px;
-
-}
-
-
-.more{
-
+.search input{
+    flex:1;
     border:0;
-
-    background:none;
-
-    color:#086bd8;
-
-    font-size:13px;
-
-    font-weight:800;
-
-    cursor:pointer;
-
+    outline:0;
+    background:transparent;
+    padding-left:10px;
+    font-size:14px;
+    color:#173d62;
 }
 
-
-.moods{
-
-    display:grid;
-
-    grid-template-columns:
-    repeat(5,1fr);
-
-    gap:6px;
-
+.search input::placeholder{
+    color:#7891a8;
 }
 
+/* ================= MOOD ================= */
 
 .mood{
-
-    border:1px solid #dbeaf5;
-
-    background:rgba(255,255,255,.75);
-
-    border-radius:15px;
-
-    padding:9px 3px;
-
-    cursor:pointer;
-
+    background:#edf8ff;
+    border:1px solid #d6ebfa;
+    border-radius:18px;
+    padding:12px;
+    margin-bottom:10px;
 }
 
-
-.mood:active{
-
-    transform:scale(.95);
-
+.mood-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:9px;
 }
 
-
-.mood-icon{
-
-    width:40px;
-    height:40px;
-
-    margin:auto;
-
-    border-radius:50%;
-
-    display:grid;
-
-    place-items:center;
-
-    font-size:21px;
-
-    background:#e8f5ff;
-
+.mood-title{
+    font-size:18px;
+    font-weight:850;
+    color:#103e70;
 }
 
-
-.mood span{
-
-    display:block;
-
-    margin-top:6px;
-
-    font-size:9px;
-
+.more{
+    border:0;
+    background:none;
+    color:#0870dc;
+    font-size:13px;
     font-weight:750;
-
-    color:#426a8e;
-
 }
 
+.mood-sub{
+    font-size:12px;
+    color:#7790a5;
+    margin-top:2px;
+}
 
-/* =====================================================
-   PROFILE
-===================================================== */
+.moods{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:6px;
+}
+
+.mood-item{
+    min-width:0;
+    height:72px;
+    border-radius:13px;
+    border:1px solid #dcecf8;
+    background:rgba(255,255,255,.72);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+}
+
+.mood-item:active{
+    transform:scale(.96);
+}
+
+.mood-emoji{
+    font-size:24px;
+    line-height:27px;
+}
+
+.mood-name{
+    margin-top:4px;
+    font-size:10px;
+    font-weight:750;
+    color:#315d80;
+}
+
+/* ================= PROFILE ================= */
 
 .profile-card{
-
-    margin-top:17px;
-
-    padding:15px;
-
-    border-radius:22px;
-
-    background:
-    linear-gradient(
-        135deg,
-        #e8f6ff,
-        #f7fcff
-    );
-
-    border:1px solid #d4eaf8;
-
-}
-
-
-.profile-top{
-
+    background:#edf8ff;
+    border:1px solid #d4eafa;
+    border-radius:18px;
+    padding:12px;
     display:flex;
-
     align-items:center;
-
-    gap:13px;
-
+    gap:11px;
+    margin-bottom:10px;
 }
 
-
-.profile-avatar{
-
-    width:67px;
-    height:67px;
-
+.avatar{
+    width:68px;
+    height:68px;
     flex-shrink:0;
-
     border-radius:50%;
-
-    display:grid;
-
-    place-items:center;
-
-    background:
-    linear-gradient(
-        145deg,
-        #d9efff,
-        #bfe3ff
-    );
-
-    color:#086fd7;
-
-    font-size:27px;
-
-    font-weight:900;
-
+    background:#dff1ff;
     border:4px solid white;
-
-    box-shadow:
-    0 3px 12px
-    rgba(20,105,175,.13);
-
-    position:relative;
-
+    display:grid;
+    place-items:center;
+    color:#0871d8;
+    font-size:28px;
+    font-weight:850;
 }
 
-
-.online{
-
-    position:absolute;
-
-    width:14px;
-    height:14px;
-
-    border-radius:50%;
-
-    background:#12a95b;
-
-    border:3px solid white;
-
-    right:0;
-
-    bottom:1px;
-
-}
-
-
-.profile-main{
-
+.profile-info{
     flex:1;
-
+    min-width:0;
 }
 
-
-.profile-main h2{
-
-    font-size:18px;
-
-    color:#0e3969;
-
+.profile-name{
+    font-size:17px;
+    font-weight:850;
+    color:#103d6d;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
 }
 
-
-.profile-main p{
-
-    color:#7190a6;
-
+.user-id{
     font-size:12px;
-
-    margin-top:4px;
-
+    color:#718ba1;
+    margin-top:2px;
 }
-
-
-.active{
-
-    color:#0a9951;
-
-    font-size:11px;
-
-    font-weight:750;
-
-    margin-top:5px;
-
-}
-
-
-/* STATS */
 
 .stats{
-
-    margin-top:15px;
-
-    padding-top:14px;
-
-    border-top:1px solid #d9eaf5;
-
-    display:grid;
-
-    grid-template-columns:
-    repeat(3,1fr);
-
-    text-align:center;
-
+    display:flex;
+    gap:15px;
+    margin-top:7px;
 }
-
 
 .stat{
-
-    border-right:1px solid #d9eaf5;
-
+    text-align:center;
 }
-
-
-.stat:last-child{
-
-    border-right:0;
-
-}
-
 
 .stat b{
-
     display:block;
-
-    font-size:16px;
-
-    color:#153e68;
-
+    font-size:14px;
+    color:#164d7d;
 }
-
 
 .stat span{
-
-    display:block;
-
-    margin-top:3px;
-
-    font-size:10px;
-
-    color:#7991a5;
-
+    font-size:9px;
+    color:#7890a4;
 }
 
+.arrow{
+    font-size:25px;
+    color:#17609a;
+}
 
-/* =====================================================
-   STORIES
-===================================================== */
+/* ================= STORIES ================= */
+
+.section-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin:4px 2px 7px;
+}
 
 .section-title{
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-    margin:20px 2px 10px;
-
+    font-size:17px;
+    font-weight:850;
+    color:#103d6d;
 }
-
-
-.section-title h2{
-
-    font-size:18px;
-
-    color:#123d6b;
-
-}
-
 
 .view{
-
     border:0;
-
     background:none;
-
-    color:#0870dd;
-
-    font-weight:750;
-
+    color:#0870dc;
     font-size:12px;
-
-    cursor:pointer;
-
+    font-weight:750;
 }
-
 
 .stories{
-
     display:flex;
-
-    gap:10px;
-
+    gap:9px;
     overflow-x:auto;
-
-    padding:3px 1px 8px;
-
+    scrollbar-width:none;
+    margin-bottom:12px;
 }
-
 
 .stories::-webkit-scrollbar{
-
     display:none;
-
 }
-
 
 .story{
-
-    min-width:78px;
-
+    width:66px;
+    flex:0 0 66px;
     text-align:center;
-
-    cursor:pointer;
-
 }
 
-
-.story-circle{
-
-    width:62px;
-    height:62px;
-
+.story-img{
+    width:58px;
+    height:58px;
     margin:auto;
-
     border-radius:50%;
-
-    padding:3px;
-
-    background:
-    linear-gradient(
-        135deg,
-        #1688ef,
-        #4c9fff
-    );
-
-}
-
-
-.story-inner{
-
-    width:100%;
-    height:100%;
-
-    border-radius:50%;
-
+    border:3px solid #1682ed;
+    background:#e2f2ff;
     display:grid;
-
     place-items:center;
-
-    background:#dff2ff;
-
-    color:#0871d9;
-
-    font-weight:850;
-
-    font-size:19px;
-
-    border:2px solid white;
-
+    color:#0870dc;
+    font-size:20px;
+    font-weight:800;
 }
-
 
 .story-name{
-
-    margin-top:5px;
-
     font-size:10px;
-
-    color:#274e73;
-
-    font-weight:700;
-
-    white-space:nowrap;
-
-}
-
-
-/* =====================================================
-   RECENT CHATS
-===================================================== */
-
-.chat-title{
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-    margin:17px 2px 8px;
-
-}
-
-
-.chat-title h2{
-
-    font-size:18px;
-
-    color:#123d6b;
-
-}
-
-
-.chat{
-
-    display:flex;
-
-    align-items:center;
-
-    gap:11px;
-
-    padding:12px 5px;
-
-    border-bottom:1px solid #e4eff6;
-
-    cursor:pointer;
-
-}
-
-
-.chat-avatar{
-
-    width:46px;
-    height:46px;
-
-    border-radius:50%;
-
-    background:#e5f3ff;
-
-    display:grid;
-
-    place-items:center;
-
-    color:#0870d8;
-
-    font-weight:850;
-
-}
-
-
-.chat-info{
-
-    flex:1;
-
-}
-
-
-.chat-info b{
-
-    display:block;
-
-    color:#173e67;
-
-    font-size:14px;
-
-}
-
-
-.chat-info small{
-
-    display:block;
-
     margin-top:4px;
-
-    color:#8297a8;
-
-    font-size:11px;
-
+    color:#355d7c;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
 }
 
+/* ================= POSTS ================= */
 
-.chat-right{
-
-    text-align:right;
-
+.post{
+    background:rgba(255,255,255,.88);
+    border:1px solid #d9ebf8;
+    border-radius:16px;
+    padding:11px;
+    margin-bottom:9px;
 }
 
-
-.chat-right small{
-
-    color:#7f96a9;
-
-    font-size:9px;
-
+.post-top{
+    display:flex;
+    align-items:center;
+    gap:8px;
 }
 
-
-.unread{
-
-    width:19px;
-    height:19px;
-
-    margin:4px 0 0 auto;
-
+.post-avatar{
+    width:38px;
+    height:38px;
     border-radius:50%;
-
-    background:#0878e8;
-
-    color:white;
-
+    background:#e1f2ff;
     display:grid;
-
     place-items:center;
-
-    font-size:9px;
-
+    color:#0870dc;
+    font-weight:800;
 }
 
-
-/* =====================================================
-   CAMERA
-===================================================== */
-
-.camera{
-
-    position:absolute;
-
-    right:17px;
-
-    bottom:96px;
-
-    width:57px;
-    height:57px;
-
-    border-radius:50%;
-
-    border:4px solid white;
-
-    background:
-    linear-gradient(
-        135deg,
-        #168cff,
-        #0867d8
-    );
-
-    color:white;
-
-    font-size:24px;
-
-    box-shadow:
-    0 8px 23px
-    rgba(8,111,220,.30);
-
-    cursor:pointer;
-
-    z-index:4;
-
+.post-user{
+    flex:1;
 }
 
+.post-user b{
+    display:block;
+    font-size:13px;
+    color:#153f68;
+}
 
-/* =====================================================
-   BOTTOM NAV
-===================================================== */
+.post-user span{
+    font-size:10px;
+    color:#8195a7;
+}
+
+.post-text{
+    font-size:13px;
+    color:#47667f;
+    margin:9px 0 7px;
+    line-height:1.4;
+}
+
+.post-actions{
+    display:flex;
+    gap:20px;
+}
+
+.post-actions button{
+    border:0;
+    background:none;
+    color:#587992;
+    font-size:12px;
+}
+
+/* ================= BOTTOM NAV ================= */
 
 .bottom{
-
-    position:absolute;
-
-    left:0;
-    right:0;
-    bottom:0;
-
-    height:78px;
-
-    background:
-    rgba(255,255,255,.98);
-
-    border-top:1px solid #dfedf6;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:space-around;
-
-    z-index:5;
-
-}
-
-
-.nav{
-
-    border:0;
-
-    background:none;
-
-    color:#8196a9;
-
-    cursor:pointer;
-
-    display:flex;
-
-    flex-direction:column;
-
-    align-items:center;
-
-    gap:4px;
-
-}
-
-
-.nav span{
-
-    font-size:21px;
-
-}
-
-
-.nav small{
-
-    font-size:10px;
-
-}
-
-
-.nav.active{
-
-    color:#0875df;
-
-    font-weight:800;
-
-}
-
-
-.upload{
-
-    width:54px;
-    height:54px;
-
-    margin-top:-27px;
-
-    border-radius:50%;
-
-    border:4px solid white;
-
-    background:
-    linear-gradient(
-        135deg,
-        #168cff,
-        #0867d8
-    );
-
-    color:white;
-
-    font-size:29px;
-
-    box-shadow:
-    0 8px 24px
-    rgba(8,112,220,.3);
-
-    cursor:pointer;
-
-}
-
-
-/* =====================================================
-   POPUP
-===================================================== */
-
-.overlay{
-
     position:fixed;
-
-    inset:0;
-
-    background:
-    rgba(5,32,56,.30);
-
-    display:none;
-
-    align-items:flex-end;
-
-    justify-content:center;
-
+    left:8px;
+    right:8px;
+    bottom:7px;
+    height:66px;
+    border-radius:22px;
+    background:rgba(255,255,255,.94);
+    border:1px solid #d9eaf6;
+    box-shadow:0 8px 30px rgba(41,100,150,.16);
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr 1fr 1fr;
+    align-items:center;
     z-index:50;
-
 }
 
-
-.popup{
-
-    width:min(500px,100%);
-
-    background:white;
-
-    border-radius:27px 27px 0 0;
-
-    padding:25px;
-
-    text-align:center;
-
-}
-
-
-.popup h2{
-
-    color:#103b68;
-
-    margin-bottom:8px;
-
-}
-
-
-.popup p{
-
-    color:#7890a4;
-
-    font-size:13px;
-
-    line-height:1.5;
-
-    white-space:pre-line;
-
-}
-
-
-.close{
-
-    width:100%;
-
-    height:48px;
-
-    margin-top:18px;
-
-    border:0;
-
-    border-radius:15px;
-
-    background:#0875df;
-
-    color:white;
-
-    font-weight:800;
-
-    cursor:pointer;
-
-}
-
-
-/* =====================================================
-   SIDE MENU
-===================================================== */
-
-.side{
-
-    position:fixed;
-
-    inset:0;
-
-    background:
-    rgba(5,30,55,.30);
-
-    display:none;
-
-    z-index:60;
-
-}
-
-
-.side-box{
-
-    width:285px;
-
+.nav-btn{
     height:100%;
-
-    background:white;
-
-    padding:24px 18px;
-
-}
-
-
-.side-brand{
-
-    display:flex;
-
-    align-items:center;
-
-    gap:10px;
-
-    font-size:21px;
-
-    font-weight:850;
-
-    color:#0b3970;
-
-    padding-bottom:25px;
-
-}
-
-
-.side-item{
-
-    width:100%;
-
-    padding:15px;
-
     border:0;
-
-    border-radius:13px;
-
     background:none;
-
-    text-align:left;
-
-    color:#244d70;
-
-    font-size:15px;
-
-    cursor:pointer;
-
+    color:#718aa0;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:2px;
+    font-size:10px;
+    font-weight:700;
 }
 
-
-.side-item:hover{
-
-    background:#edf7ff;
-
+.nav-icon{
+    font-size:21px;
 }
 
+.nav-btn.active{
+    color:#0870dc;
+}
 
+/* PLUS */
+
+.plus-wrap{
+    position:relative;
+    height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.plus{
+    width:53px;
+    height:53px;
+    border-radius:50%;
+    border:4px solid white;
+    background:linear-gradient(145deg,#168bff,#0865d8);
+    color:white;
+    font-size:28px;
+    box-shadow:0 7px 20px rgba(10,105,220,.3);
+}
+
+/* ================= CAMERA ================= */
+
+.camera{
+    position:fixed;
+    right:17px;
+    bottom:83px;
+    width:48px;
+    height:48px;
+    border-radius:50%;
+    border:3px solid white;
+    background:#1685ed;
+    color:white;
+    display:grid;
+    place-items:center;
+    font-size:21px;
+    z-index:60;
+    box-shadow:0 7px 20px rgba(8,100,210,.3);
+}
+
+/* ================= SMALL SCREEN ================= */
+
+@media(max-width:370px){
+
+    .header{
+        padding-left:9px;
+        padding-right:9px;
+        gap:6px;
+    }
+
+    .brand-name{
+        font-size:18px;
+    }
+
+    .logo{
+        width:36px;
+        height:36px;
+    }
+
+    .mood{
+        padding:9px;
+    }
+
+    .mood-item{
+        height:67px;
+    }
+
+    .profile-card{
+        padding:10px;
+    }
+
+    .avatar{
+        width:60px;
+        height:60px;
+    }
+
+    .stats{
+        gap:10px;
+    }
+}
 </style>
 </head>
 
-
 <body>
-
 
 <div class="app">
 
-
-<!-- =====================================================
-     HEADER
-===================================================== -->
+<!-- ================= HEADER ================= -->
 
 <header class="header">
 
+    <button class="menu" onclick="openMenu()">☰</button>
 
-<button
-    class="menu"
-    onclick="openMenu()"
->
-☰
-</button>
-
-
-<div class="brand">
-
-    <div class="logo">
-        U
+    <div class="brand">
+        <div class="logo">U</div>
+        <div class="brand-name">Usanex</div>
     </div>
 
-    <span class="brand-name">
-        Usanex
-    </span>
+    <!-- MONETIZATION HEADER ME -->
+    <div class="header-actions">
 
-</div>
+        <button class="header-btn money"
+                onclick="openMonetization()"
+                title="Monetization">
+            ₹
+        </button>
 
+        <button class="header-btn"
+                onclick="openNotifications()">
+            ♧
+            <span class="badge">3</span>
+        </button>
 
-<button
-    class="monetization"
-    onclick="monetization()"
->
-💰 Monetization
-</button>
+        <button class="profile-mini"
+                onclick="openProfile()"
+                id="miniAvatar">
+            U
+        </button>
 
-
-<button
-    class="head-btn"
-    onclick="notifications()"
->
-🔔
-<span class="badge">3</span>
-</button>
-
-
-<button
-    class="head-btn"
-    onclick="profile()"
->
-👤
-</button>
-
+    </div>
 
 </header>
 
 
+<!-- ================= SCROLL CONTENT ================= -->
 
 <main class="content">
 
+    <!-- SEARCH -->
 
-<!-- SEARCH -->
+    <div class="search">
 
-<input
-    class="search"
-    id="search"
-    type="search"
-    placeholder="🔍  Search Usanex..."
-    oninput="searchUsers()"
-/>
+        <span>⌕</span>
 
+        <input
+            type="text"
+            placeholder="Search..."
+            oninput="searchUsers(this.value)"
+        >
 
+    </div>
 
-<!-- =====================================================
-     MOOD
-===================================================== -->
 
-<div class="mood-box">
+    <!-- YOUR MOOD -->
 
+    <section class="mood">
 
-<div class="mood-head">
+        <div class="mood-head">
 
-<div>
+            <div>
+                <div class="mood-title">Your Mood</div>
+                <div class="mood-sub">
+                    How are you feeling today?
+                </div>
+            </div>
 
-<h2>Your Mood</h2>
+            <button class="more"
+                    onclick="showMoreMood()">
+                More ›
+            </button>
 
-<p>
-How are you feeling today?
-</p>
+        </div>
 
-</div>
 
+        <div class="moods">
 
-<button
-    class="more"
-    onclick="moreMood()"
->
-More ›
-</button>
+            <button class="mood-item"
+                    onclick="setMood('Good')">
+                <div class="mood-emoji">😊</div>
+                <div class="mood-name">Good</div>
+            </button>
 
-</div>
+            <button class="mood-item"
+                    onclick="setMood('Sad')">
+                <div class="mood-emoji">😔</div>
+                <div class="mood-name">Sad</div>
+            </button>
 
+            <button class="mood-item"
+                    onclick="setMood('Emotional')">
+                <div class="mood-emoji">🥹</div>
+                <div class="mood-name">Emotional</div>
+            </button>
 
+            <button class="mood-item"
+                    onclick="setMood('Motivation')">
+                <div class="mood-emoji">💪</div>
+                <div class="mood-name">Motivation</div>
+            </button>
 
-<div class="moods">
+            <button class="mood-item"
+                    onclick="setMood('Other')">
+                <div class="mood-emoji">•••</div>
+                <div class="mood-name">Other</div>
+            </button>
 
+        </div>
 
-<button
-    class="mood"
-    onclick="setMood('Good')"
->
+    </section>
 
-<div class="mood-icon">
-😊
-</div>
 
-<span>
-Good
-</span>
+    <!-- USER PROFILE -->
 
-</button>
+    <section class="profile-card"
+             onclick="openProfile()">
 
+        <div class="avatar" id="mainAvatar">
+            U
+        </div>
 
-<button
-    class="mood"
-    onclick="setMood('Sad')"
->
+        <div class="profile-info">
 
-<div class="mood-icon">
-😔
-</div>
+            <div class="profile-name"
+                 id="profileName">
+                Uttam
+            </div>
 
-<span>
-Sad
-</span>
+            <div class="user-id"
+                 id="profileId">
+                UX2e858661c5
+            </div>
 
-</button>
+            <div class="stats">
 
+                <div class="stat">
+                    <b id="postCount">0</b>
+                    <span>Posts</span>
+                </div>
 
-<button
-    class="mood"
-    onclick="setMood('Emotional')"
->
+                <div class="stat">
+                    <b id="followersCount">0</b>
+                    <span>Followers</span>
+                </div>
 
-<div class="mood-icon">
-🥹
-</div>
+                <div class="stat">
+                    <b id="followingCount">0</b>
+                    <span>Following</span>
+                </div>
 
-<span>
-Emotional
-</span>
+            </div>
 
-</button>
+        </div>
 
+        <div class="arrow">›</div>
 
-<button
-    class="mood"
-    onclick="setMood('Motivational')"
->
+    </section>
 
-<div class="mood-icon">
-💪
-</div>
 
-<span>
-Motivation
-</span>
+    <!-- STORIES -->
 
-</button>
+    <div class="section-head">
 
+        <div class="section-title">
+            Stories
+        </div>
 
-<button
-    class="mood"
-    onclick="setMood('Other')"
->
+        <button class="view"
+                onclick="viewStories()">
+            View all ›
+        </button>
 
-<div class="mood-icon">
-•••
-</div>
+    </div>
 
-<span>
-Other
-</span>
 
-</button>
+    <div class="stories">
 
+        <div class="story" onclick="addStory()">
+            <div class="story-img">+</div>
+            <div class="story-name">Add Story</div>
+        </div>
 
-</div>
+        <div class="story" onclick="openStory('Rohit')">
+            <div class="story-img">R</div>
+            <div class="story-name">Rohit</div>
+        </div>
 
-</div>
+        <div class="story" onclick="openStory('Priya')">
+            <div class="story-img">P</div>
+            <div class="story-name">Priya</div>
+        </div>
 
+        <div class="story" onclick="openStory('Amit')">
+            <div class="story-img">A</div>
+            <div class="story-name">Amit</div>
+        </div>
 
+        <div class="story" onclick="openStory('Neha')">
+            <div class="story-img">N</div>
+            <div class="story-name">Neha</div>
+        </div>
 
-<!-- =====================================================
-     PROFILE
-===================================================== -->
+    </div>
 
-<div
-    class="profile-card"
-    onclick="profile()"
->
 
+    <!-- RECENT POSTS -->
 
-<div class="profile-top">
+    <div class="section-head">
 
+        <div class="section-title">
+            Recent Posts
+        </div>
 
-<div class="profile-avatar">
+        <button class="view"
+                onclick="viewAllPosts()">
+            View all ›
+        </button>
 
-    U
+    </div>
 
-    <span class="online"></span>
 
-</div>
+    <article class="post">
 
+        <div class="post-top">
 
-<div class="profile-main">
+            <div class="post-avatar">
+                R
+            </div>
 
-<h2 id="userName">
-Uttam Vishwakarma
-</h2>
+            <div class="post-user">
+                <b>Rohit Kumar</b>
+                <span>2 min ago</span>
+            </div>
 
-<p id="userId">
-UX2e858661
-</p>
+        </div>
 
-<div class="active">
-● Active
-</div>
+        <div class="post-text">
+            Hey! How are you? 😊
+        </div>
 
-</div>
+        <div class="post-actions">
+            <button onclick="likePost(this)">♡ Like</button>
+            <button onclick="commentPost()">💬 Comment</button>
+            <button onclick="sharePost()">↗ Share</button>
+        </div>
 
+    </article>
 
-<div style="
-font-size:28px;
-color:#145087;
-">
-›
-</div>
 
+    <article class="post">
 
-</div>
+        <div class="post-top">
 
+            <div class="post-avatar">
+                P
+            </div>
 
+            <div class="post-user">
+                <b>Priya Sharma</b>
+                <span>15 min ago</span>
+            </div>
 
-<!-- STATS -->
+        </div>
 
-<div class="stats">
+        <div class="post-text">
+            Have a beautiful day! 🌸
+        </div>
 
+        <div class="post-actions">
+            <button onclick="likePost(this)">♡ Like</button>
+            <button onclick="commentPost()">💬 Comment</button>
+            <button onclick="sharePost()">↗ Share</button>
+        </div>
 
-<div class="stat">
+    </article>
 
-<b id="postCount">
-0
-</b>
 
-<span>
-Posts
-</span>
+    <article class="post">
 
-</div>
+        <div class="post-top">
 
+            <div class="post-avatar">
+                A
+            </div>
 
-<div class="stat">
+            <div class="post-user">
+                <b>Amit Singh</b>
+                <span>32 min ago</span>
+            </div>
 
-<b id="followers">
-0
-</b>
+        </div>
 
-<span>
-Followers
-</span>
+        <div class="post-text">
+            New photo uploaded 📷
+        </div>
 
-</div>
+        <div class="post-actions">
+            <button onclick="likePost(this)">♡ Like</button>
+            <button onclick="commentPost()">💬 Comment</button>
+            <button onclick="sharePost()">↗ Share</button>
+        </div>
 
-
-<div class="stat">
-
-<b id="following">
-0
-</b>
-
-<span>
-Following
-</span>
-
-</div>
-
-
-</div>
-
-
-</div>
-
-
-
-<!-- =====================================================
-     STORIES
-===================================================== -->
-
-<div class="section-title">
-
-<h2>
-Stories
-</h2>
-
-<button
-    class="view"
-    onclick="viewStories()"
->
-View All ›
-</button>
-
-</div>
-
-
-<div class="stories">
-
-
-<div
-    class="story"
-    onclick="openStory('Your Story')"
->
-
-<div class="story-circle">
-
-<div class="story-inner">
-+
-</div>
-
-</div>
-
-<div class="story-name">
-Your Story
-</div>
-
-</div>
-
-
-
-<div
-    class="story"
-    onclick="openStory('Rohit')"
->
-
-<div class="story-circle">
-
-<div class="story-inner">
-R
-</div>
-
-</div>
-
-<div class="story-name">
-Rohit
-</div>
-
-</div>
-
-
-
-<div
-    class="story"
-    onclick="openStory('Priya')"
->
-
-<div class="story-circle">
-
-<div class="story-inner">
-P
-</div>
-
-</div>
-
-<div class="story-name">
-Priya
-</div>
-
-</div>
-
-
-
-<div
-    class="story"
-    onclick="openStory('Amit')"
->
-
-<div class="story-circle">
-
-<div class="story-inner">
-A
-</div>
-
-</div>
-
-<div class="story-name">
-Amit
-</div>
-
-</div>
-
-
-
-<div
-    class="story"
-    onclick="openStory('Neha')"
->
-
-<div class="story-circle">
-
-<div class="story-inner">
-N
-</div>
-
-</div>
-
-<div class="story-name">
-Neha
-</div>
-
-</div>
-
-
-</div>
-
-
-
-<!-- =====================================================
-     RECENT CHATS
-===================================================== -->
-
-<div class="chat-title">
-
-<h2>
-Recent Chats / Contacts
-</h2>
-
-<button
-    class="view"
-    onclick="viewAllContacts()"
->
-View All ›
-</button>
-
-</div>
-
-
-
-<div id="contacts">
-
-
-<div
-    class="chat"
-    onclick="openChat('Rohit Kumar')"
->
-
-<div class="chat-avatar">
-R
-</div>
-
-<div class="chat-info">
-
-<b>
-Rohit Kumar
-</b>
-
-<small>
-Hey! How are you?
-</small>
-
-</div>
-
-<div class="chat-right">
-
-<small>
-2:15 PM
-</small>
-
-<div class="unread">
-2
-</div>
-
-</div>
-
-</div>
-
-
-
-<div
-    class="chat"
-    onclick="openChat('Priya Sharma')"
->
-
-<div class="chat-avatar">
-P
-</div>
-
-<div class="chat-info">
-
-<b>
-Priya Sharma
-</b>
-
-<small>
-See you soon 😊
-</small>
-
-</div>
-
-<div class="chat-right">
-
-<small>
-1:42 PM
-</small>
-
-</div>
-
-</div>
-
-
-
-<div
-    class="chat"
-    onclick="openChat('Amit Singh')"
->
-
-<div class="chat-avatar">
-A
-</div>
-
-<div class="chat-info">
-
-<b>
-Amit Singh
-</b>
-
-<small>
-📷 Photo
-</small>
-
-</div>
-
-<div class="chat-right">
-
-<small>
-12:30 PM
-</small>
-
-</div>
-
-</div>
-
-
-
-<div
-    class="chat"
-    onclick="openChat('Neha Gupta')"
->
-
-<div class="chat-avatar">
-N
-</div>
-
-<div class="chat-info">
-
-<b>
-Neha Gupta
-</b>
-
-<small>
-🎤 Voice message
-</small>
-
-</div>
-
-<div class="chat-right">
-
-<small>
-11:20 AM
-</small>
-
-</div>
-
-</div>
-
-
-</div>
+    </article>
 
 
 </main>
 
 
+<!-- ================= CAMERA ================= -->
 
-<!-- CAMERA -->
-
-<button
-    class="camera"
-    onclick="camera()"
->
-📷
+<button class="camera"
+        onclick="openCamera()">
+    📷
 </button>
 
 
-
-<!-- =====================================================
-     BOTTOM NAV
-===================================================== -->
+<!-- ================= BOTTOM ================= -->
 
 <nav class="bottom">
 
+    <button class="nav-btn active"
+            onclick="goHome()">
+        <span class="nav-icon">⌂</span>
+        Home
+    </button>
 
-<button
-    class="nav active"
-    onclick="home()"
->
+    <button class="nav-btn"
+            onclick="openReels()">
+        <span class="nav-icon">▶</span>
+        Reels
+    </button>
 
-<span>
-⌂
-</span>
+    <div class="plus-wrap">
+        <button class="plus"
+                onclick="createPost()">
+            +
+        </button>
+    </div>
 
-<small>
-Home
-</small>
+    <button class="nav-btn"
+            onclick="openCalls()">
+        <span class="nav-icon">☎</span>
+        Calls
+    </button>
 
-</button>
-
-
-
-<button
-    class="nav"
-    onclick="reels()"
->
-
-<span>
-▶
-</span>
-
-<small>
-Reels
-</small>
-
-</button>
-
-
-
-<button
-    class="upload"
-    onclick="upload()"
->
-+
-</button>
-
-
-
-<button
-    class="nav"
-    onclick="calls()"
->
-
-<span>
-☎
-</span>
-
-<small>
-Calls
-</small>
-
-</button>
-
-
-
-<button
-    class="nav"
-    onclick="upload()"
->
-
-<span>
-⬆
-</span>
-
-<small>
-Upload
-</small>
-
-</button>
-
+    <button class="nav-btn"
+            onclick="openProfile()">
+        <span class="nav-icon">●</span>
+        Profile
+    </button>
 
 </nav>
 
-
 </div>
-
-
-
-<!-- =====================================================
-     POPUP
-===================================================== -->
-
-<div
-    class="overlay"
-    id="overlay"
-    onclick="closePopup(event)"
->
-
-
-<div class="popup">
-
-
-<h2 id="popupTitle">
-Usanex
-</h2>
-
-
-<p id="popupText">
--
-</p>
-
-
-<button
-    class="close"
-    onclick="closePopup()"
->
-OK
-</button>
-
-
-</div>
-
-</div>
-
-
-
-<!-- =====================================================
-     SIDE MENU
-===================================================== -->
-
-<div
-    class="side"
-    id="side"
-    onclick="closeMenu(event)"
->
-
-
-<div class="side-box">
-
-
-<div class="side-brand">
-
-<div class="logo">
-U
-</div>
-
-Usanex
-
-</div>
-
-
-<button
-    class="side-item"
-    onclick="profile()"
->
-👤 My Profile
-</button>
-
-
-<button
-    class="side-item"
-    onclick="monetization()"
->
-💰 Monetization
-</button>
-
-
-<button
-    class="side-item"
-    onclick="notifications()"
->
-🔔 Notifications
-</button>
-
-
-<button
-    class="side-item"
-    onclick="settings()"
->
-⚙️ Settings
-</button>
-
-
-<button
-    class="side-item"
-    onclick="security()"
->
-🛡️ Security
-</button>
-
-
-<button
-    class="side-item"
-    onclick="logout()"
->
-🚪 Logout
-</button>
-
-
-</div>
-
-</div>
-
 
 
 <script>
 
-/* =====================================================
-   USER DATA
-===================================================== */
+/* ================= USER ================= */
+
+let user = {
+    name:"Uttam",
+    user_id:"UX2e858661c5",
+    mobile:""
+};
 
 const savedUser =
-localStorage.getItem("usanex_user");
-
-
-let user = null;
-
+    localStorage.getItem("usanex_user");
 
 if(savedUser){
 
     try{
-
-        user =
-        JSON.parse(savedUser);
-
-    }catch(e){
-
-        user = null;
-
-    }
+        user = JSON.parse(savedUser);
+    }catch(e){}
 
 }
 
+document.getElementById("profileName")
+    .textContent = user.name || "User";
 
-/* =====================================================
-   SHOW USER
-===================================================== */
+document.getElementById("profileId")
+    .textContent = user.user_id || "";
 
-if(user){
+const firstLetter =
+    (user.name || "U")
+    .charAt(0)
+    .toUpperCase();
 
-    if(user.name){
+document.getElementById("mainAvatar")
+    .textContent = firstLetter;
 
-        document
-        .getElementById("userName")
-        .textContent =
-        user.name;
-
-    }
-
-
-    if(user.user_id){
-
-        document
-        .getElementById("userId")
-        .textContent =
-        user.user_id;
-
-    }
-
-}
+document.getElementById("miniAvatar")
+    .textContent = firstLetter;
 
 
-/* =====================================================
-   POPUP
-===================================================== */
-
-function popup(title,text){
-
-    document
-    .getElementById("popupTitle")
-    .textContent =
-    title;
-
-    document
-    .getElementById("popupText")
-    .textContent =
-    text;
-
-    document
-    .getElementById("overlay")
-    .style.display =
-    "flex";
-
-}
-
-
-function closePopup(e){
-
-    if(
-        !e ||
-        e.target.id==="overlay" ||
-        e.target.classList.contains("close")
-    ){
-
-        document
-        .getElementById("overlay")
-        .style.display =
-        "none";
-
-    }
-
-}
-
-
-/* =====================================================
-   MENU
-===================================================== */
+/* ================= BUTTONS ================= */
 
 function openMenu(){
-
-    document
-    .getElementById("side")
-    .style.display =
-    "block";
-
+    alert("Settings / Menu");
 }
 
+function openMonetization(){
+    alert("Monetization\n\nYour creator earnings will appear here.");
+}
 
-function closeMenu(e){
+function openNotifications(){
+    alert("Notifications");
+}
 
-    if(
-        !e ||
-        e.target.id==="side"
-    ){
+function openProfile(){
+    alert("Profile");
+}
 
-        document
-        .getElementById("side")
-        .style.display =
-        "none";
+function setMood(mood){
+    alert("Mood selected: " + mood);
+}
 
+function showMoreMood(){
+    alert("More moods");
+}
+
+function searchUsers(value){
+    // Search functionality later
+}
+
+function addStory(){
+    alert("Add Story");
+}
+
+function openStory(name){
+    alert(name + " Story");
+}
+
+function viewStories(){
+    alert("All Stories");
+}
+
+function viewAllPosts(){
+    alert("All Posts");
+}
+
+function likePost(button){
+
+    if(button.textContent.includes("♡")){
+        button.textContent = "♥ Liked";
+    }else{
+        button.textContent = "♡ Like";
     }
 
 }
 
-
-/* =====================================================
-   MOOD
-===================================================== */
-
-function setMood(mood){
-
-    popup(
-        "Your Mood",
-        "Your mood has been set to: "+mood
-    );
-
+function commentPost(){
+    alert("Comments");
 }
 
-
-function moreMood(){
-
-    popup(
-        "More Mood",
-        "More mood options will be added soon."
-    );
-
+function sharePost(){
+    alert("Share Post");
 }
 
-
-/* =====================================================
-   PROFILE
-===================================================== */
-
-function profile(){
-
-    let name =
-    user?.name ||
-    "Uttam Vishwakarma";
-
-    let id =
-    user?.user_id ||
-    "UX2e858661";
-
-    let mobile =
-    user?.mobile ||
-    "Not available";
-
-    popup(
-        "👤 My Profile",
-
-        "Name: "+name+
-        "\n\nUser ID: "+id+
-        "\n\nMobile: "+mobile+
-        "\n\nPosts: 0"+
-        "\n\nFollowers: 0"+
-        "\n\nFollowing: 0"
-    );
-
+function openCamera(){
+    alert("Camera");
 }
 
-
-/* =====================================================
-   MONETIZATION
-===================================================== */
-
-function monetization(){
-
-    popup(
-        "💰 Monetization",
-
-        "Monetization dashboard\n\n"+
-        "Earnings: ₹0\n"+
-        "Posts: 0\n"+
-        "Eligible: Coming soon"
-    );
-
+function createPost(){
+    alert("Create Post / Upload Reel");
 }
 
-
-/* =====================================================
-   NOTIFICATIONS
-===================================================== */
-
-function notifications(){
-
-    popup(
-        "🔔 Notifications",
-
-        "You have no new notifications."
-    );
-
+function openReels(){
+    alert("Reels");
 }
 
-
-/* =====================================================
-   SETTINGS
-===================================================== */
-
-function settings(){
-
-    popup(
-        "⚙️ Settings",
-
-        "Account settings\n\n"+
-        "Privacy\n"+
-        "Notifications\n"+
-        "Security\n\n"+
-        "Settings will be expanded soon."
-    );
-
+function openCalls(){
+    alert("Calls");
 }
 
-
-/* =====================================================
-   SECURITY
-===================================================== */
-
-function security(){
-
-    popup(
-        "🛡️ Security",
-
-        "Your Usanex account is active and protected."
-    );
-
-}
-
-
-/* =====================================================
-   STORIES
-===================================================== */
-
-function openStory(name){
-
-    popup(
-        "📸 "+name,
-
-        "Story viewer will open here."
-    );
-
-}
-
-
-function viewStories(){
-
-    popup(
-        "Stories",
-
-        "All stories will appear here."
-    );
-
-}
-
-
-/* =====================================================
-   CHAT
-===================================================== */
-
-function openChat(name){
-
-    popup(
-        "💬 "+name,
-
-        "Chat with "+name+
-        " will open here."
-    );
-
-}
-
-
-function viewAllContacts(){
-
-    popup(
-        "Contacts",
-
-        "All your contacts will appear here."
-    );
-
-}
-
-
-/* =====================================================
-   SEARCH
-===================================================== */
-
-function searchUsers(){
-
-    const value =
-    document
-    .getElementById("search")
-    .value
-    .toLowerCase();
-
-    const chats =
-    document
-    .querySelectorAll(".chat");
-
-
-    chats.forEach(chat=>{
-
-        const text =
-        chat.innerText
-        .toLowerCase();
-
-        chat.style.display =
-        text.includes(value)
-        ? "flex"
-        : "none";
-
-    });
-
-}
-
-
-/* =====================================================
-   CAMERA
-===================================================== */
-
-function camera(){
-
-    popup(
-        "📷 Camera",
-
-        "Camera will open here."
-    );
-
-}
-
-
-/* =====================================================
-   REELS
-===================================================== */
-
-function reels(){
-
-    popup(
-        "🎬 Reels",
-
-        "Reels section will open here."
-    );
-
-}
-
-
-/* =====================================================
-   UPLOAD
-===================================================== */
-
-function upload(){
-
-    popup(
-        "⬆️ Upload",
-
-        "Select a photo, video or reel to upload."
-    );
-
-}
-
-
-/* =====================================================
-   HOME
-===================================================== */
-
-function home(){
-
-    window.scrollTo({
-
-        top:0,
-
-        behavior:"smooth"
-
-    });
-
-}
-
-
-/* =====================================================
-   CALLS
-===================================================== */
-
-function calls(){
-
-    popup(
-        "☎️ Calls",
-
-        "Your calls will appear here."
-    );
-
-}
-
-
-/* =====================================================
-   LOGOUT
-===================================================== */
-
-function logout(){
-
-    localStorage.removeItem(
-        "usanex_user"
-    );
-
-    localStorage.removeItem(
-        "usanex_token"
-    );
-
-    window.location.href =
-    "index.html";
-
+function goHome(){
+    window.scrollTo(0,0);
 }
 
 </script>
