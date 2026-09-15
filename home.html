@@ -48,6 +48,7 @@ body{
 .app{
     min-height:100vh;
     padding-bottom:100px;
+
     background:
         radial-gradient(
             circle at 50% -10%,
@@ -73,8 +74,7 @@ body{
 
     gap:14px;
 
-    background:
-        rgba(7,9,13,.88);
+    background:rgba(7,9,13,.88);
 
     border-bottom:
         1px solid rgba(255,255,255,.07);
@@ -85,7 +85,6 @@ body{
     z-index:30;
 
     backdrop-filter:blur(18px);
-
 }
 
 
@@ -99,7 +98,6 @@ body{
     align-items:center;
 
     flex-shrink:0;
-
 }
 
 .logo-mark{
@@ -125,7 +123,6 @@ body{
     box-shadow:
         0 7px 22px
         rgba(18,105,232,.38);
-
 }
 
 .logo-u{
@@ -136,7 +133,6 @@ body{
     color:#fff;
 
     z-index:2;
-
 }
 
 .logo-shine{
@@ -154,7 +150,6 @@ body{
     top:6px;
 
     opacity:.9;
-
 }
 
 .logo-mark:after{
@@ -173,7 +168,6 @@ body{
 
     left:11px;
     bottom:6px;
-
 }
 
 .logo-name{
@@ -184,7 +178,6 @@ body{
     font-weight:800;
 
     letter-spacing:-.5px;
-
 }
 
 
@@ -218,7 +211,6 @@ body{
         rgba(255,255,255,.03);
 
     cursor:text;
-
 }
 
 .search-icon{
@@ -228,7 +220,6 @@ body{
     color:#8993a5;
 
     margin-right:9px;
-
 }
 
 .search input{
@@ -243,13 +234,11 @@ body{
     color:#fff;
 
     font-size:14px;
-
 }
 
 .search input::placeholder{
 
     color:#747d8d;
-
 }
 
 
@@ -264,7 +253,6 @@ body{
     align-items:center;
 
     gap:12px;
-
 }
 
 .header-btn{
@@ -285,20 +273,18 @@ body{
     align-items:center;
     justify-content:center;
 
-    font-size:20px;
+    font-size:19px;
 
     border:
         1px solid
         rgba(255,255,255,.07);
 
     cursor:pointer;
-
 }
 
 .header-btn:active{
 
     transform:scale(.92);
-
 }
 
 
@@ -308,8 +294,178 @@ body{
 
 .content{
 
-    padding:27px 20px 20px;
+    padding:20px 20px 20px;
+}
 
+
+/* =========================================================
+   STATUS SECTION
+========================================================= */
+
+.status-section{
+
+    margin-bottom:27px;
+}
+
+.status-head{
+
+    display:flex;
+
+    align-items:center;
+    justify-content:space-between;
+
+    margin-bottom:14px;
+}
+
+.status-title{
+
+    font-size:18px;
+
+    font-weight:800;
+
+    letter-spacing:.5px;
+}
+
+.status-see{
+
+    font-size:12px;
+
+    color:#6faeff;
+
+    font-weight:700;
+
+    cursor:pointer;
+}
+
+
+/* =========================================================
+   STATUS SCROLL
+========================================================= */
+
+.status-scroll{
+
+    display:flex;
+
+    gap:16px;
+
+    overflow-x:auto;
+
+    overflow-y:hidden;
+
+    padding:3px 2px 8px;
+
+    scroll-behavior:smooth;
+
+    scrollbar-width:none;
+}
+
+.status-scroll::-webkit-scrollbar{
+
+    display:none;
+}
+
+
+/* =========================================================
+   STATUS ITEM
+========================================================= */
+
+.status-item{
+
+    width:68px;
+
+    flex-shrink:0;
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    cursor:pointer;
+}
+
+.status-ring{
+
+    width:64px;
+    height:64px;
+
+    padding:3px;
+
+    border-radius:50%;
+
+    background:
+        linear-gradient(
+            145deg,
+            #2e94ff,
+            #7c4dff,
+            #16c9ff
+        );
+
+    box-shadow:
+        0 5px 18px
+        rgba(30,120,255,.18);
+}
+
+.status-avatar{
+
+    width:100%;
+    height:100%;
+
+    border-radius:50%;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    font-size:20px;
+    font-weight:800;
+
+    background:
+        linear-gradient(
+            145deg,
+            #202735,
+            #0f131b
+        );
+
+    border:
+        3px solid
+        #090b10;
+}
+
+.status-name{
+
+    width:68px;
+
+    margin-top:7px;
+
+    text-align:center;
+
+    font-size:10px;
+
+    color:#aab2c0;
+
+    white-space:nowrap;
+
+    overflow:hidden;
+
+    text-overflow:ellipsis;
+}
+
+
+/* =========================================================
+   NO STATUS
+========================================================= */
+
+.no-status{
+
+    color:#70798a;
+
+    font-size:12px;
+
+    padding:15px 5px;
+
+    display:none;
 }
 
 
@@ -325,7 +481,6 @@ body{
     justify-content:space-between;
 
     margin-bottom:17px;
-
 }
 
 .section-title{
@@ -335,7 +490,6 @@ body{
     font-weight:800;
 
     letter-spacing:.8px;
-
 }
 
 .section-line{
@@ -352,7 +506,6 @@ body{
             #29303c,
             transparent
         );
-
 }
 
 
@@ -367,7 +520,6 @@ body{
     flex-direction:column;
 
     gap:10px;
-
 }
 
 .connection{
@@ -400,13 +552,11 @@ body{
     cursor:pointer;
 
     transition:.2s;
-
 }
 
 .connection:active{
 
     transform:scale(.985);
-
 }
 
 .avatar{
@@ -435,7 +585,6 @@ body{
     box-shadow:
         0 5px 16px
         rgba(15,105,235,.25);
-
 }
 
 .connection-info{
@@ -445,7 +594,6 @@ body{
     min-width:0;
 
     margin-left:12px;
-
 }
 
 .connection-name{
@@ -459,7 +607,6 @@ body{
     overflow:hidden;
 
     text-overflow:ellipsis;
-
 }
 
 .connection-id{
@@ -469,7 +616,6 @@ body{
     font-size:11px;
 
     color:#818a9a;
-
 }
 
 .connection-arrow{
@@ -488,7 +634,6 @@ body{
     background:#1d222c;
 
     font-size:21px;
-
 }
 
 
@@ -499,7 +644,7 @@ body{
 .empty{
 
     min-height:
-        calc(100vh - 280px);
+        calc(100vh - 390px);
 
     display:flex;
 
@@ -512,7 +657,6 @@ body{
 
     padding:
         30px 25px;
-
 }
 
 .empty-circle{
@@ -542,13 +686,11 @@ body{
         rgba(25,115,245,.10);
 
     margin-bottom:22px;
-
 }
 
 .empty-icon{
 
     font-size:43px;
-
 }
 
 .empty-title{
@@ -558,7 +700,6 @@ body{
     font-weight:800;
 
     margin-bottom:9px;
-
 }
 
 .empty-text{
@@ -570,7 +711,6 @@ body{
     font-size:13px;
 
     line-height:1.6;
-
 }
 
 
@@ -616,13 +756,11 @@ body{
     z-index:40;
 
     cursor:pointer;
-
 }
 
 .camera:active{
 
     transform:scale(.92);
-
 }
 
 
@@ -667,7 +805,6 @@ body{
     backdrop-filter:blur(20px);
 
     z-index:50;
-
 }
 
 
@@ -691,7 +828,6 @@ body{
     color:#737c8d;
 
     cursor:pointer;
-
 }
 
 .nav-icon{
@@ -699,7 +835,6 @@ body{
     font-size:21px;
 
     line-height:1;
-
 }
 
 .nav-label{
@@ -707,13 +842,11 @@ body{
     font-size:10px;
 
     font-weight:600;
-
 }
 
 .nav-item.active{
 
     color:#fff;
-
 }
 
 .nav-item.active .nav-icon{
@@ -723,7 +856,6 @@ body{
             0 0 8px
             rgba(45,145,255,.7)
         );
-
 }
 
 
@@ -737,7 +869,6 @@ body{
 
     align-items:center;
     justify-content:center;
-
 }
 
 .plus-btn{
@@ -771,13 +902,11 @@ body{
         rgba(18,105,232,.40);
 
     cursor:pointer;
-
 }
 
 .plus-btn:active{
 
     transform:scale(.90);
-
 }
 
 
@@ -789,51 +918,94 @@ body{
 
     .header{
 
-        padding:0 13px;
+        padding:0 10px;
 
-        gap:9px;
+        gap:7px;
+    }
 
+    .logo-mark{
+
+        width:38px;
+        height:38px;
+
+        border-radius:12px;
+    }
+
+    .logo-u{
+
+        font-size:22px;
     }
 
     .logo-name{
 
-        display:none;
+        margin-left:6px;
 
+        font-size:16px;
+    }
+
+    .search{
+
+        height:40px;
+
+        padding:0 11px;
+    }
+
+    .search-icon{
+
+        font-size:19px;
+
+        margin-right:5px;
     }
 
     .header-actions{
 
-        gap:7px;
-
+        gap:5px;
     }
 
     .header-btn{
 
-        width:36px;
-        height:36px;
+        width:35px;
+        height:35px;
 
-        font-size:18px;
-
+        font-size:17px;
     }
 
     .content{
 
-        padding-left:16px;
-        padding-right:16px;
+        padding-left:15px;
+        padding-right:15px;
+    }
 
+    .status-scroll{
+
+        gap:14px;
+    }
+
+    .status-item{
+
+        width:63px;
+    }
+
+    .status-ring{
+
+        width:60px;
+        height:60px;
+    }
+
+    .status-name{
+
+        width:63px;
     }
 
     .bottom-nav{
 
         left:7px;
         right:7px;
-
     }
 
     .camera{
 
         right:16px;
-
     }
 
 }
@@ -899,7 +1071,7 @@ body{
             class="header-btn"
             onclick="openNotifications()">
 
-            ♧
+            🔔
 
         </button>
 
@@ -923,47 +1095,94 @@ body{
 <main class="content">
 
 
-    <div class="section-head">
+<!-- =====================================================
+     STATUS
+===================================================== -->
 
-        <div class="section-title">
-            Connections
+<section class="status-section">
+
+    <div class="status-head">
+
+        <div class="status-title">
+            Status
         </div>
 
-        <div class="section-line"></div>
+        <div
+            class="status-see"
+            onclick="openAllStatus()">
+
+            See all
+
+        </div>
 
     </div>
 
 
     <div
-        id="connections"
-        class="connections">
+        id="statusScroll"
+        class="status-scroll">
+
+        <!-- Status users will load here -->
+
     </div>
 
-
-    <!-- EMPTY -->
 
     <div
-        id="emptyState"
-        class="empty">
+        id="noStatus"
+        class="no-status">
 
-        <div class="empty-circle">
+        No active status from your connections.
 
-            <div class="empty-icon">
-                👥
-            </div>
+    </div>
 
-        </div>
+</section>
 
-        <div class="empty-title">
-            No connections yet
-        </div>
 
-        <div class="empty-text">
-            Search for people and connect with them.
-            Your verified connections will appear here.
+<!-- =====================================================
+     CONNECTIONS
+===================================================== -->
+
+<div class="section-head">
+
+    <div class="section-title">
+        Connections
+    </div>
+
+    <div class="section-line"></div>
+
+</div>
+
+
+<div
+    id="connections"
+    class="connections">
+</div>
+
+
+<!-- EMPTY -->
+
+<div
+    id="emptyState"
+    class="empty">
+
+    <div class="empty-circle">
+
+        <div class="empty-icon">
+            👥
         </div>
 
     </div>
+
+    <div class="empty-title">
+        No connections yet
+    </div>
+
+    <div class="empty-text">
+        Search for people and connect with them.
+        Your verified connections will appear here.
+    </div>
+
+</div>
 
 
 </main>
@@ -989,8 +1208,6 @@ body{
 <nav class="bottom-nav">
 
 
-    <!-- HOME -->
-
     <div
         class="nav-item active"
         onclick="goHome()">
@@ -1005,8 +1222,6 @@ body{
 
     </div>
 
-
-    <!-- REELS -->
 
     <div
         class="nav-item"
@@ -1023,8 +1238,6 @@ body{
     </div>
 
 
-    <!-- PLUS -->
-
     <div class="nav-center">
 
         <button
@@ -1037,8 +1250,6 @@ body{
 
     </div>
 
-
-    <!-- COLLECTION -->
 
     <div
         class="nav-item"
@@ -1054,8 +1265,6 @@ body{
 
     </div>
 
-
-    <!-- PROFILE -->
 
     <div
         class="nav-item"
@@ -1079,6 +1288,201 @@ body{
 
 
 <script>
+
+/* =========================================================
+   DEMO STATUS DATA
+========================================================= */
+
+/*
+   Abhi UI test ke liye demo status users hain.
+
+   Jab real Status API banegi,
+   isi array ki jagah API se verified connections
+   ke active status load honge.
+*/
+
+const demoStatuses = [
+
+    {
+        name: "Rahul",
+        user_id: "rahul01"
+    },
+
+    {
+        name: "Aman",
+        user_id: "aman02"
+    },
+
+    {
+        name: "Priya",
+        user_id: "priya03"
+    },
+
+    {
+        name: "Rohit",
+        user_id: "rohit04"
+    },
+
+    {
+        name: "Neha",
+        user_id: "neha05"
+    },
+
+    {
+        name: "Vikas",
+        user_id: "vikas06"
+    }
+
+];
+
+
+/* =========================================================
+   LOAD STATUS
+========================================================= */
+
+function loadStatuses(){
+
+    const container =
+        document.getElementById(
+            "statusScroll"
+        );
+
+    const noStatus =
+        document.getElementById(
+            "noStatus"
+        );
+
+    container.innerHTML = "";
+
+    /*
+       Demo data.
+
+       Baad me yahan:
+       /api/home/statuses
+
+       se real data aayega.
+    */
+
+    const statuses =
+        demoStatuses;
+
+
+    if(
+        !statuses ||
+        statuses.length === 0
+    ){
+
+        noStatus.style.display =
+            "block";
+
+        return;
+
+    }
+
+
+    noStatus.style.display =
+        "none";
+
+
+    statuses.forEach(status => {
+
+        const item =
+            document.createElement(
+                "div"
+            );
+
+        item.className =
+            "status-item";
+
+
+        const firstLetter =
+            (
+                status.name ||
+                "U"
+            )
+            .charAt(0)
+            .toUpperCase();
+
+
+        item.innerHTML = `
+
+            <div class="status-ring">
+
+                <div class="status-avatar">
+
+                    ${firstLetter}
+
+                </div>
+
+            </div>
+
+            <div class="status-name">
+
+                ${escapeHtml(
+                    status.name ||
+                    "User"
+                )}
+
+            </div>
+
+        `;
+
+
+        item.onclick =
+            function(){
+
+                openStatus(
+                    status.user_id
+                );
+
+            };
+
+
+        container.appendChild(item);
+
+    });
+
+}
+
+
+/* =========================================================
+   OPEN STATUS
+========================================================= */
+
+function openStatus(userId){
+
+    if(!userId){
+
+        return;
+
+    }
+
+    /*
+       Baad me actual Status Viewer
+       yahan open hoga.
+    */
+
+    alert(
+        "Status of " +
+        userId +
+        " will open here."
+    );
+
+}
+
+
+/* =========================================================
+   SEE ALL STATUS
+========================================================= */
+
+function openAllStatus(){
+
+    alert(
+        "All active statuses will open here."
+    );
+
+}
+
 
 /* =========================================================
    LOAD CONNECTIONS
@@ -1163,17 +1567,21 @@ async function loadConnections(){
                 <div class="connection-info">
 
                     <div class="connection-name">
+
                         ${escapeHtml(
                             user.name ||
                             "User"
                         )}
+
                     </div>
 
                     <div class="connection-id">
+
                         ${escapeHtml(
                             user.user_id ||
                             ""
                         )}
+
                     </div>
 
                 </div>
@@ -1339,6 +1747,8 @@ function openProfile(){
 /* =========================================================
    START
 ========================================================= */
+
+loadStatuses();
 
 loadConnections();
 
