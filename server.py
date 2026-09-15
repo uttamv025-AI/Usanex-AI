@@ -8,6 +8,15 @@ class RegisterRequest(BaseModel):
     name: str
     mobile: str
     password: str
+    
+@app.post("/register")
+async def register(request: RegisterRequest):
+    return {
+        "ok": True,
+        "message": "Registration data received",
+        "name": request.name,
+        "mobile": request.mobile
+    }
 
 
 @app.get("/")
