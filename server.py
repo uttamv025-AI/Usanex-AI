@@ -1,8 +1,13 @@
 from fastapi import FastAPI
+from pydantic import BaseModel
 from fastapi.responses import FileResponse
 import os
 
 app = FastAPI(title="Usanex AI")
+class RegisterRequest(BaseModel):
+    name: str
+    mobile: str
+    password: str
 
 
 @app.get("/")
