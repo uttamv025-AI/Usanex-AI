@@ -135,6 +135,50 @@ def save_otp(
 # REGISTER PAGE
 # ============================================================
 
+@app.get("/search")
+async def search_page():
+    return FileResponse("search.html")
+
+
+@app.get("/api/search")
+async def search_users(
+    q: str = "",
+    db: Session = Depends(get_db)
+):
+    q = q.strip()
+
+    if not q:
+        return {
+            "ok": True,
+            "users": []
+        }
+
+    users = (
+        db.query(User)
+        .filter(
+            (User.user_id.ilike(f"%{q}%")) |
+            (User.mobile.ilike(f"%{q}%"))
+        )
+        .limit(20)
+        .all()
+    )
+
+    return {
+        "ok": True,
+        "users": [
+            {
+                "user_id": user.user_id,
+                "name": user.name,
+                "profile_photo": user.profile_photo
+            }
+            for user in users
+        ]
+    }
+
+
+
+
+
 @app.get("/")
 async def register_page():
 
