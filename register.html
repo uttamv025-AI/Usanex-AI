@@ -15,10 +15,6 @@ user-scalable=no">
 
 <style>
 
-/* =========================================================
-   BASIC
-========================================================= */
-
 *{
     box-sizing:border-box;
     margin:0;
@@ -34,13 +30,10 @@ body{
 }
 
 body{
-
     min-height:100vh;
-
     display:flex;
     justify-content:center;
     align-items:center;
-
     padding:15px;
 
     background:
@@ -51,64 +44,33 @@ body{
     );
 }
 
-
-/* =========================================================
-   APP
-========================================================= */
-
 .app{
-
     width:100%;
     max-width:390px;
-
 }
 
-
-/* =========================================================
-   CARD
-========================================================= */
-
 .card{
-
     width:100%;
-
     background:#ffffff;
-
     border-radius:30px;
-
     padding:25px 21px;
 
     box-shadow:
     0 18px 45px rgba(0,0,0,.18);
 
     overflow:hidden;
-
 }
-
-
-/* =========================================================
-   USANEX LOGO
-========================================================= */
 
 .logo{
-
     display:flex;
-
     align-items:center;
     justify-content:center;
-
     margin-bottom:9px;
-
 }
 
-
-/* Logo outer */
-
 .logo-mark{
-
     width:48px;
     height:48px;
-
     border-radius:15px;
 
     background:
@@ -126,245 +88,129 @@ body{
 
     box-shadow:
     0 7px 15px rgba(18,105,232,.25);
-
 }
-
-
-/* U */
 
 .logo-u{
-
     color:white;
-
     font-size:28px;
-
     font-weight:800;
-
     line-height:1;
-
     position:relative;
-
     z-index:2;
-
 }
 
-
-/* Small shine */
-
 .logo-shine{
-
     position:absolute;
-
     width:10px;
     height:10px;
-
     border-radius:50%;
-
     background:#ffffff;
-
     opacity:.9;
-
     top:7px;
     right:8px;
 
     box-shadow:
     0 0 7px rgba(255,255,255,.8);
-
 }
-
-
-/* Small bottom curve */
 
 .logo-mark::after{
-
     content:"";
-
     position:absolute;
-
     width:24px;
     height:5px;
-
     border-radius:10px;
-
     background:rgba(255,255,255,.20);
-
     bottom:6px;
     left:12px;
-
 }
-
-
-/* Text */
 
 .logo-name{
-
     margin-left:10px;
-
     font-size:25px;
-
     font-weight:800;
-
     letter-spacing:-.5px;
-
     color:#0759c9;
-
 }
 
-
-/* =========================================================
-   TITLE
-========================================================= */
-
 .title{
-
     text-align:center;
-
     color:#0759c9;
-
     font-size:23px;
-
     font-weight:700;
-
     margin-top:8px;
-
 }
 
 .subtitle{
-
     text-align:center;
-
     color:#8996a5;
-
     font-size:12px;
-
     margin-top:5px;
-
     margin-bottom:18px;
-
 }
 
-
-/* =========================================================
-   BOX
-========================================================= */
-
 .box{
-
     display:none;
-
 }
 
 .box.active{
-
     display:block;
-
 }
 
-
-/* =========================================================
-   INPUT
-========================================================= */
-
 .group{
-
     margin-bottom:11px;
-
 }
 
 label{
-
     display:block;
-
     color:#45576b;
-
     font-size:11px;
-
     font-weight:bold;
-
     margin:0 0 5px 4px;
-
 }
 
 .input{
-
     width:100%;
-
     height:43px;
-
     border:1.5px solid #c5d8ee;
-
     border-radius:22px;
-
     background:#ffffff;
-
     padding:0 15px;
-
     outline:none;
-
     font-size:13px;
-
     color:#243447;
 
     box-shadow:
     0 2px 7px rgba(50,100,160,.08);
-
 }
 
 .input:focus{
-
     border-color:#1269e8;
 
     box-shadow:
     0 0 0 3px rgba(18,105,232,.08);
-
 }
 
-
-/* =========================================================
-   PASSWORD
-========================================================= */
-
 .password{
-
     position:relative;
-
 }
 
 .password .input{
-
     padding-right:45px;
-
 }
 
 .eye{
-
     position:absolute;
-
     right:15px;
-
     top:50%;
-
     transform:translateY(-50%);
-
     cursor:pointer;
-
     font-size:14px;
-
 }
 
-
-/* =========================================================
-   BUTTON
-========================================================= */
-
 .btn{
-
     width:100%;
-
     height:43px;
-
     border:0;
-
     border-radius:22px;
 
     background:
@@ -375,278 +221,148 @@ label{
     );
 
     color:#ffffff;
-
     font-size:14px;
-
     font-weight:bold;
-
     margin-top:5px;
-
     cursor:pointer;
 
     box-shadow:
     0 6px 14px rgba(18,105,232,.22);
-
 }
 
 .btn:active{
-
     transform:scale(.98);
-
 }
 
 .btn:disabled{
-
     opacity:.6;
-
 }
-
-
-/* =========================================================
-   MESSAGE
-========================================================= */
 
 .message{
-
     min-height:18px;
-
     text-align:center;
-
     margin-top:9px;
-
     font-size:11px;
-
     color:#e34b55;
-
 }
 
-
-/* =========================================================
-   LINKS
-========================================================= */
-
 .links{
-
     text-align:center;
-
     margin-top:13px;
-
     color:#7c8b9b;
-
     font-size:11px;
-
 }
 
 .link{
-
     color:#1269e8;
-
     font-weight:bold;
-
     cursor:pointer;
-
 }
 
-
-/* =========================================================
-   OTP
-========================================================= */
-
 .otp-input{
-
     text-align:center;
-
     letter-spacing:8px;
-
     font-size:20px;
-
     font-weight:bold;
-
 }
 
 .otp-note{
-
     text-align:center;
-
     color:#7d8b9a;
-
     font-size:10px;
-
     margin:7px 0 10px;
-
 }
 
-
-/* =========================================================
-   USERNAME
-========================================================= */
-
 .username-card{
-
     background:#f4f9ff;
-
     border:1px solid #d8e9fa;
-
     border-radius:16px;
-
     padding:13px;
-
     margin:12px 0;
-
 }
 
 .username-title{
-
     font-size:10px;
-
     color:#718397;
-
     margin-bottom:5px;
-
 }
 
 .username-row{
-
     display:flex;
-
     gap:7px;
-
 }
 
 .username-value{
-
     flex:1;
-
     height:37px;
-
     border-radius:10px;
-
     background:#ffffff;
-
     border:1px solid #d5e5f4;
-
     display:flex;
-
     align-items:center;
-
     padding:0 10px;
-
     font-size:13px;
-
     font-weight:bold;
-
     color:#0759c9;
-
     overflow:hidden;
-
 }
 
 .copy-btn{
-
     width:62px;
-
     border:0;
-
     border-radius:10px;
-
     background:#1269e8;
-
     color:white;
-
     font-size:10px;
-
     font-weight:bold;
-
 }
-
-
-/* =========================================================
-   HOME
-========================================================= */
 
 .home{
-
     text-align:center;
-
 }
 
-
-/*
-   यहाँ पहले वाला बड़ा U logo था।
-   उसे पूरी तरह हटा दिया गया है।
-*/
-
-
 .home h2{
-
     color:#0759c9;
-
     font-size:23px;
-
     margin-top:14px;
-
 }
 
 .home p{
-
     color:#8290a0;
-
     font-size:12px;
-
     margin-top:7px;
-
 }
 
 .logout{
-
     margin-top:20px;
-
 }
-
-
-/* =========================================================
-   SMALL PHONE
-========================================================= */
 
 @media(max-width:360px){
 
     body{
-
         padding:10px;
-
     }
 
     .card{
-
         padding:21px 17px;
-
     }
 
     .logo-mark{
-
         width:44px;
         height:44px;
-
         border-radius:14px;
-
     }
 
     .logo-u{
-
         font-size:25px;
-
     }
 
     .logo-name{
-
         font-size:22px;
-
     }
 
     .title{
-
         font-size:21px;
-
     }
 
 }
@@ -655,18 +371,13 @@ label{
 
 </head>
 
-
 <body>
-
 
 <div class="app">
 
 <div class="card">
 
-
-<!-- =====================================================
-     LOGO
-===================================================== -->
+<!-- LOGO -->
 
 <div class="logo">
 
@@ -688,10 +399,7 @@ label{
 </div>
 
 
-
-<!-- =====================================================
-     REGISTER
-===================================================== -->
+<!-- REGISTER -->
 
 <div id="registerBox" class="box active">
 
@@ -702,7 +410,6 @@ label{
     <div class="subtitle">
         Create your Usanex account
     </div>
-
 
     <div class="group">
 
@@ -718,7 +425,6 @@ label{
             autocomplete="name">
 
     </div>
-
 
     <div class="group">
 
@@ -736,7 +442,6 @@ label{
             autocomplete="tel">
 
     </div>
-
 
     <div class="group">
 
@@ -763,7 +468,6 @@ label{
 
     </div>
 
-
     <button
         class="btn"
         id="registerBtn"
@@ -773,12 +477,10 @@ label{
 
     </button>
 
-
     <div
         class="message"
         id="registerMessage">
     </div>
-
 
     <div class="links">
 
@@ -797,10 +499,7 @@ label{
 </div>
 
 
-
-<!-- =====================================================
-     REGISTER OTP
-===================================================== -->
+<!-- REGISTER OTP -->
 
 <div id="registerOtpBox" class="box">
 
@@ -811,7 +510,6 @@ label{
     <div class="subtitle">
         Enter the OTP to create your account
     </div>
-
 
     <div class="group">
 
@@ -829,12 +527,10 @@ label{
 
     </div>
 
-
     <div
         id="testOtp"
         class="otp-note">
     </div>
-
 
     <button
         class="btn"
@@ -845,12 +541,10 @@ label{
 
     </button>
 
-
     <div
         id="registerOtpMessage"
         class="message">
     </div>
-
 
     <div class="links">
 
@@ -867,10 +561,7 @@ label{
 </div>
 
 
-
-<!-- =====================================================
-     USERNAME
-===================================================== -->
+<!-- USERNAME -->
 
 <div id="usernameBox" class="box">
 
@@ -881,7 +572,6 @@ label{
     <div class="subtitle">
         Your Usanex username is ready
     </div>
-
 
     <div class="username-card">
 
@@ -908,7 +598,6 @@ label{
 
     </div>
 
-
     <button
         class="btn"
         onclick="showLogin()">
@@ -916,7 +605,6 @@ label{
         Login
 
     </button>
-
 
     <div
         id="usernameMessage"
@@ -926,10 +614,7 @@ label{
 </div>
 
 
-
-<!-- =====================================================
-     LOGIN
-===================================================== -->
+<!-- LOGIN -->
 
 <div id="loginBox" class="box">
 
@@ -940,7 +625,6 @@ label{
     <div class="subtitle">
         Welcome back to Usanex
     </div>
-
 
     <div class="group">
 
@@ -955,7 +639,6 @@ label{
             placeholder="Username or mobile">
 
     </div>
-
 
     <div class="group">
 
@@ -984,7 +667,6 @@ label{
 
     </div>
 
-
     <div
         class="links"
         style="
@@ -1003,7 +685,6 @@ label{
 
     </div>
 
-
     <button
         class="btn"
         id="loginBtn"
@@ -1013,12 +694,10 @@ label{
 
     </button>
 
-
     <div
         id="loginMessage"
         class="message">
     </div>
-
 
     <div class="links">
 
@@ -1037,10 +716,7 @@ label{
 </div>
 
 
-
-<!-- =====================================================
-     FORGOT PASSWORD
-===================================================== -->
+<!-- FORGOT PASSWORD -->
 
 <div id="forgotBox" class="box">
 
@@ -1051,7 +727,6 @@ label{
     <div class="subtitle">
         Reset your Usanex password
     </div>
-
 
     <!-- STEP 1 -->
 
@@ -1070,7 +745,6 @@ label{
                 placeholder="Username or mobile">
 
         </div>
-
 
         <button
             class="btn"
@@ -1105,12 +779,10 @@ label{
 
         </div>
 
-
         <div
             id="forgotTestOtp"
             class="otp-note">
         </div>
-
 
         <button
             class="btn"
@@ -1143,7 +815,6 @@ label{
 
         </div>
 
-
         <div class="group">
 
             <label>
@@ -1158,7 +829,6 @@ label{
 
         </div>
 
-
         <button
             class="btn"
             onclick="resetPassword()">
@@ -1169,12 +839,10 @@ label{
 
     </div>
 
-
     <div
         id="forgotMessage"
         class="message">
     </div>
-
 
     <div class="links">
 
@@ -1191,16 +859,11 @@ label{
 </div>
 
 
-
-<!-- =====================================================
-     HOME
-===================================================== -->
+<!-- OLD HOME BOX - NOT USED AFTER LOGIN -->
 
 <div id="homeBox" class="box">
 
     <div class="home">
-
-        <!-- दूसरा logo हटा दिया गया है -->
 
         <h2>
             Welcome to Usanex
@@ -1209,7 +872,6 @@ label{
         <p id="welcomeText">
             Login successful
         </p>
-
 
         <button
             class="btn logout"
@@ -1223,15 +885,12 @@ label{
 
 </div>
 
-
 </div>
 
 </div>
-
 
 
 <script>
-
 
 /* =========================================================
    API
@@ -1781,19 +1440,12 @@ async function loginUser(){
         }
 
 
-        document
-        .getElementById("welcomeText")
-        .textContent =
-            "Welcome, " +
-            (data.user?.name || "User");
+        /* =================================================
+           LOGIN SUCCESS
+           DIRECTLY OPEN REAL HOME PAGE
+        ================================================= */
 
-
-        hideAll();
-
-
-        document
-        .getElementById("homeBox")
-        .classList.add("active");
+        window.location.href = "/home";
 
 
     }catch(error){
