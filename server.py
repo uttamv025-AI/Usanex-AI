@@ -127,7 +127,27 @@ def save_otp(
 
 
 # ============================================================
-# LOGIN
+# REGISTER PAGE
+# ============================================================
+
+@app.get("/")
+async def register_page():
+
+    return FileResponse(
+        "register.html"
+    )
+
+
+@app.get("/register.html")
+async def register_html():
+
+    return FileResponse(
+        "register.html"
+    )
+
+
+# ============================================================
+# LOGIN API
 # ============================================================
 
 @app.post("/login")
@@ -909,18 +929,6 @@ async def reset_password(
         "Password changed successfully"
 
     }
-
-
-# ============================================================
-# HOME
-# ============================================================
-
-@app.get("/")
-async def home():
-
-    return FileResponse(
-        "index.html"
-    )
 
 
 # ============================================================
