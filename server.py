@@ -1,12 +1,18 @@
 from fastapi import FastAPI, Depends
 from pydantic import BaseModel
 from fastapi.responses import FileResponse
+from sqlalchemy.orm import Session
+from sqlalchemy.exc import IntegrityError
+from argon2 import PasswordHasher
 import os
+import uuid
 
-from database import SessionLocal
+from database import SessionLocal, User
 
 
 app = FastAPI(title="Usanex AI")
+
+password_hasher = PasswordHasher()
 
 
 class RegisterRequest(BaseModel):
@@ -27,13 +33,83 @@ def get_db():
 @app.post("/register")
 async def register(
     request: RegisterRequest,
-    db=Depends(get_db)
+    db: Session = Depends(get_db)
 ):
+    name = request.name.strip()
+    mobile = request.mobile.strip()
+    password = request.password
+
+    # Basic validation
+    if not name:
+        return {
+            "ok": False,
+            "message": "Name is required"
+        }
+
+    if not mobile:
+        return {
+            "ok": False,
+            "message": "Mobile number is required"
+        }
+
+    if not password:
+        return {
+            "ok": False,
+            "message": "Password is required"
+        }
+
+    if len(password) < 6:
+        return {
+            "ok": False,
+            "message": "Password must be at least 6 characters"
+        }
+
+    # Check existing mobile
+    existing_user = (
+        db.query(User)
+        .filter(User.mobile == mobile)
+        .first()
+    )
+
+    if existing_user:
+        return {
+            "ok": False,
+            "message": "Mobile number already registered"
+        }
+
+    # Generate unique user ID
+    user_id = "UX" + uuid.uuid4().hex[:10]
+
+    # Hash password
+    password_hash = password_hasher.hash(password)
+
+    # Create user
+    new_user = User(
+        user_id=user_id,
+        name=name,
+        mobile=mobile,
+        password_hash=password_hash
+    )
+
+    try:
+        db.add(new_user)
+        db.commit()
+        db.refresh(new_user)
+
+    except IntegrityError:
+        db.rollback()
+
+        return {
+            "ok": False,
+            "message": "Registration failed. Please try again."
+        }
+
     return {
         "ok": True,
-        "message": "Registration data received",
-        "name": request.name,
-        "mobile": request.mobile
+        "message": "Registration successful",
+        "user_id": new_user.user_id,
+        "name": new_user.name,
+        "mobile": new_user.mobile
     }
 
 
