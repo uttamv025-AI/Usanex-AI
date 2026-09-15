@@ -1,23 +1,13 @@
 import os
 from datetime import datetime
 
-from sqlalchemy import (
-    create_engine,
-    String,
-    DateTime,
-    Boolean,
-)
+from sqlalchemy import create_engine, String, DateTime, Boolean
 from sqlalchemy.orm import (
     DeclarativeBase,
     sessionmaker,
     Mapped,
     mapped_column,
 )
-
-
-# ============================================================
-# DATABASE URL
-# ============================================================
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 
@@ -26,11 +16,7 @@ if not DATABASE_URL:
         "DATABASE_URL environment variable is not configured."
     )
 
-
-# ============================================================
-# POSTGRESQL DRIVER
-# ============================================================
-
+# PostgreSQL + psycopg3
 if DATABASE_URL.startswith("postgresql://"):
     DATABASE_URL = DATABASE_URL.replace(
         "postgresql://",
@@ -38,20 +24,10 @@ if DATABASE_URL.startswith("postgresql://"):
         1
     )
 
-
-# ============================================================
-# DATABASE ENGINE
-# ============================================================
-
 engine = create_engine(
     DATABASE_URL,
     pool_pre_ping=True,
 )
-
-
-# ============================================================
-# SESSION
-# ============================================================
 
 SessionLocal = sessionmaker(
     bind=engine,
@@ -59,10 +35,6 @@ SessionLocal = sessionmaker(
     autocommit=False,
 )
 
-
-# ============================================================
-# BASE
-# ============================================================
 
 class Base(DeclarativeBase):
     pass
