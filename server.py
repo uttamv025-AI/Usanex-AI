@@ -10,7 +10,8 @@ class RegisterRequest(BaseModel):
     password: str
     
 @app.post("/register")
-async def register(request: RegisterRequest):
+async def register(request: RegisterRequest,
+    db = Depends(get_db):
     return {
         "ok": True,
         "message": "Registration data received",
