@@ -5,7 +5,10 @@ import os
 
 from database import SessionLocal, User
 
+
 app = FastAPI(title="Usanex AI")
+
+
 class RegisterRequest(BaseModel):
     name: str
     mobile: str
@@ -19,11 +22,12 @@ def get_db():
         yield db
     finally:
         db.close()
-    
+
+
 @app.post("/register")
 async def register(
     request: RegisterRequest,
-    db = Depends(get_db)
+    db=Depends(get_db)
 ):
     return {
         "ok": True,
