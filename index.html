@@ -2,27 +2,48 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Usanex</title>
+<meta name="viewport"
+      content="width=device-width,initial-scale=1.0">
+
+<title>Usanex.com</title>
 
 <style>
+
 *{
     box-sizing:border-box;
     margin:0;
     padding:0;
 }
 
-body{
-    min-height:100vh;
-    font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-    background:linear-gradient(145deg,#dff1ff,#f8fcff,#d8edff);
-    color:#102a43;
-    display:flex;
-    justify-content:center;
-    padding:12px;
+html,body{
+    min-height:100%;
 }
 
-button,input{
+body{
+    min-height:100vh;
+    font-family:Inter,system-ui,-apple-system,
+                 BlinkMacSystemFont,"Segoe UI",
+                 Roboto,Arial,sans-serif;
+
+    background:
+        linear-gradient(
+            145deg,
+            #dff2ff,
+            #f8fcff,
+            #d8edff
+        );
+
+    color:#17344f;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    padding:8px;
+}
+
+button,
+input{
     font:inherit;
 }
 
@@ -30,15 +51,8 @@ button{
     cursor:pointer;
 }
 
-.shell{
-    width:min(450px,100%);
-    min-height:calc(100vh - 24px);
-    background:rgba(255,255,255,.94);
-    border-radius:30px;
-    border:1px solid rgba(255,255,255,.95);
-    box-shadow:0 20px 60px rgba(37,103,160,.18);
-    overflow:hidden;
-    position:relative;
+button:active{
+    transform:scale(.98);
 }
 
 .hidden{
@@ -47,842 +61,522 @@ button{
 
 
 /* =====================================================
-   LOGIN / AUTH
+   APP
+===================================================== */
+
+.shell{
+
+    width:min(420px,100%);
+
+    min-height:
+        calc(100vh - 16px);
+
+    max-height:
+        calc(100vh - 16px);
+
+    overflow:auto;
+
+    background:
+        rgba(255,255,255,.96);
+
+    border-radius:24px;
+
+    border:1px solid
+        rgba(255,255,255,.95);
+
+    box-shadow:
+        0 15px 45px
+        rgba(30,100,155,.16);
+}
+
+
+/* =====================================================
+   AUTH
 ===================================================== */
 
 .auth{
-    padding:26px 22px 30px;
+    padding:
+        18px 18px 24px;
 }
 
+
+/* =====================================================
+   BRAND
+===================================================== */
+
 .auth-top{
+
     display:flex;
     align-items:center;
-    gap:10px;
-    font-size:24px;
+
+    gap:8px;
+
+    font-size:20px;
     font-weight:850;
-    color:#083b77;
+
+    color:#073b73;
 }
 
 .logo{
-    width:48px;
-    height:48px;
-    border-radius:15px;
+
+    width:38px;
+    height:38px;
+
+    border-radius:11px;
+
     display:grid;
     place-items:center;
-    background:linear-gradient(145deg,#168cff,#0865d8);
-    color:#fff;
-    font-size:27px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #168cff,
+            #0865d8
+        );
+
+    color:white;
+
+    font-size:21px;
     font-weight:900;
-    box-shadow:0 8px 20px #168bff35;
+
+    box-shadow:
+        0 5px 14px
+        rgba(22,139,255,.20);
 }
 
+
+/* =====================================================
+   HERO
+===================================================== */
+
 .hero{
+
     text-align:center;
-    padding:48px 8px 28px;
+
+    padding:
+        32px 5px 22px;
 }
 
 .hero-icon{
-    width:82px;
-    height:82px;
-    border-radius:28px;
-    margin:0 auto 20px;
+
+    width:58px;
+    height:58px;
+
+    border-radius:18px;
+
+    margin:
+        0 auto 13px;
+
     display:grid;
     place-items:center;
-    font-size:38px;
+
+    font-size:27px;
+
     background:#eef8ff;
-    border:1px solid #c8e7fb;
+
+    border:
+        1px solid #cfe8fa;
 }
 
 h1{
+
     color:#092d58;
-    font-size:29px;
-    margin-bottom:8px;
+
+    font-size:24px;
+
+    margin-bottom:6px;
 }
 
 .subtitle{
+
     color:#71879a;
-    font-size:14px;
+
+    font-size:12px;
+
     line-height:1.5;
 }
 
+
+/* =====================================================
+   FORM
+===================================================== */
+
 .form{
+
     display:grid;
-    gap:13px;
+
+    gap:10px;
 }
 
 .field{
+
     position:relative;
 }
 
 .field input{
+
     width:100%;
-    height:57px;
-    border:1px solid #c9e3f8;
-    border-radius:17px;
+
+    height:49px;
+
+    border:
+        1px solid #c9e3f8;
+
+    border-radius:14px;
+
     background:#fbfeff;
-    padding:0 48px;
+
+    padding:
+        0 43px;
+
     outline:none;
+
     color:#163452;
+
+    font-size:14px;
 }
 
 .field input:focus{
+
     border-color:#1682ee;
-    box-shadow:0 0 0 4px #1682ee14;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(22,130,238,.08);
 }
 
 .ico{
+
     position:absolute;
-    left:16px;
-    top:18px;
+
+    left:14px;
+    top:15px;
+
+    font-size:15px;
+
+    z-index:2;
 }
 
 .toggle{
+
     position:absolute;
-    right:13px;
-    top:16px;
+
+    right:10px;
+    top:12px;
+
+    width:26px;
+    height:26px;
+
     border:0;
+
     background:none;
+
     color:#68839c;
+
+    font-size:13px;
 }
 
+
+/* =====================================================
+   BUTTON
+===================================================== */
+
 .primary{
+
     width:100%;
-    min-height:55px;
+
+    min-height:48px;
+
     border:0;
-    border-radius:17px;
-    background:linear-gradient(135deg,#168bff,#0865d8);
+
+    border-radius:14px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #168bff,
+            #0865d8
+        );
+
     color:white;
+
+    font-size:14px;
+
     font-weight:800;
-    box-shadow:0 12px 25px #0875df30;
+
+    box-shadow:
+        0 8px 18px
+        rgba(8,117,223,.16);
 }
 
 .primary:disabled{
+
     opacity:.6;
+
+    cursor:not-allowed;
 }
 
+
+/* =====================================================
+   LINK
+===================================================== */
+
 .link{
+
     border:0;
+
     background:none;
+
     color:#086bd9;
+
+    font-size:12px;
+
     font-weight:750;
 }
 
 .bottom{
+
     text-align:center;
-    margin-top:18px;
+
+    margin-top:14px;
+
     color:#71879a;
-    font-size:13px;
+
+    font-size:12px;
 }
 
+
+/* =====================================================
+   MESSAGE
+===================================================== */
+
 .message{
+
     display:none;
-    margin-top:13px;
-    padding:12px;
-    border-radius:13px;
+
+    margin-top:10px;
+
+    padding:10px;
+
+    border-radius:11px;
+
     text-align:center;
-    font-size:13px;
+
+    font-size:12px;
 }
 
 .message.ok{
+
     display:block;
+
     background:#e9fbf2;
+
     color:#08733e;
 }
 
 .message.err{
+
     display:block;
+
     background:#fff0f0;
+
     color:#a12626;
 }
 
+
+/* =====================================================
+   OTP
+===================================================== */
+
 .otp-row{
+
     display:grid;
-    grid-template-columns:repeat(6,1fr);
-    gap:7px;
-    margin:20px 0 12px;
+
+    grid-template-columns:
+        repeat(6,1fr);
+
+    gap:6px;
+
+    margin:
+        16px 0 10px;
 }
 
 .otp-row input{
+
     width:100%;
-    height:53px;
+
+    height:46px;
+
     text-align:center;
-    font-size:22px;
+
+    font-size:18px;
+
     font-weight:800;
-    border:1px solid #bcdfff;
-    border-radius:13px;
+
+    border:
+        1px solid #bcdfff;
+
+    border-radius:11px;
+
     outline:none;
+
+    color:#123d65;
+
+    background:#fbfeff;
+}
+
+.otp-row input:focus{
+
+    border-color:#1682ee;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(22,130,238,.08);
 }
 
 .timer-line{
+
     display:flex;
-    justify-content:space-between;
+
+    justify-content:
+        space-between;
+
     align-items:center;
+
     color:#678198;
-    font-size:12px;
-    margin:6px 2px 18px;
+
+    font-size:11px;
+
+    margin:
+        4px 2px 14px;
 }
 
 .test-otp{
-    padding:11px;
-    margin-bottom:13px;
-    border-radius:13px;
+
+    padding:9px;
+
+    margin-bottom:10px;
+
+    border-radius:11px;
+
     background:#edf7ff;
-    border:1px dashed #8bc8ff;
+
+    border:
+        1px dashed #8bc8ff;
+
     color:#14548d;
+
     text-align:center;
-    font-size:13px;
+
+    font-size:12px;
 }
 
+
+/* =====================================================
+   SUCCESS / INFO
+===================================================== */
+
 .info{
-    margin-top:20px;
+
+    margin-top:15px;
+
     background:#f5fbff;
-    border:1px solid #d6ebfb;
-    border-radius:17px;
-    padding:15px;
+
+    border:
+        1px solid #d6ebfb;
+
+    border-radius:14px;
+
+    padding:12px;
 }
 
 .info div{
+
     display:flex;
-    justify-content:space-between;
-    padding:7px 0;
-    font-size:13px;
+
+    justify-content:
+        space-between;
+
+    gap:10px;
+
+    padding:6px 0;
+
+    font-size:12px;
 }
 
 .info span:first-child{
+
     color:#688199;
 }
 
 .info span:last-child{
+
     font-weight:750;
+
+    text-align:right;
+
+    word-break:break-word;
 }
 
 
 /* =====================================================
-   HOME HEADER
+   SMALL MOBILE
 ===================================================== */
 
-.home-page{
-    min-height:100vh;
-    padding-bottom:88px;
-}
+@media(max-width:380px){
 
-.home-header{
-    padding:20px 18px 10px;
-}
-
-.header-row{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:10px;
-}
-
-.header-left{
-    display:flex;
-    align-items:center;
-    gap:13px;
-}
-
-.menu-btn,
-.icon-btn{
-    border:0;
-    background:none;
-    color:#103e70;
-    font-size:28px;
-    width:42px;
-    height:42px;
-    display:grid;
-    place-items:center;
-}
-
-.header-brand{
-    display:flex;
-    align-items:center;
-    gap:9px;
-    color:#083b77;
-    font-size:22px;
-    font-weight:850;
-}
-
-.header-logo{
-    width:48px;
-    height:48px;
-    border-radius:14px;
-    display:grid;
-    place-items:center;
-    color:#fff;
-    font-size:27px;
-    font-weight:900;
-    background:linear-gradient(145deg,#168cff,#0865d8);
-}
-
-.header-right{
-    display:flex;
-    align-items:center;
-    gap:5px;
-}
-
-.notification{
-    position:relative;
-}
-
-.badge{
-    position:absolute;
-    right:0;
-    top:0;
-    width:17px;
-    height:17px;
-    border-radius:50%;
-    background:#f04444;
-    color:#fff;
-    font-size:10px;
-    display:grid;
-    place-items:center;
-    font-weight:800;
-}
-
-.profile-mini{
-    width:43px;
-    height:43px;
-    border-radius:50%;
-    background:#1683ed;
-    color:#fff;
-    display:grid;
-    place-items:center;
-    font-weight:850;
-    border:3px solid #e4f2ff;
-}
-
-
-/* =====================================================
-   SEARCH
-===================================================== */
-
-.search-box{
-    margin:12px 0;
-    height:53px;
-    background:#edf7ff;
-    border-radius:27px;
-    display:flex;
-    align-items:center;
-    padding:0 17px;
-    color:#66839e;
-}
-
-.search-box span{
-    font-size:25px;
-}
-
-.search-box input{
-    flex:1;
-    border:0;
-    outline:none;
-    background:none;
-    padding:0 12px;
-    font-size:16px;
-    color:#163452;
-}
-
-
-/* =====================================================
-   MOOD
-===================================================== */
-
-.section{
-    margin:10px 16px;
-}
-
-.section-card{
-    background:linear-gradient(145deg,#eef8ff,#e4f3ff);
-    border:1px solid #d3eafb;
-    border-radius:23px;
-    padding:18px 15px;
-}
-
-.section-head{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:15px;
-}
-
-.section-head h2{
-    color:#0b376b;
-    font-size:21px;
-}
-
-.more{
-    border:0;
-    background:none;
-    color:#0871dd;
-    font-weight:750;
-}
-
-.mood-list{
-    display:grid;
-    grid-template-columns:repeat(5,1fr);
-    gap:7px;
-}
-
-.mood{
-    border:1px solid #e0edf7;
-    background:rgba(255,255,255,.72);
-    border-radius:16px;
-    padding:10px 3px;
-    text-align:center;
-}
-
-.mood-icon{
-    width:49px;
-    height:49px;
-    margin:auto;
-    border-radius:50%;
-    display:grid;
-    place-items:center;
-    font-size:25px;
-    background:#e9f5ff;
-}
-
-.mood small{
-    display:block;
-    margin-top:7px;
-    font-size:10px;
-    font-weight:750;
-    color:#276292;
-}
-
-
-/* =====================================================
-   PROFILE CARD
-===================================================== */
-
-.profile-card{
-    display:flex;
-    align-items:center;
-    gap:13px;
-    background:#eef8ff;
-    border:1px solid #d2e9fa;
-    border-radius:22px;
-    padding:15px;
-}
-
-.big-avatar{
-    width:72px;
-    height:72px;
-    flex-shrink:0;
-    border-radius:50%;
-    display:grid;
-    place-items:center;
-    background:linear-gradient(145deg,#cdeaff,#eaf7ff);
-    color:#0871dc;
-    font-size:28px;
-    font-weight:850;
-    border:4px solid white;
-}
-
-.profile-info{
-    flex:1;
-}
-
-.profile-name{
-    color:#0b3568;
-    font-size:17px;
-    font-weight:850;
-}
-
-.profile-id{
-    color:#68839b;
-    font-size:13px;
-    margin-top:3px;
-}
-
-.stats{
-    display:flex;
-    gap:17px;
-    margin-top:10px;
-}
-
-.stat{
-    text-align:center;
-}
-
-.stat b{
-    display:block;
-    color:#103f73;
-    font-size:14px;
-}
-
-.stat span{
-    font-size:10px;
-    color:#71879a;
-}
-
-.arrow{
-    font-size:28px;
-    color:#1760a0;
-}
-
-
-/* =====================================================
-   STORIES
-===================================================== */
-
-.stories{
-    display:flex;
-    gap:12px;
-    overflow-x:auto;
-    padding:3px 2px 7px;
-}
-
-.stories::-webkit-scrollbar{
-    display:none;
-}
-
-.story{
-    min-width:72px;
-    text-align:center;
-}
-
-.story-ring{
-    width:65px;
-    height:65px;
-    padding:3px;
-    border-radius:50%;
-    margin:auto;
-    background:linear-gradient(135deg,#0878e8,#61b4ff);
-}
-
-.story-img{
-    width:100%;
-    height:100%;
-    border-radius:50%;
-    display:grid;
-    place-items:center;
-    background:#e9f5ff;
-    border:3px solid white;
-    color:#19598b;
-    font-weight:800;
-}
-
-.story-name{
-    margin-top:5px;
-    font-size:11px;
-    color:#244b72;
-    font-weight:700;
-}
-
-
-/* =====================================================
-   MONETIZATION
-===================================================== */
-
-.money-card{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:12px;
-    background:linear-gradient(135deg,#edf9ff,#dff1ff);
-    border:1px solid #cbe6fa;
-    border-radius:20px;
-    padding:15px;
-}
-
-.money-left{
-    display:flex;
-    align-items:center;
-    gap:11px;
-}
-
-.money-icon{
-    width:46px;
-    height:46px;
-    border-radius:14px;
-    background:#1685ed;
-    color:#fff;
-    display:grid;
-    place-items:center;
-    font-size:23px;
-}
-
-.money-card h3{
-    color:#0b376b;
-    font-size:15px;
-}
-
-.money-card p{
-    color:#7890a4;
-    font-size:11px;
-    margin-top:3px;
-}
-
-.money-btn{
-    border:0;
-    border-radius:12px;
-    padding:9px 12px;
-    color:#fff;
-    background:#0871dd;
-    font-weight:750;
-    font-size:11px;
-}
-
-
-/* =====================================================
-   RECENT CHAT
-===================================================== */
-
-.recent-title{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:8px 2px 10px;
-}
-
-.recent-title h2{
-    color:#0b376b;
-    font-size:19px;
-}
-
-.chat{
-    display:flex;
-    align-items:center;
-    gap:11px;
-    padding:12px 4px;
-    border-bottom:1px solid #e5eef5;
-}
-
-.chat-avatar{
-    width:48px;
-    height:48px;
-    border-radius:50%;
-    background:#e8f4ff;
-    display:grid;
-    place-items:center;
-    color:#1267ad;
-    font-weight:800;
-}
-
-.chat-main{
-    flex:1;
-}
-
-.chat-name{
-    color:#153c66;
-    font-weight:800;
-    font-size:14px;
-}
-
-.chat-text{
-    color:#7890a4;
-    font-size:12px;
-    margin-top:4px;
-}
-
-.chat-time{
-    align-self:flex-start;
-    color:#7890a4;
-    font-size:10px;
-}
-
-.chat-arrow{
-    color:#6487a7;
-    font-size:22px;
-}
-
-
-/* =====================================================
-   FLOAT CAMERA
-===================================================== */
-
-.camera-float{
-    position:fixed;
-    right:calc(50% - 205px);
-    bottom:86px;
-    width:58px;
-    height:58px;
-    border-radius:50%;
-    border:4px solid white;
-    background:#1685ed;
-    color:white;
-    font-size:25px;
-    display:grid;
-    place-items:center;
-    box-shadow:0 8px 25px #0875df40;
-    z-index:20;
-}
-
-
-/* =====================================================
-   BOTTOM NAV
-===================================================== */
-
-.bottom-nav{
-    position:fixed;
-    bottom:12px;
-    left:50%;
-    transform:translateX(-50%);
-    width:min(450px,calc(100% - 24px));
-    height:72px;
-    border-radius:28px;
-    background:rgba(255,255,255,.96);
-    border:1px solid #e3eef6;
-    box-shadow:0 10px 35px rgba(45,105,150,.18);
-    display:grid;
-    grid-template-columns:1fr 1fr 1fr 1fr 1fr;
-    align-items:center;
-    z-index:30;
-}
-
-.nav-btn{
-    border:0;
-    background:none;
-    color:#6c87a0;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:3px;
-    font-size:10px;
-    font-weight:750;
-}
-
-.nav-btn span{
-    font-size:23px;
-}
-
-.nav-btn.active{
-    color:#0873df;
-}
-
-.upload-nav{
-    width:58px;
-    height:58px;
-    border-radius:50%;
-    margin:auto;
-    background:linear-gradient(135deg,#168bff,#0865d8);
-    color:white;
-    border:4px solid white;
-    box-shadow:0 7px 20px #0875df40;
-    font-size:28px;
-}
-
-
-/* =====================================================
-   SIDE MENU
-===================================================== */
-
-.overlay{
-    position:fixed;
-    inset:0;
-    background:#082e4b55;
-    z-index:50;
-}
-
-.side-menu{
-    position:absolute;
-    left:0;
-    top:0;
-    bottom:0;
-    width:82%;
-    max-width:340px;
-    background:#fff;
-    padding:24px 18px;
-    box-shadow:15px 0 40px #153e5b25;
-}
-
-.menu-head{
-    display:flex;
-    align-items:center;
-    gap:11px;
-    padding-bottom:20px;
-    border-bottom:1px solid #e5eef5;
-}
-
-.menu-title{
-    font-size:20px;
-    font-weight:850;
-    color:#0b376b;
-}
-
-.menu-item{
-    width:100%;
-    padding:15px 10px;
-    border:0;
-    background:none;
-    text-align:left;
-    color:#234d72;
-    font-weight:700;
-    border-radius:12px;
-    margin-top:5px;
-}
-
-.menu-item:hover{
-    background:#edf7ff;
-}
-
-
-/* =====================================================
-   SIMPLE CONTENT PAGE
-===================================================== */
-
-.content-page{
-    padding:20px;
-}
-
-.content-head{
-    display:flex;
-    align-items:center;
-    gap:12px;
-    margin-bottom:25px;
-}
-
-.content-head button{
-    border:0;
-    background:none;
-    font-size:28px;
-    color:#123f70;
-}
-
-.content-head h2{
-    color:#0b376b;
-}
-
-.content-box{
-    background:#f2f9ff;
-    border:1px solid #d6eaf8;
-    border-radius:20px;
-    padding:20px;
-    margin-bottom:15px;
-}
-
-.content-box h3{
-    color:#104477;
-    margin-bottom:8px;
-}
-
-.content-box p{
-    color:#71879a;
-    font-size:13px;
-    line-height:1.6;
-}
-
-@media(max-width:390px){
-    .mood small{
-        font-size:9px;
+    body{
+        padding:4px;
     }
 
-    .stats{
-        gap:10px;
+    .shell{
+        min-height:
+            calc(100vh - 8px);
+
+        max-height:
+            calc(100vh - 8px);
+
+        border-radius:20px;
     }
 
-    .camera-float{
-        right:20px;
+    .auth{
+        padding:
+            15px 14px 20px;
+    }
+
+    .hero{
+        padding:
+            25px 5px 18px;
+    }
+
+    h1{
+        font-size:22px;
+    }
+
+    .hero-icon{
+        width:52px;
+        height:52px;
+        font-size:24px;
+    }
+
+    .field input{
+        height:46px;
+    }
+
+    .primary{
+        min-height:46px;
     }
 }
+
 </style>
 </head>
 
+
 <body>
 
+
 <main class="shell">
+
 
 <!-- =====================================================
      AUTH AREA
@@ -890,1132 +584,706 @@ h1{
 
 <div id="authArea" class="auth">
 
-    <div class="auth-top">
-        <div class="logo">U</div>
-        <span>Usanex</span>
+
+<!-- =====================================================
+     BRAND
+===================================================== -->
+
+<div class="auth-top">
+
+    <div class="logo">
+        U
     </div>
 
-
-    <!-- LOGIN -->
-
-    <section id="loginScreen">
-
-        <div class="hero">
-            <div class="hero-icon">🔐</div>
-            <h1>Welcome Back!</h1>
-            <p class="subtitle">
-                Login to your Usanex account
-            </p>
-        </div>
-
-        <div class="form">
-
-            <div class="field">
-                <span class="ico">📱</span>
-
-                <input
-                    id="loginMobile"
-                    type="tel"
-                    maxlength="10"
-                    placeholder="Mobile Number"
-                >
-            </div>
-
-            <div class="field">
-                <span class="ico">🔒</span>
-
-                <input
-                    id="loginPassword"
-                    type="password"
-                    placeholder="Password"
-                >
-
-                <button
-                    class="toggle"
-                    onclick="togglePass('loginPassword')"
-                >
-                    ◉
-                </button>
-            </div>
-
-            <button
-                class="primary"
-                id="loginBtn"
-                onclick="login()"
-            >
-                Login →
-            </button>
-
-        </div>
-
-        <div id="loginMsg" class="message"></div>
-
-        <div class="bottom">
-            <button
-                class="link"
-                onclick="showForgot()"
-            >
-                Forgot Password?
-            </button>
-        </div>
-
-        <div class="bottom">
-            Don't have an account?
-            <button
-                class="link"
-                onclick="showRegister()"
-            >
-                Register
-            </button>
-        </div>
-
-    </section>
-
-
-    <!-- REGISTER -->
-
-    <section id="registerScreen" class="hidden">
-
-        <div class="hero">
-            <div class="hero-icon">👤</div>
-            <h1>Create Your Account</h1>
-            <p class="subtitle">
-                Enter your details to get started
-            </p>
-        </div>
-
-        <div class="form">
-
-            <div class="field">
-                <span class="ico">👤</span>
-                <input
-                    id="regName"
-                    type="text"
-                    placeholder="Full Name"
-                >
-            </div>
-
-            <div class="field">
-                <span class="ico">📱</span>
-                <input
-                    id="regMobile"
-                    type="tel"
-                    maxlength="10"
-                    placeholder="Mobile Number"
-                >
-            </div>
-
-            <div class="field">
-                <span class="ico">🔒</span>
-
-                <input
-                    id="regPassword"
-                    type="password"
-                    placeholder="Password (min 6 characters)"
-                >
-
-                <button
-                    class="toggle"
-                    onclick="togglePass('regPassword')"
-                >
-                    ◉
-                </button>
-            </div>
-
-            <button
-                class="primary"
-                onclick="requestRegisterOtp()"
-            >
-                Request OTP
-            </button>
-
-        </div>
-
-        <div id="regMsg" class="message"></div>
-
-        <div class="bottom">
-            Already have an account?
-            <button
-                class="link"
-                onclick="showLogin()"
-            >
-                Login
-            </button>
-        </div>
-
-    </section>
-
-
-    <!-- REGISTER OTP -->
-
-    <section id="regOtpScreen" class="hidden">
-
-        <div class="hero">
-            <div class="hero-icon">🔢</div>
-            <h1>Verify OTP</h1>
-
-            <p class="subtitle">
-                Enter the 6-digit OTP for
-                <br>
-                <b id="regOtpMobile"></b>
-            </p>
-        </div>
-
-        <div
-            id="regOtpTest"
-            class="test-otp"
-        ></div>
-
-        <div
-            class="otp-row"
-            id="regOtpRow"
-        ></div>
-
-        <div class="timer-line">
-            <span>
-                ⏱ <b id="regTimer">02:00</b>
-            </span>
-
-            <button
-                class="link"
-                onclick="requestRegisterOtp()"
-            >
-                Resend OTP
-            </button>
-        </div>
-
-        <button
-            class="primary"
-            onclick="verifyRegisterOtp()"
-        >
-            Verify OTP
-        </button>
-
-        <div
-            id="regVerifyMsg"
-            class="message"
-        ></div>
-
-    </section>
-
-
-    <!-- REGISTER SUCCESS -->
-
-    <section id="successScreen" class="hidden">
-
-        <div class="hero">
-            <div class="hero-icon">✅</div>
-
-            <h1>Registration Successful</h1>
-
-            <p class="subtitle">
-                Your Usanex account is ready.
-            </p>
-        </div>
-
-        <div class="info">
-
-            <div>
-                <span>User ID</span>
-                <span id="successId"></span>
-            </div>
-
-            <div>
-                <span>Name</span>
-                <span id="successName"></span>
-            </div>
-
-            <div>
-                <span>Mobile</span>
-                <span id="successMobile"></span>
-            </div>
-
-        </div>
-
-        <button
-            class="primary"
-            style="margin-top:20px"
-            onclick="showLogin()"
-        >
-            Go to Login
-        </button>
-
-    </section>
-
-
-    <!-- FORGOT -->
-
-    <section id="forgotScreen" class="hidden">
-
-        <div class="hero">
-            <div class="hero-icon">🔑</div>
-
-            <h1>Forgot Password</h1>
-
-            <p class="subtitle">
-                Enter your User ID or Mobile number
-            </p>
-        </div>
-
-        <div class="form">
-
-            <div class="field">
-                <span class="ico">🪪</span>
-
-                <input
-                    id="forgotIdentifier"
-                    type="text"
-                    placeholder="User ID or Mobile Number"
-                >
-            </div>
-
-            <button
-                class="primary"
-                onclick="requestForgotOtp()"
-            >
-                Request OTP
-            </button>
-
-        </div>
-
-        <div id="forgotMsg" class="message"></div>
-
-        <div class="bottom">
-            <button
-                class="link"
-                onclick="showLogin()"
-            >
-                Back to Login
-            </button>
-        </div>
-
-    </section>
-
-
-    <!-- FORGOT OTP -->
-
-    <section id="forgotOtpScreen" class="hidden">
-
-        <div class="hero">
-            <div class="hero-icon">🛡️</div>
-
-            <h1>Verify OTP</h1>
-
-            <p class="subtitle">
-                Enter the 6-digit OTP
-            </p>
-        </div>
-
-        <div
-            id="forgotOtpTest"
-            class="test-otp"
-        ></div>
-
-        <div
-            class="otp-row"
-            id="forgotOtpRow"
-        ></div>
-
-        <div class="timer-line">
-
-            <span>
-                ⏱ <b id="forgotTimer">02:00</b>
-            </span>
-
-            <button
-                class="link"
-                onclick="requestForgotOtp()"
-            >
-                Resend OTP
-            </button>
-
-        </div>
-
-        <button
-            class="primary"
-            onclick="verifyForgotOtp()"
-        >
-            Verify OTP
-        </button>
-
-        <div
-            id="forgotVerifyMsg"
-            class="message"
-        ></div>
-
-    </section>
-
-
-    <!-- RESET PASSWORD -->
-
-    <section id="resetScreen" class="hidden">
-
-        <div class="hero">
-            <div class="hero-icon">🔒</div>
-
-            <h1>Set New Password</h1>
-
-            <p class="subtitle">
-                Create a new password
-            </p>
-        </div>
-
-        <div class="form">
-
-            <div class="field">
-                <span class="ico">🔒</span>
-
-                <input
-                    id="newPassword"
-                    type="password"
-                    placeholder="New Password"
-                >
-            </div>
-
-            <div class="field">
-                <span class="ico">🔒</span>
-
-                <input
-                    id="confirmPassword"
-                    type="password"
-                    placeholder="Confirm Password"
-                >
-            </div>
-
-            <button
-                class="primary"
-                onclick="resetPassword()"
-            >
-                Reset Password
-            </button>
-
-        </div>
-
-        <div id="resetMsg" class="message"></div>
-
-    </section>
-
-
-    <!-- RESET SUCCESS -->
-
-    <section id="resetSuccessScreen" class="hidden">
-
-        <div class="hero">
-
-            <div class="hero-icon">✅</div>
-
-            <h1>Password Changed</h1>
-
-            <p class="subtitle">
-                Your password has been updated successfully.
-            </p>
-
-        </div>
-
-        <button
-            class="primary"
-            onclick="showLogin()"
-        >
-            Go to Login
-        </button>
-
-    </section>
+    <span>
+        Usanex.com
+    </span>
 
 </div>
 
 
 <!-- =====================================================
-     HOME AREA
+     LOGIN
 ===================================================== -->
 
-<section id="homeScreen" class="hidden home-page">
-
-    <!-- HEADER -->
-
-    <header class="home-header">
-
-        <div class="header-row">
-
-            <div class="header-left">
-
-                <button
-                    class="menu-btn"
-                    onclick="openMenu()"
-                >
-                    ☰
-                </button>
-
-                <div class="header-brand">
-
-                    <div class="header-logo">
-                        U
-                    </div>
-
-                    <span>
-                        Usanex
-                    </span>
-
-                </div>
-
-            </div>
+<section id="loginScreen">
 
 
-            <div class="header-right">
+<div class="hero">
 
-                <button
-                    class="icon-btn notification"
-                    onclick="openNotifications()"
-                >
-                    ♧
-                    <span class="badge">3</span>
-                </button>
-
-                <button
-                    class="profile-mini"
-                    onclick="openProfile()"
-                    id="miniAvatar"
-                >
-                    U
-                </button>
-
-            </div>
-
-        </div>
-
-
-        <!-- SEARCH -->
-
-        <div class="search-box">
-
-            <span>⌕</span>
-
-            <input
-                id="homeSearch"
-                type="text"
-                placeholder="Search..."
-                oninput="searchHome()"
-            >
-
-        </div>
-
-    </header>
-
-
-    <!-- MOOD -->
-
-    <div class="section">
-
-        <div class="section-card">
-
-            <div class="section-head">
-
-                <div>
-                    <h2>Your Mood</h2>
-
-                    <p
-                        class="subtitle"
-                        style="margin-top:3px"
-                    >
-                        How are you feeling today?
-                    </p>
-                </div>
-
-                <button
-                    class="more"
-                    onclick="openMood()"
-                >
-                    More ›
-                </button>
-
-            </div>
-
-
-            <div class="mood-list">
-
-                <button
-                    class="mood"
-                    onclick="selectMood('Good')"
-                >
-                    <div class="mood-icon">😊</div>
-                    <small>Good</small>
-                </button>
-
-                <button
-                    class="mood"
-                    onclick="selectMood('Sad')"
-                >
-                    <div class="mood-icon">😔</div>
-                    <small>Sad</small>
-                </button>
-
-                <button
-                    class="mood"
-                    onclick="selectMood('Emotional')"
-                >
-                    <div class="mood-icon">🥹</div>
-                    <small>Emotional</small>
-                </button>
-
-                <button
-                    class="mood"
-                    onclick="selectMood('Motivation')"
-                >
-                    <div class="mood-icon">💪</div>
-                    <small>Motivation</small>
-                </button>
-
-                <button
-                    class="mood"
-                    onclick="selectMood('Other')"
-                >
-                    <div class="mood-icon">•••</div>
-                    <small>Other</small>
-                </button>
-
-            </div>
-
-        </div>
-
+    <div class="hero-icon">
+        🔐
     </div>
 
+    <h1>
+        Welcome Back
+    </h1>
 
-    <!-- PROFILE -->
+    <p class="subtitle">
+        Login to your Usanex.com account
+    </p>
 
-    <div class="section">
+</div>
 
-        <button
-            class="profile-card"
-            style="width:100%;border:none;text-align:left"
-            onclick="openProfile()"
-        >
 
-            <div
-                class="big-avatar"
-                id="homeAvatar"
-            >
-                U
-            </div>
+<div class="form">
 
-            <div class="profile-info">
 
-                <div
-                    class="profile-name"
-                    id="homeName"
-                >
-                    Uttam Vishwakarma
-                </div>
+<div class="field">
 
-                <div
-                    class="profile-id"
-                    id="homeId"
-                >
-                    UX000000000
-                </div>
+    <span class="ico">
+        📱
+    </span>
 
-                <div class="stats">
+    <input
+        id="loginMobile"
+        type="tel"
+        inputmode="numeric"
+        maxlength="10"
+        placeholder="Mobile Number"
+    >
 
-                    <div class="stat">
-                        <b>0</b>
-                        <span>Posts</span>
-                    </div>
+</div>
 
-                    <div class="stat">
-                        <b>0</b>
-                        <span>Followers</span>
-                    </div>
 
-                    <div class="stat">
-                        <b>0</b>
-                        <span>Following</span>
-                    </div>
+<div class="field">
 
-                </div>
+    <span class="ico">
+        🔒
+    </span>
 
-            </div>
-
-            <div class="arrow">
-                ›
-            </div>
-
-        </button>
-
-    </div>
-
-
-    <!-- MONETIZATION -->
-
-    <div class="section">
-
-        <div class="money-card">
-
-            <div class="money-left">
-
-                <div class="money-icon">
-                    ₹
-                </div>
-
-                <div>
-
-                    <h3>
-                        Monetization
-                    </h3>
-
-                    <p>
-                        Earn from your Usanex content
-                    </p>
-
-                </div>
-
-            </div>
-
-            <button
-                class="money-btn"
-                onclick="openMonetization()"
-            >
-                Open
-            </button>
-
-        </div>
-
-    </div>
-
-
-    <!-- STORIES -->
-
-    <div class="section">
-
-        <div class="section-head">
-
-            <h2 style="font-size:19px;color:#0b376b">
-                Stories
-            </h2>
-
-            <button
-                class="more"
-                onclick="openStories()"
-            >
-                View All ›
-            </button>
-
-        </div>
-
-
-        <div class="stories">
-
-            <button
-                class="story"
-                onclick="uploadStory()"
-            >
-                <div class="story-ring">
-                    <div class="story-img"
-                         style="font-size:27px">
-                        +
-                    </div>
-                </div>
-
-                <div class="story-name">
-                    Your Story
-                </div>
-            </button>
-
-
-            <button class="story"
-                    onclick="viewStory('Rohit')">
-
-                <div class="story-ring">
-                    <div class="story-img">
-                        R
-                    </div>
-                </div>
-
-                <div class="story-name">
-                    Rohit
-                </div>
-
-            </button>
-
-
-            <button class="story"
-                    onclick="viewStory('Priya')">
-
-                <div class="story-ring">
-                    <div class="story-img">
-                        P
-                    </div>
-                </div>
-
-                <div class="story-name">
-                    Priya
-                </div>
-
-            </button>
-
-
-            <button class="story"
-                    onclick="viewStory('Amit')">
-
-                <div class="story-ring">
-                    <div class="story-img">
-                        A
-                    </div>
-                </div>
-
-                <div class="story-name">
-                    Amit
-                </div>
-
-            </button>
-
-
-            <button class="story"
-                    onclick="viewStory('Neha')">
-
-                <div class="story-ring">
-                    <div class="story-img">
-                        N
-                    </div>
-                </div>
-
-                <div class="story-name">
-                    Neha
-                </div>
-
-            </button>
-
-        </div>
-
-    </div>
-
-
-    <!-- RECENT CHATS -->
-
-    <div class="section">
-
-        <div class="recent-title">
-
-            <h2>
-                Recent Chats / Contacts
-            </h2>
-
-            <button
-                class="more"
-                onclick="openChats()"
-            >
-                View All ›
-            </button>
-
-        </div>
-
-
-        <div>
-
-            <button
-                class="chat"
-                style="width:100%;border:0;background:none;text-align:left"
-                onclick="openChat('Rohit Kumar')"
-            >
-
-                <div class="chat-avatar">
-                    R
-                </div>
-
-                <div class="chat-main">
-
-                    <div class="chat-name">
-                        Rohit Kumar
-                    </div>
-
-                    <div class="chat-text">
-                        Hey! How are you?
-                    </div>
-
-                </div>
-
-                <div class="chat-time">
-                    2:15 PM
-                </div>
-
-                <div class="chat-arrow">
-                    ›
-                </div>
-
-            </button>
-
-
-            <button
-                class="chat"
-                style="width:100%;border:0;background:none;text-align:left"
-                onclick="openChat('Priya Sharma')"
-            >
-
-                <div class="chat-avatar">
-                    P
-                </div>
-
-                <div class="chat-main">
-
-                    <div class="chat-name">
-                        Priya Sharma
-                    </div>
-
-                    <div class="chat-text">
-                        See you soon 😊
-                    </div>
-
-                </div>
-
-                <div class="chat-time">
-                    1:42 PM
-                </div>
-
-                <div class="chat-arrow">
-                    ›
-                </div>
-
-            </button>
-
-
-            <button
-                class="chat"
-                style="width:100%;border:0;background:none;text-align:left"
-                onclick="openChat('Amit Singh')"
-            >
-
-                <div class="chat-avatar">
-                    A
-                </div>
-
-                <div class="chat-main">
-
-                    <div class="chat-name">
-                        Amit Singh
-                    </div>
-
-                    <div class="chat-text">
-                        📷 Photo
-                    </div>
-
-                </div>
-
-                <div class="chat-time">
-                    12:30 PM
-                </div>
-
-                <div class="chat-arrow">
-                    ›
-                </div>
-
-            </button>
-
-
-            <button
-                class="chat"
-                style="width:100%;border:0;background:none;text-align:left"
-                onclick="openChat('Neha Gupta')"
-            >
-
-                <div class="chat-avatar">
-                    N
-                </div>
-
-                <div class="chat-main">
-
-                    <div class="chat-name">
-                        Neha Gupta
-                    </div>
-
-                    <div class="chat-text">
-                        🎤 Voice message
-                    </div>
-
-                </div>
-
-                <div class="chat-time">
-                    11:20 AM
-                </div>
-
-                <div class="chat-arrow">
-                    ›
-                </div>
-
-            </button>
-
-        </div>
-
-    </div>
-
-
-    <!-- FLOAT CAMERA -->
+    <input
+        id="loginPassword"
+        type="password"
+        placeholder="Password"
+    >
 
     <button
-        class="camera-float"
-        onclick="openCamera()"
+        class="toggle"
+        onclick="togglePass('loginPassword')"
+        type="button"
     >
-        📷
+        ◉
     </button>
 
+</div>
 
-    <!-- BOTTOM NAV -->
 
-    <nav class="bottom-nav">
+<button
+    class="primary"
+    id="loginBtn"
+    onclick="login()"
+    type="button"
+>
+    Login →
+</button>
 
-        <button
-            class="nav-btn active"
-            onclick="homeNav()"
-        >
-            <span>⌂</span>
-            Home
-        </button>
 
-        <button
-            class="nav-btn"
-            onclick="openReels()"
-        >
-            <span>▶</span>
-            Reels
-        </button>
+</div>
 
-        <button
-            class="upload-nav"
-            onclick="uploadReel()"
-        >
-            +
-        </button>
 
-        <button
-            class="nav-btn"
-            onclick="openCalls()"
-        >
-            <span>☎</span>
-            Calls
-        </button>
+<div
+    id="loginMsg"
+    class="message"
+></div>
 
-        <button
-            class="nav-btn"
-            onclick="openProfile()"
-        >
-            <span>●</span>
-            Profile
-        </button>
 
-    </nav>
+<div class="bottom">
+
+    <button
+        class="link"
+        onclick="showForgot()"
+        type="button"
+    >
+        Forgot Password?
+    </button>
+
+</div>
+
+
+<div class="bottom">
+
+    Don't have an account?
+
+    <button
+        class="link"
+        onclick="showRegister()"
+        type="button"
+    >
+        Register
+    </button>
+
+</div>
+
 
 </section>
 
 
 <!-- =====================================================
-     SIDE MENU
-===================================================== -->
-
-<div
-    id="menuOverlay"
-    class="overlay hidden"
-    onclick="closeMenu(event)"
->
-
-    <aside class="side-menu">
-
-        <div class="menu-head">
-
-            <div class="logo">
-                U
-            </div>
-
-            <div>
-                <div class="menu-title">
-                    Usanex
-                </div>
-
-                <small style="color:#7890a4">
-                    Menu & Settings
-                </small>
-            </div>
-
-        </div>
-
-
-        <button
-            class="menu-item"
-            onclick="openProfile()"
-        >
-            👤 My Profile
-        </button>
-
-        <button
-            class="menu-item"
-            onclick="openNotifications()"
-        >
-            🔔 Notifications
-        </button>
-
-        <button
-            class="menu-item"
-            onclick="openMonetization()"
-        >
-            💰 Monetization
-        </button>
-
-        <button
-            class="menu-item"
-            onclick="openSettings()"
-        >
-            ⚙️ Settings
-        </button>
-
-        <button
-            class="menu-item"
-            onclick="openPrivacy()"
-        >
-            🔒 Privacy
-        </button>
-
-        <button
-            class="menu-item"
-            onclick="logout()"
-        >
-            🚪 Logout
-        </button>
-
-    </aside>
-
-</div>
-
-
-<!-- =====================================================
-     CONTENT MODAL
+     REGISTER
 ===================================================== -->
 
 <section
-    id="contentScreen"
+    id="registerScreen"
     class="hidden"
-    style="position:absolute;inset:0;background:#fff;z-index:40;overflow:auto"
 >
 
-    <div class="content-page">
 
-        <div class="content-head">
+<div class="hero">
 
-            <button onclick="closeContent()">
-                ‹
-            </button>
-
-            <h2 id="contentTitle">
-                Usanex
-            </h2>
-
-        </div>
-
-        <div id="contentBody"></div>
-
+    <div class="hero-icon">
+        👤
     </div>
+
+    <h1>
+        Create Account
+    </h1>
+
+    <p class="subtitle">
+        Create your Usanex.com account
+    </p>
+
+</div>
+
+
+<div class="form">
+
+
+<div class="field">
+
+    <span class="ico">
+        👤
+    </span>
+
+    <input
+        id="regName"
+        type="text"
+        placeholder="Full Name"
+    >
+
+</div>
+
+
+<div class="field">
+
+    <span class="ico">
+        📱
+    </span>
+
+    <input
+        id="regMobile"
+        type="tel"
+        inputmode="numeric"
+        maxlength="10"
+        placeholder="Mobile Number"
+    >
+
+</div>
+
+
+<div class="field">
+
+    <span class="ico">
+        🔒
+    </span>
+
+    <input
+        id="regPassword"
+        type="password"
+        placeholder="Password (min 6 characters)"
+    >
+
+    <button
+        class="toggle"
+        onclick="togglePass('regPassword')"
+        type="button"
+    >
+        ◉
+    </button>
+
+</div>
+
+
+<button
+    class="primary"
+    onclick="requestRegisterOtp()"
+    type="button"
+>
+    Request OTP
+</button>
+
+
+</div>
+
+
+<div
+    id="regMsg"
+    class="message"
+></div>
+
+
+<div class="bottom">
+
+    Already have an account?
+
+    <button
+        class="link"
+        onclick="showLogin()"
+        type="button"
+    >
+        Login
+    </button>
+
+</div>
+
 
 </section>
 
+
+<!-- =====================================================
+     REGISTER OTP
+===================================================== -->
+
+<section
+    id="regOtpScreen"
+    class="hidden"
+>
+
+
+<div class="hero">
+
+    <div class="hero-icon">
+        🔢
+    </div>
+
+    <h1>
+        Verify OTP
+    </h1>
+
+    <p class="subtitle">
+
+        Enter the 6-digit OTP for
+
+        <br>
+
+        <b id="regOtpMobile"></b>
+
+    </p>
+
+</div>
+
+
+<div
+    id="regOtpTest"
+    class="test-otp"
+></div>
+
+
+<div
+    class="otp-row"
+    id="regOtpRow"
+></div>
+
+
+<div class="timer-line">
+
+    <span>
+        ⏱
+        <b id="regTimer">
+            02:00
+        </b>
+    </span>
+
+    <button
+        class="link"
+        onclick="requestRegisterOtp()"
+        type="button"
+    >
+        Resend OTP
+    </button>
+
+</div>
+
+
+<button
+    class="primary"
+    onclick="verifyRegisterOtp()"
+    type="button"
+>
+    Verify OTP
+</button>
+
+
+<div
+    id="regVerifyMsg"
+    class="message"
+></div>
+
+
+</section>
+
+
+<!-- =====================================================
+     REGISTER SUCCESS
+===================================================== -->
+
+<section
+    id="successScreen"
+    class="hidden"
+>
+
+
+<div class="hero">
+
+    <div class="hero-icon">
+        ✅
+    </div>
+
+    <h1>
+        Registration Successful
+    </h1>
+
+    <p class="subtitle">
+        Your Usanex.com account is ready.
+    </p>
+
+</div>
+
+
+<div class="info">
+
+    <div>
+
+        <span>
+            User ID
+        </span>
+
+        <span id="successId"></span>
+
+    </div>
+
+
+    <div>
+
+        <span>
+            Name
+        </span>
+
+        <span id="successName"></span>
+
+    </div>
+
+
+    <div>
+
+        <span>
+            Mobile
+        </span>
+
+        <span id="successMobile"></span>
+
+    </div>
+
+</div>
+
+
+<button
+    class="primary"
+    style="margin-top:15px"
+    onclick="showLogin()"
+    type="button"
+>
+    Go to Login
+</button>
+
+
+</section>
+
+
+<!-- =====================================================
+     FORGOT PASSWORD
+===================================================== -->
+
+<section
+    id="forgotScreen"
+    class="hidden"
+>
+
+
+<div class="hero">
+
+    <div class="hero-icon">
+        🔑
+    </div>
+
+    <h1>
+        Forgot Password
+    </h1>
+
+    <p class="subtitle">
+        Enter your User ID or Mobile number
+    </p>
+
+</div>
+
+
+<div class="form">
+
+
+<div class="field">
+
+    <span class="ico">
+        🪪
+    </span>
+
+    <input
+        id="forgotIdentifier"
+        type="text"
+        placeholder="User ID or Mobile Number"
+    >
+
+</div>
+
+
+<button
+    class="primary"
+    onclick="requestForgotOtp()"
+    type="button"
+>
+    Request OTP
+</button>
+
+
+</div>
+
+
+<div
+    id="forgotMsg"
+    class="message"
+></div>
+
+
+<div class="bottom">
+
+    <button
+        class="link"
+        onclick="showLogin()"
+        type="button"
+    >
+        ← Back to Login
+    </button>
+
+</div>
+
+
+</section>
+
+
+<!-- =====================================================
+     FORGOT OTP
+===================================================== -->
+
+<section
+    id="forgotOtpScreen"
+    class="hidden"
+>
+
+
+<div class="hero">
+
+    <div class="hero-icon">
+        🛡️
+    </div>
+
+    <h1>
+        Verify OTP
+    </h1>
+
+    <p class="subtitle">
+        Enter the 6-digit OTP
+    </p>
+
+</div>
+
+
+<div
+    id="forgotOtpTest"
+    class="test-otp"
+></div>
+
+
+<div
+    class="otp-row"
+    id="forgotOtpRow"
+></div>
+
+
+<div class="timer-line">
+
+    <span>
+        ⏱
+        <b id="forgotTimer">
+            02:00
+        </b>
+    </span>
+
+
+    <button
+        class="link"
+        onclick="requestForgotOtp()"
+        type="button"
+    >
+        Resend OTP
+    </button>
+
+</div>
+
+
+<button
+    class="primary"
+    onclick="verifyForgotOtp()"
+    type="button"
+>
+    Verify OTP
+</button>
+
+
+<div
+    id="forgotVerifyMsg"
+    class="message"
+></div>
+
+
+</section>
+
+
+<!-- =====================================================
+     RESET PASSWORD
+===================================================== -->
+
+<section
+    id="resetScreen"
+    class="hidden"
+>
+
+
+<div class="hero">
+
+    <div class="hero-icon">
+        🔒
+    </div>
+
+    <h1>
+        Set New Password
+    </h1>
+
+    <p class="subtitle">
+        Create a new password
+    </p>
+
+</div>
+
+
+<div class="form">
+
+
+<div class="field">
+
+    <span class="ico">
+        🔒
+    </span>
+
+    <input
+        id="newPassword"
+        type="password"
+        placeholder="New Password"
+    >
+
+</div>
+
+
+<div class="field">
+
+    <span class="ico">
+        🔒
+    </span>
+
+    <input
+        id="confirmPassword"
+        type="password"
+        placeholder="Confirm Password"
+    >
+
+</div>
+
+
+<button
+    class="primary"
+    onclick="resetPassword()"
+    type="button"
+>
+    Reset Password
+</button>
+
+
+</div>
+
+
+<div
+    id="resetMsg"
+    class="message"
+></div>
+
+
+</section>
+
+
+<!-- =====================================================
+     RESET SUCCESS
+===================================================== -->
+
+<section
+    id="resetSuccessScreen"
+    class="hidden"
+>
+
+
+<div class="hero">
+
+    <div class="hero-icon">
+        ✅
+    </div>
+
+    <h1>
+        Password Changed
+    </h1>
+
+    <p class="subtitle">
+        Your password has been updated successfully.
+    </p>
+
+</div>
+
+
+<button
+    class="primary"
+    onclick="showLogin()"
+    type="button"
+>
+    Go to Login
+</button>
+
+
+</section>
+
+
+</div>
 
 </main>
 
 
 <script>
+
 
 /* =====================================================
    API
@@ -2030,17 +1298,20 @@ const API =
 ===================================================== */
 
 let regData = {};
+
 let forgotIdentifier = "";
 
 let regTimer = null;
+
 let forgotTimer = null;
 
 
 /* =====================================================
-   HELPERS
+   HELPER
 ===================================================== */
 
 function $(id){
+
     return document.getElementById(id);
 }
 
@@ -2052,7 +1323,9 @@ function msg(id,text,type){
     if(!el) return;
 
     el.textContent = text;
-    el.className = "message " + type;
+
+    el.className =
+        "message " + type;
 }
 
 
@@ -2074,21 +1347,32 @@ function togglePass(id){
 ===================================================== */
 
 const authScreens = [
+
     "loginScreen",
+
     "registerScreen",
+
     "regOtpScreen",
+
     "successScreen",
+
     "forgotScreen",
+
     "forgotOtpScreen",
+
     "resetScreen",
+
     "resetSuccessScreen"
+
 ];
 
 
 function showAuth(id){
 
-    $("authArea").classList.remove("hidden");
-    $("homeScreen").classList.add("hidden");
+    $("authArea")
+        .classList
+        .remove("hidden");
+
 
     authScreens.forEach(screen => {
 
@@ -2100,24 +1384,37 @@ function showAuth(id){
             );
 
     });
+
 }
 
 
 function showLogin(){
+
     stopTimers();
-    showAuth("loginScreen");
+
+    showAuth(
+        "loginScreen"
+    );
 }
 
 
 function showRegister(){
+
     stopTimers();
-    showAuth("registerScreen");
+
+    showAuth(
+        "registerScreen"
+    );
 }
 
 
 function showForgot(){
+
     stopTimers();
-    showAuth("forgotScreen");
+
+    showAuth(
+        "forgotScreen"
+    );
 }
 
 
@@ -2128,14 +1425,24 @@ function showForgot(){
 function stopTimers(){
 
     if(regTimer){
-        clearInterval(regTimer);
+
+        clearInterval(
+            regTimer
+        );
+
         regTimer = null;
     }
 
+
     if(forgotTimer){
-        clearInterval(forgotTimer);
+
+        clearInterval(
+            forgotTimer
+        );
+
         forgotTimer = null;
     }
+
 }
 
 
@@ -2151,57 +1458,89 @@ function startTimer(id,type){
 
         const min =
             String(
-                Math.floor(seconds / 60)
+                Math.floor(
+                    seconds / 60
+                )
             ).padStart(2,"0");
+
 
         const sec =
             String(
                 seconds % 60
             ).padStart(2,"0");
 
+
         el.textContent =
             min + ":" + sec;
 
+
         if(seconds <= 0){
 
-            clearInterval(handle);
+            clearInterval(
+                handle
+            );
 
             return;
         }
 
+
         seconds--;
+
     }
+
 
     update();
 
+
     const handle =
-        setInterval(update,1000);
+        setInterval(
+            update,
+            1000
+        );
+
 
     if(type === "register"){
+
         regTimer = handle;
+
     }else{
+
         forgotTimer = handle;
     }
+
 }
 
 
 /* =====================================================
-   OTP INPUTS
+   OTP INPUT
 ===================================================== */
 
 function createOtpInputs(id){
 
     const row = $(id);
 
+    if(!row) return;
+
     row.innerHTML = "";
 
-    for(let i=0;i<6;i++){
+
+    for(
+        let i = 0;
+        i < 6;
+        i++
+    ){
 
         const input =
-            document.createElement("input");
+            document.createElement(
+                "input"
+            );
+
 
         input.maxLength = 1;
-        input.inputMode = "numeric";
+
+        input.inputMode =
+            "numeric";
+
 
         input.addEventListener(
             "input",
@@ -2213,14 +1552,21 @@ function createOtpInputs(id){
                         ""
                     );
 
+
                 if(
                     input.value &&
                     input.nextElementSibling
                 ){
-                    input.nextElementSibling.focus();
+
+                    input
+                        .nextElementSibling
+                        .focus();
+
                 }
+
             }
         );
+
 
         input.addEventListener(
             "keydown",
@@ -2231,13 +1577,23 @@ function createOtpInputs(id){
                     !input.value &&
                     input.previousElementSibling
                 ){
-                    input.previousElementSibling.focus();
+
+                    input
+                        .previousElementSibling
+                        .focus();
+
                 }
+
             }
         );
 
-        row.appendChild(input);
+
+        row.appendChild(
+            input
+        );
+
     }
+
 }
 
 
@@ -2248,8 +1604,11 @@ function getOtp(id){
             "#" + id + " input"
         )
     ]
-    .map(x => x.value)
+    .map(
+        x => x.value
+    )
     .join("");
+
 }
 
 
@@ -2260,13 +1619,20 @@ function getOtp(id){
 async function login(){
 
     const mobile =
-        $("loginMobile").value.trim();
+        $("loginMobile")
+        .value
+        .trim();
+
 
     const password =
-        $("loginPassword").value;
+        $("loginPassword")
+        .value;
+
 
     if(
-        !/^\d{10}$/.test(mobile) ||
+        !/^\d{10}$/.test(
+            mobile
+        ) ||
         !password
     ){
 
@@ -2279,10 +1645,16 @@ async function login(){
         return;
     }
 
-    const btn = $("loginBtn");
+
+    const btn =
+        $("loginBtn");
+
 
     btn.disabled = true;
-    btn.textContent = "Logging in...";
+
+    btn.textContent =
+        "Logging in...";
+
 
     try{
 
@@ -2294,25 +1666,28 @@ async function login(){
 
                     headers:{
                         "Content-Type":
-                        "application/json"
+                            "application/json"
                     },
 
-                    body:JSON.stringify({
-                        mobile,
-                        password
-                    })
+                    body:
+                        JSON.stringify({
+                            mobile,
+                            password
+                        })
                 }
             );
 
+
         const data =
             await response.json();
+
 
         if(!data.ok){
 
             msg(
                 "loginMsg",
                 data.message ||
-                "Login failed.",
+                    "Login failed.",
                 "err"
             );
 
@@ -2325,13 +1700,23 @@ async function login(){
             data.token || ""
         );
 
+
         localStorage.setItem(
             "usanex_user",
-            JSON.stringify(data.user)
+            JSON.stringify(
+                data.user
+            )
         );
 
 
-        loadHome(data.user);
+        /* ==========================================
+           IMPORTANT:
+           LOGIN KE BAAD HOME.HTML
+        ========================================== */
+
+        window.location.href =
+            "/home.html";
+
 
     }catch(error){
 
@@ -2344,80 +1729,35 @@ async function login(){
     }finally{
 
         btn.disabled = false;
-        btn.textContent = "Login →";
+
+        btn.textContent =
+            "Login →";
     }
+
 }
 
 
 /* =====================================================
-   LOAD HOME
-===================================================== */
-
-function loadHome(user){
-
-    if(!user) return;
-
-    $("homeName").textContent =
-        user.name || "Usanex User";
-
-    $("homeId").textContent =
-        user.user_id || "";
-
-    const first =
-        (user.name || "U")
-        .charAt(0)
-        .toUpperCase();
-
-    $("homeAvatar").textContent = first;
-    $("miniAvatar").textContent = first;
-
-
-    $("authArea").classList.add("hidden");
-    $("homeScreen").classList.remove("hidden");
-
-    closeMenu();
-    closeContent();
-}
-
-
-/* =====================================================
-   LOGOUT
-===================================================== */
-
-function logout(){
-
-    localStorage.removeItem(
-        "usanex_token"
-    );
-
-    localStorage.removeItem(
-        "usanex_user"
-    );
-
-    $("loginMobile").value = "";
-    $("loginPassword").value = "";
-
-    closeMenu();
-    closeContent();
-
-    showLogin();
-}
-
-
-/* =====================================================
-   REGISTER OTP
+   REGISTER REQUEST OTP
 ===================================================== */
 
 async function requestRegisterOtp(){
 
     const name =
-        $("regName").value.trim();
+        $("regName")
+        .value
+        .trim();
+
 
     const mobile =
-        $("regMobile").value.trim();
+        $("regMobile")
+        .value
+        .trim();
+
 
     const password =
-        $("regPassword").value;
+        $("regPassword")
+        .value;
 
 
     if(!name){
@@ -2432,7 +1772,11 @@ async function requestRegisterOtp(){
     }
 
 
-    if(!/^\d{10}$/.test(mobile)){
+    if(
+        !/^\d{10}$/.test(
+            mobile
+        )
+    ){
 
         msg(
             "regMsg",
@@ -2444,7 +1788,9 @@ async function requestRegisterOtp(){
     }
 
 
-    if(password.length < 6){
+    if(
+        password.length < 6
+    ){
 
         msg(
             "regMsg",
@@ -2460,20 +1806,22 @@ async function requestRegisterOtp(){
 
         const response =
             await fetch(
-                API + "/register/request-otp",
+                API +
+                "/register/request-otp",
                 {
                     method:"POST",
 
                     headers:{
                         "Content-Type":
-                        "application/json"
+                            "application/json"
                     },
 
-                    body:JSON.stringify({
-                        name,
-                        mobile,
-                        password
-                    })
+                    body:
+                        JSON.stringify({
+                            name,
+                            mobile,
+                            password
+                        })
                 }
             );
 
@@ -2487,7 +1835,7 @@ async function requestRegisterOtp(){
             msg(
                 "regMsg",
                 data.message ||
-                "Unable to generate OTP.",
+                    "Unable to generate OTP.",
                 "err"
             );
 
@@ -2496,34 +1844,41 @@ async function requestRegisterOtp(){
 
 
         regData = {
+
             name,
             mobile,
             password
+
         };
 
 
-        $("regOtpMobile").textContent =
+        $("regOtpMobile")
+            .textContent =
             mobile;
 
 
-        $("regOtpTest").textContent =
+        $("regOtpTest")
+            .textContent =
             "Test OTP: " +
             data.otp +
-            " (valid for 2 minutes)";
+            " • Valid for 2 minutes";
 
 
         createOtpInputs(
             "regOtpRow"
         );
 
+
         showAuth(
             "regOtpScreen"
         );
+
 
         startTimer(
             "regTimer",
             "register"
         );
+
 
     }catch(error){
 
@@ -2532,20 +1887,27 @@ async function requestRegisterOtp(){
             "Server connection failed.",
             "err"
         );
+
     }
+
 }
 
 
 /* =====================================================
-   VERIFY REGISTER OTP
+   REGISTER VERIFY OTP
 ===================================================== */
 
 async function verifyRegisterOtp(){
 
     const otp =
-        getOtp("regOtpRow");
+        getOtp(
+            "regOtpRow"
+        );
 
-    if(otp.length !== 6){
+
+    if(
+        otp.length !== 6
+    ){
 
         msg(
             "regVerifyMsg",
@@ -2561,19 +1923,21 @@ async function verifyRegisterOtp(){
 
         const response =
             await fetch(
-                API + "/register/verify-otp",
+                API +
+                "/register/verify-otp",
                 {
                     method:"POST",
 
                     headers:{
                         "Content-Type":
-                        "application/json"
+                            "application/json"
                     },
 
-                    body:JSON.stringify({
-                        ...regData,
-                        otp
-                    })
+                    body:
+                        JSON.stringify({
+                            ...regData,
+                            otp
+                        })
                 }
             );
 
@@ -2587,7 +1951,7 @@ async function verifyRegisterOtp(){
             msg(
                 "regVerifyMsg",
                 data.message ||
-                "Invalid OTP.",
+                    "Invalid OTP.",
                 "err"
             );
 
@@ -2595,21 +1959,28 @@ async function verifyRegisterOtp(){
         }
 
 
-        $("successId").textContent =
+        $("successId")
+            .textContent =
             data.user_id;
 
-        $("successName").textContent =
+
+        $("successName")
+            .textContent =
             data.name;
 
-        $("successMobile").textContent =
+
+        $("successMobile")
+            .textContent =
             data.mobile;
 
 
         stopTimers();
 
+
         showAuth(
             "successScreen"
         );
+
 
     }catch(error){
 
@@ -2618,12 +1989,14 @@ async function verifyRegisterOtp(){
             "Server connection failed.",
             "err"
         );
+
     }
+
 }
 
 
 /* =====================================================
-   FORGOT OTP
+   FORGOT PASSWORD REQUEST OTP
 ===================================================== */
 
 async function requestForgotOtp(){
@@ -2661,12 +2034,13 @@ async function requestForgotOtp(){
 
                     headers:{
                         "Content-Type":
-                        "application/json"
+                            "application/json"
                     },
 
-                    body:JSON.stringify({
-                        identifier
-                    })
+                    body:
+                        JSON.stringify({
+                            identifier
+                        })
                 }
             );
 
@@ -2680,7 +2054,7 @@ async function requestForgotOtp(){
             msg(
                 "forgotMsg",
                 data.message ||
-                "Unable to generate OTP.",
+                    "Unable to generate OTP.",
                 "err"
             );
 
@@ -2688,10 +2062,11 @@ async function requestForgotOtp(){
         }
 
 
-        $("forgotOtpTest").textContent =
+        $("forgotOtpTest")
+            .textContent =
             "Test OTP: " +
             data.otp +
-            " (valid for 2 minutes)";
+            " • Valid for 2 minutes";
 
 
         createOtpInputs(
@@ -2709,6 +2084,7 @@ async function requestForgotOtp(){
             "forgot"
         );
 
+
     }catch(error){
 
         msg(
@@ -2716,21 +2092,27 @@ async function requestForgotOtp(){
             "Server connection failed.",
             "err"
         );
+
     }
+
 }
 
 
 /* =====================================================
-   VERIFY FORGOT OTP
+   FORGOT VERIFY OTP
 ===================================================== */
 
 async function verifyForgotOtp(){
 
     const otp =
-        getOtp("forgotOtpRow");
+        getOtp(
+            "forgotOtpRow"
+        );
 
 
-    if(otp.length !== 6){
+    if(
+        otp.length !== 6
+    ){
 
         msg(
             "forgotVerifyMsg",
@@ -2753,15 +2135,18 @@ async function verifyForgotOtp(){
 
                     headers:{
                         "Content-Type":
-                        "application/json"
+                            "application/json"
                     },
 
-                    body:JSON.stringify({
-                        identifier:
-                        forgotIdentifier,
+                    body:
+                        JSON.stringify({
 
-                        otp
-                    })
+                            identifier:
+                                forgotIdentifier,
+
+                            otp
+
+                        })
                 }
             );
 
@@ -2775,7 +2160,7 @@ async function verifyForgotOtp(){
             msg(
                 "forgotVerifyMsg",
                 data.message ||
-                "Invalid OTP.",
+                    "Invalid OTP.",
                 "err"
             );
 
@@ -2785,9 +2170,11 @@ async function verifyForgotOtp(){
 
         stopTimers();
 
+
         showAuth(
             "resetScreen"
         );
+
 
     }catch(error){
 
@@ -2796,7 +2183,9 @@ async function verifyForgotOtp(){
             "Server connection failed.",
             "err"
         );
+
     }
+
 }
 
 
@@ -2807,13 +2196,18 @@ async function verifyForgotOtp(){
 async function resetPassword(){
 
     const newPassword =
-        $("newPassword").value;
+        $("newPassword")
+        .value;
+
 
     const confirmPassword =
-        $("confirmPassword").value;
+        $("confirmPassword")
+        .value;
 
 
-    if(newPassword.length < 6){
+    if(
+        newPassword.length < 6
+    ){
 
         msg(
             "resetMsg",
@@ -2825,7 +2219,10 @@ async function resetPassword(){
     }
 
 
-    if(newPassword !== confirmPassword){
+    if(
+        newPassword !==
+        confirmPassword
+    ){
 
         msg(
             "resetMsg",
@@ -2848,20 +2245,22 @@ async function resetPassword(){
 
                     headers:{
                         "Content-Type":
-                        "application/json"
+                            "application/json"
                     },
 
-                    body:JSON.stringify({
+                    body:
+                        JSON.stringify({
 
-                        identifier:
-                        forgotIdentifier,
+                            identifier:
+                                forgotIdentifier,
 
-                        new_password:
-                        newPassword,
+                            new_password:
+                                newPassword,
 
-                        confirm_password:
-                        confirmPassword
-                    })
+                            confirm_password:
+                                confirmPassword
+
+                        })
                 }
             );
 
@@ -2875,7 +2274,7 @@ async function resetPassword(){
             msg(
                 "resetMsg",
                 data.message ||
-                "Unable to reset password.",
+                    "Unable to reset password.",
                 "err"
             );
 
@@ -2883,12 +2282,18 @@ async function resetPassword(){
         }
 
 
-        $("newPassword").value = "";
-        $("confirmPassword").value = "";
+        $("newPassword")
+            .value = "";
+
+
+        $("confirmPassword")
+            .value = "";
+
 
         showAuth(
             "resetSuccessScreen"
         );
+
 
     }catch(error){
 
@@ -2897,482 +2302,28 @@ async function resetPassword(){
             "Server connection failed.",
             "err"
         );
-    }
-}
 
-
-/* =====================================================
-   MENU
-===================================================== */
-
-function openMenu(){
-
-    $("menuOverlay")
-        .classList
-        .remove("hidden");
-}
-
-
-function closeMenu(event){
-
-    if(
-        event &&
-        event.target !== $("menuOverlay")
-    ){
-        return;
     }
 
-    $("menuOverlay")
-        .classList
-        .add("hidden");
 }
 
 
 /* =====================================================
-   CONTENT PAGES
+   LOGOUT
 ===================================================== */
 
-function showContent(title,html){
+function logout(){
 
-    $("contentTitle").textContent =
-        title;
-
-    $("contentBody").innerHTML =
-        html;
-
-    $("contentScreen")
-        .classList
-        .remove("hidden");
-
-    closeMenu();
-}
-
-
-function closeContent(){
-
-    $("contentScreen")
-        .classList
-        .add("hidden");
-}
-
-
-/* =====================================================
-   PROFILE
-===================================================== */
-
-function openProfile(){
-
-    const user =
-        JSON.parse(
-            localStorage.getItem(
-                "usanex_user"
-            ) || "{}"
-        );
-
-    showContent(
-        "My Profile",
-        `
-        <div class="content-box">
-
-            <div style="
-                text-align:center;
-                margin-bottom:20px;
-            ">
-
-                <div class="big-avatar"
-                     style="margin:auto">
-                    ${(user.name || "U").charAt(0).toUpperCase()}
-                </div>
-
-                <h3 style="margin-top:12px">
-                    ${user.name || "Usanex User"}
-                </h3>
-
-                <p>
-                    ${user.user_id || ""}
-                </p>
-
-            </div>
-
-            <div class="stats"
-                 style="justify-content:center">
-
-                <div class="stat">
-                    <b>0</b>
-                    <span>Posts</span>
-                </div>
-
-                <div class="stat">
-                    <b>0</b>
-                    <span>Followers</span>
-                </div>
-
-                <div class="stat">
-                    <b>0</b>
-                    <span>Following</span>
-                </div>
-
-            </div>
-
-        </div>
-
-        <button
-            class="primary"
-            onclick="logout()"
-        >
-            Logout
-        </button>
-        `
-    );
-}
-
-
-/* =====================================================
-   MONETIZATION
-===================================================== */
-
-function openMonetization(){
-
-    showContent(
-        "Monetization",
-        `
-        <div class="content-box">
-
-            <h3>💰 Usanex Monetization</h3>
-
-            <p>
-                Your monetization dashboard will appear
-                here when monetization is enabled.
-            </p>
-
-        </div>
-
-        <div class="content-box">
-
-            <h3>Estimated Earnings</h3>
-
-            <p style="font-size:28px;font-weight:850;color:#0871dd">
-                ₹0.00
-            </p>
-
-        </div>
-
-        <div class="content-box">
-
-            <h3>Creator Status</h3>
-
-            <p>
-                Not activated yet.
-            </p>
-
-        </div>
-        `
-    );
-}
-
-
-/* =====================================================
-   NOTIFICATIONS
-===================================================== */
-
-function openNotifications(){
-
-    showContent(
-        "Notifications",
-        `
-        <div class="content-box">
-            <h3>🔔 Notifications</h3>
-            <p>
-                You have 3 new notifications.
-            </p>
-        </div>
-
-        <div class="content-box">
-            <h3>Welcome to Usanex</h3>
-            <p>
-                Your account is active.
-            </p>
-        </div>
-
-        <div class="content-box">
-            <h3>Profile</h3>
-            <p>
-                Complete your profile to get started.
-            </p>
-        </div>
-        `
-    );
-}
-
-
-/* =====================================================
-   SETTINGS
-===================================================== */
-
-function openSettings(){
-
-    showContent(
-        "Settings",
-        `
-        <div class="content-box">
-            <h3>⚙️ Account Settings</h3>
-            <p>
-                Account settings will be available here.
-            </p>
-        </div>
-
-        <div class="content-box">
-            <h3>🔔 Notifications</h3>
-            <p>
-                Notification preferences.
-            </p>
-        </div>
-
-        <div class="content-box">
-            <h3>🌐 Language</h3>
-            <p>
-                English
-            </p>
-        </div>
-        `
-    );
-}
-
-
-/* =====================================================
-   PRIVACY
-===================================================== */
-
-function openPrivacy(){
-
-    showContent(
-        "Privacy",
-        `
-        <div class="content-box">
-            <h3>🔒 Privacy</h3>
-            <p>
-                Your privacy settings and account
-                controls will appear here.
-            </p>
-        </div>
-        `
-    );
-}
-
-
-/* =====================================================
-   MOOD
-===================================================== */
-
-function selectMood(mood){
-
-    localStorage.setItem(
-        "usanex_mood",
-        mood
+    localStorage.removeItem(
+        "usanex_token"
     );
 
-    alert(
-        "Your mood is set to: " + mood
+    localStorage.removeItem(
+        "usanex_user"
     );
-}
 
-
-function openMood(){
-
-    showContent(
-        "Your Mood",
-        `
-        <div class="content-box">
-            <h3>How are you feeling?</h3>
-            <p>
-                Select a mood from the Home page.
-            </p>
-        </div>
-        `
-    );
-}
-
-
-/* =====================================================
-   STORIES
-===================================================== */
-
-function uploadStory(){
-
-    alert(
-        "Story upload option will be connected to backend."
-    );
-}
-
-
-function viewStory(name){
-
-    alert(
-        name + "'s story opened."
-    );
-}
-
-
-function openStories(){
-
-    showContent(
-        "Stories",
-        `
-        <div class="content-box">
-            <h3>Stories</h3>
-            <p>
-                Stories from your contacts will appear here.
-            </p>
-        </div>
-        `
-    );
-}
-
-
-/* =====================================================
-   CHATS
-===================================================== */
-
-function openChat(name){
-
-    showContent(
-        name,
-        `
-        <div class="content-box">
-            <h3>💬 ${name}</h3>
-            <p>
-                Chat screen will be connected to the
-                messaging backend.
-            </p>
-        </div>
-        `
-    );
-}
-
-
-function openChats(){
-
-    showContent(
-        "Chats",
-        `
-        <div class="content-box">
-            <h3>Recent Chats</h3>
-            <p>
-                Your conversations will appear here.
-            </p>
-        </div>
-        `
-    );
-}
-
-
-/* =====================================================
-   REELS
-===================================================== */
-
-function openReels(){
-
-    showContent(
-        "Reels",
-        `
-        <div class="content-box"
-             style="text-align:center">
-
-            <div style="
-                font-size:55px;
-                margin-bottom:15px;
-            ">
-                ▶️
-            </div>
-
-            <h3>Usanex Reels</h3>
-
-            <p>
-                Reels feed will appear here.
-            </p>
-
-        </div>
-
-        <button
-            class="primary"
-            onclick="uploadReel()"
-        >
-            + Upload Reel
-        </button>
-        `
-    );
-}
-
-
-function uploadReel(){
-
-    alert(
-        "Reel upload option will be connected to backend."
-    );
-}
-
-
-/* =====================================================
-   CALLS
-===================================================== */
-
-function openCalls(){
-
-    showContent(
-        "Calls",
-        `
-        <div class="content-box">
-            <h3>☎️ Calls</h3>
-            <p>
-                Your recent calls will appear here.
-            </p>
-        </div>
-        `
-    );
-}
-
-
-/* =====================================================
-   CAMERA
-===================================================== */
-
-function openCamera(){
-
-    alert(
-        "Camera will be connected here."
-    );
-}
-
-
-/* =====================================================
-   SEARCH
-===================================================== */
-
-function searchHome(){
-
-    const value =
-        $("homeSearch")
-        .value
-        .trim();
-
-    if(value.length > 0){
-
-        console.log(
-            "Searching:",
-            value
-        );
-    }
-}
-
-
-/* =====================================================
-   HOME NAV
-===================================================== */
-
-function homeNav(){
-
-    closeContent();
-    closeMenu();
+    window.location.href =
+        "/";
 }
 
 
@@ -3380,9 +2331,19 @@ function homeNav(){
    INITIALIZE
 ===================================================== */
 
-createOtpInputs("regOtpRow");
-createOtpInputs("forgotOtpRow");
+createOtpInputs(
+    "regOtpRow"
+);
 
+createOtpInputs(
+    "forgotOtpRow"
+);
+
+
+/*
+   Agar user pehle se login hai,
+   to directly home.html.
+*/
 
 const savedUser =
     localStorage.getItem(
@@ -3392,28 +2353,13 @@ const savedUser =
 
 if(savedUser){
 
-    try{
-
-        loadHome(
-            JSON.parse(savedUser)
-        );
-
-    }catch(e){
-
-        localStorage.removeItem(
-            "usanex_user"
-        );
-
-        localStorage.removeItem(
-            "usanex_token"
-        );
-
-        showLogin();
-    }
+    window.location.href =
+        "/home.html";
 
 }else{
 
     showLogin();
+
 }
 
 </script>
