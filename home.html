@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usanex - Home</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f6fb;
+            color: #171717;
+        }
+
+        .app {
+            width: 100%;
+            max-width: 600px;
+            min-height: 100vh;
+            margin: auto;
+            background: #fff;
+            position: relative;
+            padding-bottom: 80px;
+        }
+
+        /* =========================
+           TOP HEADER
+        ========================= */
+
+        .header {
+            height: 68px;
+            padding: 10px 12px;
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            background: #fff;
+            border-bottom: 1px solid #ededed;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        /* SAME LOGO AS LOGIN PAGE */
+
+        .logo {
+            width: 82px;
+            min-width: 82px;
+            height: 42px;
+            object-fit: contain;
+        }
+
+        /* SEARCH */
+
+        .search-box {
+            flex: 1;
+            height: 40px;
+            background: #f1f3f7;
+            border-radius: 22px;
+            display: flex;
+            align-items: center;
+            padding: 0 13px;
+            gap: 7px;
+        }
+
+        .search-box span {
+            font-size: 16px;
+        }
+
+        .search-box input {
+            width: 100%;
+            border: none;
+            outline: none;
+            background: transparent;
+            font-size: 13px;
+        }
+
+        /* HEADER ICON */
+
+        .top-icon {
+            width: 35px;
+            height: 35px;
+            border: none;
+            border-radius: 50%;
+            background: #f3f4f7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 17px;
+            cursor: pointer;
+        }
+
+        .top-icon:active {
+            transform: scale(.90);
+        }
+
+
+        /* =========================
+           STATUS
+        ========================= */
+
+        .status-section {
+            border-bottom: 1px solid #eeeeee;
+            padding: 14px 0;
+        }
+
+        .status-title {
+            padding: 0 15px 11px;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .status-scroll {
+            display: flex;
+            gap: 14px;
+            overflow-x: auto;
+            padding: 0 15px;
+            scrollbar-width: none;
+        }
+
+        .status-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .status {
+            min-width: 58px;
+            text-align: center;
+        }
+
+        .status-image {
+            width: 54px;
+            height: 54px;
+            padding: 2px;
+            border-radius: 50%;
+            margin: auto;
+            background: linear-gradient(
+                135deg,
+                #6d35ff,
+                #d52fff,
+                #ff4f9a,
+                #ffae00
+            );
+        }
+
+        .status-image img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid white;
+        }
+
+        .status-name {
+            margin-top: 5px;
+            font-size: 11px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+
+        /* =========================
+           USERS
+        ========================= */
+
+        .users {
+            width: 100%;
+        }
+
+        .user-card {
+            min-height: 78px;
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            padding: 10px 13px;
+            border-bottom: 1px solid #eeeeee;
+            cursor: pointer;
+        }
+
+        .user-card:hover {
+            background: #fafaff;
+        }
+
+        .user-photo {
+            width: 53px;
+            height: 53px;
+            min-width: 53px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .user-name {
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .username {
+            color: #777;
+            font-size: 12px;
+            margin-top: 3px;
+        }
+
+        .user-id {
+            color: #a1a1a1;
+            font-size: 10px;
+            margin-top: 3px;
+        }
+
+        /* FOLLOW */
+
+        .follow-btn {
+            border: none;
+            background: #6d35ff;
+            color: white;
+            padding: 8px 13px;
+            min-width: 76px;
+            border-radius: 18px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .follow-btn.following {
+            background: #eeeeee;
+            color: #333;
+        }
+
+        /* PROFILE ARROW */
+
+        .arrow {
+            color: #aaa;
+            font-size: 24px;
+            margin-left: 2px;
+            padding: 5px;
+        }
+
+
+        /* =========================
+           CAMERA
+        ========================= */
+
+        .camera {
+            position: fixed;
+            bottom: 75px;
+            right: max(15px, calc((100vw - 600px) / 2 + 15px));
+            z-index: 60;
+        }
+
+        .camera-button {
+            width: 55px;
+            height: 55px;
+            border: none;
+            border-radius: 17px;
+            background: linear-gradient(
+                135deg,
+                #6d35ff,
+                #a42cff
+            );
+            color: white;
+            font-size: 23px;
+            cursor: pointer;
+            box-shadow: 0 7px 22px rgba(70, 30, 180, .25);
+        }
+
+        .camera-button:active {
+            transform: scale(.92);
+        }
+
+
+        /* =========================
+           BOTTOM NAV
+        ========================= */
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 600px;
+            height: 65px;
+            background: rgba(255,255,255,.98);
+            border-top: 1px solid #e9e9e9;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            z-index: 55;
+        }
+
+        .nav-item {
+            width: 70px;
+            height: 55px;
+            border: none;
+            background: transparent;
+            color: #777;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 3px;
+            cursor: pointer;
+        }
+
+        .nav-item.active {
+            color: #6d35ff;
+            font-weight: 700;
+        }
+
+        .nav-icon {
+            font-size: 20px;
+        }
+
+        .nav-label {
+            font-size: 10px;
+        }
+
+        .collection-button {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            border: none;
+            background: #eeeaff;
+            color: #6d35ff;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 430px) {
+
+            .header {
+                padding: 9px;
+                gap: 6px;
+            }
+
+            .logo {
+                width: 70px;
+                min-width: 70px;
+            }
+
+            .top-icon {
+                width: 32px;
+                height: 32px;
+                font-size: 15px;
+            }
+
+            .search-box {
+                height: 37px;
+            }
+
+            .user-card {
+                padding: 10px;
+            }
+
+            .user-photo {
+                width: 49px;
+                height: 49px;
+                min-width: 49px;
+            }
+
+            .follow-btn {
+                min-width: 70px;
+                padding: 7px 9px;
+            }
+        }
+    </style>
+</head>
+
+
+<body>
+
+<div class="app">
+
+
+    <!-- =================================
+         HEADER
+    ================================== -->
+
+    <header class="header">
+
+        <!-- LOGIN PAGE KA SAME LOGO -->
+        <img
+            class="logo"
+            src="/static/images/usanex-logo.png"
+            alt="Usanex"
+        >
+
+        <!-- SEARCH -->
+        <div class="search-box">
+            <span>🔍</span>
+
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Search"
+                oninput="searchUsers()"
+            >
+        </div>
+
+        <!-- NOTIFICATION -->
+        <button
+            class="top-icon"
+            onclick="openNotifications()">
+            🔔
+        </button>
+
+        <!-- WALLET -->
+        <button
+            class="top-icon"
+            onclick="openWallet()">
+            ₹
+        </button>
+
+        <!-- MENU -->
+        <button
+            class="top-icon"
+            onclick="openMenu()">
+            ☰
+        </button>
+
+    </header>
+
+
+    <!-- =================================
+         STATUS
+    ================================== -->
+
+    <section class="status-section">
+
+        <div class="status-title">
+            STATUS
+        </div>
+
+        <div class="status-scroll">
+
+            <div class="status">
+                <div class="status-image">
+                    <img src="https://i.pravatar.cc/100?img=12">
+                </div>
+                <div class="status-name">You</div>
+            </div>
+
+            <div class="status">
+                <div class="status-image">
+                    <img src="https://i.pravatar.cc/100?img=11">
+                </div>
+                <div class="status-name">Rahul</div>
+            </div>
+
+            <div class="status">
+                <div class="status-image">
+                    <img src="https://i.pravatar.cc/100?img=32">
+                </div>
+                <div class="status-name">Aman</div>
+            </div>
+
+            <div class="status">
+                <div class="status-image">
+                    <img src="https://i.pravatar.cc/100?img=47">
+                </div>
+                <div class="status-name">Neha</div>
+            </div>
+
+            <div class="status">
+                <div class="status-image">
+                    <img src="https://i.pravatar.cc/100?img=68">
+                </div>
+                <div class="status-name">Ravi</div>
+            </div>
+
+            <div class="status">
+                <div class="status-image">
+                    <img src="https://i.pravatar.cc/100?img=13">
+                </div>
+                <div class="status-name">Pooja</div>
+            </div>
+
+            <div class="status">
+                <div class="status-image">
+                    <img src="https://i.pravatar.cc/100?img=5">
+                </div>
+                <div class="status-name">Anjali</div>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =================================
+         ALL USERS
+    ================================== -->
+
+    <main class="users" id="usersList">
+
+
+        <!-- USER 1 -->
+
+        <div
+            class="user-card"
+            data-name="rahul sharma"
+            onclick="openProfile('rahul')">
+
+            <img
+                class="user-photo"
+                src="https://i.pravatar.cc/150?img=11"
+                alt="Rahul"
+            >
+
+            <div class="user-info">
+
+                <div class="user-name">
+                    Rahul Sharma
+                </div>
+
+                <div class="username">
+                    @rahul
+                </div>
+
+                <div class="user-id">
+                    ID: usanex_123
+                </div>
+
+            </div>
+
+            <button
+                class="follow-btn"
+                onclick="toggleFollow(this, event)">
+                Follow
+            </button>
+
+            <div class="arrow">
+                ›
+            </div>
+
+        </div>
+
+
+        <!-- USER 2 -->
+
+        <div
+            class="user-card"
+            data-name="aman verma"
+            onclick="openProfile('aman')">
+
+            <img
+                class="user-photo"
+                src="https://i.pravatar.cc/150?img=32"
+                alt="Aman"
+            >
+
+            <div class="user-info">
+
+                <div class="user-name">
+                    Aman Verma
+                </div>
+
+                <div class="username">
+                    @aman
+                </div>
+
+                <div class="user-id">
+                    ID: usanex_456
+                </div>
+
+            </div>
+
+            <button
+                class="follow-btn"
+                onclick="toggleFollow(this, event)">
+                Follow
+            </button>
+
+            <div class="arrow">
+                ›
+            </div>
+
+        </div>
+
+
+        <!-- USER 3 -->
+
+        <div
+            class="user-card"
+            data-name="neha singh"
+            onclick="openProfile('neha')">
+
+            <img
+                class="user-photo"
+                src="https://i.pravatar.cc/150?img=47"
+                alt="Neha"
+            >
+
+            <div class="user-info">
+
+                <div class="user-name">
+                    Neha Singh
+                </div>
+
+                <div class="username">
+                    @neha
+                </div>
+
+                <div class="user-id">
+                    ID: usanex_789
+                </div>
+
+            </div>
+
+            <button
+                class="follow-btn"
+                onclick="toggleFollow(this, event)">
+                Follow
+            </button>
+
+            <div class="arrow">
+                ›
+            </div>
+
+        </div>
+
+
+        <!-- USER 4 -->
+
+        <div
+            class="user-card"
+            data-name="ravi kumar"
+            onclick="openProfile('ravi')">
+
+            <img
+                class="user-photo"
+                src="https://i.pravatar.cc/150?img=68"
+                alt="Ravi"
+            >
+
+            <div class="user-info">
+
+                <div class="user-name">
+                    Ravi Kumar
+                </div>
+
+                <div class="username">
+                    @ravi
+                </div>
+
+                <div class="user-id">
+                    ID: usanex_852
+                </div>
+
+            </div>
+
+            <button
+                class="follow-btn"
+                onclick="toggleFollow(this, event)">
+                Follow
+            </button>
+
+            <div class="arrow">
+                ›
+            </div>
+
+        </div>
+
+
+        <!-- USER 5 -->
+
+        <div
+            class="user-card"
+            data-name="pooja mishra"
+            onclick="openProfile('pooja')">
+
+            <img
+                class="user-photo"
+                src="https://i.pravatar.cc/150?img=13"
+                alt="Pooja"
+            >
+
+            <div class="user-info">
+
+                <div class="user-name">
+                    Pooja Mishra
+                </div>
+
+                <div class="username">
+                    @pooja
+                </div>
+
+                <div class="user-id">
+                    ID: usanex_963
+                </div>
+
+            </div>
+
+            <button
+                class="follow-btn"
+                onclick="toggleFollow(this, event)">
+                Follow
+            </button>
+
+            <div class="arrow">
+                ›
+            </div>
+
+        </div>
+
+
+    </main>
+
+
+    <!-- =================================
+         CAMERA
+    ================================== -->
+
+    <div class="camera">
+
+        <button
+            class="camera-button"
+            onclick="openCamera()">
+            📷
+        </button>
+
+    </div>
+
+
+    <!-- =================================
+         BOTTOM NAVIGATION
+    ================================== -->
+
+    <nav class="bottom-nav">
+
+        <button
+            class="nav-item active"
+            onclick="goHome()">
+
+            <div class="nav-icon">
+                🏠
+            </div>
+
+            <div class="nav-label">
+                Home
+            </div>
+
+        </button>
+
+
+        <button
+            class="nav-item"
+            onclick="goReels()">
+
+            <div class="nav-icon">
+                🎬
+            </div>
+
+            <div class="nav-label">
+                Reels
+            </div>
+
+        </button>
+
+
+        <button
+            class="nav-item"
+            onclick="openCollection()">
+
+            <button
+                class="collection-button">
+                +
+            </button>
+
+        </button>
+
+
+        <button
+            class="nav-item"
+            onclick="goProfile()">
+
+            <div class="nav-icon">
+                👤
+            </div>
+
+            <div class="nav-label">
+                Profile
+            </div>
+
+        </button>
+
+    </nav>
+
+</div>
+
+
+<script>
+
+    /* =========================
+       FOLLOW / UNFOLLOW
+    ========================= */
+
+    function toggleFollow(button, event) {
+
+        event.stopPropagation();
+
+        if (button.classList.contains("following")) {
+
+            button.classList.remove("following");
+            button.innerText = "Follow";
+
+        } else {
+
+            button.classList.add("following");
+            button.innerText = "Unfollow";
+
+        }
+    }
+
+
+    /* =========================
+       SEARCH
+    ========================= */
+
+    function searchUsers() {
+
+        const input =
+            document
+            .getElementById("searchInput")
+            .value
+            .toLowerCase()
+            .trim();
+
+        const users =
+            document.querySelectorAll(".user-card");
+
+        users.forEach(user => {
+
+            const name =
+                user.dataset.name;
+
+            if (name.includes(input)) {
+
+                user.style.display = "flex";
+
+            } else {
+
+                user.style.display = "none";
+
+            }
+
+        });
+    }
+
+
+    /* =========================
+       PROFILE
+    ========================= */
+
+    function openProfile(username) {
+
+        console.log(
+            "Opening profile:",
+            username
+        );
+
+        // FastAPI connect later:
+        // window.location.href =
+        // "/profile/" + username;
+    }
+
+
+    /* =========================
+       CAMERA
+    ========================= */
+
+    function openCamera() {
+
+        console.log("Camera clicked");
+
+        // FastAPI connect later:
+        // window.location.href = "/camera";
+    }
+
+
+    /* =========================
+       NOTIFICATION
+    ========================= */
+
+    function openNotifications() {
+
+        console.log("Notifications");
+    }
+
+
+    /* =========================
+       WALLET
+    ========================= */
+
+    function openWallet() {
+
+        console.log("Wallet");
+    }
+
+
+    /* =========================
+       MENU
+    ========================= */
+
+    function openMenu() {
+
+        console.log("Menu");
+    }
+
+
+    /* =========================
+       NAVIGATION
+    ========================= */
+
+    function goHome() {
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+    }
+
+
+    function goReels() {
+
+        console.log("Reels");
+    }
+
+
+    function openCollection() {
+
+        console.log("Collection");
+    }
+
+
+    function goProfile() {
+
+        console.log("Profile");
+    }
+
+</script>
+
+</body>
+</html>
