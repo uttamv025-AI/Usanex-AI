@@ -3,7 +3,7 @@ from pydantic import BaseModel
 from fastapi.responses import FileResponse
 import os
 
-from database import SessionLocal, User
+from database import SessionLocal
 
 
 app = FastAPI(title="Usanex AI")
