@@ -2,10 +2,21 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+
+<meta name="viewport"
+      content="width=device-width,
+      initial-scale=1.0,
+      maximum-scale=1.0,
+      user-scalable=no">
+
 <title>Usanex</title>
 
 <style>
+
+/* =========================
+   BASIC
+========================= */
+
 *{
     box-sizing:border-box;
     margin:0;
@@ -13,131 +24,180 @@
     -webkit-tap-highlight-color:transparent;
 }
 
-html,body{
+html,
+body{
     width:100%;
     height:100%;
     overflow:hidden;
+    font-family:Arial, sans-serif;
+    background:#dceeff;
 }
 
 body{
-    font-family:Inter,system-ui,Arial,sans-serif;
-    background:linear-gradient(145deg,#e3f3ff,#f8fcff,#dcefff);
-    color:#12365c;
+    display:flex;
+    justify-content:center;
 }
 
-/* ================= APP ================= */
+
+/* =========================
+   APP
+========================= */
 
 .app{
     width:100%;
-    height:100dvh;
-    display:flex;
-    flex-direction:column;
+    max-width:520px;
+    height:100vh;
+    background:#ffffff;
+    position:relative;
     overflow:hidden;
-    background:rgba(255,255,255,.55);
 }
 
-/* ================= HEADER ================= */
+
+/* =========================
+   HEADER
+========================= */
 
 .header{
-    height:64px;
-    flex-shrink:0;
+    height:66px;
     display:flex;
     align-items:center;
-    padding:8px 13px;
-    gap:10px;
+    padding:8px 14px;
+    gap:7px;
+    background:#ffffff;
 }
+
+
+/* MENU */
 
 .menu{
-    width:34px;
-    height:34px;
-    border:0;
-    background:none;
-    font-size:27px;
-    color:#174b7c;
+    width:31px;
+    font-size:25px;
+    color:#164875;
+    cursor:pointer;
+    line-height:1;
 }
 
-.brand{
+
+/* LOGO */
+
+.logo{
     display:flex;
     align-items:center;
     gap:7px;
     flex:1;
 }
 
-.logo{
-    width:39px;
-    height:39px;
-    border-radius:11px;
-    display:grid;
-    place-items:center;
-    background:linear-gradient(145deg,#168bff,#0865d8);
-    color:white;
-    font-size:23px;
-    font-weight:900;
-}
-
-.brand-name{
-    font-size:20px;
-    font-weight:850;
-    color:#073b72;
-}
-
-.header-actions{
+.logo-box{
+    width:44px;
+    height:44px;
+    border-radius:12px;
+    background:#1685e5;
+    color:#ffffff;
     display:flex;
+    justify-content:center;
     align-items:center;
-    gap:7px;
+    font-size:26px;
+    font-weight:bold;
 }
+
+.logo-text{
+    font-size:22px;
+    font-weight:700;
+    color:#123f6b;
+}
+
+
+/* HEADER BUTTON */
 
 .header-btn{
-    width:34px;
-    height:34px;
-    border:0;
+    width:30px;
+    height:30px;
     border-radius:50%;
-    background:transparent;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
     position:relative;
-    font-size:21px;
-    color:#123f6c;
 }
 
+
+/* MONEY */
+
 .money{
-    font-size:20px;
-    font-weight:900;
+    color:#167ddd;
+    font-size:21px;
+    font-weight:bold;
 }
+
+
+/* NOTIFICATION */
+
+.notification{
+    color:#123f6b;
+    font-size:20px;
+}
+
+
+/* NOTIFICATION BADGE */
 
 .badge{
     position:absolute;
-    top:-1px;
-    right:-1px;
-    min-width:16px;
-    height:16px;
-    border-radius:10px;
-    background:#ed4b50;
+    top:-3px;
+    right:-3px;
+
+    background:#ef4d54;
     color:white;
+
+    width:17px;
+    height:17px;
+
+    border-radius:50%;
+
     font-size:9px;
-    display:grid;
-    place-items:center;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    font-weight:bold;
 }
+
+
+/* PROFILE */
 
 .profile-mini{
-    width:38px;
-    height:38px;
+    width:35px;
+    height:35px;
+
     border-radius:50%;
-    background:linear-gradient(145deg,#168bff,#0865d8);
+
+    background:#1685e5;
     color:white;
-    display:grid;
-    place-items:center;
-    font-weight:800;
-    font-size:17px;
-    border:3px solid #e8f5ff;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    font-size:19px;
+    font-weight:bold;
+
+    border:3px solid #e5f4ff;
+
+    cursor:pointer;
 }
 
-/* ================= SCROLL AREA ================= */
+
+/* =========================
+   CONTENT
+========================= */
 
 .content{
-    flex:1;
-    min-height:0;
+    height:calc(100vh - 135px);
+
     overflow-y:auto;
     overflow-x:hidden;
-    padding:0 13px 88px;
+
+    padding:7px 13px 100px;
+
     scrollbar-width:none;
 }
 
@@ -145,481 +205,603 @@ body{
     display:none;
 }
 
-/* ================= SEARCH ================= */
+
+/* =========================
+   SEARCH
+========================= */
 
 .search{
-    height:45px;
-    border-radius:24px;
-    background:#eaf5fd;
-    border:1px solid #d5eafa;
+    height:47px;
+
+    border-radius:25px;
+
+    background:#edf7ff;
+
     display:flex;
     align-items:center;
-    padding:0 14px;
-    margin:2px 0 10px;
+
+    padding:0 16px;
+
+    margin-bottom:15px;
 }
 
-.search span{
-    font-size:20px;
-    color:#6385a2;
+.search-icon{
+    font-size:22px;
+    color:#64849d;
+
+    margin-right:9px;
 }
 
 .search input{
-    flex:1;
     border:0;
     outline:0;
+
     background:transparent;
-    padding-left:10px;
-    font-size:14px;
-    color:#173d62;
+
+    width:100%;
+
+    font-size:17px;
+    color:#345;
 }
 
 .search input::placeholder{
-    color:#7891a8;
+    color:#758899;
 }
 
-/* ================= MOOD ================= */
+
+/* =========================
+   MOOD
+========================= */
 
 .mood{
-    background:#edf8ff;
-    border:1px solid #d6ebfa;
-    border-radius:18px;
-    padding:12px;
-    margin-bottom:10px;
+    background:#eaf7ff;
+
+    border:1px solid #cce7f8;
+
+    border-radius:20px;
+
+    padding:14px 11px 12px;
+
+    margin-bottom:16px;
 }
+
+
+/* MOOD HEADER */
 
 .mood-head{
     display:flex;
-    justify-content:space-between;
+
     align-items:center;
-    margin-bottom:9px;
+    justify-content:space-between;
+
+    margin:0 7px 3px;
 }
 
 .mood-title{
-    font-size:18px;
-    font-weight:850;
-    color:#103e70;
+    font-size:21px;
+
+    font-weight:bold;
+
+    color:#123f6b;
 }
 
 .more{
-    border:0;
-    background:none;
-    color:#0870dc;
-    font-size:13px;
-    font-weight:750;
-}
+    color:#0877d1;
 
-.mood-sub{
-    font-size:12px;
-    color:#7790a5;
-    margin-top:2px;
-}
+    font-size:14px;
 
-.moods{
-    display:grid;
-    grid-template-columns:repeat(5,1fr);
-    gap:6px;
-}
+    font-weight:bold;
 
-.mood-item{
-    min-width:0;
-    height:72px;
-    border-radius:13px;
-    border:1px solid #dcecf8;
-    background:rgba(255,255,255,.72);
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
     cursor:pointer;
 }
 
-.mood-item:active{
-    transform:scale(.96);
+
+/* MOOD SUBTITLE */
+
+.mood-sub{
+    margin:0 7px 10px;
+
+    color:#728b9e;
+
+    font-size:13px;
 }
 
+
+/* MOOD LIST */
+
+.mood-list{
+    display:flex;
+
+    gap:6px;
+
+    overflow-x:auto;
+
+    scrollbar-width:none;
+}
+
+.mood-list::-webkit-scrollbar{
+    display:none;
+}
+
+
+/* MOOD ITEM */
+
+.mood-item{
+    min-width:72px;
+    height:100px;
+
+    background:#ffffff;
+
+    border:1px solid #d9ebf7;
+
+    border-radius:16px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    justify-content:center;
+
+    cursor:pointer;
+}
+
+
+/* MOOD EMOJI */
+
 .mood-emoji{
-    font-size:24px;
-    line-height:27px;
+    width:45px;
+    height:45px;
+
+    border-radius:50%;
+
+    background:#eef8ff;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    font-size:27px;
+
+    margin-bottom:7px;
 }
 
 .mood-name{
-    margin-top:4px;
-    font-size:10px;
-    font-weight:750;
-    color:#315d80;
+    font-size:11px;
+
+    font-weight:bold;
+
+    color:#35627f;
 }
 
-/* ================= PROFILE ================= */
 
-.profile-card{
-    background:#edf8ff;
-    border:1px solid #d4eafa;
-    border-radius:18px;
-    padding:12px;
-    display:flex;
-    align-items:center;
-    gap:11px;
-    margin-bottom:10px;
-}
-
-.avatar{
-    width:68px;
-    height:68px;
-    flex-shrink:0;
-    border-radius:50%;
-    background:#dff1ff;
-    border:4px solid white;
-    display:grid;
-    place-items:center;
-    color:#0871d8;
-    font-size:28px;
-    font-weight:850;
-}
-
-.profile-info{
-    flex:1;
-    min-width:0;
-}
-
-.profile-name{
-    font-size:17px;
-    font-weight:850;
-    color:#103d6d;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-}
-
-.user-id{
-    font-size:12px;
-    color:#718ba1;
-    margin-top:2px;
-}
-
-.stats{
-    display:flex;
-    gap:15px;
-    margin-top:7px;
-}
-
-.stat{
-    text-align:center;
-}
-
-.stat b{
-    display:block;
-    font-size:14px;
-    color:#164d7d;
-}
-
-.stat span{
-    font-size:9px;
-    color:#7890a4;
-}
-
-.arrow{
-    font-size:25px;
-    color:#17609a;
-}
-
-/* ================= STORIES ================= */
+/* =========================
+   STORIES
+========================= */
 
 .section-head{
     display:flex;
+
     justify-content:space-between;
     align-items:center;
-    margin:4px 2px 7px;
+
+    margin:7px 3px 9px;
 }
 
 .section-title{
-    font-size:17px;
-    font-weight:850;
-    color:#103d6d;
+    font-size:20px;
+
+    color:#123f6b;
+
+    font-weight:bold;
 }
 
-.view{
-    border:0;
-    background:none;
-    color:#0870dc;
-    font-size:12px;
-    font-weight:750;
+.view-all{
+    color:#0877d1;
+
+    font-weight:bold;
+
+    font-size:13px;
+
+    cursor:pointer;
 }
+
+
+/* STORIES */
 
 .stories{
     display:flex;
+
     gap:9px;
+
     overflow-x:auto;
+
     scrollbar-width:none;
-    margin-bottom:12px;
+
+    margin-bottom:17px;
 }
 
 .stories::-webkit-scrollbar{
     display:none;
 }
 
+
+/* STORY */
+
 .story{
-    width:66px;
-    flex:0 0 66px;
+    min-width:68px;
+
     text-align:center;
+
+    cursor:pointer;
 }
 
-.story-img{
-    width:58px;
-    height:58px;
-    margin:auto;
+.story-circle{
+    width:57px;
+    height:57px;
+
     border-radius:50%;
-    border:3px solid #1682ed;
-    background:#e2f2ff;
-    display:grid;
-    place-items:center;
-    color:#0870dc;
+
+    background:#e5f5ff;
+
+    border:3px solid #1786df;
+
+    display:flex;
+
+    justify-content:center;
+    align-items:center;
+
+    color:#087bd7;
+
     font-size:20px;
-    font-weight:800;
+
+    font-weight:bold;
+
+    margin:auto;
+}
+
+
+/* ADD STORY */
+
+.add-story{
+    background:#1685e5;
+
+    color:white;
+
+    font-size:28px;
 }
 
 .story-name{
     font-size:10px;
-    margin-top:4px;
-    color:#355d7c;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
+
+    color:#526f83;
+
+    margin-top:5px;
 }
 
-/* ================= POSTS ================= */
+
+/* =========================
+   POSTS
+========================= */
 
 .post{
-    background:rgba(255,255,255,.88);
-    border:1px solid #d9ebf8;
-    border-radius:16px;
-    padding:11px;
-    margin-bottom:9px;
+    background:#f1faff;
+
+    border-radius:17px;
+
+    padding:12px;
+
+    margin-bottom:12px;
 }
 
-.post-top{
+.post-head{
     display:flex;
+
     align-items:center;
+
     gap:8px;
 }
 
 .post-avatar{
-    width:38px;
-    height:38px;
+    width:37px;
+    height:37px;
+
     border-radius:50%;
-    background:#e1f2ff;
-    display:grid;
-    place-items:center;
-    color:#0870dc;
-    font-weight:800;
+
+    background:#1685e5;
+
+    color:white;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    font-weight:bold;
+
+    font-size:18px;
 }
 
-.post-user{
-    flex:1;
-}
+.post-name{
+    font-weight:bold;
 
-.post-user b{
-    display:block;
-    font-size:13px;
-    color:#153f68;
-}
+    color:#123f6b;
 
-.post-user span{
-    font-size:10px;
-    color:#8195a7;
+    font-size:14px;
 }
 
 .post-text{
+    margin-top:9px;
+
+    color:#456;
+
     font-size:13px;
-    color:#47667f;
-    margin:9px 0 7px;
-    line-height:1.4;
 }
 
-.post-actions{
+
+/* =========================
+   BOTTOM NAV
+========================= */
+
+.bottom-nav{
+    position:absolute;
+
+    left:9px;
+    right:9px;
+
+    bottom:6px;
+
+    height:65px;
+
+    border-radius:23px;
+
+    background:rgba(255,255,255,0.97);
+
+    box-shadow:
+        0 3px 18px rgba(0,0,0,.10);
+
     display:flex;
-    gap:20px;
-}
 
-.post-actions button{
-    border:0;
-    background:none;
-    color:#587992;
-    font-size:12px;
-}
-
-/* ================= BOTTOM NAV ================= */
-
-.bottom{
-    position:fixed;
-    left:8px;
-    right:8px;
-    bottom:7px;
-    height:66px;
-    border-radius:22px;
-    background:rgba(255,255,255,.94);
-    border:1px solid #d9eaf6;
-    box-shadow:0 8px 30px rgba(41,100,150,.16);
-    display:grid;
-    grid-template-columns:1fr 1fr 1fr 1fr 1fr;
     align-items:center;
-    z-index:50;
+
+    justify-content:space-around;
+
+    z-index:10;
 }
 
-.nav-btn{
-    height:100%;
-    border:0;
-    background:none;
-    color:#718aa0;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    gap:2px;
+
+/* NAV ITEM */
+
+.nav-item{
+    width:48px;
+
+    text-align:center;
+
+    color:#72899a;
+
+    cursor:pointer;
+
     font-size:10px;
-    font-weight:700;
+
+    font-weight:bold;
 }
 
 .nav-icon{
-    font-size:21px;
+    display:block;
+
+    font-size:20px;
+
+    margin-bottom:2px;
 }
 
-.nav-btn.active{
-    color:#0870dc;
+.nav-item.active{
+    color:#087bd7;
 }
 
-/* PLUS */
 
-.plus-wrap{
-    position:relative;
-    height:100%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-}
+/* =========================
+   PLUS BUTTON
+========================= */
 
 .plus{
-    width:53px;
-    height:53px;
+    width:52px;
+    height:52px;
+
     border-radius:50%;
-    border:4px solid white;
-    background:linear-gradient(145deg,#168bff,#0865d8);
+
+    background:#1685e5;
+
     color:white;
-    font-size:28px;
-    box-shadow:0 7px 20px rgba(10,105,220,.3);
+
+    font-size:29px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    box-shadow:
+        0 4px 12px rgba(0,120,220,.3);
+
+    margin-top:-23px;
+
+    border:4px solid white;
 }
 
-/* ================= CAMERA ================= */
+
+/* =========================
+   CAMERA
+========================= */
 
 .camera{
-    position:fixed;
-    right:17px;
-    bottom:83px;
-    width:48px;
-    height:48px;
+    position:absolute;
+
+    right:15px;
+    bottom:80px;
+
+    width:47px;
+    height:47px;
+
     border-radius:50%;
-    border:3px solid white;
-    background:#1685ed;
-    color:white;
-    display:grid;
-    place-items:center;
-    font-size:21px;
-    z-index:60;
-    box-shadow:0 7px 20px rgba(8,100,210,.3);
+
+    background:#1685e5;
+
+    border:4px solid white;
+
+    box-shadow:
+        0 3px 12px rgba(0,0,0,.15);
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    font-size:20px;
+
+    z-index:11;
+
+    cursor:pointer;
 }
 
-/* ================= SMALL SCREEN ================= */
 
-@media(max-width:370px){
+/* =========================
+   SMALL PHONE
+========================= */
+
+@media(max-width:360px){
 
     .header{
-        padding-left:9px;
-        padding-right:9px;
-        gap:6px;
+        padding:7px 10px;
+        gap:5px;
     }
 
-    .brand-name{
-        font-size:18px;
+    .logo-box{
+        width:40px;
+        height:40px;
+        font-size:24px;
     }
 
-    .logo{
-        width:36px;
-        height:36px;
+    .logo-text{
+        font-size:20px;
     }
 
-    .mood{
-        padding:9px;
+    .content{
+        padding-left:10px;
+        padding-right:10px;
     }
 
     .mood-item{
-        height:67px;
+        min-width:69px;
     }
 
-    .profile-card{
-        padding:10px;
-    }
-
-    .avatar{
-        width:60px;
-        height:60px;
-    }
-
-    .stats{
-        gap:10px;
-    }
 }
+
+
+/* =========================
+   NO OUTER SCROLL
+========================= */
+
+body,
+html{
+    overscroll-behavior:none;
+}
+
 </style>
 </head>
+
 
 <body>
 
 <div class="app">
 
-<!-- ================= HEADER ================= -->
 
-<header class="header">
+<!-- ==================================
+     HEADER
+================================== -->
 
-    <button class="menu" onclick="openMenu()">☰</button>
+<div class="header">
 
-    <div class="brand">
-        <div class="logo">U</div>
-        <div class="brand-name">Usanex</div>
+
+    <!-- MENU -->
+
+    <div class="menu"
+         onclick="openMenu()">
+
+        ☰
+
     </div>
 
-    <!-- MONETIZATION HEADER ME -->
-    <div class="header-actions">
 
-        <button class="header-btn money"
-                onclick="openMonetization()"
-                title="Monetization">
-            ₹
-        </button>
+    <!-- LOGO -->
 
-        <button class="header-btn"
-                onclick="openNotifications()">
-            ♧
-            <span class="badge">3</span>
-        </button>
+    <div class="logo">
 
-        <button class="profile-mini"
-                onclick="openProfile()"
-                id="miniAvatar">
+        <div class="logo-box">
             U
-        </button>
+        </div>
+
+        <div class="logo-text">
+            Usanex
+        </div>
 
     </div>
 
-</header>
+
+    <!-- MONETIZATION -->
+
+    <div class="header-btn money"
+         onclick="openMonetization()">
+
+        ₹
+
+    </div>
 
 
-<!-- ================= SCROLL CONTENT ================= -->
+    <!-- NOTIFICATION -->
 
-<main class="content">
+    <div class="header-btn notification"
+         onclick="openNotifications()">
+
+        ♧
+
+        <span class="badge">
+            3
+        </span>
+
+    </div>
+
+
+    <!-- PROFILE -->
+
+    <div class="profile-mini"
+         onclick="openProfile()"
+         id="miniAvatar">
+
+        U
+
+    </div>
+
+
+</div>
+
+
+
+<!-- ==================================
+     CONTENT
+================================== -->
+
+<div class="content">
+
 
     <!-- SEARCH -->
 
     <div class="search">
 
-        <span>⌕</span>
+        <span class="search-icon">
+            ⌕
+        </span>
 
         <input
             type="text"
@@ -630,112 +812,129 @@ body{
     </div>
 
 
-    <!-- YOUR MOOD -->
 
-    <section class="mood">
+    <!-- ==================================
+         YOUR MOOD
+    ================================== -->
+
+    <div class="mood">
+
 
         <div class="mood-head">
 
-            <div>
-                <div class="mood-title">Your Mood</div>
-                <div class="mood-sub">
-                    How are you feeling today?
-                </div>
+            <div class="mood-title">
+                Your Mood
             </div>
 
-            <button class="more"
-                    onclick="showMoreMood()">
+            <div class="more"
+                 onclick="showMoreMood()">
+
                 More ›
-            </button>
-
-        </div>
-
-
-        <div class="moods">
-
-            <button class="mood-item"
-                    onclick="setMood('Good')">
-                <div class="mood-emoji">😊</div>
-                <div class="mood-name">Good</div>
-            </button>
-
-            <button class="mood-item"
-                    onclick="setMood('Sad')">
-                <div class="mood-emoji">😔</div>
-                <div class="mood-name">Sad</div>
-            </button>
-
-            <button class="mood-item"
-                    onclick="setMood('Emotional')">
-                <div class="mood-emoji">🥹</div>
-                <div class="mood-name">Emotional</div>
-            </button>
-
-            <button class="mood-item"
-                    onclick="setMood('Motivation')">
-                <div class="mood-emoji">💪</div>
-                <div class="mood-name">Motivation</div>
-            </button>
-
-            <button class="mood-item"
-                    onclick="setMood('Other')">
-                <div class="mood-emoji">•••</div>
-                <div class="mood-name">Other</div>
-            </button>
-
-        </div>
-
-    </section>
-
-
-    <!-- USER PROFILE -->
-
-    <section class="profile-card"
-             onclick="openProfile()">
-
-        <div class="avatar" id="mainAvatar">
-            U
-        </div>
-
-        <div class="profile-info">
-
-            <div class="profile-name"
-                 id="profileName">
-                Uttam
-            </div>
-
-            <div class="user-id"
-                 id="profileId">
-                UX2e858661c5
-            </div>
-
-            <div class="stats">
-
-                <div class="stat">
-                    <b id="postCount">0</b>
-                    <span>Posts</span>
-                </div>
-
-                <div class="stat">
-                    <b id="followersCount">0</b>
-                    <span>Followers</span>
-                </div>
-
-                <div class="stat">
-                    <b id="followingCount">0</b>
-                    <span>Following</span>
-                </div>
 
             </div>
 
         </div>
 
-        <div class="arrow">›</div>
 
-    </section>
+        <div class="mood-sub">
+
+            How are you feeling today?
+
+        </div>
 
 
-    <!-- STORIES -->
+        <div class="mood-list">
+
+
+            <!-- GOOD -->
+
+            <div class="mood-item"
+                 onclick="selectMood('Good')">
+
+                <div class="mood-emoji">
+                    😊
+                </div>
+
+                <div class="mood-name">
+                    Good
+                </div>
+
+            </div>
+
+
+            <!-- SAD -->
+
+            <div class="mood-item"
+                 onclick="selectMood('Sad')">
+
+                <div class="mood-emoji">
+                    😔
+                </div>
+
+                <div class="mood-name">
+                    Sad
+                </div>
+
+            </div>
+
+
+            <!-- EMOTIONAL -->
+
+            <div class="mood-item"
+                 onclick="selectMood('Emotional')">
+
+                <div class="mood-emoji">
+                    🥹
+                </div>
+
+                <div class="mood-name">
+                    Emotional
+                </div>
+
+            </div>
+
+
+            <!-- MOTIVATION -->
+
+            <div class="mood-item"
+                 onclick="selectMood('Motivation')">
+
+                <div class="mood-emoji">
+                    💪
+                </div>
+
+                <div class="mood-name">
+                    Motivation
+                </div>
+
+            </div>
+
+
+            <!-- OTHER -->
+
+            <div class="mood-item"
+                 onclick="selectMood('Other')">
+
+                <div class="mood-emoji">
+                    •••
+                </div>
+
+                <div class="mood-name">
+                    Other
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ==================================
+         STORIES
+    ================================== -->
 
     <div class="section-head">
 
@@ -743,45 +942,87 @@ body{
             Stories
         </div>
 
-        <button class="view"
-                onclick="viewStories()">
-            View all ›
-        </button>
+        <div class="view-all"
+             onclick="viewStories()">
+
+            View All ›
+
+        </div>
 
     </div>
 
 
     <div class="stories">
 
-        <div class="story" onclick="addStory()">
-            <div class="story-img">+</div>
-            <div class="story-name">Add Story</div>
+
+        <!-- ADD STORY -->
+
+        <div class="story"
+             onclick="addStory()">
+
+            <div class="story-circle add-story">
+                +
+            </div>
+
+            <div class="story-name">
+                Add Story
+            </div>
+
         </div>
 
-        <div class="story" onclick="openStory('Rohit')">
-            <div class="story-img">R</div>
-            <div class="story-name">Rohit</div>
+
+        <!-- STORY 1 -->
+
+        <div class="story">
+
+            <div class="story-circle">
+                U
+            </div>
+
+            <div class="story-name">
+                User
+            </div>
+
         </div>
 
-        <div class="story" onclick="openStory('Priya')">
-            <div class="story-img">P</div>
-            <div class="story-name">Priya</div>
+
+        <!-- STORY 2 -->
+
+        <div class="story">
+
+            <div class="story-circle">
+                A
+            </div>
+
+            <div class="story-name">
+                Alex
+            </div>
+
         </div>
 
-        <div class="story" onclick="openStory('Amit')">
-            <div class="story-img">A</div>
-            <div class="story-name">Amit</div>
+
+        <!-- STORY 3 -->
+
+        <div class="story">
+
+            <div class="story-circle">
+                R
+            </div>
+
+            <div class="story-name">
+                Rahul
+            </div>
+
         </div>
 
-        <div class="story" onclick="openStory('Neha')">
-            <div class="story-img">N</div>
-            <div class="story-name">Neha</div>
-        </div>
 
     </div>
 
 
-    <!-- RECENT POSTS -->
+
+    <!-- ==================================
+         RECENT POSTS
+    ================================== -->
 
     <div class="section-head">
 
@@ -789,271 +1030,355 @@ body{
             Recent Posts
         </div>
 
-        <button class="view"
-                onclick="viewAllPosts()">
-            View all ›
-        </button>
+        <div class="view-all"
+             onclick="viewPosts()">
+
+            View All ›
+
+        </div>
 
     </div>
 
 
-    <article class="post">
+    <!-- POST -->
 
-        <div class="post-top">
-
-            <div class="post-avatar">
-                R
-            </div>
-
-            <div class="post-user">
-                <b>Rohit Kumar</b>
-                <span>2 min ago</span>
-            </div>
-
-        </div>
-
-        <div class="post-text">
-            Hey! How are you? 😊
-        </div>
-
-        <div class="post-actions">
-            <button onclick="likePost(this)">♡ Like</button>
-            <button onclick="commentPost()">💬 Comment</button>
-            <button onclick="sharePost()">↗ Share</button>
-        </div>
-
-    </article>
+    <div class="post">
 
 
-    <article class="post">
-
-        <div class="post-top">
+        <div class="post-head">
 
             <div class="post-avatar">
-                P
+                U
             </div>
 
-            <div class="post-user">
-                <b>Priya Sharma</b>
-                <span>15 min ago</span>
+            <div class="post-name">
+                Welcome
             </div>
 
         </div>
+
 
         <div class="post-text">
-            Have a beautiful day! 🌸
-        </div>
 
-        <div class="post-actions">
-            <button onclick="likePost(this)">♡ Like</button>
-            <button onclick="commentPost()">💬 Comment</button>
-            <button onclick="sharePost()">↗ Share</button>
-        </div>
-
-    </article>
-
-
-    <article class="post">
-
-        <div class="post-top">
-
-            <div class="post-avatar">
-                A
-            </div>
-
-            <div class="post-user">
-                <b>Amit Singh</b>
-                <span>32 min ago</span>
-            </div>
+            Welcome to Usanex 🎉
 
         </div>
 
-        <div class="post-text">
-            New photo uploaded 📷
-        </div>
 
-        <div class="post-actions">
-            <button onclick="likePost(this)">♡ Like</button>
-            <button onclick="commentPost()">💬 Comment</button>
-            <button onclick="sharePost()">↗ Share</button>
-        </div>
-
-    </article>
-
-
-</main>
-
-
-<!-- ================= CAMERA ================= -->
-
-<button class="camera"
-        onclick="openCamera()">
-    📷
-</button>
-
-
-<!-- ================= BOTTOM ================= -->
-
-<nav class="bottom">
-
-    <button class="nav-btn active"
-            onclick="goHome()">
-        <span class="nav-icon">⌂</span>
-        Home
-    </button>
-
-    <button class="nav-btn"
-            onclick="openReels()">
-        <span class="nav-icon">▶</span>
-        Reels
-    </button>
-
-    <div class="plus-wrap">
-        <button class="plus"
-                onclick="createPost()">
-            +
-        </button>
     </div>
 
-    <button class="nav-btn"
-            onclick="openCalls()">
-        <span class="nav-icon">☎</span>
-        Calls
-    </button>
-
-    <button class="nav-btn"
-            onclick="openProfile()">
-        <span class="nav-icon">●</span>
-        Profile
-    </button>
-
-</nav>
 
 </div>
 
 
+
+<!-- ==================================
+     CAMERA
+================================== -->
+
+<div class="camera"
+     onclick="openCamera()">
+
+    📷
+
+</div>
+
+
+
+<!-- ==================================
+     BOTTOM NAVIGATION
+================================== -->
+
+<div class="bottom-nav">
+
+
+    <!-- HOME -->
+
+    <div class="nav-item active"
+         onclick="goHome()">
+
+        <span class="nav-icon">
+            ⌂
+        </span>
+
+        Home
+
+    </div>
+
+
+    <!-- REELS -->
+
+    <div class="nav-item"
+         onclick="openReels()">
+
+        <span class="nav-icon">
+            ▶
+        </span>
+
+        Reels
+
+    </div>
+
+
+    <!-- CREATE -->
+
+    <div class="nav-item"
+         onclick="createPost()">
+
+        <div class="plus">
+            +
+        </div>
+
+    </div>
+
+
+    <!-- CALLS -->
+
+    <div class="nav-item"
+         onclick="openCalls()">
+
+        <span class="nav-icon">
+            ☎
+        </span>
+
+        Calls
+
+    </div>
+
+
+    <!-- PROFILE -->
+
+    <div class="nav-item"
+         onclick="openProfile()">
+
+        <span class="nav-icon">
+            ●
+        </span>
+
+        Profile
+
+    </div>
+
+
+</div>
+
+
+</div>
+
+
+
+<!-- ==================================
+     JAVASCRIPT
+================================== -->
+
 <script>
 
-/* ================= USER ================= */
+
+/* =========================
+   USER DATA
+========================= */
 
 let user = {
-    name:"Uttam",
-    user_id:"UX2e858661c5",
-    mobile:""
+
+    name: "User",
+
+    user_id: "",
+
+    mobile: ""
+
 };
 
-const savedUser =
-    localStorage.getItem("usanex_user");
 
-if(savedUser){
+try{
 
-    try{
-        user = JSON.parse(savedUser);
-    }catch(e){}
+    const savedUser =
+        localStorage.getItem("usanex_user");
+
+
+    if(savedUser){
+
+        user =
+            JSON.parse(savedUser);
+
+    }
+
+}catch(error){
+
+    console.log(error);
 
 }
 
-document.getElementById("profileName")
-    .textContent = user.name || "User";
 
-document.getElementById("profileId")
-    .textContent = user.user_id || "";
+
+/* =========================
+   PROFILE ICON
+========================= */
 
 const firstLetter =
     (user.name || "U")
     .charAt(0)
     .toUpperCase();
 
-document.getElementById("mainAvatar")
-    .textContent = firstLetter;
 
-document.getElementById("miniAvatar")
-    .textContent = firstLetter;
+document.getElementById(
+    "miniAvatar"
+).textContent = firstLetter;
 
 
-/* ================= BUTTONS ================= */
+
+/* =========================
+   HEADER FUNCTIONS
+========================= */
 
 function openMenu(){
-    alert("Settings / Menu");
+
+    alert("Menu");
+
 }
+
 
 function openMonetization(){
-    alert("Monetization\n\nYour creator earnings will appear here.");
+
+    alert("Usanex Monetization");
+
 }
+
 
 function openNotifications(){
+
     alert("Notifications");
+
 }
+
 
 function openProfile(){
+
     alert("Profile");
+
 }
 
-function setMood(mood){
-    alert("Mood selected: " + mood);
+
+
+/* =========================
+   MOOD
+========================= */
+
+function selectMood(mood){
+
+    alert(
+        "Mood selected: " + mood
+    );
+
 }
+
 
 function showMoreMood(){
+
     alert("More moods");
+
 }
 
-function searchUsers(value){
-    // Search functionality later
-}
+
+
+/* =========================
+   STORIES
+========================= */
 
 function addStory(){
+
     alert("Add Story");
+
 }
 
-function openStory(name){
-    alert(name + " Story");
-}
 
 function viewStories(){
-    alert("All Stories");
+
+    alert("Stories");
+
 }
 
-function viewAllPosts(){
-    alert("All Posts");
+
+
+/* =========================
+   POSTS
+========================= */
+
+function viewPosts(){
+
+    alert("Posts");
+
 }
 
-function likePost(button){
 
-    if(button.textContent.includes("♡")){
-        button.textContent = "♥ Liked";
-    }else{
-        button.textContent = "♡ Like";
+
+/* =========================
+   SEARCH
+========================= */
+
+function searchUsers(value){
+
+    if(
+        value.trim() === ""
+    ){
+
+        return;
+
     }
 
+    console.log(
+        "Searching:",
+        value
+    );
+
 }
 
-function commentPost(){
-    alert("Comments");
-}
 
-function sharePost(){
-    alert("Share Post");
-}
+
+/* =========================
+   CAMERA
+========================= */
 
 function openCamera(){
+
     alert("Camera");
+
 }
 
-function createPost(){
-    alert("Create Post / Upload Reel");
-}
 
-function openReels(){
-    alert("Reels");
-}
 
-function openCalls(){
-    alert("Calls");
-}
+/* =========================
+   BOTTOM NAV
+========================= */
 
 function goHome(){
-    window.scrollTo(0,0);
+
+    document
+        .querySelector(".content")
+        .scrollTop = 0;
+
 }
+
+
+function openReels(){
+
+    alert("Reels");
+
+}
+
+
+function createPost(){
+
+    alert("Create Post");
+
+}
+
+
+function openCalls(){
+
+    alert("Calls");
+
+}
+
 
 </script>
 
