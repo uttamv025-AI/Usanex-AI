@@ -1,0 +1,2454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>Usanex</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+    font-family:
+    Inter,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Arial,
+    sans-serif;
+
+    min-height:100vh;
+
+    background:
+    linear-gradient(
+        145deg,
+        #e2f3ff 0%,
+        #f9fdff 48%,
+        #dcefff 100%
+    );
+
+    color:#123b64;
+
+    padding:10px;
+}
+
+
+.app{
+    width:min(500px,100%);
+    min-height:calc(100vh - 20px);
+
+    margin:auto;
+
+    background:rgba(255,255,255,.96);
+
+    border-radius:30px;
+
+    overflow:hidden;
+
+    position:relative;
+
+    box-shadow:
+    0 20px 65px
+    rgba(39,105,157,.18);
+
+    padding-bottom:86px;
+}
+
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+.header{
+
+    height:76px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:11px;
+
+    padding:13px 16px;
+
+    background:
+    rgba(255,255,255,.96);
+
+}
+
+
+.menu{
+
+    width:42px;
+    height:42px;
+
+    border:0;
+    background:none;
+
+    font-size:31px;
+
+    color:#103e6d;
+
+    cursor:pointer;
+}
+
+
+.brand{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:9px;
+
+    flex:1;
+
+}
+
+
+.logo{
+
+    width:47px;
+    height:47px;
+
+    border-radius:14px;
+
+    background:
+    linear-gradient(
+        135deg,
+        #168cff,
+        #0862d3
+    );
+
+    color:white;
+
+    display:grid;
+
+    place-items:center;
+
+    font-size:28px;
+
+    font-weight:900;
+
+    box-shadow:
+    0 7px 18px
+    rgba(8,112,220,.25);
+}
+
+
+.brand-name{
+
+    font-size:23px;
+
+    font-weight:850;
+
+    color:#0a3970;
+
+}
+
+
+/* MONETIZATION */
+
+.monetization{
+
+    height:40px;
+
+    padding:0 10px;
+
+    border-radius:13px;
+
+    border:1px solid #cce6f8;
+
+    background:#f2faff;
+
+    color:#0869d8;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:5px;
+
+    font-size:11px;
+
+    font-weight:800;
+
+    cursor:pointer;
+
+}
+
+
+.head-btn{
+
+    width:42px;
+    height:42px;
+
+    border-radius:14px;
+
+    border:1px solid #d4e8f6;
+
+    background:#f5fbff;
+
+    font-size:19px;
+
+    cursor:pointer;
+
+    position:relative;
+
+}
+
+
+.badge{
+
+    position:absolute;
+
+    top:-5px;
+
+    right:-4px;
+
+    min-width:18px;
+
+    height:18px;
+
+    border-radius:50%;
+
+    background:#ff4655;
+
+    color:#fff;
+
+    font-size:9px;
+
+    display:grid;
+
+    place-items:center;
+
+    font-weight:800;
+
+}
+
+
+/* =====================================================
+   CONTENT
+===================================================== */
+
+.content{
+
+    padding:5px 17px 25px;
+
+}
+
+
+/* =====================================================
+   SEARCH
+===================================================== */
+
+.search{
+
+    width:100%;
+
+    height:51px;
+
+    border-radius:17px;
+
+    border:1px solid #d5e9f7;
+
+    background:#f1f8fd;
+
+    outline:none;
+
+    padding:0 17px;
+
+    font-size:15px;
+
+    color:#183e62;
+
+}
+
+
+.search:focus{
+
+    border-color:#1584ed;
+
+    box-shadow:
+    0 0 0 4px
+    rgba(21,132,237,.08);
+
+}
+
+
+/* =====================================================
+   MOOD
+===================================================== */
+
+.mood-box{
+
+    margin-top:17px;
+
+    padding:17px 11px 12px;
+
+    border-radius:22px;
+
+    background:
+    linear-gradient(
+        135deg,
+        #eaf7ff,
+        #f5fbff
+    );
+
+    border:1px solid #d5ebfa;
+
+}
+
+
+.mood-head{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:0 5px 13px;
+
+}
+
+
+.mood-head h2{
+
+    font-size:20px;
+
+    color:#0b3970;
+
+}
+
+
+.mood-head p{
+
+    color:#7892a7;
+
+    font-size:11px;
+
+    margin-top:3px;
+
+}
+
+
+.more{
+
+    border:0;
+
+    background:none;
+
+    color:#086bd8;
+
+    font-size:13px;
+
+    font-weight:800;
+
+    cursor:pointer;
+
+}
+
+
+.moods{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(5,1fr);
+
+    gap:6px;
+
+}
+
+
+.mood{
+
+    border:1px solid #dbeaf5;
+
+    background:rgba(255,255,255,.75);
+
+    border-radius:15px;
+
+    padding:9px 3px;
+
+    cursor:pointer;
+
+}
+
+
+.mood:active{
+
+    transform:scale(.95);
+
+}
+
+
+.mood-icon{
+
+    width:40px;
+    height:40px;
+
+    margin:auto;
+
+    border-radius:50%;
+
+    display:grid;
+
+    place-items:center;
+
+    font-size:21px;
+
+    background:#e8f5ff;
+
+}
+
+
+.mood span{
+
+    display:block;
+
+    margin-top:6px;
+
+    font-size:9px;
+
+    font-weight:750;
+
+    color:#426a8e;
+
+}
+
+
+/* =====================================================
+   PROFILE
+===================================================== */
+
+.profile-card{
+
+    margin-top:17px;
+
+    padding:15px;
+
+    border-radius:22px;
+
+    background:
+    linear-gradient(
+        135deg,
+        #e8f6ff,
+        #f7fcff
+    );
+
+    border:1px solid #d4eaf8;
+
+}
+
+
+.profile-top{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:13px;
+
+}
+
+
+.profile-avatar{
+
+    width:67px;
+    height:67px;
+
+    flex-shrink:0;
+
+    border-radius:50%;
+
+    display:grid;
+
+    place-items:center;
+
+    background:
+    linear-gradient(
+        145deg,
+        #d9efff,
+        #bfe3ff
+    );
+
+    color:#086fd7;
+
+    font-size:27px;
+
+    font-weight:900;
+
+    border:4px solid white;
+
+    box-shadow:
+    0 3px 12px
+    rgba(20,105,175,.13);
+
+    position:relative;
+
+}
+
+
+.online{
+
+    position:absolute;
+
+    width:14px;
+    height:14px;
+
+    border-radius:50%;
+
+    background:#12a95b;
+
+    border:3px solid white;
+
+    right:0;
+
+    bottom:1px;
+
+}
+
+
+.profile-main{
+
+    flex:1;
+
+}
+
+
+.profile-main h2{
+
+    font-size:18px;
+
+    color:#0e3969;
+
+}
+
+
+.profile-main p{
+
+    color:#7190a6;
+
+    font-size:12px;
+
+    margin-top:4px;
+
+}
+
+
+.active{
+
+    color:#0a9951;
+
+    font-size:11px;
+
+    font-weight:750;
+
+    margin-top:5px;
+
+}
+
+
+/* STATS */
+
+.stats{
+
+    margin-top:15px;
+
+    padding-top:14px;
+
+    border-top:1px solid #d9eaf5;
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(3,1fr);
+
+    text-align:center;
+
+}
+
+
+.stat{
+
+    border-right:1px solid #d9eaf5;
+
+}
+
+
+.stat:last-child{
+
+    border-right:0;
+
+}
+
+
+.stat b{
+
+    display:block;
+
+    font-size:16px;
+
+    color:#153e68;
+
+}
+
+
+.stat span{
+
+    display:block;
+
+    margin-top:3px;
+
+    font-size:10px;
+
+    color:#7991a5;
+
+}
+
+
+/* =====================================================
+   STORIES
+===================================================== */
+
+.section-title{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin:20px 2px 10px;
+
+}
+
+
+.section-title h2{
+
+    font-size:18px;
+
+    color:#123d6b;
+
+}
+
+
+.view{
+
+    border:0;
+
+    background:none;
+
+    color:#0870dd;
+
+    font-weight:750;
+
+    font-size:12px;
+
+    cursor:pointer;
+
+}
+
+
+.stories{
+
+    display:flex;
+
+    gap:10px;
+
+    overflow-x:auto;
+
+    padding:3px 1px 8px;
+
+}
+
+
+.stories::-webkit-scrollbar{
+
+    display:none;
+
+}
+
+
+.story{
+
+    min-width:78px;
+
+    text-align:center;
+
+    cursor:pointer;
+
+}
+
+
+.story-circle{
+
+    width:62px;
+    height:62px;
+
+    margin:auto;
+
+    border-radius:50%;
+
+    padding:3px;
+
+    background:
+    linear-gradient(
+        135deg,
+        #1688ef,
+        #4c9fff
+    );
+
+}
+
+
+.story-inner{
+
+    width:100%;
+    height:100%;
+
+    border-radius:50%;
+
+    display:grid;
+
+    place-items:center;
+
+    background:#dff2ff;
+
+    color:#0871d9;
+
+    font-weight:850;
+
+    font-size:19px;
+
+    border:2px solid white;
+
+}
+
+
+.story-name{
+
+    margin-top:5px;
+
+    font-size:10px;
+
+    color:#274e73;
+
+    font-weight:700;
+
+    white-space:nowrap;
+
+}
+
+
+/* =====================================================
+   RECENT CHATS
+===================================================== */
+
+.chat-title{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin:17px 2px 8px;
+
+}
+
+
+.chat-title h2{
+
+    font-size:18px;
+
+    color:#123d6b;
+
+}
+
+
+.chat{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:11px;
+
+    padding:12px 5px;
+
+    border-bottom:1px solid #e4eff6;
+
+    cursor:pointer;
+
+}
+
+
+.chat-avatar{
+
+    width:46px;
+    height:46px;
+
+    border-radius:50%;
+
+    background:#e5f3ff;
+
+    display:grid;
+
+    place-items:center;
+
+    color:#0870d8;
+
+    font-weight:850;
+
+}
+
+
+.chat-info{
+
+    flex:1;
+
+}
+
+
+.chat-info b{
+
+    display:block;
+
+    color:#173e67;
+
+    font-size:14px;
+
+}
+
+
+.chat-info small{
+
+    display:block;
+
+    margin-top:4px;
+
+    color:#8297a8;
+
+    font-size:11px;
+
+}
+
+
+.chat-right{
+
+    text-align:right;
+
+}
+
+
+.chat-right small{
+
+    color:#7f96a9;
+
+    font-size:9px;
+
+}
+
+
+.unread{
+
+    width:19px;
+    height:19px;
+
+    margin:4px 0 0 auto;
+
+    border-radius:50%;
+
+    background:#0878e8;
+
+    color:white;
+
+    display:grid;
+
+    place-items:center;
+
+    font-size:9px;
+
+}
+
+
+/* =====================================================
+   CAMERA
+===================================================== */
+
+.camera{
+
+    position:absolute;
+
+    right:17px;
+
+    bottom:96px;
+
+    width:57px;
+    height:57px;
+
+    border-radius:50%;
+
+    border:4px solid white;
+
+    background:
+    linear-gradient(
+        135deg,
+        #168cff,
+        #0867d8
+    );
+
+    color:white;
+
+    font-size:24px;
+
+    box-shadow:
+    0 8px 23px
+    rgba(8,111,220,.30);
+
+    cursor:pointer;
+
+    z-index:4;
+
+}
+
+
+/* =====================================================
+   BOTTOM NAV
+===================================================== */
+
+.bottom{
+
+    position:absolute;
+
+    left:0;
+    right:0;
+    bottom:0;
+
+    height:78px;
+
+    background:
+    rgba(255,255,255,.98);
+
+    border-top:1px solid #dfedf6;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-around;
+
+    z-index:5;
+
+}
+
+
+.nav{
+
+    border:0;
+
+    background:none;
+
+    color:#8196a9;
+
+    cursor:pointer;
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    gap:4px;
+
+}
+
+
+.nav span{
+
+    font-size:21px;
+
+}
+
+
+.nav small{
+
+    font-size:10px;
+
+}
+
+
+.nav.active{
+
+    color:#0875df;
+
+    font-weight:800;
+
+}
+
+
+.upload{
+
+    width:54px;
+    height:54px;
+
+    margin-top:-27px;
+
+    border-radius:50%;
+
+    border:4px solid white;
+
+    background:
+    linear-gradient(
+        135deg,
+        #168cff,
+        #0867d8
+    );
+
+    color:white;
+
+    font-size:29px;
+
+    box-shadow:
+    0 8px 24px
+    rgba(8,112,220,.3);
+
+    cursor:pointer;
+
+}
+
+
+/* =====================================================
+   POPUP
+===================================================== */
+
+.overlay{
+
+    position:fixed;
+
+    inset:0;
+
+    background:
+    rgba(5,32,56,.30);
+
+    display:none;
+
+    align-items:flex-end;
+
+    justify-content:center;
+
+    z-index:50;
+
+}
+
+
+.popup{
+
+    width:min(500px,100%);
+
+    background:white;
+
+    border-radius:27px 27px 0 0;
+
+    padding:25px;
+
+    text-align:center;
+
+}
+
+
+.popup h2{
+
+    color:#103b68;
+
+    margin-bottom:8px;
+
+}
+
+
+.popup p{
+
+    color:#7890a4;
+
+    font-size:13px;
+
+    line-height:1.5;
+
+    white-space:pre-line;
+
+}
+
+
+.close{
+
+    width:100%;
+
+    height:48px;
+
+    margin-top:18px;
+
+    border:0;
+
+    border-radius:15px;
+
+    background:#0875df;
+
+    color:white;
+
+    font-weight:800;
+
+    cursor:pointer;
+
+}
+
+
+/* =====================================================
+   SIDE MENU
+===================================================== */
+
+.side{
+
+    position:fixed;
+
+    inset:0;
+
+    background:
+    rgba(5,30,55,.30);
+
+    display:none;
+
+    z-index:60;
+
+}
+
+
+.side-box{
+
+    width:285px;
+
+    height:100%;
+
+    background:white;
+
+    padding:24px 18px;
+
+}
+
+
+.side-brand{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    font-size:21px;
+
+    font-weight:850;
+
+    color:#0b3970;
+
+    padding-bottom:25px;
+
+}
+
+
+.side-item{
+
+    width:100%;
+
+    padding:15px;
+
+    border:0;
+
+    border-radius:13px;
+
+    background:none;
+
+    text-align:left;
+
+    color:#244d70;
+
+    font-size:15px;
+
+    cursor:pointer;
+
+}
+
+
+.side-item:hover{
+
+    background:#edf7ff;
+
+}
+
+
+</style>
+</head>
+
+
+<body>
+
+
+<div class="app">
+
+
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
+<header class="header">
+
+
+<button
+    class="menu"
+    onclick="openMenu()"
+>
+☰
+</button>
+
+
+<div class="brand">
+
+    <div class="logo">
+        U
+    </div>
+
+    <span class="brand-name">
+        Usanex
+    </span>
+
+</div>
+
+
+<button
+    class="monetization"
+    onclick="monetization()"
+>
+💰 Monetization
+</button>
+
+
+<button
+    class="head-btn"
+    onclick="notifications()"
+>
+🔔
+<span class="badge">3</span>
+</button>
+
+
+<button
+    class="head-btn"
+    onclick="profile()"
+>
+👤
+</button>
+
+
+</header>
+
+
+
+<main class="content">
+
+
+<!-- SEARCH -->
+
+<input
+    class="search"
+    id="search"
+    type="search"
+    placeholder="🔍  Search Usanex..."
+    oninput="searchUsers()"
+/>
+
+
+
+<!-- =====================================================
+     MOOD
+===================================================== -->
+
+<div class="mood-box">
+
+
+<div class="mood-head">
+
+<div>
+
+<h2>Your Mood</h2>
+
+<p>
+How are you feeling today?
+</p>
+
+</div>
+
+
+<button
+    class="more"
+    onclick="moreMood()"
+>
+More ›
+</button>
+
+</div>
+
+
+
+<div class="moods">
+
+
+<button
+    class="mood"
+    onclick="setMood('Good')"
+>
+
+<div class="mood-icon">
+😊
+</div>
+
+<span>
+Good
+</span>
+
+</button>
+
+
+<button
+    class="mood"
+    onclick="setMood('Sad')"
+>
+
+<div class="mood-icon">
+😔
+</div>
+
+<span>
+Sad
+</span>
+
+</button>
+
+
+<button
+    class="mood"
+    onclick="setMood('Emotional')"
+>
+
+<div class="mood-icon">
+🥹
+</div>
+
+<span>
+Emotional
+</span>
+
+</button>
+
+
+<button
+    class="mood"
+    onclick="setMood('Motivational')"
+>
+
+<div class="mood-icon">
+💪
+</div>
+
+<span>
+Motivation
+</span>
+
+</button>
+
+
+<button
+    class="mood"
+    onclick="setMood('Other')"
+>
+
+<div class="mood-icon">
+•••
+</div>
+
+<span>
+Other
+</span>
+
+</button>
+
+
+</div>
+
+</div>
+
+
+
+<!-- =====================================================
+     PROFILE
+===================================================== -->
+
+<div
+    class="profile-card"
+    onclick="profile()"
+>
+
+
+<div class="profile-top">
+
+
+<div class="profile-avatar">
+
+    U
+
+    <span class="online"></span>
+
+</div>
+
+
+<div class="profile-main">
+
+<h2 id="userName">
+Uttam Vishwakarma
+</h2>
+
+<p id="userId">
+UX2e858661
+</p>
+
+<div class="active">
+● Active
+</div>
+
+</div>
+
+
+<div style="
+font-size:28px;
+color:#145087;
+">
+›
+</div>
+
+
+</div>
+
+
+
+<!-- STATS -->
+
+<div class="stats">
+
+
+<div class="stat">
+
+<b id="postCount">
+0
+</b>
+
+<span>
+Posts
+</span>
+
+</div>
+
+
+<div class="stat">
+
+<b id="followers">
+0
+</b>
+
+<span>
+Followers
+</span>
+
+</div>
+
+
+<div class="stat">
+
+<b id="following">
+0
+</b>
+
+<span>
+Following
+</span>
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+<!-- =====================================================
+     STORIES
+===================================================== -->
+
+<div class="section-title">
+
+<h2>
+Stories
+</h2>
+
+<button
+    class="view"
+    onclick="viewStories()"
+>
+View All ›
+</button>
+
+</div>
+
+
+<div class="stories">
+
+
+<div
+    class="story"
+    onclick="openStory('Your Story')"
+>
+
+<div class="story-circle">
+
+<div class="story-inner">
++
+</div>
+
+</div>
+
+<div class="story-name">
+Your Story
+</div>
+
+</div>
+
+
+
+<div
+    class="story"
+    onclick="openStory('Rohit')"
+>
+
+<div class="story-circle">
+
+<div class="story-inner">
+R
+</div>
+
+</div>
+
+<div class="story-name">
+Rohit
+</div>
+
+</div>
+
+
+
+<div
+    class="story"
+    onclick="openStory('Priya')"
+>
+
+<div class="story-circle">
+
+<div class="story-inner">
+P
+</div>
+
+</div>
+
+<div class="story-name">
+Priya
+</div>
+
+</div>
+
+
+
+<div
+    class="story"
+    onclick="openStory('Amit')"
+>
+
+<div class="story-circle">
+
+<div class="story-inner">
+A
+</div>
+
+</div>
+
+<div class="story-name">
+Amit
+</div>
+
+</div>
+
+
+
+<div
+    class="story"
+    onclick="openStory('Neha')"
+>
+
+<div class="story-circle">
+
+<div class="story-inner">
+N
+</div>
+
+</div>
+
+<div class="story-name">
+Neha
+</div>
+
+</div>
+
+
+</div>
+
+
+
+<!-- =====================================================
+     RECENT CHATS
+===================================================== -->
+
+<div class="chat-title">
+
+<h2>
+Recent Chats / Contacts
+</h2>
+
+<button
+    class="view"
+    onclick="viewAllContacts()"
+>
+View All ›
+</button>
+
+</div>
+
+
+
+<div id="contacts">
+
+
+<div
+    class="chat"
+    onclick="openChat('Rohit Kumar')"
+>
+
+<div class="chat-avatar">
+R
+</div>
+
+<div class="chat-info">
+
+<b>
+Rohit Kumar
+</b>
+
+<small>
+Hey! How are you?
+</small>
+
+</div>
+
+<div class="chat-right">
+
+<small>
+2:15 PM
+</small>
+
+<div class="unread">
+2
+</div>
+
+</div>
+
+</div>
+
+
+
+<div
+    class="chat"
+    onclick="openChat('Priya Sharma')"
+>
+
+<div class="chat-avatar">
+P
+</div>
+
+<div class="chat-info">
+
+<b>
+Priya Sharma
+</b>
+
+<small>
+See you soon 😊
+</small>
+
+</div>
+
+<div class="chat-right">
+
+<small>
+1:42 PM
+</small>
+
+</div>
+
+</div>
+
+
+
+<div
+    class="chat"
+    onclick="openChat('Amit Singh')"
+>
+
+<div class="chat-avatar">
+A
+</div>
+
+<div class="chat-info">
+
+<b>
+Amit Singh
+</b>
+
+<small>
+📷 Photo
+</small>
+
+</div>
+
+<div class="chat-right">
+
+<small>
+12:30 PM
+</small>
+
+</div>
+
+</div>
+
+
+
+<div
+    class="chat"
+    onclick="openChat('Neha Gupta')"
+>
+
+<div class="chat-avatar">
+N
+</div>
+
+<div class="chat-info">
+
+<b>
+Neha Gupta
+</b>
+
+<small>
+🎤 Voice message
+</small>
+
+</div>
+
+<div class="chat-right">
+
+<small>
+11:20 AM
+</small>
+
+</div>
+
+</div>
+
+
+</div>
+
+
+</main>
+
+
+
+<!-- CAMERA -->
+
+<button
+    class="camera"
+    onclick="camera()"
+>
+📷
+</button>
+
+
+
+<!-- =====================================================
+     BOTTOM NAV
+===================================================== -->
+
+<nav class="bottom">
+
+
+<button
+    class="nav active"
+    onclick="home()"
+>
+
+<span>
+⌂
+</span>
+
+<small>
+Home
+</small>
+
+</button>
+
+
+
+<button
+    class="nav"
+    onclick="reels()"
+>
+
+<span>
+▶
+</span>
+
+<small>
+Reels
+</small>
+
+</button>
+
+
+
+<button
+    class="upload"
+    onclick="upload()"
+>
++
+</button>
+
+
+
+<button
+    class="nav"
+    onclick="calls()"
+>
+
+<span>
+☎
+</span>
+
+<small>
+Calls
+</small>
+
+</button>
+
+
+
+<button
+    class="nav"
+    onclick="upload()"
+>
+
+<span>
+⬆
+</span>
+
+<small>
+Upload
+</small>
+
+</button>
+
+
+</nav>
+
+
+</div>
+
+
+
+<!-- =====================================================
+     POPUP
+===================================================== -->
+
+<div
+    class="overlay"
+    id="overlay"
+    onclick="closePopup(event)"
+>
+
+
+<div class="popup">
+
+
+<h2 id="popupTitle">
+Usanex
+</h2>
+
+
+<p id="popupText">
+-
+</p>
+
+
+<button
+    class="close"
+    onclick="closePopup()"
+>
+OK
+</button>
+
+
+</div>
+
+</div>
+
+
+
+<!-- =====================================================
+     SIDE MENU
+===================================================== -->
+
+<div
+    class="side"
+    id="side"
+    onclick="closeMenu(event)"
+>
+
+
+<div class="side-box">
+
+
+<div class="side-brand">
+
+<div class="logo">
+U
+</div>
+
+Usanex
+
+</div>
+
+
+<button
+    class="side-item"
+    onclick="profile()"
+>
+👤 My Profile
+</button>
+
+
+<button
+    class="side-item"
+    onclick="monetization()"
+>
+💰 Monetization
+</button>
+
+
+<button
+    class="side-item"
+    onclick="notifications()"
+>
+🔔 Notifications
+</button>
+
+
+<button
+    class="side-item"
+    onclick="settings()"
+>
+⚙️ Settings
+</button>
+
+
+<button
+    class="side-item"
+    onclick="security()"
+>
+🛡️ Security
+</button>
+
+
+<button
+    class="side-item"
+    onclick="logout()"
+>
+🚪 Logout
+</button>
+
+
+</div>
+
+</div>
+
+
+
+<script>
+
+/* =====================================================
+   USER DATA
+===================================================== */
+
+const savedUser =
+localStorage.getItem("usanex_user");
+
+
+let user = null;
+
+
+if(savedUser){
+
+    try{
+
+        user =
+        JSON.parse(savedUser);
+
+    }catch(e){
+
+        user = null;
+
+    }
+
+}
+
+
+/* =====================================================
+   SHOW USER
+===================================================== */
+
+if(user){
+
+    if(user.name){
+
+        document
+        .getElementById("userName")
+        .textContent =
+        user.name;
+
+    }
+
+
+    if(user.user_id){
+
+        document
+        .getElementById("userId")
+        .textContent =
+        user.user_id;
+
+    }
+
+}
+
+
+/* =====================================================
+   POPUP
+===================================================== */
+
+function popup(title,text){
+
+    document
+    .getElementById("popupTitle")
+    .textContent =
+    title;
+
+    document
+    .getElementById("popupText")
+    .textContent =
+    text;
+
+    document
+    .getElementById("overlay")
+    .style.display =
+    "flex";
+
+}
+
+
+function closePopup(e){
+
+    if(
+        !e ||
+        e.target.id==="overlay" ||
+        e.target.classList.contains("close")
+    ){
+
+        document
+        .getElementById("overlay")
+        .style.display =
+        "none";
+
+    }
+
+}
+
+
+/* =====================================================
+   MENU
+===================================================== */
+
+function openMenu(){
+
+    document
+    .getElementById("side")
+    .style.display =
+    "block";
+
+}
+
+
+function closeMenu(e){
+
+    if(
+        !e ||
+        e.target.id==="side"
+    ){
+
+        document
+        .getElementById("side")
+        .style.display =
+        "none";
+
+    }
+
+}
+
+
+/* =====================================================
+   MOOD
+===================================================== */
+
+function setMood(mood){
+
+    popup(
+        "Your Mood",
+        "Your mood has been set to: "+mood
+    );
+
+}
+
+
+function moreMood(){
+
+    popup(
+        "More Mood",
+        "More mood options will be added soon."
+    );
+
+}
+
+
+/* =====================================================
+   PROFILE
+===================================================== */
+
+function profile(){
+
+    let name =
+    user?.name ||
+    "Uttam Vishwakarma";
+
+    let id =
+    user?.user_id ||
+    "UX2e858661";
+
+    let mobile =
+    user?.mobile ||
+    "Not available";
+
+    popup(
+        "👤 My Profile",
+
+        "Name: "+name+
+        "\n\nUser ID: "+id+
+        "\n\nMobile: "+mobile+
+        "\n\nPosts: 0"+
+        "\n\nFollowers: 0"+
+        "\n\nFollowing: 0"
+    );
+
+}
+
+
+/* =====================================================
+   MONETIZATION
+===================================================== */
+
+function monetization(){
+
+    popup(
+        "💰 Monetization",
+
+        "Monetization dashboard\n\n"+
+        "Earnings: ₹0\n"+
+        "Posts: 0\n"+
+        "Eligible: Coming soon"
+    );
+
+}
+
+
+/* =====================================================
+   NOTIFICATIONS
+===================================================== */
+
+function notifications(){
+
+    popup(
+        "🔔 Notifications",
+
+        "You have no new notifications."
+    );
+
+}
+
+
+/* =====================================================
+   SETTINGS
+===================================================== */
+
+function settings(){
+
+    popup(
+        "⚙️ Settings",
+
+        "Account settings\n\n"+
+        "Privacy\n"+
+        "Notifications\n"+
+        "Security\n\n"+
+        "Settings will be expanded soon."
+    );
+
+}
+
+
+/* =====================================================
+   SECURITY
+===================================================== */
+
+function security(){
+
+    popup(
+        "🛡️ Security",
+
+        "Your Usanex account is active and protected."
+    );
+
+}
+
+
+/* =====================================================
+   STORIES
+===================================================== */
+
+function openStory(name){
+
+    popup(
+        "📸 "+name,
+
+        "Story viewer will open here."
+    );
+
+}
+
+
+function viewStories(){
+
+    popup(
+        "Stories",
+
+        "All stories will appear here."
+    );
+
+}
+
+
+/* =====================================================
+   CHAT
+===================================================== */
+
+function openChat(name){
+
+    popup(
+        "💬 "+name,
+
+        "Chat with "+name+
+        " will open here."
+    );
+
+}
+
+
+function viewAllContacts(){
+
+    popup(
+        "Contacts",
+
+        "All your contacts will appear here."
+    );
+
+}
+
+
+/* =====================================================
+   SEARCH
+===================================================== */
+
+function searchUsers(){
+
+    const value =
+    document
+    .getElementById("search")
+    .value
+    .toLowerCase();
+
+    const chats =
+    document
+    .querySelectorAll(".chat");
+
+
+    chats.forEach(chat=>{
+
+        const text =
+        chat.innerText
+        .toLowerCase();
+
+        chat.style.display =
+        text.includes(value)
+        ? "flex"
+        : "none";
+
+    });
+
+}
+
+
+/* =====================================================
+   CAMERA
+===================================================== */
+
+function camera(){
+
+    popup(
+        "📷 Camera",
+
+        "Camera will open here."
+    );
+
+}
+
+
+/* =====================================================
+   REELS
+===================================================== */
+
+function reels(){
+
+    popup(
+        "🎬 Reels",
+
+        "Reels section will open here."
+    );
+
+}
+
+
+/* =====================================================
+   UPLOAD
+===================================================== */
+
+function upload(){
+
+    popup(
+        "⬆️ Upload",
+
+        "Select a photo, video or reel to upload."
+    );
+
+}
+
+
+/* =====================================================
+   HOME
+===================================================== */
+
+function home(){
+
+    window.scrollTo({
+
+        top:0,
+
+        behavior:"smooth"
+
+    });
+
+}
+
+
+/* =====================================================
+   CALLS
+===================================================== */
+
+function calls(){
+
+    popup(
+        "☎️ Calls",
+
+        "Your calls will appear here."
+    );
+
+}
+
+
+/* =====================================================
+   LOGOUT
+===================================================== */
+
+function logout(){
+
+    localStorage.removeItem(
+        "usanex_user"
+    );
+
+    localStorage.removeItem(
+        "usanex_token"
+    );
+
+    window.location.href =
+    "index.html";
+
+}
+
+</script>
+
+</body>
+</html>
