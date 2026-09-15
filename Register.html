@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width,
+      initial-scale=1.0,
+      maximum-scale=1.0,
+      user-scalable=no">
+
+<title>Usanex - Register</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    -webkit-tap-highlight-color:transparent;
+}
+
+html,
+body{
+    width:100%;
+    min-height:100%;
+    font-family:Arial,sans-serif;
+    background:#dceeff;
+}
+
+body{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+}
+
+
+/* APP */
+
+.app{
+    width:100%;
+    max-width:420px;
+}
+
+
+/* CARD */
+
+.card{
+    width:100%;
+
+    background:#ffffff;
+
+    border-radius:24px;
+
+    padding:28px 22px;
+
+    box-shadow:
+        0 8px 30px rgba(40,120,180,.12);
+}
+
+
+/* LOGO */
+
+.logo{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    margin-bottom:10px;
+}
+
+.logo-box{
+    width:48px;
+    height:48px;
+
+    border-radius:13px;
+
+    background:#1685e5;
+
+    color:#ffffff;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:27px;
+    font-weight:bold;
+}
+
+.logo-text{
+    margin-left:9px;
+
+    font-size:25px;
+
+    font-weight:700;
+
+    color:#123f6b;
+}
+
+
+/* TITLE */
+
+.title{
+    text-align:center;
+
+    color:#123f6b;
+
+    font-size:23px;
+
+    font-weight:700;
+
+    margin-top:8px;
+}
+
+.subtitle{
+    text-align:center;
+
+    color:#71899c;
+
+    font-size:13px;
+
+    margin-top:6px;
+
+    margin-bottom:22px;
+}
+
+
+/* INPUT GROUP */
+
+.input-group{
+    margin-bottom:14px;
+}
+
+.label{
+    display:block;
+
+    color:#315c78;
+
+    font-size:12px;
+
+    font-weight:bold;
+
+    margin-bottom:6px;
+}
+
+.input{
+    width:100%;
+
+    height:46px;
+
+    border:1px solid #d5e8f5;
+
+    border-radius:13px;
+
+    outline:none;
+
+    background:#f5fbff;
+
+    padding:0 14px;
+
+    color:#234;
+
+    font-size:14px;
+}
+
+.input:focus{
+    border-color:#1685e5;
+
+    background:#ffffff;
+}
+
+
+/* PASSWORD */
+
+.password-box{
+    position:relative;
+}
+
+.password-box .input{
+    padding-right:45px;
+}
+
+.show-password{
+    position:absolute;
+
+    right:13px;
+    top:50%;
+
+    transform:translateY(-50%);
+
+    color:#5f8198;
+
+    font-size:15px;
+
+    cursor:pointer;
+}
+
+
+/* BUTTON */
+
+.register-btn{
+    width:100%;
+
+    height:47px;
+
+    border:0;
+
+    border-radius:14px;
+
+    background:#1685e5;
+
+    color:#ffffff;
+
+    font-size:15px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+
+    margin-top:5px;
+}
+
+.register-btn:active{
+    transform:scale(.98);
+}
+
+.register-btn:disabled{
+    opacity:.65;
+}
+
+
+/* MESSAGE */
+
+.message{
+    min-height:20px;
+
+    text-align:center;
+
+    margin-top:12px;
+
+    font-size:12px;
+
+    color:#e04d54;
+}
+
+
+/* LOGIN */
+
+.login-text{
+    text-align:center;
+
+    margin-top:18px;
+
+    color:#72899a;
+
+    font-size:12px;
+}
+
+.login-link{
+    color:#087bd7;
+
+    font-weight:bold;
+
+    cursor:pointer;
+}
+
+
+/* SMALL PHONE */
+
+@media(max-width:360px){
+
+    body{
+        padding:12px;
+    }
+
+    .card{
+        padding:23px 17px;
+    }
+
+    .logo-box{
+        width:43px;
+        height:43px;
+
+        font-size:24px;
+    }
+
+    .logo-text{
+        font-size:22px;
+    }
+
+    .title{
+        font-size:21px;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="app">
+
+    <div class="card">
+
+
+        <!-- LOGO -->
+
+        <div class="logo">
+
+            <div class="logo-box">
+                U
+            </div>
+
+            <div class="logo-text">
+                Usanex
+            </div>
+
+        </div>
+
+
+        <!-- TITLE -->
+
+        <div class="title">
+            Create Account
+        </div>
+
+        <div class="subtitle">
+            Join Usanex and get started
+        </div>
+
+
+        <!-- NAME -->
+
+        <div class="input-group">
+
+            <label class="label">
+                Name
+            </label>
+
+            <input
+                id="name"
+                class="input"
+                type="text"
+                placeholder="Enter your name"
+                autocomplete="name"
+            >
+
+        </div>
+
+
+        <!-- MOBILE -->
+
+        <div class="input-group">
+
+            <label class="label">
+                Mobile Number
+            </label>
+
+            <input
+                id="mobile"
+                class="input"
+                type="tel"
+                inputmode="numeric"
+                maxlength="10"
+                placeholder="Enter 10-digit mobile number"
+                autocomplete="tel"
+            >
+
+        </div>
+
+
+        <!-- PASSWORD -->
+
+        <div class="input-group">
+
+            <label class="label">
+                Password
+            </label>
+
+            <div class="password-box">
+
+                <input
+                    id="password"
+                    class="input"
+                    type="password"
+                    placeholder="Minimum 6 characters"
+                    autocomplete="new-password"
+                >
+
+                <span
+                    class="show-password"
+                    onclick="togglePassword()"
+                    id="eye">
+                    👁
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- BUTTON -->
+
+        <button
+            class="register-btn"
+            id="registerBtn"
+            onclick="requestOTP()">
+
+            Continue
+
+        </button>
+
+
+        <!-- MESSAGE -->
+
+        <div
+            class="message"
+            id="message">
+        </div>
+
+
+        <!-- LOGIN -->
+
+        <div class="login-text">
+
+            Already have an account?
+
+            <span
+                class="login-link"
+                onclick="goLogin()">
+
+                Login
+
+            </span>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =========================
+   API
+========================= */
+
+const API =
+    "https://usanex-ai.onrender.com";
+
+
+/* =========================
+   REQUEST OTP
+========================= */
+
+async function requestOTP(){
+
+    const name =
+        document
+        .getElementById("name")
+        .value
+        .trim();
+
+    const mobile =
+        document
+        .getElementById("mobile")
+        .value
+        .trim();
+
+    const password =
+        document
+        .getElementById("password")
+        .value;
+
+
+    const message =
+        document
+        .getElementById("message");
+
+    const button =
+        document
+        .getElementById("registerBtn");
+
+
+    message.textContent = "";
+
+
+    /* VALIDATION */
+
+    if(!name){
+
+        message.textContent =
+            "Please enter your name.";
+
+        return;
+    }
+
+
+    if(!/^\d{10}$/.test(mobile)){
+
+        message.textContent =
+            "Enter a valid 10-digit mobile number.";
+
+        return;
+    }
+
+
+    if(password.length < 6){
+
+        message.textContent =
+            "Password must be at least 6 characters.";
+
+        return;
+    }
+
+
+    /* LOADING */
+
+    button.disabled = true;
+
+    button.textContent =
+        "Please wait...";
+
+
+    try{
+
+        const response =
+            await fetch(
+                API + "/register/request-otp",
+                {
+                    method:"POST",
+
+                    headers:{
+                        "Content-Type":
+                        "application/json"
+                    },
+
+                    body:JSON.stringify({
+
+                        name:name,
+
+                        mobile:mobile,
+
+                        password:password
+
+                    })
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if(!data.ok){
+
+            message.textContent =
+                data.message ||
+                "Unable to generate OTP.";
+
+            return;
+        }
+
+
+        /*
+           Save registration data
+           for the next page.
+        */
+
+        sessionStorage.setItem(
+            "usanex_register",
+            JSON.stringify({
+
+                name:name,
+
+                mobile:mobile,
+
+                password:password
+
+            })
+        );
+
+
+        /*
+           Test OTP is currently
+           returned by backend.
+        */
+
+        sessionStorage.setItem(
+            "usanex_register_otp",
+            data.otp || ""
+        );
+
+
+        /*
+           Go to OTP page
+        */
+
+        window.location.href =
+            "/register-otp.html";
+
+
+    }catch(error){
+
+        console.error(error);
+
+        message.textContent =
+            "Server connection failed. Please try again.";
+
+    }finally{
+
+        button.disabled = false;
+
+        button.textContent =
+            "Continue";
+
+    }
+
+}
+
+
+/* =========================
+   SHOW / HIDE PASSWORD
+========================= */
+
+function togglePassword(){
+
+    const password =
+        document.getElementById("password");
+
+    const eye =
+        document.getElementById("eye");
+
+
+    if(password.type === "password"){
+
+        password.type = "text";
+
+        eye.textContent = "🙈";
+
+    }else{
+
+        password.type = "password";
+
+        eye.textContent = "👁";
+
+    }
+
+}
+
+
+/* =========================
+   LOGIN
+========================= */
+
+function goLogin(){
+
+    window.location.href =
+        "/login.html";
+
+}
+
+</script>
+
+</body>
+</html>
