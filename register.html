@@ -1,16 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
 <meta charset="UTF-8">
 
 <meta name="viewport"
-content="width=device-width, initial-scale=1.0,
-maximum-scale=1.0, user-scalable=no">
+content="width=device-width,
+initial-scale=1.0,
+maximum-scale=1.0,
+user-scalable=no">
 
 <title>Usanex</title>
 
 <style>
+
+/* =========================================================
+   BASIC
+========================================================= */
 
 *{
     box-sizing:border-box;
@@ -19,331 +26,627 @@ maximum-scale=1.0, user-scalable=no">
     -webkit-tap-highlight-color:transparent;
 }
 
-html,body{
+html,
+body{
     width:100%;
     min-height:100%;
     font-family:Arial,sans-serif;
 }
 
 body{
+
     min-height:100vh;
+
     display:flex;
     justify-content:center;
     align-items:center;
+
     padding:15px;
 
     background:
-        linear-gradient(
-            180deg,
-            #1164e8 0%,
-            #0b4fae 100%
-        );
+    linear-gradient(
+        180deg,
+        #1167e8 0%,
+        #0752b5 100%
+    );
 }
+
+
+/* =========================================================
+   APP
+========================================================= */
 
 .app{
+
     width:100%;
     max-width:390px;
+
 }
+
+
+/* =========================================================
+   CARD
+========================================================= */
 
 .card{
+
     width:100%;
-    background:#fff;
-    border-radius:28px;
+
+    background:#ffffff;
+
+    border-radius:30px;
+
     padding:25px 21px;
-    box-shadow:0 15px 40px rgba(0,0,0,.18);
+
+    box-shadow:
+    0 18px 45px rgba(0,0,0,.18);
+
     overflow:hidden;
+
 }
 
-/* LOGO */
+
+/* =========================================================
+   USANEX LOGO
+========================================================= */
 
 .logo{
-    text-align:center;
-    margin-bottom:8px;
-}
 
-.logo span{
-    display:inline-flex;
-    width:43px;
-    height:43px;
+    display:flex;
+
     align-items:center;
     justify-content:center;
 
-    background:#1269e8;
-    color:#fff;
+    margin-bottom:9px;
 
-    border-radius:13px;
-
-    font-size:24px;
-    font-weight:bold;
-
-    vertical-align:middle;
 }
 
-.logo strong{
+
+/* Logo outer */
+
+.logo-mark{
+
+    width:48px;
+    height:48px;
+
+    border-radius:15px;
+
+    background:
+    linear-gradient(
+        145deg,
+        #2385f5,
+        #075bc9
+    );
+
+    position:relative;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    box-shadow:
+    0 7px 15px rgba(18,105,232,.25);
+
+}
+
+
+/* U */
+
+.logo-u{
+
+    color:white;
+
+    font-size:28px;
+
+    font-weight:800;
+
+    line-height:1;
+
+    position:relative;
+
+    z-index:2;
+
+}
+
+
+/* Small shine */
+
+.logo-shine{
+
+    position:absolute;
+
+    width:10px;
+    height:10px;
+
+    border-radius:50%;
+
+    background:#ffffff;
+
+    opacity:.9;
+
+    top:7px;
+    right:8px;
+
+    box-shadow:
+    0 0 7px rgba(255,255,255,.8);
+
+}
+
+
+/* Small bottom curve */
+
+.logo-mark::after{
+
+    content:"";
+
+    position:absolute;
+
+    width:24px;
+    height:5px;
+
+    border-radius:10px;
+
+    background:rgba(255,255,255,.20);
+
+    bottom:6px;
+    left:12px;
+
+}
+
+
+/* Text */
+
+.logo-name{
+
+    margin-left:10px;
+
+    font-size:25px;
+
+    font-weight:800;
+
+    letter-spacing:-.5px;
+
     color:#0759c9;
-    font-size:24px;
-    margin-left:7px;
+
 }
 
-/* TITLE */
+
+/* =========================================================
+   TITLE
+========================================================= */
 
 .title{
+
     text-align:center;
+
     color:#0759c9;
+
     font-size:23px;
+
     font-weight:700;
+
     margin-top:8px;
+
 }
 
 .subtitle{
+
     text-align:center;
+
     color:#8996a5;
+
     font-size:12px;
+
     margin-top:5px;
+
     margin-bottom:18px;
+
 }
 
-/* BOX */
+
+/* =========================================================
+   BOX
+========================================================= */
 
 .box{
+
     display:none;
+
 }
 
 .box.active{
+
     display:block;
+
 }
 
-/* INPUT */
+
+/* =========================================================
+   INPUT
+========================================================= */
 
 .group{
+
     margin-bottom:11px;
+
 }
 
 label{
+
     display:block;
+
     color:#45576b;
+
     font-size:11px;
+
     font-weight:bold;
+
     margin:0 0 5px 4px;
+
 }
 
 .input{
+
     width:100%;
+
     height:43px;
 
     border:1.5px solid #c5d8ee;
+
     border-radius:22px;
 
-    background:#fff;
+    background:#ffffff;
 
     padding:0 15px;
 
     outline:none;
 
     font-size:13px;
+
     color:#243447;
 
-    box-shadow:0 2px 7px rgba(50,100,160,.08);
+    box-shadow:
+    0 2px 7px rgba(50,100,160,.08);
+
 }
 
 .input:focus{
+
     border-color:#1269e8;
-    box-shadow:0 0 0 3px rgba(18,105,232,.08);
+
+    box-shadow:
+    0 0 0 3px rgba(18,105,232,.08);
+
 }
 
-/* PASSWORD */
+
+/* =========================================================
+   PASSWORD
+========================================================= */
 
 .password{
+
     position:relative;
+
 }
 
 .password .input{
+
     padding-right:45px;
+
 }
 
 .eye{
+
     position:absolute;
+
     right:15px;
+
     top:50%;
+
     transform:translateY(-50%);
+
     cursor:pointer;
+
     font-size:14px;
+
 }
 
-/* BUTTON */
+
+/* =========================================================
+   BUTTON
+========================================================= */
 
 .btn{
+
     width:100%;
+
     height:43px;
 
     border:0;
+
     border-radius:22px;
 
-    background:#1269e8;
-    color:#fff;
+    background:
+    linear-gradient(
+        90deg,
+        #1169e8,
+        #0870ed
+    );
+
+    color:#ffffff;
 
     font-size:14px;
+
     font-weight:bold;
 
     margin-top:5px;
 
     cursor:pointer;
 
-    box-shadow:0 5px 12px rgba(18,105,232,.22);
+    box-shadow:
+    0 6px 14px rgba(18,105,232,.22);
+
 }
 
 .btn:active{
+
     transform:scale(.98);
+
 }
 
 .btn:disabled{
+
     opacity:.6;
+
 }
 
-/* SECONDARY */
 
-.btn-light{
-    background:#edf5ff;
-    color:#1269e8;
-    box-shadow:none;
-}
-
-/* MESSAGE */
+/* =========================================================
+   MESSAGE
+========================================================= */
 
 .message{
+
     min-height:18px;
+
     text-align:center;
+
     margin-top:9px;
+
     font-size:11px;
+
     color:#e34b55;
+
 }
 
-/* LINKS */
+
+/* =========================================================
+   LINKS
+========================================================= */
 
 .links{
+
     text-align:center;
+
     margin-top:13px;
+
     color:#7c8b9b;
+
     font-size:11px;
+
 }
 
 .link{
+
     color:#1269e8;
+
     font-weight:bold;
+
     cursor:pointer;
+
 }
 
-/* OTP */
+
+/* =========================================================
+   OTP
+========================================================= */
 
 .otp-input{
+
     text-align:center;
+
     letter-spacing:8px;
+
     font-size:20px;
+
     font-weight:bold;
+
 }
 
 .otp-note{
+
     text-align:center;
+
     color:#7d8b9a;
+
     font-size:10px;
+
     margin:7px 0 10px;
+
 }
 
-/* USERNAME */
+
+/* =========================================================
+   USERNAME
+========================================================= */
 
 .username-card{
+
     background:#f4f9ff;
+
     border:1px solid #d8e9fa;
+
     border-radius:16px;
+
     padding:13px;
+
     margin:12px 0;
+
 }
 
 .username-title{
+
     font-size:10px;
+
     color:#718397;
+
     margin-bottom:5px;
+
 }
 
 .username-row{
+
     display:flex;
+
     gap:7px;
+
 }
 
 .username-value{
+
     flex:1;
+
     height:37px;
+
     border-radius:10px;
-    background:#fff;
+
+    background:#ffffff;
+
     border:1px solid #d5e5f4;
+
     display:flex;
+
     align-items:center;
+
     padding:0 10px;
+
     font-size:13px;
+
     font-weight:bold;
+
     color:#0759c9;
+
     overflow:hidden;
+
 }
 
 .copy-btn{
+
     width:62px;
+
     border:0;
+
     border-radius:10px;
+
     background:#1269e8;
+
     color:white;
+
     font-size:10px;
+
     font-weight:bold;
+
 }
 
-/* HOME */
+
+/* =========================================================
+   HOME
+========================================================= */
 
 .home{
+
     text-align:center;
+
 }
 
-.home-icon{
-    width:65px;
-    height:65px;
-    border-radius:20px;
-    background:#1269e8;
-    color:white;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:32px;
-    font-weight:bold;
-    margin:5px auto 13px;
-}
+
+/*
+   यहाँ पहले वाला बड़ा U logo था।
+   उसे पूरी तरह हटा दिया गया है।
+*/
+
 
 .home h2{
+
     color:#0759c9;
-    font-size:22px;
+
+    font-size:23px;
+
+    margin-top:14px;
+
 }
 
 .home p{
+
     color:#8290a0;
+
     font-size:12px;
-    margin-top:6px;
+
+    margin-top:7px;
+
 }
 
 .logout{
-    margin-top:18px;
+
+    margin-top:20px;
+
 }
 
-/* SMALL */
+
+/* =========================================================
+   SMALL PHONE
+========================================================= */
 
 @media(max-width:360px){
 
     body{
+
         padding:10px;
+
     }
 
     .card{
+
         padding:21px 17px;
+
+    }
+
+    .logo-mark{
+
+        width:44px;
+        height:44px;
+
+        border-radius:14px;
+
+    }
+
+    .logo-u{
+
+        font-size:25px;
+
+    }
+
+    .logo-name{
+
+        font-size:22px;
+
     }
 
     .title{
+
         font-size:21px;
+
     }
 
 }
@@ -352,112 +655,328 @@ label{
 
 </head>
 
+
 <body>
+
 
 <div class="app">
 
 <div class="card">
 
-    <!-- LOGO -->
 
-    <div class="logo">
-        <span>U</span>
-        <strong>Usanex</strong>
+<!-- =====================================================
+     LOGO
+===================================================== -->
+
+<div class="logo">
+
+    <div class="logo-mark">
+
+        <span class="logo-u">
+            U
+        </span>
+
+        <span class="logo-shine">
+        </span>
+
+    </div>
+
+    <div class="logo-name">
+        Usanex
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     REGISTER
+===================================================== -->
+
+<div id="registerBox" class="box active">
+
+    <div class="title">
+        Sign Up
+    </div>
+
+    <div class="subtitle">
+        Create your Usanex account
     </div>
 
 
-    <!-- ================= REGISTER ================= -->
+    <div class="group">
 
-    <div id="registerBox" class="box active">
+        <label>
+            Name
+        </label>
 
-        <div class="title">
-            Sign Up
-        </div>
+        <input
+            id="name"
+            class="input"
+            type="text"
+            placeholder="Enter name"
+            autocomplete="name">
 
-        <div class="subtitle">
-            Create your Usanex account
-        </div>
+    </div>
 
 
-        <div class="group">
+    <div class="group">
 
-            <label>Name</label>
+        <label>
+            Mobile Number
+        </label>
+
+        <input
+            id="mobile"
+            class="input"
+            type="tel"
+            inputmode="numeric"
+            maxlength="10"
+            placeholder="10-digit mobile number"
+            autocomplete="tel">
+
+    </div>
+
+
+    <div class="group">
+
+        <label>
+            Password
+        </label>
+
+        <div class="password">
 
             <input
-                id="name"
+                id="password"
                 class="input"
-                type="text"
-                placeholder="Enter name"
-                autocomplete="name">
-
-        </div>
-
-
-        <div class="group">
-
-            <label>Mobile Number</label>
-
-            <input
-                id="mobile"
-                class="input"
-                type="tel"
-                inputmode="numeric"
-                maxlength="10"
-                placeholder="10-digit mobile number"
-                autocomplete="tel">
-
-        </div>
-
-
-        <div class="group">
-
-            <label>Password</label>
-
-            <div class="password">
-
-                <input
-                    id="password"
-                    class="input"
-                    type="password"
-                    placeholder="Minimum 6 characters">
-
-                <span
-                    class="eye"
-                    onclick="togglePassword('password','eye1')"
-                    id="eye1">
-                    👁
-                </span>
-
-            </div>
-
-        </div>
-
-
-        <button
-            id="registerBtn"
-            class="btn"
-            onclick="requestOTP()">
-
-            Get OTP
-
-        </button>
-
-
-        <div
-            id="registerMessage"
-            class="message">
-        </div>
-
-
-        <div class="links">
-
-            Already have an account?
+                type="password"
+                placeholder="Minimum 6 characters">
 
             <span
-                class="link"
-                onclick="showLogin()">
+                class="eye"
+                id="eye1"
+                onclick="togglePassword('password','eye1')">
+                👁
+            </span>
 
-                Login
+        </div>
+
+    </div>
+
+
+    <button
+        class="btn"
+        id="registerBtn"
+        onclick="requestOTP()">
+
+        Get OTP
+
+    </button>
+
+
+    <div
+        class="message"
+        id="registerMessage">
+    </div>
+
+
+    <div class="links">
+
+        Already have an account?
+
+        <span
+            class="link"
+            onclick="showLogin()">
+
+            Login
+
+        </span>
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     REGISTER OTP
+===================================================== -->
+
+<div id="registerOtpBox" class="box">
+
+    <div class="title">
+        Verify OTP
+    </div>
+
+    <div class="subtitle">
+        Enter the OTP to create your account
+    </div>
+
+
+    <div class="group">
+
+        <label>
+            OTP
+        </label>
+
+        <input
+            id="registerOtp"
+            class="input otp-input"
+            type="tel"
+            inputmode="numeric"
+            maxlength="6"
+            placeholder="------">
+
+    </div>
+
+
+    <div
+        id="testOtp"
+        class="otp-note">
+    </div>
+
+
+    <button
+        class="btn"
+        id="verifyRegisterBtn"
+        onclick="verifyRegisterOTP()">
+
+        Verify OTP
+
+    </button>
+
+
+    <div
+        id="registerOtpMessage"
+        class="message">
+    </div>
+
+
+    <div class="links">
+
+        <span
+            class="link"
+            onclick="showRegister()">
+
+            Back
+
+        </span>
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     USERNAME
+===================================================== -->
+
+<div id="usernameBox" class="box">
+
+    <div class="title">
+        Account Created
+    </div>
+
+    <div class="subtitle">
+        Your Usanex username is ready
+    </div>
+
+
+    <div class="username-card">
+
+        <div class="username-title">
+            Your Username
+        </div>
+
+        <div class="username-row">
+
+            <div
+                id="usernameValue"
+                class="username-value">
+            </div>
+
+            <button
+                class="copy-btn"
+                onclick="copyUsername()">
+
+                Copy
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <button
+        class="btn"
+        onclick="showLogin()">
+
+        Login
+
+    </button>
+
+
+    <div
+        id="usernameMessage"
+        class="message">
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     LOGIN
+===================================================== -->
+
+<div id="loginBox" class="box">
+
+    <div class="title">
+        Login
+    </div>
+
+    <div class="subtitle">
+        Welcome back to Usanex
+    </div>
+
+
+    <div class="group">
+
+        <label>
+            Username or Mobile Number
+        </label>
+
+        <input
+            id="loginIdentifier"
+            class="input"
+            type="text"
+            placeholder="Username or mobile">
+
+    </div>
+
+
+    <div class="group">
+
+        <label>
+            Password
+        </label>
+
+        <div class="password">
+
+            <input
+                id="loginPassword"
+                class="input"
+                type="password"
+                placeholder="Password">
+
+            <span
+                class="eye"
+                id="eye2"
+                onclick="togglePassword('loginPassword','eye2')">
+
+                👁
 
             </span>
 
@@ -466,25 +985,118 @@ label{
     </div>
 
 
-    <!-- ================= REGISTER OTP ================= -->
+    <div
+        class="links"
+        style="
+        text-align:right;
+        margin-top:-4px;
+        margin-bottom:10px;
+        ">
 
-    <div id="registerOtpBox" class="box">
+        <span
+            class="link"
+            onclick="showForgot()">
 
-        <div class="title">
-            Verify OTP
-        </div>
+            Forgot Password?
 
-        <div class="subtitle">
-            Enter the OTP to create your account
-        </div>
+        </span>
 
+    </div>
+
+
+    <button
+        class="btn"
+        id="loginBtn"
+        onclick="loginUser()">
+
+        Login
+
+    </button>
+
+
+    <div
+        id="loginMessage"
+        class="message">
+    </div>
+
+
+    <div class="links">
+
+        Don't have an account?
+
+        <span
+            class="link"
+            onclick="showRegister()">
+
+            Sign Up
+
+        </span>
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     FORGOT PASSWORD
+===================================================== -->
+
+<div id="forgotBox" class="box">
+
+    <div class="title">
+        Forgot Password
+    </div>
+
+    <div class="subtitle">
+        Reset your Usanex password
+    </div>
+
+
+    <!-- STEP 1 -->
+
+    <div id="forgotStep1">
 
         <div class="group">
 
-            <label>OTP</label>
+            <label>
+                Username or Mobile Number
+            </label>
 
             <input
-                id="registerOtp"
+                id="forgotIdentifier"
+                class="input"
+                type="text"
+                placeholder="Username or mobile">
+
+        </div>
+
+
+        <button
+            class="btn"
+            onclick="requestForgotOTP()">
+
+            Get OTP
+
+        </button>
+
+    </div>
+
+
+    <!-- STEP 2 -->
+
+    <div
+        id="forgotStep2"
+        style="display:none;">
+
+        <div class="group">
+
+            <label>
+                OTP
+            </label>
+
+            <input
+                id="forgotOtp"
                 class="input otp-input"
                 type="tel"
                 inputmode="numeric"
@@ -495,384 +1107,143 @@ label{
 
 
         <div
-            id="testOtp"
+            id="forgotTestOtp"
             class="otp-note">
         </div>
 
 
         <button
             class="btn"
-            id="verifyRegisterBtn"
-            onclick="verifyRegisterOTP()">
+            onclick="verifyForgotOTP()">
 
             Verify OTP
 
         </button>
 
-
-        <div
-            id="registerOtpMessage"
-            class="message">
-        </div>
-
-
-        <div class="links">
-
-            <span
-                class="link"
-                onclick="showRegister()">
-
-                Back
-
-            </span>
-
-        </div>
-
     </div>
 
 
-    <!-- ================= USERNAME ================= -->
+    <!-- STEP 3 -->
 
-    <div id="usernameBox" class="box">
+    <div
+        id="forgotStep3"
+        style="display:none;">
 
-        <div class="title">
-            Account Created
-        </div>
+        <div class="group">
 
-        <div class="subtitle">
-            Your Usanex username is ready
-        </div>
+            <label>
+                New Password
+            </label>
 
+            <input
+                id="newPassword"
+                class="input"
+                type="password"
+                placeholder="Minimum 6 characters">
 
-        <div class="username-card">
-
-            <div class="username-title">
-                Your Username
-            </div>
-
-            <div class="username-row">
-
-                <div
-                    id="usernameValue"
-                    class="username-value">
-                </div>
-
-                <button
-                    class="copy-btn"
-                    onclick="copyUsername()">
-
-                    Copy
-
-                </button>
-
-            </div>
-
-        </div>
-
-
-        <button
-            class="btn"
-            onclick="showLogin()">
-
-            Login
-
-        </button>
-
-
-        <div
-            id="usernameMessage"
-            class="message">
-        </div>
-
-    </div>
-
-
-    <!-- ================= LOGIN ================= -->
-
-    <div id="loginBox" class="box">
-
-        <div class="title">
-            Login
-        </div>
-
-        <div class="subtitle">
-            Welcome back to Usanex
         </div>
 
 
         <div class="group">
 
             <label>
-                Username or Mobile Number
+                Confirm Password
             </label>
 
             <input
-                id="loginIdentifier"
+                id="confirmPassword"
                 class="input"
-                type="text"
-                placeholder="Username or mobile">
-
-        </div>
-
-
-        <div class="group">
-
-            <label>Password</label>
-
-            <div class="password">
-
-                <input
-                    id="loginPassword"
-                    class="input"
-                    type="password"
-                    placeholder="Password">
-
-                <span
-                    class="eye"
-                    onclick="togglePassword('loginPassword','eye2')"
-                    id="eye2">
-                    👁
-                </span>
-
-            </div>
-
-        </div>
-
-
-        <div
-            class="links"
-            style="text-align:right;margin-top:-4px;margin-bottom:10px;">
-
-            <span
-                class="link"
-                onclick="showForgot()">
-
-                Forgot Password?
-
-            </span>
+                type="password"
+                placeholder="Confirm password">
 
         </div>
 
 
         <button
             class="btn"
-            id="loginBtn"
-            onclick="loginUser()">
+            onclick="resetPassword()">
 
-            Login
+            Change Password
 
         </button>
 
-
-        <div
-            id="loginMessage"
-            class="message">
-        </div>
-
-
-        <div class="links">
-
-            Don't have an account?
-
-            <span
-                class="link"
-                onclick="showRegister()">
-
-                Sign Up
-
-            </span>
-
-        </div>
-
     </div>
 
 
-    <!-- ================= FORGOT ================= -->
-
-    <div id="forgotBox" class="box">
-
-        <div class="title">
-            Forgot Password
-        </div>
-
-        <div class="subtitle">
-            Reset your Usanex password
-        </div>
-
-
-        <!-- STEP 1 -->
-
-        <div id="forgotStep1">
-
-            <div class="group">
-
-                <label>
-                    Username or Mobile Number
-                </label>
-
-                <input
-                    id="forgotIdentifier"
-                    class="input"
-                    type="text"
-                    placeholder="Username or mobile">
-
-            </div>
-
-
-            <button
-                class="btn"
-                onclick="requestForgotOTP()">
-
-                Get OTP
-
-            </button>
-
-        </div>
-
-
-        <!-- STEP 2 -->
-
-        <div id="forgotStep2" style="display:none;">
-
-            <div class="group">
-
-                <label>OTP</label>
-
-                <input
-                    id="forgotOtp"
-                    class="input otp-input"
-                    type="tel"
-                    inputmode="numeric"
-                    maxlength="6"
-                    placeholder="------">
-
-            </div>
-
-
-            <div
-                id="forgotTestOtp"
-                class="otp-note">
-            </div>
-
-
-            <button
-                class="btn"
-                onclick="verifyForgotOTP()">
-
-                Verify OTP
-
-            </button>
-
-        </div>
-
-
-        <!-- STEP 3 -->
-
-        <div id="forgotStep3" style="display:none;">
-
-            <div class="group">
-
-                <label>New Password</label>
-
-                <input
-                    id="newPassword"
-                    class="input"
-                    type="password"
-                    placeholder="Minimum 6 characters">
-
-            </div>
-
-
-            <div class="group">
-
-                <label>Confirm Password</label>
-
-                <input
-                    id="confirmPassword"
-                    class="input"
-                    type="password"
-                    placeholder="Confirm password">
-
-            </div>
-
-
-            <button
-                class="btn"
-                onclick="resetPassword()">
-
-                Change Password
-
-            </button>
-
-        </div>
-
-
-        <div
-            id="forgotMessage"
-            class="message">
-        </div>
-
-
-        <div class="links">
-
-            <span
-                class="link"
-                onclick="showLogin()">
-
-                Back to Login
-
-            </span>
-
-        </div>
-
+    <div
+        id="forgotMessage"
+        class="message">
     </div>
 
 
-    <!-- ================= HOME ================= -->
+    <div class="links">
 
-    <div id="homeBox" class="box">
+        <span
+            class="link"
+            onclick="showLogin()">
 
-        <div class="home">
+            Back to Login
 
-            <div class="home-icon">
-                U
-            </div>
-
-            <h2>
-                Welcome to Usanex
-            </h2>
-
-            <p id="welcomeText">
-                Login successful
-            </p>
-
-
-            <button
-                class="btn logout"
-                onclick="logout()">
-
-                Logout
-
-            </button>
-
-        </div>
+        </span>
 
     </div>
 
 </div>
 
+
+
+<!-- =====================================================
+     HOME
+===================================================== -->
+
+<div id="homeBox" class="box">
+
+    <div class="home">
+
+        <!-- दूसरा logo हटा दिया गया है -->
+
+        <h2>
+            Welcome to Usanex
+        </h2>
+
+        <p id="welcomeText">
+            Login successful
+        </p>
+
+
+        <button
+            class="btn logout"
+            onclick="logout()">
+
+            Logout
+
+        </button>
+
+    </div>
+
 </div>
+
+
+</div>
+
+</div>
+
 
 
 <script>
+
+
+/* =========================================================
+   API
+========================================================= */
 
 const API =
     "https://usanex-ai.onrender.com";
 
 
-/* =========================
+/* =========================================================
    SCREEN CONTROL
-========================= */
+========================================================= */
 
 function hideAll(){
 
@@ -920,9 +1291,9 @@ function showForgot(){
 }
 
 
-/* =========================
-   PASSWORD EYE
-========================= */
+/* =========================================================
+   PASSWORD
+========================================================= */
 
 function togglePassword(
     inputId,
@@ -939,11 +1310,13 @@ function togglePassword(
     if(input.type === "password"){
 
         input.type = "text";
+
         eye.textContent = "🙈";
 
     }else{
 
         input.type = "password";
+
         eye.textContent = "👁";
 
     }
@@ -951,26 +1324,40 @@ function togglePassword(
 }
 
 
-/* =========================
-   REGISTER OTP
-========================= */
+/* =========================================================
+   REGISTER REQUEST OTP
+========================================================= */
 
 async function requestOTP(){
 
     const name =
-        document.getElementById("name").value.trim();
+        document
+        .getElementById("name")
+        .value
+        .trim();
+
 
     const mobile =
-        document.getElementById("mobile").value.trim();
+        document
+        .getElementById("mobile")
+        .value
+        .trim();
+
 
     const password =
-        document.getElementById("password").value;
+        document
+        .getElementById("password")
+        .value;
+
 
     const message =
-        document.getElementById("registerMessage");
+        document
+        .getElementById("registerMessage");
+
 
     const button =
-        document.getElementById("registerBtn");
+        document
+        .getElementById("registerBtn");
 
 
     message.textContent = "";
@@ -1007,15 +1394,19 @@ async function requestOTP(){
 
 
     button.disabled = true;
-    button.textContent = "Please wait...";
+
+    button.textContent =
+        "Please wait...";
 
 
     try{
 
         const response =
             await fetch(
-                API + "/register/request-otp",
+                API +
+                "/register/request-otp",
                 {
+
                     method:"POST",
 
                     headers:{
@@ -1026,10 +1417,13 @@ async function requestOTP(){
                     body:JSON.stringify({
 
                         name:name,
+
                         mobile:mobile,
+
                         password:password
 
                     })
+
                 }
             );
 
@@ -1050,26 +1444,26 @@ async function requestOTP(){
 
 
         sessionStorage.setItem(
+
             "usanex_register",
+
             JSON.stringify({
 
                 name:name,
+
                 mobile:mobile,
+
                 password:password
 
             })
+
         );
 
 
-        /*
-          Test mode:
-          Backend OTP ko response me
-          bhej raha hai.
-        */
-
         document
         .getElementById("registerOtp")
-        .value = data.otp || "";
+        .value =
+            data.otp || "";
 
 
         document
@@ -1081,6 +1475,7 @@ async function requestOTP(){
 
 
         hideAll();
+
 
         document
         .getElementById("registerOtpBox")
@@ -1097,30 +1492,37 @@ async function requestOTP(){
     }finally{
 
         button.disabled = false;
-        button.textContent = "Get OTP";
+
+        button.textContent =
+            "Get OTP";
 
     }
 
 }
 
 
-/* =========================
+/* =========================================================
    VERIFY REGISTER OTP
-========================= */
+========================================================= */
 
 async function verifyRegisterOTP(){
 
     const saved =
         JSON.parse(
+
             sessionStorage.getItem(
                 "usanex_register"
-            ) || "null"
+            )
+            ||
+            "null"
+
         );
 
 
     if(!saved){
 
         showRegister();
+
         return;
 
     }
@@ -1129,7 +1531,8 @@ async function verifyRegisterOTP(){
     const otp =
         document
         .getElementById("registerOtp")
-        .value.trim();
+        .value
+        .trim();
 
 
     const message =
@@ -1148,12 +1551,16 @@ async function verifyRegisterOTP(){
 
 
     const button =
-        document.getElementById(
+        document
+        .getElementById(
             "verifyRegisterBtn"
         );
 
+
     button.disabled = true;
-    button.textContent = "Verifying...";
+
+    button.textContent =
+        "Verifying...";
 
     message.textContent = "";
 
@@ -1162,8 +1569,12 @@ async function verifyRegisterOTP(){
 
         const response =
             await fetch(
-                API + "/register/verify-otp",
+
+                API +
+                "/register/verify-otp",
+
                 {
+
                     method:"POST",
 
                     headers:{
@@ -1174,12 +1585,17 @@ async function verifyRegisterOTP(){
                     body:JSON.stringify({
 
                         name:saved.name,
+
                         mobile:saved.mobile,
+
                         password:saved.password,
+
                         otp:otp
 
                     })
+
                 }
+
             );
 
 
@@ -1211,6 +1627,7 @@ async function verifyRegisterOTP(){
 
         hideAll();
 
+
         document
         .getElementById("usernameBox")
         .classList.add("active");
@@ -1226,16 +1643,18 @@ async function verifyRegisterOTP(){
     }finally{
 
         button.disabled = false;
-        button.textContent = "Verify OTP";
+
+        button.textContent =
+            "Verify OTP";
 
     }
 
 }
 
 
-/* =========================
+/* =========================================================
    COPY USERNAME
-========================= */
+========================================================= */
 
 async function copyUsername(){
 
@@ -1250,6 +1669,7 @@ async function copyUsername(){
         await navigator.clipboard.writeText(
             username
         );
+
 
         document
         .getElementById("usernameMessage")
@@ -1268,21 +1688,24 @@ async function copyUsername(){
 }
 
 
-/* =========================
+/* =========================================================
    LOGIN
-========================= */
+========================================================= */
 
 async function loginUser(){
 
     const identifier =
         document
         .getElementById("loginIdentifier")
-        .value.trim();
+        .value
+        .trim();
+
 
     const password =
         document
         .getElementById("loginPassword")
         .value;
+
 
     const message =
         document
@@ -1303,18 +1726,26 @@ async function loginUser(){
 
 
     const button =
-        document.getElementById("loginBtn");
+        document
+        .getElementById("loginBtn");
+
 
     button.disabled = true;
-    button.textContent = "Logging in...";
+
+    button.textContent =
+        "Logging in...";
 
 
     try{
 
         const response =
             await fetch(
-                API + "/login",
+
+                API +
+                "/login",
+
                 {
+
                     method:"POST",
 
                     headers:{
@@ -1325,10 +1756,13 @@ async function loginUser(){
                     body:JSON.stringify({
 
                         identifier:identifier,
+
                         password:password
 
                     })
+
                 }
+
             );
 
 
@@ -1356,6 +1790,7 @@ async function loginUser(){
 
         hideAll();
 
+
         document
         .getElementById("homeBox")
         .classList.add("active");
@@ -1371,23 +1806,27 @@ async function loginUser(){
     }finally{
 
         button.disabled = false;
-        button.textContent = "Login";
+
+        button.textContent =
+            "Login";
 
     }
 
 }
 
 
-/* =========================
-   FORGOT OTP
-========================= */
+/* =========================================================
+   FORGOT PASSWORD - REQUEST OTP
+========================================================= */
 
 async function requestForgotOTP(){
 
     const identifier =
         document
         .getElementById("forgotIdentifier")
-        .value.trim();
+        .value
+        .trim();
+
 
     const message =
         document
@@ -1411,9 +1850,12 @@ async function requestForgotOTP(){
 
         const response =
             await fetch(
+
                 API +
                 "/forgot-password/request-otp",
+
                 {
+
                     method:"POST",
 
                     headers:{
@@ -1426,7 +1868,9 @@ async function requestForgotOTP(){
                         identifier:identifier
 
                     })
+
                 }
+
             );
 
 
@@ -1446,8 +1890,11 @@ async function requestForgotOTP(){
 
 
         sessionStorage.setItem(
+
             "usanex_forgot_identifier",
+
             identifier
+
         );
 
 
@@ -1467,12 +1914,14 @@ async function requestForgotOTP(){
 
         document
         .getElementById("forgotStep1")
-        .style.display = "none";
+        .style.display =
+            "none";
 
 
         document
         .getElementById("forgotStep2")
-        .style.display = "block";
+        .style.display =
+            "block";
 
 
     }catch(error){
@@ -1487,9 +1936,9 @@ async function requestForgotOTP(){
 }
 
 
-/* =========================
-   VERIFY FORGOT OTP
-========================= */
+/* =========================================================
+   FORGOT PASSWORD - VERIFY OTP
+========================================================= */
 
 async function verifyForgotOTP(){
 
@@ -1498,10 +1947,13 @@ async function verifyForgotOTP(){
             "usanex_forgot_identifier"
         );
 
+
     const otp =
         document
         .getElementById("forgotOtp")
-        .value.trim();
+        .value
+        .trim();
+
 
     const message =
         document
@@ -1511,6 +1963,7 @@ async function verifyForgotOTP(){
     if(!identifier){
 
         showForgot();
+
         return;
 
     }
@@ -1530,9 +1983,12 @@ async function verifyForgotOTP(){
 
         const response =
             await fetch(
+
                 API +
                 "/forgot-password/verify-otp",
+
                 {
+
                     method:"POST",
 
                     headers:{
@@ -1543,10 +1999,13 @@ async function verifyForgotOTP(){
                     body:JSON.stringify({
 
                         identifier:identifier,
+
                         otp:otp
 
                     })
+
                 }
+
             );
 
 
@@ -1567,12 +2026,14 @@ async function verifyForgotOTP(){
 
         document
         .getElementById("forgotStep2")
-        .style.display = "none";
+        .style.display =
+            "none";
 
 
         document
         .getElementById("forgotStep3")
-        .style.display = "block";
+        .style.display =
+            "block";
 
 
     }catch(error){
@@ -1587,9 +2048,9 @@ async function verifyForgotOTP(){
 }
 
 
-/* =========================
+/* =========================================================
    RESET PASSWORD
-========================= */
+========================================================= */
 
 async function resetPassword(){
 
@@ -1598,15 +2059,18 @@ async function resetPassword(){
             "usanex_forgot_identifier"
         );
 
+
     const newPassword =
         document
         .getElementById("newPassword")
         .value;
 
+
     const confirmPassword =
         document
         .getElementById("confirmPassword")
         .value;
+
 
     const message =
         document
@@ -1637,9 +2101,12 @@ async function resetPassword(){
 
         const response =
             await fetch(
+
                 API +
                 "/forgot-password/reset-password",
+
                 {
+
                     method:"POST",
 
                     headers:{
@@ -1650,11 +2117,16 @@ async function resetPassword(){
                     body:JSON.stringify({
 
                         identifier:identifier,
+
                         new_password:newPassword,
-                        confirm_password:confirmPassword
+
+                        confirm_password:
+                            confirmPassword
 
                     })
+
                 }
+
             );
 
 
@@ -1698,9 +2170,9 @@ async function resetPassword(){
 }
 
 
-/* =========================
+/* =========================================================
    LOGOUT
-========================= */
+========================================================= */
 
 function logout(){
 
@@ -1711,4 +2183,5 @@ function logout(){
 </script>
 
 </body>
+
 </html>
