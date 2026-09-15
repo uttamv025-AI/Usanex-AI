@@ -2,10 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
+    >
+
     <title>Usanex - Home</title>
 
     <style>
+
         * {
             margin: 0;
             padding: 0;
@@ -13,945 +19,713 @@
         }
 
         body {
-            font-family: Arial, Helvetica, sans-serif;
-            background: #f4f6fb;
-            color: #171717;
-        }
-
-        .app {
-            width: 100%;
-            max-width: 600px;
+            font-family: Arial, sans-serif;
+            background: #090b10;
+            color: #ffffff;
             min-height: 100vh;
-            margin: auto;
-            background: #fff;
-            position: relative;
-            padding-bottom: 80px;
+            padding-bottom: 75px;
         }
 
-        /* =========================
-           TOP HEADER
-        ========================= */
+        /* ==============================
+           HEADER
+        ============================== */
 
         .header {
-            height: 68px;
-            padding: 10px 12px;
+            height: 70px;
+            background: #11141b;
+            border-bottom: 1px solid #272c35;
+
             display: flex;
             align-items: center;
-            gap: 9px;
-            background: #fff;
-            border-bottom: 1px solid #ededed;
+
+            padding: 0 15px;
+            gap: 12px;
+
             position: sticky;
             top: 0;
-            z-index: 50;
+            z-index: 100;
         }
-
-        /* SAME LOGO AS LOGIN PAGE */
 
         .logo {
-            width: 82px;
-            min-width: 82px;
-            height: 42px;
-            object-fit: contain;
-        }
+            width: 45px;
+            height: 45px;
 
-        /* SEARCH */
+            border-radius: 50%;
+
+            object-fit: contain;
+
+            flex-shrink: 0;
+        }
 
         .search-box {
             flex: 1;
-            height: 40px;
-            background: #f1f3f7;
+
+            height: 42px;
+
+            background: #1b1f27;
+
+            border: 1px solid #303640;
+
             border-radius: 22px;
+
             display: flex;
             align-items: center;
-            padding: 0 13px;
-            gap: 7px;
-        }
 
-        .search-box span {
-            font-size: 16px;
-        }
+            padding: 0 14px;
 
-        .search-box input {
-            width: 100%;
-            border: none;
-            outline: none;
-            background: transparent;
-            font-size: 13px;
-        }
-
-        /* HEADER ICON */
-
-        .top-icon {
-            width: 35px;
-            height: 35px;
-            border: none;
-            border-radius: 50%;
-            background: #f3f4f7;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 17px;
             cursor: pointer;
         }
 
-        .top-icon:active {
-            transform: scale(.90);
+        .search-icon {
+            font-size: 20px;
+            margin-right: 8px;
+            color: #aeb5c0;
         }
 
-
-        /* =========================
-           STATUS
-        ========================= */
-
-        .status-section {
-            border-bottom: 1px solid #eeeeee;
-            padding: 14px 0;
-        }
-
-        .status-title {
-            padding: 0 15px 11px;
+        .search-text {
+            color: #9ba2ad;
             font-size: 14px;
-            font-weight: 700;
         }
 
-        .status-scroll {
-            display: flex;
-            gap: 14px;
-            overflow-x: auto;
-            padding: 0 15px;
-            scrollbar-width: none;
+        .header-button {
+            width: 38px;
+            height: 38px;
+
+            border: none;
+            background: transparent;
+
+            color: white;
+
+            font-size: 21px;
+
+            cursor: pointer;
+
+            flex-shrink: 0;
         }
 
-        .status-scroll::-webkit-scrollbar {
-            display: none;
-        }
+        /* ==============================
+           MAIN
+        ============================== */
 
-        .status {
-            min-width: 58px;
-            text-align: center;
-        }
-
-        .status-image {
-            width: 54px;
-            height: 54px;
-            padding: 2px;
-            border-radius: 50%;
+        .main {
+            max-width: 700px;
             margin: auto;
-            background: linear-gradient(
-                135deg,
-                #6d35ff,
-                #d52fff,
-                #ff4f9a,
-                #ffae00
-            );
+            padding: 18px 15px;
         }
 
-        .status-image img {
-            width: 100%;
-            height: 100%;
+        .section-title {
+            font-size: 14px;
+            font-weight: bold;
+
+            letter-spacing: 1px;
+
+            color: #bfc5cf;
+
+            margin-bottom: 14px;
+        }
+
+        /* ==============================
+           CONNECTION LIST
+        ============================== */
+
+        .connections {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .user-card {
+            min-height: 72px;
+
+            background: #12161d;
+
+            border: 1px solid #242a33;
+
+            border-radius: 15px;
+
+            display: flex;
+            align-items: center;
+
+            padding: 10px 12px;
+
+            transition: 0.2s;
+        }
+
+        .user-card:active {
+            transform: scale(0.98);
+        }
+
+        .profile-photo {
+            width: 50px;
+            height: 50px;
+
             border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid white;
+
+            background: #272d37;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 21px;
+
+            margin-right: 12px;
+
+            flex-shrink: 0;
         }
 
-        .status-name {
-            margin-top: 5px;
-            font-size: 11px;
+        .user-info {
+            flex: 1;
+
+            min-width: 0;
+        }
+
+        .user-name {
+            font-size: 16px;
+            font-weight: 600;
+
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
 
-
-        /* =========================
-           USERS
-        ========================= */
-
-        .users {
-            width: 100%;
-        }
-
-        .user-card {
-            min-height: 78px;
-            display: flex;
-            align-items: center;
-            gap: 11px;
-            padding: 10px 13px;
-            border-bottom: 1px solid #eeeeee;
-            cursor: pointer;
-        }
-
-        .user-card:hover {
-            background: #fafaff;
-        }
-
-        .user-photo {
-            width: 53px;
-            height: 53px;
-            min-width: 53px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-        .user-info {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .user-name {
-            font-size: 15px;
-            font-weight: 700;
-        }
-
-        .username {
-            color: #777;
-            font-size: 12px;
-            margin-top: 3px;
-        }
-
         .user-id {
-            color: #a1a1a1;
-            font-size: 10px;
-            margin-top: 3px;
+            margin-top: 5px;
+
+            font-size: 12px;
+
+            color: #8e96a3;
         }
-
-        /* FOLLOW */
-
-        .follow-btn {
-            border: none;
-            background: #6d35ff;
-            color: white;
-            padding: 8px 13px;
-            min-width: 76px;
-            border-radius: 18px;
-            font-size: 11px;
-            font-weight: 700;
-            cursor: pointer;
-        }
-
-        .follow-btn.following {
-            background: #eeeeee;
-            color: #333;
-        }
-
-        /* PROFILE ARROW */
 
         .arrow {
-            color: #aaa;
-            font-size: 24px;
-            margin-left: 2px;
-            padding: 5px;
+            font-size: 28px;
+            color: #777f8c;
+
+            padding-left: 8px;
         }
 
+        /* ==============================
+           EMPTY STATE
+        ============================== */
 
-        /* =========================
+        .empty {
+            text-align: center;
+
+            padding: 90px 20px;
+
+            color: #7e8794;
+        }
+
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .empty-title {
+            color: #c4cad3;
+            font-size: 17px;
+            margin-bottom: 7px;
+        }
+
+        .empty-text {
+            font-size: 13px;
+            line-height: 20px;
+        }
+
+        /* ==============================
            CAMERA
-        ========================= */
-
-        .camera {
-            position: fixed;
-            bottom: 75px;
-            right: max(15px, calc((100vw - 600px) / 2 + 15px));
-            z-index: 60;
-        }
+        ============================== */
 
         .camera-button {
-            width: 55px;
-            height: 55px;
-            border: none;
-            border-radius: 17px;
-            background: linear-gradient(
-                135deg,
-                #6d35ff,
-                #a42cff
-            );
+            position: fixed;
+
+            right: 18px;
+            bottom: 88px;
+
+            width: 56px;
+            height: 56px;
+
+            border-radius: 50%;
+
+            border: 1px solid #39414c;
+
+            background: #181d25;
+
             color: white;
-            font-size: 23px;
+
+            font-size: 25px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+
             cursor: pointer;
-            box-shadow: 0 7px 22px rgba(70, 30, 180, .25);
+
+            z-index: 200;
         }
 
-        .camera-button:active {
-            transform: scale(.92);
-        }
-
-
-        /* =========================
+        /* ==============================
            BOTTOM NAV
-        ========================= */
+        ============================== */
 
         .bottom-nav {
             position: fixed;
+
+            left: 0;
+            right: 0;
             bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100%;
-            max-width: 600px;
-            height: 65px;
-            background: rgba(255,255,255,.98);
-            border-top: 1px solid #e9e9e9;
+
+            height: 70px;
+
+            background: #11141b;
+
+            border-top: 1px solid #272c35;
+
             display: flex;
-            align-items: center;
+
             justify-content: space-around;
-            z-index: 55;
+            align-items: center;
+
+            z-index: 150;
         }
 
         .nav-item {
-            width: 70px;
-            height: 55px;
             border: none;
             background: transparent;
-            color: #777;
+
+            color: #858d99;
+
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
-            gap: 3px;
-            cursor: pointer;
-        }
 
-        .nav-item.active {
-            color: #6d35ff;
-            font-weight: 700;
+            gap: 4px;
+
+            font-size: 11px;
+
+            cursor: pointer;
+
+            min-width: 65px;
         }
 
         .nav-icon {
-            font-size: 20px;
+            font-size: 21px;
         }
 
-        .nav-label {
-            font-size: 10px;
+        .nav-item.active {
+            color: #ffffff;
         }
 
-        .collection-button {
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            border: none;
-            background: #eeeaff;
-            color: #6d35ff;
+        .collection {
             font-size: 24px;
-            cursor: pointer;
         }
 
+        /* ==============================
+           DESKTOP
+        ============================== */
 
-        /* =========================
-           MOBILE
-        ========================= */
-
-        @media (max-width: 430px) {
+        @media (min-width: 700px) {
 
             .header {
-                padding: 9px;
-                gap: 6px;
+                padding-left: calc((100% - 700px) / 2);
+                padding-right: calc((100% - 700px) / 2);
             }
 
-            .logo {
-                width: 70px;
-                min-width: 70px;
-            }
-
-            .top-icon {
-                width: 32px;
-                height: 32px;
-                font-size: 15px;
-            }
-
-            .search-box {
-                height: 37px;
-            }
-
-            .user-card {
-                padding: 10px;
-            }
-
-            .user-photo {
-                width: 49px;
-                height: 49px;
-                min-width: 49px;
-            }
-
-            .follow-btn {
-                min-width: 70px;
-                padding: 7px 9px;
+            .main {
+                padding-top: 25px;
             }
         }
+
     </style>
 </head>
 
 
 <body>
 
-<div class="app">
-
-
-    <!-- =================================
+    <!-- ==============================
          HEADER
-    ================================== -->
+    ============================== -->
 
     <header class="header">
 
-        <!-- LOGIN PAGE KA SAME LOGO -->
+        <!--
+            IMPORTANT:
+            Yahan apne LOGIN PAGE wale
+            SAME Usanex logo ka path rakho.
+        -->
+
         <img
-            class="logo"
             src="/static/images/usanex-logo.png"
+            class="logo"
             alt="Usanex"
         >
 
-        <!-- SEARCH -->
-        <div class="search-box">
-            <span>🔍</span>
+        <div
+            class="search-box"
+            onclick="openSearch()"
+        >
 
-            <input
-                type="text"
-                id="searchInput"
-                placeholder="Search"
-                oninput="searchUsers()"
-            >
+            <span class="search-icon">⌕</span>
+
+            <span class="search-text">
+                Search people
+            </span>
+
         </div>
 
-        <!-- NOTIFICATION -->
         <button
-            class="top-icon"
-            onclick="openNotifications()">
+            class="header-button"
+            onclick="openNotifications()"
+        >
             🔔
         </button>
 
-        <!-- WALLET -->
         <button
-            class="top-icon"
-            onclick="openWallet()">
+            class="header-button"
+            onclick="openWallet()"
+        >
             ₹
         </button>
 
-        <!-- MENU -->
         <button
-            class="top-icon"
-            onclick="openMenu()">
+            class="header-button"
+            onclick="openMenu()"
+        >
             ☰
         </button>
 
     </header>
 
 
-    <!-- =================================
-         STATUS
-    ================================== -->
+    <!-- ==============================
+         MAIN
+    ============================== -->
 
-    <section class="status-section">
+    <main class="main">
 
-        <div class="status-title">
-            STATUS
+        <div class="section-title">
+            CONNECTIONS
         </div>
-
-        <div class="status-scroll">
-
-            <div class="status">
-                <div class="status-image">
-                    <img src="https://i.pravatar.cc/100?img=12">
-                </div>
-                <div class="status-name">You</div>
-            </div>
-
-            <div class="status">
-                <div class="status-image">
-                    <img src="https://i.pravatar.cc/100?img=11">
-                </div>
-                <div class="status-name">Rahul</div>
-            </div>
-
-            <div class="status">
-                <div class="status-image">
-                    <img src="https://i.pravatar.cc/100?img=32">
-                </div>
-                <div class="status-name">Aman</div>
-            </div>
-
-            <div class="status">
-                <div class="status-image">
-                    <img src="https://i.pravatar.cc/100?img=47">
-                </div>
-                <div class="status-name">Neha</div>
-            </div>
-
-            <div class="status">
-                <div class="status-image">
-                    <img src="https://i.pravatar.cc/100?img=68">
-                </div>
-                <div class="status-name">Ravi</div>
-            </div>
-
-            <div class="status">
-                <div class="status-image">
-                    <img src="https://i.pravatar.cc/100?img=13">
-                </div>
-                <div class="status-name">Pooja</div>
-            </div>
-
-            <div class="status">
-                <div class="status-image">
-                    <img src="https://i.pravatar.cc/100?img=5">
-                </div>
-                <div class="status-name">Anjali</div>
-            </div>
-
-        </div>
-
-    </section>
-
-
-    <!-- =================================
-         ALL USERS
-    ================================== -->
-
-    <main class="users" id="usersList">
-
-
-        <!-- USER 1 -->
 
         <div
-            class="user-card"
-            data-name="rahul sharma"
-            onclick="openProfile('rahul')">
+            id="connections"
+            class="connections"
+        >
 
-            <img
-                class="user-photo"
-                src="https://i.pravatar.cc/150?img=11"
-                alt="Rahul"
-            >
-
-            <div class="user-info">
-
-                <div class="user-name">
-                    Rahul Sharma
-                </div>
-
-                <div class="username">
-                    @rahul
-                </div>
-
-                <div class="user-id">
-                    ID: usanex_123
-                </div>
-
-            </div>
-
-            <button
-                class="follow-btn"
-                onclick="toggleFollow(this, event)">
-                Follow
-            </button>
-
-            <div class="arrow">
-                ›
-            </div>
+            <!-- JavaScript yahan users dalega -->
 
         </div>
-
-
-        <!-- USER 2 -->
-
-        <div
-            class="user-card"
-            data-name="aman verma"
-            onclick="openProfile('aman')">
-
-            <img
-                class="user-photo"
-                src="https://i.pravatar.cc/150?img=32"
-                alt="Aman"
-            >
-
-            <div class="user-info">
-
-                <div class="user-name">
-                    Aman Verma
-                </div>
-
-                <div class="username">
-                    @aman
-                </div>
-
-                <div class="user-id">
-                    ID: usanex_456
-                </div>
-
-            </div>
-
-            <button
-                class="follow-btn"
-                onclick="toggleFollow(this, event)">
-                Follow
-            </button>
-
-            <div class="arrow">
-                ›
-            </div>
-
-        </div>
-
-
-        <!-- USER 3 -->
-
-        <div
-            class="user-card"
-            data-name="neha singh"
-            onclick="openProfile('neha')">
-
-            <img
-                class="user-photo"
-                src="https://i.pravatar.cc/150?img=47"
-                alt="Neha"
-            >
-
-            <div class="user-info">
-
-                <div class="user-name">
-                    Neha Singh
-                </div>
-
-                <div class="username">
-                    @neha
-                </div>
-
-                <div class="user-id">
-                    ID: usanex_789
-                </div>
-
-            </div>
-
-            <button
-                class="follow-btn"
-                onclick="toggleFollow(this, event)">
-                Follow
-            </button>
-
-            <div class="arrow">
-                ›
-            </div>
-
-        </div>
-
-
-        <!-- USER 4 -->
-
-        <div
-            class="user-card"
-            data-name="ravi kumar"
-            onclick="openProfile('ravi')">
-
-            <img
-                class="user-photo"
-                src="https://i.pravatar.cc/150?img=68"
-                alt="Ravi"
-            >
-
-            <div class="user-info">
-
-                <div class="user-name">
-                    Ravi Kumar
-                </div>
-
-                <div class="username">
-                    @ravi
-                </div>
-
-                <div class="user-id">
-                    ID: usanex_852
-                </div>
-
-            </div>
-
-            <button
-                class="follow-btn"
-                onclick="toggleFollow(this, event)">
-                Follow
-            </button>
-
-            <div class="arrow">
-                ›
-            </div>
-
-        </div>
-
-
-        <!-- USER 5 -->
-
-        <div
-            class="user-card"
-            data-name="pooja mishra"
-            onclick="openProfile('pooja')">
-
-            <img
-                class="user-photo"
-                src="https://i.pravatar.cc/150?img=13"
-                alt="Pooja"
-            >
-
-            <div class="user-info">
-
-                <div class="user-name">
-                    Pooja Mishra
-                </div>
-
-                <div class="username">
-                    @pooja
-                </div>
-
-                <div class="user-id">
-                    ID: usanex_963
-                </div>
-
-            </div>
-
-            <button
-                class="follow-btn"
-                onclick="toggleFollow(this, event)">
-                Follow
-            </button>
-
-            <div class="arrow">
-                ›
-            </div>
-
-        </div>
-
 
     </main>
 
 
-    <!-- =================================
+    <!-- ==============================
          CAMERA
-    ================================== -->
+    ============================== -->
 
-    <div class="camera">
-
-        <button
-            class="camera-button"
-            onclick="openCamera()">
-            📷
-        </button>
-
-    </div>
+    <button
+        class="camera-button"
+        onclick="openCamera()"
+        aria-label="Camera"
+    >
+        📷
+    </button>
 
 
-    <!-- =================================
+    <!-- ==============================
          BOTTOM NAVIGATION
-    ================================== -->
+    ============================== -->
 
     <nav class="bottom-nav">
 
         <button
             class="nav-item active"
-            onclick="goHome()">
-
-            <div class="nav-icon">
-                🏠
-            </div>
-
-            <div class="nav-label">
-                Home
-            </div>
-
+            onclick="goHome()"
+        >
+            <span class="nav-icon">⌂</span>
+            <span>Home</span>
         </button>
 
 
         <button
             class="nav-item"
-            onclick="goReels()">
-
-            <div class="nav-icon">
-                🎬
-            </div>
-
-            <div class="nav-label">
-                Reels
-            </div>
-
+            onclick="openReels()"
+        >
+            <span class="nav-icon">▶</span>
+            <span>Reels</span>
         </button>
 
 
         <button
             class="nav-item"
-            onclick="openCollection()">
-
-            <button
-                class="collection-button">
-                +
-            </button>
-
+            onclick="openCollection()"
+        >
+            <span class="collection">＋</span>
+            <span>Coll</span>
         </button>
 
 
         <button
             class="nav-item"
-            onclick="goProfile()">
-
-            <div class="nav-icon">
-                👤
-            </div>
-
-            <div class="nav-label">
-                Profile
-            </div>
-
+            onclick="openProfile()"
+        >
+            <span class="nav-icon">♙</span>
+            <span>Profile</span>
         </button>
 
     </nav>
 
-</div>
+
+    <script>
+
+        /* ==========================================
+           LOAD HOME CONNECTIONS
+        ========================================== */
+
+        async function loadConnections() {
+
+            const container =
+                document.getElementById("connections");
+
+            container.innerHTML = "";
+
+            try {
+
+                const response =
+                    await fetch("/api/home/connections");
+
+                const data =
+                    await response.json();
 
 
-<script>
+                if (!data.ok) {
 
-    /* =========================
-       FOLLOW / UNFOLLOW
-    ========================= */
+                    showEmpty(
+                        "Unable to load connections",
+                        data.message || "Please try again"
+                    );
 
-    function toggleFollow(button, event) {
-
-        event.stopPropagation();
-
-        if (button.classList.contains("following")) {
-
-            button.classList.remove("following");
-            button.innerText = "Follow";
-
-        } else {
-
-            button.classList.add("following");
-            button.innerText = "Unfollow";
-
-        }
-    }
+                    return;
+                }
 
 
-    /* =========================
-       SEARCH
-    ========================= */
+                if (
+                    !data.users ||
+                    data.users.length === 0
+                ) {
 
-    function searchUsers() {
+                    showEmpty(
+                        "No connections yet",
+                        "Search for people and connect with them. Your verified connections will appear here."
+                    );
 
-        const input =
-            document
-            .getElementById("searchInput")
-            .value
-            .toLowerCase()
-            .trim();
+                    return;
+                }
 
-        const users =
-            document.querySelectorAll(".user-card");
 
-        users.forEach(user => {
+                data.users.forEach(user => {
 
-            const name =
-                user.dataset.name;
+                    const card =
+                        document.createElement("div");
 
-            if (name.includes(input)) {
+                    card.className = "user-card";
 
-                user.style.display = "flex";
+                    card.onclick = function () {
 
-            } else {
+                        openUser(user.user_id);
 
-                user.style.display = "none";
+                    };
+
+
+                    const firstLetter =
+                        (user.name || "U")
+                        .charAt(0)
+                        .toUpperCase();
+
+
+                    card.innerHTML = `
+
+                        <div class="profile-photo">
+                            ${firstLetter}
+                        </div>
+
+                        <div class="user-info">
+
+                            <div class="user-name">
+                                ${escapeHtml(user.name)}
+                            </div>
+
+                            <div class="user-id">
+                                ID: ${escapeHtml(user.user_id)}
+                            </div>
+
+                        </div>
+
+                        <div class="arrow">
+                            ›
+                        </div>
+
+                    `;
+
+
+                    container.appendChild(card);
+
+                });
+
+            }
+            catch (error) {
+
+                console.error(error);
+
+                showEmpty(
+                    "Something went wrong",
+                    "Unable to load your connections."
+                );
 
             }
 
-        });
-    }
+        }
 
 
-    /* =========================
-       PROFILE
-    ========================= */
+        /* ==========================================
+           EMPTY STATE
+        ========================================== */
 
-    function openProfile(username) {
+        function showEmpty(title, text) {
 
-        console.log(
-            "Opening profile:",
-            username
-        );
+            const container =
+                document.getElementById("connections");
 
-        // FastAPI connect later:
-        // window.location.href =
-        // "/profile/" + username;
-    }
+            container.innerHTML = `
 
+                <div class="empty">
 
-    /* =========================
-       CAMERA
-    ========================= */
+                    <div class="empty-icon">
+                        👥
+                    </div>
 
-    function openCamera() {
+                    <div class="empty-title">
+                        ${escapeHtml(title)}
+                    </div>
 
-        console.log("Camera clicked");
+                    <div class="empty-text">
+                        ${escapeHtml(text)}
+                    </div>
 
-        // FastAPI connect later:
-        // window.location.href = "/camera";
-    }
+                </div>
 
+            `;
 
-    /* =========================
-       NOTIFICATION
-    ========================= */
-
-    function openNotifications() {
-
-        console.log("Notifications");
-    }
+        }
 
 
-    /* =========================
-       WALLET
-    ========================= */
+        /* ==========================================
+           SAFE HTML
+        ========================================== */
 
-    function openWallet() {
+        function escapeHtml(value) {
 
-        console.log("Wallet");
-    }
+            return String(value)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
 
-
-    /* =========================
-       MENU
-    ========================= */
-
-    function openMenu() {
-
-        console.log("Menu");
-    }
+        }
 
 
-    /* =========================
-       NAVIGATION
-    ========================= */
+        /* ==========================================
+           OPEN USER
+        ========================================== */
 
-    function goHome() {
+        function openUser(userId) {
 
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth"
-        });
-    }
+            window.location.href =
+                "/search?user_id=" +
+                encodeURIComponent(userId);
 
-
-    function goReels() {
-
-        console.log("Reels");
-    }
+        }
 
 
-    function openCollection() {
+        /* ==========================================
+           NAVIGATION
+        ========================================== */
 
-        console.log("Collection");
-    }
+        function openSearch() {
+
+            window.location.href = "/search";
+
+        }
 
 
-    function goProfile() {
+        function openNotifications() {
 
-        console.log("Profile");
-    }
+            window.location.href =
+                "/notifications";
 
-</script>
+        }
+
+
+        function openWallet() {
+
+            window.location.href =
+                "/wallet";
+
+        }
+
+
+        function openMenu() {
+
+            alert("Menu will be connected next.");
+
+        }
+
+
+        function openCamera() {
+
+            alert("Camera will be connected next.");
+
+        }
+
+
+        function goHome() {
+
+            window.location.href = "/home";
+
+        }
+
+
+        function openReels() {
+
+            alert("Reels will be connected next.");
+
+        }
+
+
+        function openCollection() {
+
+            alert("Collection will be connected next.");
+
+        }
+
+
+        function openProfile() {
+
+            window.location.href = "/profile";
+
+        }
+
+
+        /* ==========================================
+           START
+        ========================================== */
+
+        loadConnections();
+
+    </script>
 
 </body>
 </html>
