@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, Depends, HTTPException
 from pydantic import BaseModel
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
@@ -14,9 +14,6 @@ import uuid
 import os
 
 
-from database import SessionLocal, User, OTPVerification
-
-
 # ============================================================
 # APP
 # ============================================================
@@ -24,11 +21,6 @@ from database import SessionLocal, User, OTPVerification
 app = FastAPI(title="Usanex")
 
 password_hasher = PasswordHasher()
-
-
-# ============================================================
-# BASE DIRECTORY
-# ============================================================
 
 BASE_DIR = os.path.dirname(
     os.path.abspath(__file__)
@@ -76,16 +68,21 @@ class ResetPasswordRequest(BaseModel):
 # DATABASE
 # ============================================================
 
+from database import (
+    SessionLocal,
+    User,
+    OTPVerification
+)
+
+
 def get_db():
 
     db = SessionLocal()
 
     try:
-
         yield db
 
     finally:
-
         db.close()
 
 
@@ -118,28 +115,20 @@ def save_otp(
     )
 
     for old in old_otps:
-
         db.delete(old)
 
     new_otp = OTPVerification(
-
         identifier=identifier,
-
         otp=otp,
-
         purpose=purpose,
-
         expires_at=(
             datetime.utcnow()
             + timedelta(minutes=2)
         ),
-
         verified=False
-
     )
 
     db.add(new_otp)
-
     db.commit()
 
     return otp
@@ -157,14 +146,36 @@ async def search_page():
         "search.html"
     )
 
-    return FileResponse(
-        search_file
+    if not os.path.isfile(search_file):
+
+        raise HTTPException(
+            status_code=404,
+            detail="search.html file not found on server"
+        )
+
+    return FileResponse(search_file)
+
+
+@app.get("/search.html")
+async def search_html():
+
+    search_file = os.path.join(
+        BASE_DIR,
+        "search.html"
     )
+
+    if not os.path.isfile(search_file):
+
+        raise HTTPException(
+            status_code=404,
+            detail="search.html file not found on server"
+        )
+
+    return FileResponse(search_file)
 
 
 # ============================================================
 # SEARCH API
-# USER ID OR MOBILE NUMBER
 # ============================================================
 
 @app.get("/api/search")
@@ -183,52 +194,27 @@ async def search_users(
         }
 
     users = (
-
         db.query(User)
-
         .filter(
-
-            (User.user_id.ilike(
-                f"%{q}%"
-            ))
-
+            (User.user_id.ilike(f"%{q}%"))
             |
-
-            (User.mobile.ilike(
-                f"%{q}%"
-            ))
-
+            (User.mobile.ilike(f"%{q}%"))
         )
-
         .limit(20)
-
         .all()
-
     )
 
     return {
-
         "ok": True,
-
         "users": [
-
             {
-
-                "user_id":
-                user.user_id,
-
-                "name":
-                user.name,
-
+                "user_id": user.user_id,
+                "name": user.name,
                 "profile_photo":
-                user.profile_photo
-
+                    user.profile_photo
             }
-
             for user in users
-
         ]
-
     }
 
 
@@ -239,107 +225,84 @@ async def search_users(
 @app.get("/")
 async def register_page():
 
-    return FileResponse(
+    register_file = os.path.join(
+        BASE_DIR,
+        "register.html"
+    )
 
-        os.path.join(
-            BASE_DIR,
-            "register.html"
+    if not os.path.isfile(register_file):
+
+        raise HTTPException(
+            status_code=404,
+            detail="register.html file not found"
         )
 
-    )
+    return FileResponse(register_file)
 
 
 @app.get("/register.html")
 async def register_html():
 
-    return FileResponse(
+    register_file = os.path.join(
+        BASE_DIR,
+        "register.html"
+    )
 
-        os.path.join(
-            BASE_DIR,
-            "register.html"
+    if not os.path.isfile(register_file):
+
+        raise HTTPException(
+            status_code=404,
+            detail="register.html file not found"
         )
 
-    )
+    return FileResponse(register_file)
 
 
 # ============================================================
-# LOGIN API
+# LOGIN
 # USER ID OR MOBILE NUMBER
 # ============================================================
 
 @app.post("/login")
 async def login(
-
     request: LoginRequest,
-
     db: Session = Depends(get_db)
-
 ):
 
     identifier = request.identifier.strip()
-
     password = request.password
-
-    # --------------------------------------------------------
-    # VALIDATION
-    # --------------------------------------------------------
 
     if not identifier or not password:
 
         return {
-
             "ok": False,
-
             "message":
-            "Username/mobile and password are required"
-
+                "User ID/mobile and password are required"
         }
 
-    # --------------------------------------------------------
-    # FIND USER BY USER ID OR MOBILE
-    # --------------------------------------------------------
-
     user = (
-
         db.query(User)
-
         .filter(
-
             (User.user_id == identifier)
-
             |
-
             (User.mobile == identifier)
-
         )
-
         .first()
-
     )
 
     if not user:
 
         return {
-
             "ok": False,
-
             "message":
-            "Invalid username/mobile or password"
-
+                "Invalid User ID/mobile or password"
         }
-
-    # --------------------------------------------------------
-    # VERIFY PASSWORD
-    # --------------------------------------------------------
 
     try:
 
         password_hasher.verify(
-
             user.password_hash,
-
             password
-
         )
 
     except (
@@ -348,43 +311,32 @@ async def login(
     ):
 
         return {
-
             "ok": False,
-
             "message":
-            "Invalid username/mobile or password"
-
+                "Invalid User ID/mobile or password"
         }
-
-    # --------------------------------------------------------
-    # TEMPORARY LOGIN TOKEN
-    # --------------------------------------------------------
 
     token = secrets.token_urlsafe(32)
 
     return {
-
         "ok": True,
-
         "message":
-        "Login successful",
+            "Login successful",
 
         "token":
-        token,
+            token,
 
         "user": {
 
             "user_id":
-            user.user_id,
+                user.user_id,
 
             "name":
-            user.name,
+                user.name,
 
             "mobile":
-            user.mobile
-
+                user.mobile
         }
-
     }
 
 
@@ -394,140 +346,87 @@ async def login(
 
 @app.post("/register/request-otp")
 async def register_request_otp(
-
     request: RegisterOTPRequest,
-
     db: Session = Depends(get_db)
-
 ):
 
     name = request.name.strip()
-
     mobile = request.mobile.strip()
-
     password = request.password
-
-    # --------------------------------------------------------
-    # NAME
-    # --------------------------------------------------------
 
     if not name:
 
         return {
-
             "ok": False,
-
             "message":
-            "Name is required"
-
+                "Name is required"
         }
-
-    # --------------------------------------------------------
-    # MOBILE
-    # --------------------------------------------------------
 
     if not mobile:
 
         return {
-
             "ok": False,
-
             "message":
-            "Mobile number is required"
-
+                "Mobile number is required"
         }
 
-    if not mobile.isdigit() or len(mobile) != 10:
+    if (
+        not mobile.isdigit()
+        or len(mobile) != 10
+    ):
 
         return {
-
             "ok": False,
-
             "message":
-            "Enter a valid 10-digit mobile number"
-
+                "Enter a valid 10-digit mobile number"
         }
-
-    # --------------------------------------------------------
-    # PASSWORD
-    # --------------------------------------------------------
 
     if not password:
 
         return {
-
             "ok": False,
-
             "message":
-            "Password is required"
-
+                "Password is required"
         }
 
     if len(password) < 6:
 
         return {
-
             "ok": False,
-
             "message":
-            "Password must be at least 6 characters"
-
+                "Password must be at least 6 characters"
         }
 
-    # --------------------------------------------------------
-    # CHECK EXISTING USER
-    # --------------------------------------------------------
-
     existing_user = (
-
         db.query(User)
-
         .filter(
             User.mobile == mobile
         )
-
         .first()
-
     )
 
     if existing_user:
 
         return {
-
             "ok": False,
-
             "message":
-            "Mobile number already registered"
-
+                "Mobile number already registered"
         }
 
-    # --------------------------------------------------------
-    # GENERATE OTP
-    # --------------------------------------------------------
-
     otp = save_otp(
-
         db,
-
         mobile,
-
         "register"
-
     )
 
     return {
-
         "ok": True,
-
         "message":
-        "OTP generated",
-
+            "OTP generated",
         "otp":
-        otp,
-
+            otp,
         "expires_in":
-        120
-
+            120
     }
 
 
@@ -537,153 +436,85 @@ async def register_request_otp(
 
 @app.post("/register/verify-otp")
 async def register_verify_otp(
-
     request: RegisterVerifyRequest,
-
     db: Session = Depends(get_db)
-
 ):
 
     mobile = request.mobile.strip()
-
     otp = request.otp.strip()
 
-    # --------------------------------------------------------
-    # FIND OTP
-    # --------------------------------------------------------
-
     verification = (
-
         db.query(OTPVerification)
-
         .filter(
-
             OTPVerification.identifier == mobile,
-
             OTPVerification.purpose == "register",
-
             OTPVerification.verified == False
-
         )
-
         .order_by(
             OTPVerification.id.desc()
         )
-
         .first()
-
     )
 
     if not verification:
 
         return {
-
             "ok": False,
-
             "message":
-            "OTP not found. Please request a new OTP"
-
+                "OTP not found. Please request a new OTP"
         }
-
-    # --------------------------------------------------------
-    # OTP EXPIRY
-    # --------------------------------------------------------
 
     if datetime.utcnow() > verification.expires_at:
 
         db.delete(verification)
-
         db.commit()
 
         return {
-
             "ok": False,
-
             "message":
-            "OTP expired. Please request a new OTP"
-
+                "OTP expired. Please request a new OTP"
         }
-
-    # --------------------------------------------------------
-    # OTP CHECK
-    # --------------------------------------------------------
 
     if verification.otp != otp:
 
         return {
-
             "ok": False,
-
             "message":
-            "Invalid OTP"
-
+                "Invalid OTP"
         }
 
-    # --------------------------------------------------------
-    # CHECK USER AGAIN
-    # --------------------------------------------------------
-
     existing_user = (
-
         db.query(User)
-
         .filter(
             User.mobile == mobile
         )
-
         .first()
-
     )
 
     if existing_user:
 
         return {
-
             "ok": False,
-
             "message":
-            "Mobile number already registered"
-
+                "Mobile number already registered"
         }
 
-    # --------------------------------------------------------
-    # CREATE USER ID
-    # --------------------------------------------------------
-
     user_id = (
-
         "UX"
-        +
-        uuid.uuid4().hex[:10]
-
+        + uuid.uuid4().hex[:10]
     )
 
-    # --------------------------------------------------------
-    # HASH PASSWORD
-    # --------------------------------------------------------
-
     password_hash = (
-
         password_hasher.hash(
             request.password
         )
-
     )
 
-    # --------------------------------------------------------
-    # CREATE USER
-    # --------------------------------------------------------
-
     new_user = User(
-
         user_id=user_id,
-
         name=request.name.strip(),
-
         mobile=mobile,
-
         password_hash=password_hash
-
     )
 
     try:
@@ -701,34 +532,24 @@ async def register_verify_otp(
         db.rollback()
 
         return {
-
             "ok": False,
-
             "message":
-            "Registration failed. Please try again"
-
+                "Registration failed. Please try again"
         }
 
-    # --------------------------------------------------------
-    # SUCCESS
-    # --------------------------------------------------------
-
     return {
-
         "ok": True,
-
         "message":
-        "Registration successful",
+            "Registration successful",
 
         "user_id":
-        new_user.user_id,
+            new_user.user_id,
 
         "name":
-        new_user.name,
+            new_user.name,
 
         "mobile":
-        new_user.mobile
-
+            new_user.mobile
     }
 
 
@@ -738,90 +559,52 @@ async def register_verify_otp(
 
 @app.post("/forgot-password/request-otp")
 async def forgot_password_request_otp(
-
     request: ForgotOTPRequest,
-
     db: Session = Depends(get_db)
-
 ):
 
     identifier = request.identifier.strip()
 
-    # --------------------------------------------------------
-    # VALIDATION
-    # --------------------------------------------------------
-
     if not identifier:
 
         return {
-
             "ok": False,
-
             "message":
-            "User ID or mobile number is required"
-
+                "User ID or mobile number is required"
         }
 
-    # --------------------------------------------------------
-    # FIND USER
-    # --------------------------------------------------------
-
     user = (
-
         db.query(User)
-
         .filter(
-
             (User.user_id == identifier)
-
             |
-
             (User.mobile == identifier)
-
         )
-
         .first()
-
     )
 
     if not user:
 
         return {
-
             "ok": False,
-
             "message":
-            "User ID or mobile number not found"
-
+                "User ID or mobile number not found"
         }
 
-    # --------------------------------------------------------
-    # GENERATE OTP
-    # --------------------------------------------------------
-
     otp = save_otp(
-
         db,
-
         user.mobile,
-
         "forgot_password"
-
     )
 
     return {
-
         "ok": True,
-
         "message":
-        "OTP generated",
-
+            "OTP generated",
         "otp":
-        otp,
-
+            otp,
         "expires_in":
-        120
-
+            120
     }
 
 
@@ -831,60 +614,34 @@ async def forgot_password_request_otp(
 
 @app.post("/forgot-password/verify-otp")
 async def forgot_password_verify_otp(
-
     request: ForgotVerifyRequest,
-
     db: Session = Depends(get_db)
-
 ):
 
     identifier = request.identifier.strip()
-
     otp = request.otp.strip()
 
-    # --------------------------------------------------------
-    # FIND USER
-    # --------------------------------------------------------
-
     user = (
-
         db.query(User)
-
         .filter(
-
             (User.user_id == identifier)
-
             |
-
             (User.mobile == identifier)
-
         )
-
         .first()
-
     )
 
     if not user:
 
         return {
-
             "ok": False,
-
             "message":
-            "User not found"
-
+                "User not found"
         }
 
-    # --------------------------------------------------------
-    # FIND OTP
-    # --------------------------------------------------------
-
     verification = (
-
         db.query(OTPVerification)
-
         .filter(
-
             OTPVerification.identifier
             == user.mobile,
 
@@ -893,77 +650,48 @@ async def forgot_password_verify_otp(
 
             OTPVerification.verified
             == False
-
         )
-
         .order_by(
             OTPVerification.id.desc()
         )
-
         .first()
-
     )
 
     if not verification:
 
         return {
-
             "ok": False,
-
             "message":
-            "OTP not found. Please request a new OTP"
-
+                "OTP not found. Please request a new OTP"
         }
-
-    # --------------------------------------------------------
-    # EXPIRY
-    # --------------------------------------------------------
 
     if datetime.utcnow() > verification.expires_at:
 
         db.delete(verification)
-
         db.commit()
 
         return {
-
             "ok": False,
-
             "message":
-            "OTP expired. Please request a new OTP"
-
+                "OTP expired. Please request a new OTP"
         }
-
-    # --------------------------------------------------------
-    # CHECK OTP
-    # --------------------------------------------------------
 
     if verification.otp != otp:
 
         return {
-
             "ok": False,
-
             "message":
-            "Invalid OTP"
-
+                "Invalid OTP"
         }
-
-    # --------------------------------------------------------
-    # MARK VERIFIED
-    # --------------------------------------------------------
 
     verification.verified = True
 
     db.commit()
 
     return {
-
         "ok": True,
-
         "message":
-        "OTP verified"
-
+            "OTP verified"
     }
 
 
@@ -973,33 +701,19 @@ async def forgot_password_verify_otp(
 
 @app.post("/forgot-password/reset-password")
 async def reset_password(
-
     request: ResetPasswordRequest,
-
     db: Session = Depends(get_db)
-
 ):
 
     identifier = request.identifier.strip()
 
-    # --------------------------------------------------------
-    # PASSWORD LENGTH
-    # --------------------------------------------------------
-
     if len(request.new_password) < 6:
 
         return {
-
             "ok": False,
-
             "message":
-            "Password must be at least 6 characters"
-
+                "Password must be at least 6 characters"
         }
-
-    # --------------------------------------------------------
-    # PASSWORD MATCH
-    # --------------------------------------------------------
 
     if (
         request.new_password
@@ -1008,57 +722,32 @@ async def reset_password(
     ):
 
         return {
-
             "ok": False,
-
             "message":
-            "Passwords do not match"
-
+                "Passwords do not match"
         }
 
-    # --------------------------------------------------------
-    # FIND USER
-    # --------------------------------------------------------
-
     user = (
-
         db.query(User)
-
         .filter(
-
             (User.user_id == identifier)
-
             |
-
             (User.mobile == identifier)
-
         )
-
         .first()
-
     )
 
     if not user:
 
         return {
-
             "ok": False,
-
             "message":
-            "User not found"
-
+                "User not found"
         }
 
-    # --------------------------------------------------------
-    # FIND VERIFIED OTP
-    # --------------------------------------------------------
-
     verification = (
-
         db.query(OTPVerification)
-
         .filter(
-
             OTPVerification.identifier
             == user.mobile,
 
@@ -1067,31 +756,20 @@ async def reset_password(
 
             OTPVerification.verified
             == True
-
         )
-
         .order_by(
             OTPVerification.id.desc()
         )
-
         .first()
-
     )
 
     if not verification:
 
         return {
-
             "ok": False,
-
             "message":
-            "OTP verification required"
-
+                "OTP verification required"
         }
-
-    # --------------------------------------------------------
-    # CHECK OTP EXPIRY
-    # --------------------------------------------------------
 
     if datetime.utcnow() > verification.expires_at:
 
@@ -1100,41 +778,25 @@ async def reset_password(
         db.commit()
 
         return {
-
             "ok": False,
-
             "message":
-            "OTP verification expired"
-
+                "OTP verification expired"
         }
 
-    # --------------------------------------------------------
-    # CHANGE PASSWORD
-    # --------------------------------------------------------
-
     user.password_hash = (
-
         password_hasher.hash(
             request.new_password
         )
-
     )
-
-    # --------------------------------------------------------
-    # OTP CAN ONLY BE USED ONCE
-    # --------------------------------------------------------
 
     verification.verified = False
 
     db.commit()
 
     return {
-
         "ok": True,
-
         "message":
-        "Password changed successfully"
-
+            "Password changed successfully"
     }
 
 
@@ -1145,14 +807,19 @@ async def reset_password(
 @app.get("/home")
 async def home_page():
 
-    return FileResponse(
+    home_file = os.path.join(
+        BASE_DIR,
+        "home.html"
+    )
 
-        os.path.join(
-            BASE_DIR,
-            "home.html"
+    if not os.path.isfile(home_file):
+
+        raise HTTPException(
+            status_code=404,
+            detail="home.html file not found"
         )
 
-    )
+    return FileResponse(home_file)
 
 
 # ============================================================
@@ -1161,21 +828,12 @@ async def home_page():
 
 @app.get("/api/home/connections")
 async def home_connections(
-
     db: Session = Depends(get_db)
-
 ):
 
-    # --------------------------------------------------------
-    # CONNECTION SYSTEM ABHI NAHI BANAYA GAYA HAI
-    # --------------------------------------------------------
-
     return {
-
         "ok": True,
-
         "users": []
-
     }
 
 
@@ -1187,15 +845,11 @@ async def home_connections(
 async def health():
 
     return {
-
         "ok": True,
-
         "status":
-        "online",
-
+            "online",
         "app":
-        "Usanex"
-
+            "Usanex"
     }
 
 
@@ -1208,20 +862,14 @@ if __name__ == "__main__":
     import uvicorn
 
     port = int(
-
         os.getenv(
             "PORT",
             "8000"
         )
-
     )
 
     uvicorn.run(
-
         app,
-
         host="0.0.0.0",
-
         port=port
-
     )
