@@ -3,11 +3,22 @@ from pydantic import BaseModel
 from fastapi.responses import FileResponse
 import os
 
+from database import SessionLocal, User
+
 app = FastAPI(title="Usanex AI")
 class RegisterRequest(BaseModel):
     name: str
     mobile: str
     password: str
+
+
+def get_db():
+    db = SessionLocal()
+
+    try:
+        yield db
+    finally:
+        db.close()
     
 @app.post("/register")
 async def register(
