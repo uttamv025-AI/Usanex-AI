@@ -94,7 +94,6 @@ def save_otp(
 
     otp = generate_otp()
 
-
     old_otps = (
         db.query(OTPVerification)
         .filter(
@@ -104,11 +103,9 @@ def save_otp(
         .all()
     )
 
-
     for old in old_otps:
 
         db.delete(old)
-
 
     new_otp = OTPVerification(
 
@@ -127,11 +124,9 @@ def save_otp(
 
     )
 
-
     db.add(new_otp)
 
     db.commit()
-
 
     return otp
 
@@ -174,7 +169,6 @@ async def login(
 
     password = request.password
 
-
     # --------------------------------------------------------
     # VALIDATION
     # --------------------------------------------------------
@@ -189,7 +183,6 @@ async def login(
             "Username/mobile and password are required"
 
         }
-
 
     # --------------------------------------------------------
     # FIND USER BY USERNAME OR MOBILE
@@ -213,7 +206,6 @@ async def login(
 
     )
 
-
     if not user:
 
         return {
@@ -224,7 +216,6 @@ async def login(
             "Invalid username/mobile or password"
 
         }
-
 
     # --------------------------------------------------------
     # VERIFY PASSWORD
@@ -254,13 +245,11 @@ async def login(
 
         }
 
-
     # --------------------------------------------------------
     # TEMPORARY LOGIN TOKEN
     # --------------------------------------------------------
 
     token = secrets.token_urlsafe(32)
-
 
     return {
 
@@ -306,7 +295,6 @@ async def register_request_otp(
 
     password = request.password
 
-
     # --------------------------------------------------------
     # NAME
     # --------------------------------------------------------
@@ -321,7 +309,6 @@ async def register_request_otp(
             "Name is required"
 
         }
-
 
     # --------------------------------------------------------
     # MOBILE
@@ -338,7 +325,6 @@ async def register_request_otp(
 
         }
 
-
     if not mobile.isdigit() or len(mobile) != 10:
 
         return {
@@ -349,7 +335,6 @@ async def register_request_otp(
             "Enter a valid 10-digit mobile number"
 
         }
-
 
     # --------------------------------------------------------
     # PASSWORD
@@ -366,7 +351,6 @@ async def register_request_otp(
 
         }
 
-
     if len(password) < 6:
 
         return {
@@ -377,7 +361,6 @@ async def register_request_otp(
             "Password must be at least 6 characters"
 
         }
-
 
     # --------------------------------------------------------
     # CHECK EXISTING USER
@@ -395,7 +378,6 @@ async def register_request_otp(
 
     )
 
-
     if existing_user:
 
         return {
@@ -406,7 +388,6 @@ async def register_request_otp(
             "Mobile number already registered"
 
         }
-
 
     # --------------------------------------------------------
     # GENERATE OTP
@@ -421,7 +402,6 @@ async def register_request_otp(
         "register"
 
     )
-
 
     return {
 
@@ -456,7 +436,6 @@ async def register_verify_otp(
 
     otp = request.otp.strip()
 
-
     # --------------------------------------------------------
     # FIND OTP
     # --------------------------------------------------------
@@ -483,7 +462,6 @@ async def register_verify_otp(
 
     )
 
-
     if not verification:
 
         return {
@@ -494,7 +472,6 @@ async def register_verify_otp(
             "OTP not found. Please request a new OTP"
 
         }
-
 
     # --------------------------------------------------------
     # OTP EXPIRY
@@ -515,7 +492,6 @@ async def register_verify_otp(
 
         }
 
-
     # --------------------------------------------------------
     # OTP CHECK
     # --------------------------------------------------------
@@ -530,7 +506,6 @@ async def register_verify_otp(
             "Invalid OTP"
 
         }
-
 
     # --------------------------------------------------------
     # CHECK USER AGAIN
@@ -548,7 +523,6 @@ async def register_verify_otp(
 
     )
 
-
     if existing_user:
 
         return {
@@ -559,7 +533,6 @@ async def register_verify_otp(
             "Mobile number already registered"
 
         }
-
 
     # --------------------------------------------------------
     # CREATE USERNAME
@@ -572,7 +545,6 @@ async def register_verify_otp(
 
     )
 
-
     # --------------------------------------------------------
     # HASH PASSWORD
     # --------------------------------------------------------
@@ -584,7 +556,6 @@ async def register_verify_otp(
         )
 
     )
-
 
     # --------------------------------------------------------
     # CREATE USER
@@ -602,7 +573,6 @@ async def register_verify_otp(
 
     )
 
-
     try:
 
         db.add(new_user)
@@ -612,7 +582,6 @@ async def register_verify_otp(
         db.commit()
 
         db.refresh(new_user)
-
 
     except IntegrityError:
 
@@ -626,7 +595,6 @@ async def register_verify_otp(
             "Registration failed. Please try again"
 
         }
-
 
     # --------------------------------------------------------
     # SUCCESS
@@ -666,7 +634,6 @@ async def forgot_password_request_otp(
 
     identifier = request.identifier.strip()
 
-
     # --------------------------------------------------------
     # VALIDATION
     # --------------------------------------------------------
@@ -681,7 +648,6 @@ async def forgot_password_request_otp(
             "User ID or mobile number is required"
 
         }
-
 
     # --------------------------------------------------------
     # FIND USER
@@ -705,7 +671,6 @@ async def forgot_password_request_otp(
 
     )
 
-
     if not user:
 
         return {
@@ -716,7 +681,6 @@ async def forgot_password_request_otp(
             "User ID or mobile number not found"
 
         }
-
 
     # --------------------------------------------------------
     # GENERATE OTP
@@ -731,7 +695,6 @@ async def forgot_password_request_otp(
         "forgot_password"
 
     )
-
 
     return {
 
@@ -766,7 +729,6 @@ async def forgot_password_verify_otp(
 
     otp = request.otp.strip()
 
-
     # --------------------------------------------------------
     # FIND USER
     # --------------------------------------------------------
@@ -789,7 +751,6 @@ async def forgot_password_verify_otp(
 
     )
 
-
     if not user:
 
         return {
@@ -800,7 +761,6 @@ async def forgot_password_verify_otp(
             "User not found"
 
         }
-
 
     # --------------------------------------------------------
     # FIND OTP
@@ -831,7 +791,6 @@ async def forgot_password_verify_otp(
 
     )
 
-
     if not verification:
 
         return {
@@ -842,7 +801,6 @@ async def forgot_password_verify_otp(
             "OTP not found. Please request a new OTP"
 
         }
-
 
     # --------------------------------------------------------
     # EXPIRY
@@ -863,7 +821,6 @@ async def forgot_password_verify_otp(
 
         }
 
-
     # --------------------------------------------------------
     # CHECK OTP
     # --------------------------------------------------------
@@ -879,7 +836,6 @@ async def forgot_password_verify_otp(
 
         }
 
-
     # --------------------------------------------------------
     # MARK VERIFIED
     # --------------------------------------------------------
@@ -887,7 +843,6 @@ async def forgot_password_verify_otp(
     verification.verified = True
 
     db.commit()
-
 
     return {
 
@@ -914,7 +869,6 @@ async def reset_password(
 
     identifier = request.identifier.strip()
 
-
     # --------------------------------------------------------
     # PASSWORD LENGTH
     # --------------------------------------------------------
@@ -929,7 +883,6 @@ async def reset_password(
             "Password must be at least 6 characters"
 
         }
-
 
     # --------------------------------------------------------
     # PASSWORD MATCH
@@ -949,7 +902,6 @@ async def reset_password(
             "Passwords do not match"
 
         }
-
 
     # --------------------------------------------------------
     # FIND USER
@@ -973,7 +925,6 @@ async def reset_password(
 
     )
 
-
     if not user:
 
         return {
@@ -984,7 +935,6 @@ async def reset_password(
             "User not found"
 
         }
-
 
     # --------------------------------------------------------
     # FIND VERIFIED OTP
@@ -1015,7 +965,6 @@ async def reset_password(
 
     )
 
-
     if not verification:
 
         return {
@@ -1026,7 +975,6 @@ async def reset_password(
             "OTP verification required"
 
         }
-
 
     # --------------------------------------------------------
     # CHECK OTP EXPIRY
@@ -1047,7 +995,6 @@ async def reset_password(
 
         }
 
-
     # --------------------------------------------------------
     # CHANGE PASSWORD
     # --------------------------------------------------------
@@ -1060,13 +1007,11 @@ async def reset_password(
 
     )
 
-
     # OTP can only be used once
 
     verification.verified = False
 
     db.commit()
-
 
     return {
 
@@ -1075,6 +1020,37 @@ async def reset_password(
         "message":
         "Password changed successfully"
 
+    }
+
+
+# ============================================================
+# HOME PAGE
+# ============================================================
+
+@app.get("/home")
+async def home_page():
+
+    return FileResponse(
+        "home.html"
+    )
+
+
+# ============================================================
+# HOME CONNECTIONS
+# ============================================================
+
+@app.get("/api/home/connections")
+async def home_connections(
+    db: Session = Depends(get_db)
+):
+
+    # Abhi connection system nahi banaya gaya hai.
+    # Isliye Home par sirf verified connections aane ke liye
+    # empty list return ho rahi hai.
+
+    return {
+        "ok": True,
+        "users": []
     }
 
 
@@ -1106,7 +1082,6 @@ if __name__ == "__main__":
 
     import uvicorn
 
-
     port = int(
 
         os.getenv(
@@ -1118,7 +1093,6 @@ if __name__ == "__main__":
         )
 
     )
-
 
     uvicorn.run(
 
