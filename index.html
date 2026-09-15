@@ -1,1 +1,371 @@
 # Usanex-AI
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Usanex</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      min-height:100vh;
+      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background:linear-gradient(145deg,#dff1ff 0%,#eef8ff 48%,#d7ecff 100%);
+      color:#102a43;
+      display:flex;align-items:center;justify-content:center;
+      padding:20px;overflow-x:hidden;
+    }
+    body:before,body:after{
+      content:"";position:fixed;border-radius:50%;filter:blur(2px);opacity:.5;z-index:-1;
+    }
+    body:before{width:280px;height:280px;background:#b9ddff;top:-100px;left:-90px}
+    body:after{width:340px;height:340px;background:#c8e6ff;right:-130px;bottom:-120px}
+    .shell{
+      width:min(430px,100%);min-height:700px;
+      background:rgba(255,255,255,.82);
+      border:1px solid rgba(255,255,255,.95);
+      border-radius:30px;
+      box-shadow:0 24px 70px rgba(43,103,157,.18);
+      backdrop-filter:blur(14px);
+      padding:26px 22px 24px;
+      position:relative;overflow:hidden;
+    }
+    .wave{position:absolute;left:-10%;right:-10%;height:150px;background:#e5f4ff;border-radius:50%;bottom:-95px;z-index:0}
+    .top{display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1}
+    .brand{display:flex;align-items:center;gap:9px;font-weight:800;font-size:19px;color:#083b77}
+    .logo{
+      width:38px;height:38px;border-radius:12px;
+      display:grid;place-items:center;
+      background:linear-gradient(145deg,#0b83ff,#0a55c8);
+      color:white;font-weight:900;font-size:21px;
+      box-shadow:0 8px 18px rgba(11,112,226,.25);
+    }
+    .back{border:0;background:transparent;font-size:25px;color:#174c83;cursor:pointer;visibility:hidden}
+    .hero{text-align:center;padding:34px 10px 22px;position:relative;z-index:1}
+    .hero-icon{
+      width:82px;height:82px;border-radius:28px;margin:0 auto 18px;
+      display:grid;place-items:center;font-size:38px;
+      background:linear-gradient(145deg,#d7efff,#f7fcff);
+      border:1px solid #c5e5ff;color:#0869d5;
+      box-shadow:0 12px 28px rgba(26,112,180,.13);
+    }
+    h1{font-size:29px;letter-spacing:-.7px;margin-bottom:7px;color:#0b2850}
+    .subtitle{font-size:14px;color:#66809a;line-height:1.5}
+    .screen{position:relative;z-index:1}
+    .form{display:grid;gap:13px;margin-top:12px}
+    .field{position:relative}
+    .field input{
+      width:100%;height:57px;border:1px solid #c9e3f8;border-radius:16px;
+      background:#fafdff;padding:0 46px 0 45px;outline:none;
+      color:#163452;font-size:15px;transition:.2s;
+    }
+    .field input:focus{border-color:#1682ee;box-shadow:0 0 0 4px rgba(22,130,238,.09)}
+    .field .ico{position:absolute;left:16px;top:18px;font-size:18px;color:#3975aa}
+    .toggle{position:absolute;right:14px;top:18px;border:0;background:none;cursor:pointer;color:#6b89a3}
+    .primary{
+      width:100%;height:55px;border:0;border-radius:16px;
+      background:linear-gradient(135deg,#168bff,#0865d8);color:#fff;
+      font-size:15px;font-weight:750;cursor:pointer;
+      box-shadow:0 12px 24px rgba(12,112,226,.23);margin-top:3px;
+    }
+    .primary:disabled{opacity:.6;cursor:not-allowed}
+    .link{border:0;background:none;color:#0768d9;font-weight:700;cursor:pointer}
+    .bottom{text-align:center;margin-top:19px;font-size:13px;color:#71879a}
+    .bottom button{margin-left:5px}
+    .message{
+      display:none;margin:13px 0 0;padding:12px 14px;border-radius:13px;
+      font-size:13px;line-height:1.4;text-align:center
+    }
+    .message.ok{display:block;background:#e9fbf2;color:#08733e;border:1px solid #b9efd2}
+    .message.err{display:block;background:#fff0f0;color:#a12626;border:1px solid #ffcaca}
+    .otp-row{display:grid;grid-template-columns:repeat(6,1fr);gap:7px;margin:22px 0 12px}
+    .otp-row input{
+      width:100%;height:53px;text-align:center;font-size:22px;font-weight:800;
+      border:1px solid #bcdfff;border-radius:13px;background:#fbfeff;outline:none
+    }
+    .otp-row input:focus{border-color:#0878e8;box-shadow:0 0 0 4px rgba(8,120,232,.08)}
+    .timer-line{display:flex;justify-content:space-between;font-size:12px;margin:5px 2px 18px;color:#678198}
+    .timer{font-weight:800;color:#17558e}
+    .success{margin-top:12px;text-align:center}
+    .check{
+      width:84px;height:84px;border-radius:50%;margin:8px auto 18px;
+      display:grid;place-items:center;background:#e9fff3;color:#0b9a58;
+      font-size:42px;border:7px solid #d1f7e3
+    }
+    .info{
+      margin-top:20px;background:#f5fbff;border:1px solid #d6ebfb;
+      border-radius:17px;padding:14px;text-align:left
+    }
+    .info div{display:flex;justify-content:space-between;gap:15px;padding:7px 0;font-size:13px}
+    .info span:first-child{color:#688199}.info span:last-child{font-weight:750;color:#173b61}
+    .switch{display:flex;justify-content:center;gap:7px;margin-bottom:5px}
+    .switch button{border:0;background:transparent;color:#7190aa;padding:7px 10px;font-weight:700;cursor:pointer}
+    .switch button.active{color:#0769dc;border-bottom:2px solid #0769dc}
+    .hidden{display:none!important}
+    .test-otp{
+      margin:0 0 13px;text-align:center;background:#edf7ff;border:1px dashed #8bc8ff;
+      border-radius:13px;padding:10px;color:#14548d;font-size:13px
+    }
+    .small{font-size:12px;color:#7990a5;text-align:center;margin-top:10px;line-height:1.45}
+    @media(max-height:760px){.shell{min-height:auto}.hero{padding-top:20px}.hero-icon{width:66px;height:66px;font-size:30px;margin-bottom:12px}}
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <div class="top">
+      <button class="back" id="backBtn" onclick="goBack()">‹</button>
+      <div class="brand"><div class="logo">U</div><span>Usanex</span></div>
+      <div style="width:25px"></div>
+    </div>
+
+    <section id="loginScreen" class="screen">
+      <div class="hero">
+        <div class="hero-icon">🔐</div>
+        <h1>Welcome Back!</h1>
+        <p class="subtitle">Login to your account</p>
+      </div>
+      <div class="form">
+        <div class="field"><span class="ico">📱</span><input id="loginMobile" type="tel" placeholder="Mobile Number"></div>
+        <div class="field"><span class="ico">🔒</span><input id="loginPassword" type="password" placeholder="Password"><button class="toggle" onclick="togglePass('loginPassword',this)">◉</button></div>
+        <button class="primary" onclick="login()">Login →</button>
+      </div>
+      <div id="loginMsg" class="message"></div>
+      <div class="bottom"><button class="link" onclick="showForgot()">Forgot Password?</button></div>
+      <div class="bottom">Don't have an account? <button class="link" onclick="showRegister()">Register</button></div>
+    </section>
+
+    <section id="registerScreen" class="screen hidden">
+      <div class="hero">
+        <div class="hero-icon">👤</div>
+        <h1>Create Your Account</h1>
+        <p class="subtitle">Enter your details to get started</p>
+      </div>
+      <div class="form">
+        <div class="field"><span class="ico">👤</span><input id="regName" type="text" placeholder="Full Name"></div>
+        <div class="field"><span class="ico">📱</span><input id="regMobile" type="tel" maxlength="10" placeholder="Mobile Number"></div>
+        <div class="field"><span class="ico">🔒</span><input id="regPassword" type="password" placeholder="Password (min 6 characters)"><button class="toggle" onclick="togglePass('regPassword',this)">◉</button></div>
+        <button class="primary" id="requestRegBtn" onclick="requestRegisterOtp()">Request OTP</button>
+      </div>
+      <div id="regMsg" class="message"></div>
+      <div class="bottom">Already have an account? <button class="link" onclick="showLogin()">Login</button></div>
+    </section>
+
+    <section id="regOtpScreen" class="screen hidden">
+      <div class="hero">
+        <div class="hero-icon">🔢</div>
+        <h1>Verify OTP</h1>
+        <p class="subtitle">Enter the 6-digit OTP for<br><b id="regOtpMobile"></b></p>
+      </div>
+      <div id="regOtpTest" class="test-otp hidden"></div>
+      <div class="otp-row" id="regOtpRow"></div>
+      <div class="timer-line"><span>⏱ <span id="regTimer">02:00</span></span><button class="link" onclick="requestRegisterOtp(true)">Resend OTP</button></div>
+      <button class="primary" onclick="verifyRegisterOtp()">Verify OTP</button>
+      <div id="regVerifyMsg" class="message"></div>
+      <div class="bottom"><button class="link" onclick="showRegister()">Change Details</button></div>
+    </section>
+
+    <section id="successScreen" class="screen hidden">
+      <div class="hero">
+        <div class="check">✓</div>
+        <h1>Registration Successful</h1>
+        <p class="subtitle">Your account has been created successfully.</p>
+      </div>
+      <div class="info">
+        <div><span>User ID</span><span id="successId"></span></div>
+        <div><span>Name</span><span id="successName"></span></div>
+        <div><span>Mobile</span><span id="successMobile"></span></div>
+      </div>
+      <button class="primary" style="margin-top:20px" onclick="showLogin()">Go to Login</button>
+    </section>
+
+    <section id="forgotScreen" class="screen hidden">
+      <div class="hero">
+        <div class="hero-icon">🔑</div>
+        <h1>Forgot Password</h1>
+        <p class="subtitle">Enter your User ID or Mobile number<br>to receive OTP</p>
+      </div>
+      <div class="form">
+        <div class="field"><span class="ico">🪪</span><input id="forgotIdentifier" type="text" placeholder="User ID or Mobile Number"></div>
+        <button class="primary" onclick="requestForgotOtp()">Request OTP</button>
+      </div>
+      <div id="forgotMsg" class="message"></div>
+      <div class="bottom"><button class="link" onclick="showLogin()">Back to Login</button></div>
+    </section>
+
+    <section id="forgotOtpScreen" class="screen hidden">
+      <div class="hero">
+        <div class="hero-icon">🛡️</div>
+        <h1>Verify OTP</h1>
+        <p class="subtitle">Enter the 6-digit OTP</p>
+      </div>
+      <div id="forgotOtpTest" class="test-otp hidden"></div>
+      <div class="otp-row" id="forgotOtpRow"></div>
+      <div class="timer-line"><span>⏱ <span id="forgotTimer">02:00</span></span><button class="link" onclick="requestForgotOtp(true)">Resend OTP</button></div>
+      <button class="primary" onclick="verifyForgotOtp()">Verify OTP</button>
+      <div id="forgotVerifyMsg" class="message"></div>
+    </section>
+
+    <section id="resetScreen" class="screen hidden">
+      <div class="hero">
+        <div class="hero-icon">🔒</div>
+        <h1>Set New Password</h1>
+        <p class="subtitle">Enter your new password</p>
+      </div>
+      <div class="form">
+        <div class="field"><span class="ico">🔒</span><input id="newPassword" type="password" placeholder="New Password"><button class="toggle" onclick="togglePass('newPassword',this)">◉</button></div>
+        <div class="field"><span class="ico">🔒</span><input id="confirmPassword" type="password" placeholder="Confirm Password"><button class="toggle" onclick="togglePass('confirmPassword',this)">◉</button></div>
+        <button class="primary" onclick="resetPassword()">Reset Password</button>
+      </div>
+      <div id="resetMsg" class="message"></div>
+    </section>
+
+    <section id="resetSuccessScreen" class="screen hidden">
+      <div class="hero">
+        <div class="check">✓</div>
+        <h1>Password Changed</h1>
+        <p class="subtitle">Your password has been changed successfully.</p>
+      </div>
+      <button class="primary" style="margin-top:20px" onclick="showLogin()">Go to Login</button>
+    </section>
+
+    <div class="wave"></div>
+  </main>
+
+<script>
+const API = "https://usanex-ai.onrender.com";
+let regData = {};
+let forgotIdentifier = "";
+let regOtpValue = "";
+let forgotOtpValue = "";
+let regTimerHandle, forgotTimerHandle;
+
+const screens = ["loginScreen","registerScreen","regOtpScreen","successScreen","forgotScreen","forgotOtpScreen","resetScreen","resetSuccessScreen"];
+
+function showOnly(id){
+  screens.forEach(x => document.getElementById(x).classList.toggle("hidden", x !== id));
+  document.getElementById("backBtn").style.visibility =
+    (id !== "loginScreen" && id !== "successScreen" && id !== "resetSuccessScreen") ? "visible" : "hidden";
+}
+function showLogin(){clearTimers();showOnly("loginScreen")}
+function showRegister(){clearTimers();showOnly("registerScreen")}
+function showForgot(){clearTimers();showOnly("forgotScreen")}
+function goBack(){showLogin()}
+function clearTimers(){if(regTimerHandle)clearInterval(regTimerHandle);if(forgotTimerHandle)clearInterval(forgotTimerHandle)}
+function togglePass(id,btn){const el=document.getElementById(id);el.type=el.type==="password"?"text":"password"}
+
+function msg(id,text,type){
+  const el=document.getElementById(id);el.textContent=text;el.className="message "+type;
+}
+function setOtpInputs(rowId){
+  const row=document.getElementById(rowId); row.innerHTML="";
+  for(let i=0;i<6;i++){
+    const input=document.createElement("input");
+    input.maxLength=1; input.inputMode="numeric";
+    input.addEventListener("input",e=>{
+      e.target.value=e.target.value.replace(/\D/g,"");
+      if(e.target.value && e.target.nextElementSibling)e.target.nextElementSibling.focus();
+    });
+    input.addEventListener("keydown",e=>{
+      if(e.key==="Backspace"&&!e.target.value&&e.target.previousElementSibling)e.target.previousElementSibling.focus();
+    });
+    row.appendChild(input);
+  }
+}
+function getOtp(rowId){return [...document.getElementById(rowId).querySelectorAll("input")].map(x=>x.value).join("")}
+function startTimer(id,seconds,type){
+  clearTimers();
+  let left=seconds;
+  const el=document.getElementById(id);
+  const tick=()=>{
+    const m=String(Math.floor(left/60)).padStart(2,"0"),s=String(left%60).padStart(2,"0");
+    el.textContent=`${m}:${s}`;
+    if(left<=0) clearInterval(type==="reg"?regTimerHandle:forgotTimerHandle);
+    left--;
+  };
+  tick();
+  const h=setInterval(tick,1000);
+  if(type==="reg")regTimerHandle=h; else forgotTimerHandle=h;
+}
+
+async function requestRegisterOtp(resend=false){
+  const name=document.getElementById("regName").value.trim();
+  const mobile=document.getElementById("regMobile").value.trim();
+  const password=document.getElementById("regPassword").value;
+  if(!name||!mobile||!password){msg("regMsg","Please fill all fields.","err");return}
+  if(!/^\d{10}$/.test(mobile)){msg("regMsg","Enter a valid 10-digit mobile number.","err");return}
+  if(password.length<6){msg("regMsg","Password must be at least 6 characters.","err");return}
+  const btn=document.getElementById("requestRegBtn"); if(btn)btn.disabled=true;
+  try{
+    const r=await fetch(API+"/register/request-otp",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name,mobile,password})});
+    const data=await r.json();
+    if(!data.ok){msg(resend?"regVerifyMsg":"regMsg",data.message||"Unable to generate OTP.","err");return}
+    regData={name,mobile,password}; regOtpValue=data.otp||"";
+    document.getElementById("regOtpMobile").textContent=mobile;
+    document.getElementById("regOtpTest").textContent="Test OTP: "+regOtpValue+"  (valid for 2 minutes)";
+    document.getElementById("regOtpTest").classList.remove("hidden");
+    setOtpInputs("regOtpRow"); showOnly("regOtpScreen"); startTimer("regTimer",120,"reg");
+  }catch(e){msg("regMsg","Server connection failed. Please try again.","err")}
+  finally{if(btn)btn.disabled=false}
+}
+async function verifyRegisterOtp(){
+  const otp=getOtp("regOtpRow");
+  if(otp.length!==6){msg("regVerifyMsg","Enter the 6-digit OTP.","err");return}
+  try{
+    const r=await fetch(API+"/register/verify-otp",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({...regData,otp})});
+    const data=await r.json();
+    if(!data.ok){msg("regVerifyMsg",data.message||"Invalid OTP.","err");return}
+    document.getElementById("successId").textContent=data.user_id||"";
+    document.getElementById("successName").textContent=data.name||regData.name;
+    document.getElementById("successMobile").textContent=data.mobile||regData.mobile;
+    clearTimers();showOnly("successScreen");
+  }catch(e){msg("regVerifyMsg","Server connection failed.","err")}
+}
+
+async function requestForgotOtp(resend=false){
+  const identifier=document.getElementById("forgotIdentifier").value.trim();
+  if(!identifier){msg("forgotMsg","Enter your User ID or mobile number.","err");return}
+  forgotIdentifier=identifier;
+  try{
+    const r=await fetch(API+"/forgot-password/request-otp",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({identifier})});
+    const data=await r.json();
+    if(!data.ok){msg("forgotMsg",data.message||"Unable to generate OTP.","err");return}
+    forgotOtpValue=data.otp||"";
+    document.getElementById("forgotOtpTest").textContent="Test OTP: "+forgotOtpValue+"  (valid for 2 minutes)";
+    document.getElementById("forgotOtpTest").classList.remove("hidden");
+    setOtpInputs("forgotOtpRow");showOnly("forgotOtpScreen");startTimer("forgotTimer",120,"forgot");
+  }catch(e){msg("forgotMsg","Server connection failed. Please try again.","err")}
+}
+async function verifyForgotOtp(){
+  const otp=getOtp("forgotOtpRow");
+  if(otp.length!==6){msg("forgotVerifyMsg","Enter the 6-digit OTP.","err");return}
+  try{
+    const r=await fetch(API+"/forgot-password/verify-otp",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({identifier:forgotIdentifier,otp})});
+    const data=await r.json();
+    if(!data.ok){msg("forgotVerifyMsg",data.message||"Invalid OTP.","err");return}
+    clearTimers();showOnly("resetScreen");
+  }catch(e){msg("forgotVerifyMsg","Server connection failed.","err")}
+}
+async function resetPassword(){
+  const new_password=document.getElementById("newPassword").value;
+  const confirm_password=document.getElementById("confirmPassword").value;
+  if(new_password.length<6){msg("resetMsg","Password must be at least 6 characters.","err");return}
+  if(new_password!==confirm_password){msg("resetMsg","Passwords do not match.","err");return}
+  try{
+    const r=await fetch(API+"/forgot-password/reset-password",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({identifier:forgotIdentifier,new_password,confirm_password})});
+    const data=await r.json();
+    if(!data.ok){msg("resetMsg",data.message||"Unable to reset password.","err");return}
+    showOnly("resetSuccessScreen");
+  }catch(e){msg("resetMsg","Server connection failed.","err")}
+}
+
+function login(){
+  msg("loginMsg","Login endpoint अभी backend में connected नहीं है. पहले Register/OTP flow test करें.","err");
+}
+setOtpInputs("regOtpRow");
+setOtpInputs("forgotOtpRow");
+showLogin();
+</script>
+</body>
+  </html>
+
