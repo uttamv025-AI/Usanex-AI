@@ -13,12 +13,26 @@ import secrets
 import uuid
 import os
 
+
 from database import SessionLocal, User, OTPVerification
 
+
+# ============================================================
+# APP
+# ============================================================
 
 app = FastAPI(title="Usanex")
 
 password_hasher = PasswordHasher()
+
+
+# ============================================================
+# BASE DIRECTORY
+# ============================================================
+
+BASE_DIR = os.path.dirname(
+    os.path.abspath(__file__)
+)
 
 
 # ============================================================
@@ -132,58 +146,106 @@ def save_otp(
 
 
 # ============================================================
-# REGISTER PAGE
+# SEARCH PAGE
 # ============================================================
 
 @app.get("/search")
 async def search_page():
-    return FileResponse("search.html")
 
+    search_file = os.path.join(
+        BASE_DIR,
+        "search.html"
+    )
+
+    return FileResponse(
+        search_file
+    )
+
+
+# ============================================================
+# SEARCH API
+# USER ID OR MOBILE NUMBER
+# ============================================================
 
 @app.get("/api/search")
 async def search_users(
     q: str = "",
     db: Session = Depends(get_db)
 ):
+
     q = q.strip()
 
     if not q:
+
         return {
             "ok": True,
             "users": []
         }
 
     users = (
+
         db.query(User)
+
         .filter(
-            (User.user_id.ilike(f"%{q}%")) |
-            (User.mobile.ilike(f"%{q}%"))
+
+            (User.user_id.ilike(
+                f"%{q}%"
+            ))
+
+            |
+
+            (User.mobile.ilike(
+                f"%{q}%"
+            ))
+
         )
+
         .limit(20)
+
         .all()
+
     )
 
     return {
+
         "ok": True,
+
         "users": [
+
             {
-                "user_id": user.user_id,
-                "name": user.name,
-                "profile_photo": user.profile_photo
+
+                "user_id":
+                user.user_id,
+
+                "name":
+                user.name,
+
+                "profile_photo":
+                user.profile_photo
+
             }
+
             for user in users
+
         ]
+
     }
 
 
-
-
+# ============================================================
+# REGISTER PAGE
+# ============================================================
 
 @app.get("/")
 async def register_page():
 
     return FileResponse(
-        "register.html"
+
+        os.path.join(
+            BASE_DIR,
+            "register.html"
+        )
+
     )
 
 
@@ -191,13 +253,18 @@ async def register_page():
 async def register_html():
 
     return FileResponse(
-        "register.html"
+
+        os.path.join(
+            BASE_DIR,
+            "register.html"
+        )
+
     )
 
 
 # ============================================================
 # LOGIN API
-# USERNAME OR MOBILE NUMBER
+# USER ID OR MOBILE NUMBER
 # ============================================================
 
 @app.post("/login")
@@ -229,7 +296,7 @@ async def login(
         }
 
     # --------------------------------------------------------
-    # FIND USER BY USERNAME OR MOBILE
+    # FIND USER BY USER ID OR MOBILE
     # --------------------------------------------------------
 
     user = (
@@ -302,7 +369,8 @@ async def login(
         "message":
         "Login successful",
 
-        "token": token,
+        "token":
+        token,
 
         "user": {
 
@@ -579,12 +647,13 @@ async def register_verify_otp(
         }
 
     # --------------------------------------------------------
-    # CREATE USERNAME
+    # CREATE USER ID
     # --------------------------------------------------------
 
     user_id = (
 
-        "UX" +
+        "UX"
+        +
         uuid.uuid4().hex[:10]
 
     )
@@ -1051,7 +1120,9 @@ async def reset_password(
 
     )
 
-    # OTP can only be used once
+    # --------------------------------------------------------
+    # OTP CAN ONLY BE USED ONCE
+    # --------------------------------------------------------
 
     verification.verified = False
 
@@ -1075,7 +1146,12 @@ async def reset_password(
 async def home_page():
 
     return FileResponse(
-        "home.html"
+
+        os.path.join(
+            BASE_DIR,
+            "home.html"
+        )
+
     )
 
 
@@ -1085,16 +1161,21 @@ async def home_page():
 
 @app.get("/api/home/connections")
 async def home_connections(
+
     db: Session = Depends(get_db)
+
 ):
 
-    # Abhi connection system nahi banaya gaya hai.
-    # Isliye Home par sirf verified connections aane ke liye
-    # empty list return ho rahi hai.
+    # --------------------------------------------------------
+    # CONNECTION SYSTEM ABHI NAHI BANAYA GAYA HAI
+    # --------------------------------------------------------
 
     return {
+
         "ok": True,
+
         "users": []
+
     }
 
 
@@ -1129,11 +1210,8 @@ if __name__ == "__main__":
     port = int(
 
         os.getenv(
-
             "PORT",
-
             "8000"
-
         )
 
     )
