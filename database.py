@@ -6,6 +6,7 @@ from sqlalchemy import (
     String,
     DateTime,
     Boolean,
+    text,
 )
 
 from sqlalchemy.orm import (
@@ -147,3 +148,18 @@ class OTPVerification(Base):
 # ============================================================
 
 Base.metadata.create_all(bind=engine)
+
+
+# ============================================================
+# DATABASE MIGRATION
+# ============================================================
+
+with engine.begin() as connection:
+    connection.execute(
+        text(
+            """
+            ALTER TABLE users
+            ADD COLUMN IF NOT EXISTS profile_photo VARCHAR(500)
+            """
+        )
+    )
