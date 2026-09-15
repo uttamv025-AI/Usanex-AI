@@ -26,7 +26,7 @@ password_hasher = PasswordHasher()
 # ============================================================
 
 class LoginRequest(BaseModel):
-    mobile: str
+    identifier: str
     password: str
 
 
@@ -67,9 +67,11 @@ def get_db():
     db = SessionLocal()
 
     try:
+
         yield db
 
     finally:
+
         db.close()
 
 
@@ -92,6 +94,7 @@ def save_otp(
 
     otp = generate_otp()
 
+
     old_otps = (
         db.query(OTPVerification)
         .filter(
@@ -101,9 +104,11 @@ def save_otp(
         .all()
     )
 
+
     for old in old_otps:
 
         db.delete(old)
+
 
     new_otp = OTPVerification(
 
@@ -113,15 +118,20 @@ def save_otp(
 
         purpose=purpose,
 
-        expires_at=datetime.utcnow()
-        + timedelta(minutes=2),
+        expires_at=(
+            datetime.utcnow()
+            + timedelta(minutes=2)
+        ),
 
         verified=False
+
     )
+
 
     db.add(new_otp)
 
     db.commit()
+
 
     return otp
 
@@ -148,6 +158,7 @@ async def register_html():
 
 # ============================================================
 # LOGIN API
+# USERNAME OR MOBILE NUMBER
 # ============================================================
 
 @app.post("/login")
@@ -159,29 +170,43 @@ async def login(
 
 ):
 
-    mobile = request.mobile.strip()
+    identifier = request.identifier.strip()
 
     password = request.password
 
 
-    if not mobile or not password:
+    # --------------------------------------------------------
+    # VALIDATION
+    # --------------------------------------------------------
+
+    if not identifier or not password:
 
         return {
 
             "ok": False,
 
             "message":
-            "Mobile number and password are required"
+            "Username/mobile and password are required"
 
         }
 
+
+    # --------------------------------------------------------
+    # FIND USER BY USERNAME OR MOBILE
+    # --------------------------------------------------------
 
     user = (
 
         db.query(User)
 
         .filter(
-            User.mobile == mobile
+
+            (User.user_id == identifier)
+
+            |
+
+            (User.mobile == identifier)
+
         )
 
         .first()
@@ -196,10 +221,14 @@ async def login(
             "ok": False,
 
             "message":
-            "Invalid mobile number or password"
+            "Invalid username/mobile or password"
 
         }
 
+
+    # --------------------------------------------------------
+    # VERIFY PASSWORD
+    # --------------------------------------------------------
 
     try:
 
@@ -221,12 +250,15 @@ async def login(
             "ok": False,
 
             "message":
-            "Invalid mobile number or password"
+            "Invalid username/mobile or password"
 
         }
 
 
-    # Temporary login token
+    # --------------------------------------------------------
+    # TEMPORARY LOGIN TOKEN
+    # --------------------------------------------------------
+
     token = secrets.token_urlsafe(32)
 
 
@@ -275,6 +307,10 @@ async def register_request_otp(
     password = request.password
 
 
+    # --------------------------------------------------------
+    # NAME
+    # --------------------------------------------------------
+
     if not name:
 
         return {
@@ -286,6 +322,10 @@ async def register_request_otp(
 
         }
 
+
+    # --------------------------------------------------------
+    # MOBILE
+    # --------------------------------------------------------
 
     if not mobile:
 
@@ -311,6 +351,10 @@ async def register_request_otp(
         }
 
 
+    # --------------------------------------------------------
+    # PASSWORD
+    # --------------------------------------------------------
+
     if not password:
 
         return {
@@ -334,6 +378,10 @@ async def register_request_otp(
 
         }
 
+
+    # --------------------------------------------------------
+    # CHECK EXISTING USER
+    # --------------------------------------------------------
 
     existing_user = (
 
@@ -360,6 +408,10 @@ async def register_request_otp(
         }
 
 
+    # --------------------------------------------------------
+    # GENERATE OTP
+    # --------------------------------------------------------
+
     otp = save_otp(
 
         db,
@@ -378,9 +430,11 @@ async def register_request_otp(
         "message":
         "OTP generated",
 
-        "otp": otp,
+        "otp":
+        otp,
 
-        "expires_in": 120
+        "expires_in":
+        120
 
     }
 
@@ -402,6 +456,10 @@ async def register_verify_otp(
 
     otp = request.otp.strip()
 
+
+    # --------------------------------------------------------
+    # FIND OTP
+    # --------------------------------------------------------
 
     verification = (
 
@@ -438,6 +496,10 @@ async def register_verify_otp(
         }
 
 
+    # --------------------------------------------------------
+    # OTP EXPIRY
+    # --------------------------------------------------------
+
     if datetime.utcnow() > verification.expires_at:
 
         db.delete(verification)
@@ -454,6 +516,10 @@ async def register_verify_otp(
         }
 
 
+    # --------------------------------------------------------
+    # OTP CHECK
+    # --------------------------------------------------------
+
     if verification.otp != otp:
 
         return {
@@ -465,6 +531,10 @@ async def register_verify_otp(
 
         }
 
+
+    # --------------------------------------------------------
+    # CHECK USER AGAIN
+    # --------------------------------------------------------
 
     existing_user = (
 
@@ -491,6 +561,10 @@ async def register_verify_otp(
         }
 
 
+    # --------------------------------------------------------
+    # CREATE USERNAME
+    # --------------------------------------------------------
+
     user_id = (
 
         "UX" +
@@ -498,6 +572,10 @@ async def register_verify_otp(
 
     )
 
+
+    # --------------------------------------------------------
+    # HASH PASSWORD
+    # --------------------------------------------------------
 
     password_hash = (
 
@@ -507,6 +585,10 @@ async def register_verify_otp(
 
     )
 
+
+    # --------------------------------------------------------
+    # CREATE USER
+    # --------------------------------------------------------
 
     new_user = User(
 
@@ -531,6 +613,7 @@ async def register_verify_otp(
 
         db.refresh(new_user)
 
+
     except IntegrityError:
 
         db.rollback()
@@ -544,6 +627,10 @@ async def register_verify_otp(
 
         }
 
+
+    # --------------------------------------------------------
+    # SUCCESS
+    # --------------------------------------------------------
 
     return {
 
@@ -580,6 +667,10 @@ async def forgot_password_request_otp(
     identifier = request.identifier.strip()
 
 
+    # --------------------------------------------------------
+    # VALIDATION
+    # --------------------------------------------------------
+
     if not identifier:
 
         return {
@@ -591,6 +682,10 @@ async def forgot_password_request_otp(
 
         }
 
+
+    # --------------------------------------------------------
+    # FIND USER
+    # --------------------------------------------------------
 
     user = (
 
@@ -623,6 +718,10 @@ async def forgot_password_request_otp(
         }
 
 
+    # --------------------------------------------------------
+    # GENERATE OTP
+    # --------------------------------------------------------
+
     otp = save_otp(
 
         db,
@@ -641,9 +740,11 @@ async def forgot_password_request_otp(
         "message":
         "OTP generated",
 
-        "otp": otp,
+        "otp":
+        otp,
 
-        "expires_in": 120
+        "expires_in":
+        120
 
     }
 
@@ -665,6 +766,10 @@ async def forgot_password_verify_otp(
 
     otp = request.otp.strip()
 
+
+    # --------------------------------------------------------
+    # FIND USER
+    # --------------------------------------------------------
 
     user = (
 
@@ -696,6 +801,10 @@ async def forgot_password_verify_otp(
 
         }
 
+
+    # --------------------------------------------------------
+    # FIND OTP
+    # --------------------------------------------------------
 
     verification = (
 
@@ -735,6 +844,10 @@ async def forgot_password_verify_otp(
         }
 
 
+    # --------------------------------------------------------
+    # EXPIRY
+    # --------------------------------------------------------
+
     if datetime.utcnow() > verification.expires_at:
 
         db.delete(verification)
@@ -751,6 +864,10 @@ async def forgot_password_verify_otp(
         }
 
 
+    # --------------------------------------------------------
+    # CHECK OTP
+    # --------------------------------------------------------
+
     if verification.otp != otp:
 
         return {
@@ -762,6 +879,10 @@ async def forgot_password_verify_otp(
 
         }
 
+
+    # --------------------------------------------------------
+    # MARK VERIFIED
+    # --------------------------------------------------------
 
     verification.verified = True
 
@@ -794,6 +915,10 @@ async def reset_password(
     identifier = request.identifier.strip()
 
 
+    # --------------------------------------------------------
+    # PASSWORD LENGTH
+    # --------------------------------------------------------
+
     if len(request.new_password) < 6:
 
         return {
@@ -805,6 +930,10 @@ async def reset_password(
 
         }
 
+
+    # --------------------------------------------------------
+    # PASSWORD MATCH
+    # --------------------------------------------------------
 
     if (
         request.new_password
@@ -821,6 +950,10 @@ async def reset_password(
 
         }
 
+
+    # --------------------------------------------------------
+    # FIND USER
+    # --------------------------------------------------------
 
     user = (
 
@@ -852,6 +985,10 @@ async def reset_password(
 
         }
 
+
+    # --------------------------------------------------------
+    # FIND VERIFIED OTP
+    # --------------------------------------------------------
 
     verification = (
 
@@ -891,6 +1028,10 @@ async def reset_password(
         }
 
 
+    # --------------------------------------------------------
+    # CHECK OTP EXPIRY
+    # --------------------------------------------------------
+
     if datetime.utcnow() > verification.expires_at:
 
         verification.verified = False
@@ -907,6 +1048,10 @@ async def reset_password(
         }
 
 
+    # --------------------------------------------------------
+    # CHANGE PASSWORD
+    # --------------------------------------------------------
+
     user.password_hash = (
 
         password_hasher.hash(
@@ -915,6 +1060,8 @@ async def reset_password(
 
     )
 
+
+    # OTP can only be used once
 
     verification.verified = False
 
@@ -959,12 +1106,19 @@ if __name__ == "__main__":
 
     import uvicorn
 
+
     port = int(
+
         os.getenv(
+
             "PORT",
+
             "8000"
+
         )
+
     )
+
 
     uvicorn.run(
 
