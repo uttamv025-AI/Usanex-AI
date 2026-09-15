@@ -75,6 +75,15 @@ class User(Base):
         nullable=False
     )
 
+    # ========================================================
+    # PROFILE PHOTO / DP
+    # ========================================================
+
+    profile_photo: Mapped[str | None] = mapped_column(
+        String(500),
+        nullable=True
+    )
+
 
 # ============================================================
 # OTP TABLE
