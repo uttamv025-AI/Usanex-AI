@@ -57,4 +57,34 @@ class Base(DeclarativeBase):
         String(255),
         nullable=False
     )
+    class User(Base):
+    __tablename__ = "users"
+
+    id: Mapped[int] = mapped_column(
+        primary_key=True,
+        autoincrement=True
+    )
+
+    user_id: Mapped[str] = mapped_column(
+        String(20),
+        unique=True,
+        index=True,
+        nullable=False
+    )
+
+    name: Mapped[str] = mapped_column(
+        String(100),
+        nullable=False
+    )
+
+    mobile: Mapped[str] = mapped_column(
+        String(15),
+        unique=True,
+        nullable=False
+    )
+
+    password_hash: Mapped[str] = mapped_column(
+        String(255),
+        nullable=False
+    )
     pass
