@@ -1,731 +1,1349 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
-    >
+<meta charset="UTF-8">
 
-    <title>Usanex - Home</title>
+<meta name="viewport"
+content="width=device-width,
+initial-scale=1.0,
+maximum-scale=1.0,
+user-scalable=no">
 
-    <style>
+<title>Usanex</title>
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<style>
 
-        body {
-            font-family: Arial, sans-serif;
-            background: #090b10;
-            color: #ffffff;
-            min-height: 100vh;
-            padding-bottom: 75px;
-        }
+/* =========================================================
+   RESET
+========================================================= */
 
-        /* ==============================
-           HEADER
-        ============================== */
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    -webkit-tap-highlight-color:transparent;
+}
 
-        .header {
-            height: 70px;
-            background: #11141b;
-            border-bottom: 1px solid #272c35;
+html,
+body{
+    width:100%;
+    min-height:100%;
+    font-family:Arial, sans-serif;
+    background:#07090d;
+    color:#fff;
+}
 
-            display: flex;
-            align-items: center;
+body{
+    min-height:100vh;
+    overflow-x:hidden;
+}
 
-            padding: 0 15px;
-            gap: 12px;
 
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
+/* =========================================================
+   APP
+========================================================= */
 
-        .logo {
-            width: 45px;
-            height: 45px;
+.app{
+    min-height:100vh;
+    padding-bottom:100px;
+    background:
+        radial-gradient(
+            circle at 50% -10%,
+            rgba(24,105,232,.18),
+            transparent 38%
+        ),
+        #07090d;
+}
 
-            border-radius: 50%;
 
-            object-fit: contain;
+/* =========================================================
+   HEADER
+========================================================= */
 
-            flex-shrink: 0;
-        }
+.header{
 
-        .search-box {
-            flex: 1;
+    height:88px;
 
-            height: 42px;
+    padding:0 20px;
 
-            background: #1b1f27;
+    display:flex;
+    align-items:center;
 
-            border: 1px solid #303640;
+    gap:14px;
 
-            border-radius: 22px;
+    background:
+        rgba(7,9,13,.88);
 
-            display: flex;
-            align-items: center;
+    border-bottom:
+        1px solid rgba(255,255,255,.07);
 
-            padding: 0 14px;
+    position:sticky;
+    top:0;
 
-            cursor: pointer;
-        }
+    z-index:30;
 
-        .search-icon {
-            font-size: 20px;
-            margin-right: 8px;
-            color: #aeb5c0;
-        }
+    backdrop-filter:blur(18px);
 
-        .search-text {
-            color: #9ba2ad;
-            font-size: 14px;
-        }
+}
 
-        .header-button {
-            width: 38px;
-            height: 38px;
 
-            border: none;
-            background: transparent;
+/* =========================================================
+   LOGO
+========================================================= */
 
-            color: white;
+.brand{
 
-            font-size: 21px;
+    display:flex;
+    align-items:center;
 
-            cursor: pointer;
+    flex-shrink:0;
 
-            flex-shrink: 0;
-        }
+}
 
-        /* ==============================
-           MAIN
-        ============================== */
+.logo-mark{
 
-        .main {
-            max-width: 700px;
-            margin: auto;
-            padding: 18px 15px;
-        }
+    width:43px;
+    height:43px;
 
-        .section-title {
-            font-size: 14px;
-            font-weight: bold;
+    border-radius:14px;
 
-            letter-spacing: 1px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
 
-            color: #bfc5cf;
+    position:relative;
 
-            margin-bottom: 14px;
-        }
+    background:
+        linear-gradient(
+            145deg,
+            #2d91ff,
+            #0756c9
+        );
 
-        /* ==============================
-           CONNECTION LIST
-        ============================== */
+    box-shadow:
+        0 7px 22px
+        rgba(18,105,232,.38);
 
-        .connections {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
+}
 
-        .user-card {
-            min-height: 72px;
+.logo-u{
 
-            background: #12161d;
+    font-size:25px;
+    font-weight:900;
 
-            border: 1px solid #242a33;
+    color:#fff;
 
-            border-radius: 15px;
+    z-index:2;
 
-            display: flex;
-            align-items: center;
+}
 
-            padding: 10px 12px;
+.logo-shine{
 
-            transition: 0.2s;
-        }
+    position:absolute;
 
-        .user-card:active {
-            transform: scale(0.98);
-        }
+    width:8px;
+    height:8px;
 
-        .profile-photo {
-            width: 50px;
-            height: 50px;
+    border-radius:50%;
 
-            border-radius: 50%;
+    background:#fff;
 
-            background: #272d37;
+    right:7px;
+    top:6px;
 
-            display: flex;
-            align-items: center;
-            justify-content: center;
+    opacity:.9;
 
-            font-size: 21px;
+}
 
-            margin-right: 12px;
+.logo-mark:after{
 
-            flex-shrink: 0;
-        }
+    content:"";
 
-        .user-info {
-            flex: 1;
+    position:absolute;
 
-            min-width: 0;
-        }
+    width:21px;
+    height:4px;
 
-        .user-name {
-            font-size: 16px;
-            font-weight: 600;
+    border-radius:10px;
 
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
+    background:
+        rgba(255,255,255,.25);
 
-        .user-id {
-            margin-top: 5px;
+    left:11px;
+    bottom:6px;
 
-            font-size: 12px;
+}
 
-            color: #8e96a3;
-        }
+.logo-name{
 
-        .arrow {
-            font-size: 28px;
-            color: #777f8c;
+    margin-left:9px;
 
-            padding-left: 8px;
-        }
+    font-size:20px;
+    font-weight:800;
 
-        /* ==============================
-           EMPTY STATE
-        ============================== */
+    letter-spacing:-.5px;
 
-        .empty {
-            text-align: center;
+}
 
-            padding: 90px 20px;
 
-            color: #7e8794;
-        }
+/* =========================================================
+   SEARCH
+========================================================= */
 
-        .empty-icon {
-            font-size: 48px;
-            margin-bottom: 15px;
-        }
+.search{
 
-        .empty-title {
-            color: #c4cad3;
-            font-size: 17px;
-            margin-bottom: 7px;
-        }
+    height:45px;
 
-        .empty-text {
-            font-size: 13px;
-            line-height: 20px;
-        }
+    flex:1;
 
-        /* ==============================
-           CAMERA
-        ============================== */
+    min-width:0;
 
-        .camera-button {
-            position: fixed;
+    display:flex;
+    align-items:center;
 
-            right: 18px;
-            bottom: 88px;
+    padding:0 15px;
 
-            width: 56px;
-            height: 56px;
+    border-radius:24px;
 
-            border-radius: 50%;
+    background:#151820;
 
-            border: 1px solid #39414c;
+    border:
+        1px solid
+        rgba(255,255,255,.08);
 
-            background: #181d25;
+    box-shadow:
+        inset 0 1px 0
+        rgba(255,255,255,.03);
 
-            color: white;
+    cursor:text;
 
-            font-size: 25px;
+}
 
-            display: flex;
-            align-items: center;
-            justify-content: center;
+.search-icon{
 
-            box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+    font-size:22px;
 
-            cursor: pointer;
+    color:#8993a5;
 
-            z-index: 200;
-        }
+    margin-right:9px;
 
-        /* ==============================
-           BOTTOM NAV
-        ============================== */
+}
 
-        .bottom-nav {
-            position: fixed;
+.search input{
 
-            left: 0;
-            right: 0;
-            bottom: 0;
+    width:100%;
 
-            height: 70px;
+    border:0;
+    outline:0;
 
-            background: #11141b;
+    background:transparent;
 
-            border-top: 1px solid #272c35;
+    color:#fff;
 
-            display: flex;
+    font-size:14px;
 
-            justify-content: space-around;
-            align-items: center;
+}
 
-            z-index: 150;
-        }
+.search input::placeholder{
 
-        .nav-item {
-            border: none;
-            background: transparent;
+    color:#747d8d;
 
-            color: #858d99;
+}
 
-            display: flex;
-            flex-direction: column;
-            align-items: center;
 
-            gap: 4px;
+/* =========================================================
+   HEADER ICONS
+========================================================= */
 
-            font-size: 11px;
+.header-actions{
 
-            cursor: pointer;
+    display:flex;
 
-            min-width: 65px;
-        }
+    align-items:center;
 
-        .nav-icon {
-            font-size: 21px;
-        }
+    gap:12px;
 
-        .nav-item.active {
-            color: #ffffff;
-        }
+}
 
-        .collection {
-            font-size: 24px;
-        }
+.header-btn{
 
-        /* ==============================
-           DESKTOP
-        ============================== */
+    width:40px;
+    height:40px;
 
-        @media (min-width: 700px) {
+    border:0;
 
-            .header {
-                padding-left: calc((100% - 700px) / 2);
-                padding-right: calc((100% - 700px) / 2);
-            }
+    border-radius:13px;
 
-            .main {
-                padding-top: 25px;
-            }
-        }
+    background:#151820;
 
-    </style>
+    color:#fff;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    font-size:20px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.07);
+
+    cursor:pointer;
+
+}
+
+.header-btn:active{
+
+    transform:scale(.92);
+
+}
+
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+.content{
+
+    padding:27px 20px 20px;
+
+}
+
+
+/* =========================================================
+   SECTION HEADER
+========================================================= */
+
+.section-head{
+
+    display:flex;
+
+    align-items:center;
+    justify-content:space-between;
+
+    margin-bottom:17px;
+
+}
+
+.section-title{
+
+    font-size:19px;
+
+    font-weight:800;
+
+    letter-spacing:.8px;
+
+}
+
+.section-line{
+
+    flex:1;
+
+    height:1px;
+
+    margin-left:15px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #29303c,
+            transparent
+        );
+
+}
+
+
+/* =========================================================
+   CONNECTIONS
+========================================================= */
+
+.connections{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:10px;
+
+}
+
+.connection{
+
+    min-height:72px;
+
+    display:flex;
+
+    align-items:center;
+
+    padding:11px 13px;
+
+    border-radius:19px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(25,29,38,.95),
+            rgba(14,17,23,.95)
+        );
+
+    border:
+        1px solid
+        rgba(255,255,255,.065);
+
+    box-shadow:
+        0 8px 25px
+        rgba(0,0,0,.16);
+
+    cursor:pointer;
+
+    transition:.2s;
+
+}
+
+.connection:active{
+
+    transform:scale(.985);
+
+}
+
+.avatar{
+
+    width:49px;
+    height:49px;
+
+    flex-shrink:0;
+
+    border-radius:50%;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:19px;
+    font-weight:800;
+
+    background:
+        linear-gradient(
+            145deg,
+            #2b8cff,
+            #0757c8
+        );
+
+    box-shadow:
+        0 5px 16px
+        rgba(15,105,235,.25);
+
+}
+
+.connection-info{
+
+    flex:1;
+
+    min-width:0;
+
+    margin-left:12px;
+
+}
+
+.connection-name{
+
+    font-size:15px;
+
+    font-weight:700;
+
+    white-space:nowrap;
+
+    overflow:hidden;
+
+    text-overflow:ellipsis;
+
+}
+
+.connection-id{
+
+    margin-top:5px;
+
+    font-size:11px;
+
+    color:#818a9a;
+
+}
+
+.connection-arrow{
+
+    width:34px;
+    height:34px;
+
+    border-radius:50%;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    color:#9aa3b2;
+
+    background:#1d222c;
+
+    font-size:21px;
+
+}
+
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
+.empty{
+
+    min-height:
+        calc(100vh - 280px);
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+    justify-content:center;
+
+    text-align:center;
+
+    padding:
+        30px 25px;
+
+}
+
+.empty-circle{
+
+    width:105px;
+    height:105px;
+
+    border-radius:50%;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(35,133,245,.20),
+            rgba(35,133,245,.04)
+        );
+
+    border:
+        1px solid
+        rgba(50,140,255,.16);
+
+    box-shadow:
+        0 0 45px
+        rgba(25,115,245,.10);
+
+    margin-bottom:22px;
+
+}
+
+.empty-icon{
+
+    font-size:43px;
+
+}
+
+.empty-title{
+
+    font-size:22px;
+
+    font-weight:800;
+
+    margin-bottom:9px;
+
+}
+
+.empty-text{
+
+    max-width:310px;
+
+    color:#7e8797;
+
+    font-size:13px;
+
+    line-height:1.6;
+
+}
+
+
+/* =========================================================
+   CAMERA BUTTON
+========================================================= */
+
+.camera{
+
+    position:fixed;
+
+    right:20px;
+    bottom:111px;
+
+    width:58px;
+    height:58px;
+
+    border-radius:19px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.12);
+
+    background:
+        linear-gradient(
+            145deg,
+            #1e2735,
+            #121720
+        );
+
+    color:#fff;
+
+    font-size:25px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    box-shadow:
+        0 12px 30px
+        rgba(0,0,0,.45);
+
+    z-index:40;
+
+    cursor:pointer;
+
+}
+
+.camera:active{
+
+    transform:scale(.92);
+
+}
+
+
+/* =========================================================
+   BOTTOM NAV
+========================================================= */
+
+.bottom-nav{
+
+    position:fixed;
+
+    left:10px;
+    right:10px;
+    bottom:10px;
+
+    height:76px;
+
+    border-radius:25px;
+
+    display:grid;
+
+    grid-template-columns:
+        1fr
+        1fr
+        1fr
+        1fr
+        1fr;
+
+    align-items:center;
+
+    background:
+        rgba(19,22,29,.94);
+
+    border:
+        1px solid
+        rgba(255,255,255,.09);
+
+    box-shadow:
+        0 15px 45px
+        rgba(0,0,0,.50);
+
+    backdrop-filter:blur(20px);
+
+    z-index:50;
+
+}
+
+
+/* =========================================================
+   NAV ITEM
+========================================================= */
+
+.nav-item{
+
+    height:70px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+    justify-content:center;
+
+    gap:5px;
+
+    color:#737c8d;
+
+    cursor:pointer;
+
+}
+
+.nav-icon{
+
+    font-size:21px;
+
+    line-height:1;
+
+}
+
+.nav-label{
+
+    font-size:10px;
+
+    font-weight:600;
+
+}
+
+.nav-item.active{
+
+    color:#fff;
+
+}
+
+.nav-item.active .nav-icon{
+
+    filter:
+        drop-shadow(
+            0 0 8px
+            rgba(45,145,255,.7)
+        );
+
+}
+
+
+/* =========================================================
+   CENTER PLUS
+========================================================= */
+
+.nav-center{
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+}
+
+.plus-btn{
+
+    width:55px;
+    height:55px;
+
+    border-radius:18px;
+
+    border:0;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:
+        linear-gradient(
+            145deg,
+            #3296ff,
+            #0758cb
+        );
+
+    color:#fff;
+
+    font-size:34px;
+
+    font-weight:300;
+
+    box-shadow:
+        0 9px 25px
+        rgba(18,105,232,.40);
+
+    cursor:pointer;
+
+}
+
+.plus-btn:active{
+
+    transform:scale(.90);
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media(max-width:390px){
+
+    .header{
+
+        padding:0 13px;
+
+        gap:9px;
+
+    }
+
+    .logo-name{
+
+        display:none;
+
+    }
+
+    .header-actions{
+
+        gap:7px;
+
+    }
+
+    .header-btn{
+
+        width:36px;
+        height:36px;
+
+        font-size:18px;
+
+    }
+
+    .content{
+
+        padding-left:16px;
+        padding-right:16px;
+
+    }
+
+    .bottom-nav{
+
+        left:7px;
+        right:7px;
+
+    }
+
+    .camera{
+
+        right:16px;
+
+    }
+
+}
+
+</style>
+
 </head>
 
 
 <body>
 
-    <!-- ==============================
-         HEADER
-    ============================== -->
 
-    <header class="header">
+<div class="app">
 
-        <!--
-            IMPORTANT:
-            Yahan apne LOGIN PAGE wale
-            SAME Usanex logo ka path rakho.
-        -->
 
-        <img
-            src="/static/images/usanex-logo.png"
-            class="logo"
-            alt="Usanex"
-        >
+<!-- =====================================================
+     HEADER
+===================================================== -->
 
-        <div
-            class="search-box"
-            onclick="openSearch()"
-        >
+<header class="header">
 
-            <span class="search-icon">⌕</span>
 
-            <span class="search-text">
-                Search people
+    <div class="brand">
+
+        <div class="logo-mark">
+
+            <span class="logo-u">
+                U
+            </span>
+
+            <span class="logo-shine">
             </span>
 
         </div>
 
+        <div class="logo-name">
+            Usanex
+        </div>
+
+    </div>
+
+
+    <div
+        class="search"
+        onclick="openSearch()">
+
+        <span class="search-icon">
+            ⌕
+        </span>
+
+        <input
+            id="searchInput"
+            type="text"
+            placeholder="Search people"
+            autocomplete="off">
+
+    </div>
+
+
+    <div class="header-actions">
+
         <button
-            class="header-button"
-            onclick="openNotifications()"
-        >
-            🔔
+            class="header-btn"
+            onclick="openNotifications()">
+
+            ♧
+
         </button>
 
         <button
-            class="header-button"
-            onclick="openWallet()"
-        >
-            ₹
-        </button>
+            class="header-btn"
+            onclick="openMenu()">
 
-        <button
-            class="header-button"
-            onclick="openMenu()"
-        >
             ☰
+
         </button>
 
-    </header>
+    </div>
+
+</header>
 
 
-    <!-- ==============================
-         MAIN
-    ============================== -->
+<!-- =====================================================
+     MAIN CONTENT
+===================================================== -->
 
-    <main class="main">
+<main class="content">
+
+
+    <div class="section-head">
 
         <div class="section-title">
-            CONNECTIONS
+            Connections
         </div>
 
-        <div
-            id="connections"
-            class="connections"
-        >
+        <div class="section-line"></div>
 
-            <!-- JavaScript yahan users dalega -->
+    </div>
+
+
+    <div
+        id="connections"
+        class="connections">
+    </div>
+
+
+    <!-- EMPTY -->
+
+    <div
+        id="emptyState"
+        class="empty">
+
+        <div class="empty-circle">
+
+            <div class="empty-icon">
+                👥
+            </div>
 
         </div>
 
-    </main>
+        <div class="empty-title">
+            No connections yet
+        </div>
+
+        <div class="empty-text">
+            Search for people and connect with them.
+            Your verified connections will appear here.
+        </div>
+
+    </div>
 
 
-    <!-- ==============================
-         CAMERA
-    ============================== -->
-
-    <button
-        class="camera-button"
-        onclick="openCamera()"
-        aria-label="Camera"
-    >
-        📷
-    </button>
+</main>
 
 
-    <!-- ==============================
-         BOTTOM NAVIGATION
-    ============================== -->
+<!-- =====================================================
+     CAMERA
+===================================================== -->
 
-    <nav class="bottom-nav">
+<button
+    class="camera"
+    onclick="openCamera()">
+
+    📷
+
+</button>
+
+
+<!-- =====================================================
+     BOTTOM NAV
+===================================================== -->
+
+<nav class="bottom-nav">
+
+
+    <!-- HOME -->
+
+    <div
+        class="nav-item active"
+        onclick="goHome()">
+
+        <div class="nav-icon">
+            ⌂
+        </div>
+
+        <div class="nav-label">
+            Home
+        </div>
+
+    </div>
+
+
+    <!-- REELS -->
+
+    <div
+        class="nav-item"
+        onclick="openReels()">
+
+        <div class="nav-icon">
+            ▶
+        </div>
+
+        <div class="nav-label">
+            Reels
+        </div>
+
+    </div>
+
+
+    <!-- PLUS -->
+
+    <div class="nav-center">
 
         <button
-            class="nav-item active"
-            onclick="goHome()"
-        >
-            <span class="nav-icon">⌂</span>
-            <span>Home</span>
+            class="plus-btn"
+            onclick="openCreate()">
+
+            +
+
         </button>
 
-
-        <button
-            class="nav-item"
-            onclick="openReels()"
-        >
-            <span class="nav-icon">▶</span>
-            <span>Reels</span>
-        </button>
+    </div>
 
 
-        <button
-            class="nav-item"
-            onclick="openCollection()"
-        >
-            <span class="collection">＋</span>
-            <span>Coll</span>
-        </button>
+    <!-- COLLECTION -->
+
+    <div
+        class="nav-item"
+        onclick="openCollection()">
+
+        <div class="nav-icon">
+            ▣
+        </div>
+
+        <div class="nav-label">
+            Coll
+        </div>
+
+    </div>
 
 
-        <button
-            class="nav-item"
-            onclick="openProfile()"
-        >
-            <span class="nav-icon">♙</span>
-            <span>Profile</span>
-        </button>
+    <!-- PROFILE -->
 
-    </nav>
+    <div
+        class="nav-item"
+        onclick="openProfile()">
 
+        <div class="nav-icon">
+            ♙
+        </div>
 
-    <script>
+        <div class="nav-label">
+            Profile
+        </div>
 
-        /* ==========================================
-           LOAD HOME CONNECTIONS
-        ========================================== */
-
-        async function loadConnections() {
-
-            const container =
-                document.getElementById("connections");
-
-            container.innerHTML = "";
-
-            try {
-
-                const response =
-                    await fetch("/api/home/connections");
-
-                const data =
-                    await response.json();
+    </div>
 
 
-                if (!data.ok) {
-
-                    showEmpty(
-                        "Unable to load connections",
-                        data.message || "Please try again"
-                    );
-
-                    return;
-                }
+</nav>
 
 
-                if (
-                    !data.users ||
-                    data.users.length === 0
-                ) {
-
-                    showEmpty(
-                        "No connections yet",
-                        "Search for people and connect with them. Your verified connections will appear here."
-                    );
-
-                    return;
-                }
+</div>
 
 
-                data.users.forEach(user => {
+<script>
 
-                    const card =
-                        document.createElement("div");
+/* =========================================================
+   LOAD CONNECTIONS
+========================================================= */
 
-                    card.className = "user-card";
+async function loadConnections(){
 
-                    card.onclick = function () {
+    const connections =
+        document.getElementById(
+            "connections"
+        );
 
-                        openUser(user.user_id);
+    const empty =
+        document.getElementById(
+            "emptyState"
+        );
 
-                    };
+    try{
 
+        const response =
+            await fetch(
+                "/api/home/connections"
+            );
 
-                    const firstLetter =
-                        (user.name || "U")
-                        .charAt(0)
-                        .toUpperCase();
+        if(!response.ok){
 
+            throw new Error(
+                "Connection API failed"
+            );
 
-                    card.innerHTML = `
+        }
 
-                        <div class="profile-photo">
-                            ${firstLetter}
-                        </div>
+        const data =
+            await response.json();
 
-                        <div class="user-info">
+        connections.innerHTML = "";
 
-                            <div class="user-name">
-                                ${escapeHtml(user.name)}
-                            </div>
-
-                            <div class="user-id">
-                                ID: ${escapeHtml(user.user_id)}
-                            </div>
-
-                        </div>
-
-                        <div class="arrow">
-                            ›
-                        </div>
-
-                    `;
+        const users =
+            data.users || [];
 
 
-                    container.appendChild(card);
+        if(users.length === 0){
 
-                });
+            empty.style.display =
+                "flex";
 
-            }
-            catch (error) {
-
-                console.error(error);
-
-                showEmpty(
-                    "Something went wrong",
-                    "Unable to load your connections."
-                );
-
-            }
+            return;
 
         }
 
 
-        /* ==========================================
-           EMPTY STATE
-        ========================================== */
+        empty.style.display =
+            "none";
 
-        function showEmpty(title, text) {
 
-            const container =
-                document.getElementById("connections");
+        users.forEach(user => {
 
-            container.innerHTML = `
+            const row =
+                document.createElement(
+                    "div"
+                );
 
-                <div class="empty">
+            row.className =
+                "connection";
 
-                    <div class="empty-icon">
-                        👥
+
+            const firstLetter =
+                (
+                    user.name ||
+                    "U"
+                )
+                .charAt(0)
+                .toUpperCase();
+
+
+            row.innerHTML = `
+
+                <div class="avatar">
+                    ${firstLetter}
+                </div>
+
+                <div class="connection-info">
+
+                    <div class="connection-name">
+                        ${escapeHtml(
+                            user.name ||
+                            "User"
+                        )}
                     </div>
 
-                    <div class="empty-title">
-                        ${escapeHtml(title)}
-                    </div>
-
-                    <div class="empty-text">
-                        ${escapeHtml(text)}
+                    <div class="connection-id">
+                        ${escapeHtml(
+                            user.user_id ||
+                            ""
+                        )}
                     </div>
 
                 </div>
 
+                <div class="connection-arrow">
+                    ›
+                </div>
+
             `;
 
-        }
+
+            row.onclick = function(){
+
+                if(user.user_id){
+
+                    window.location.href =
+                        "/search?user_id=" +
+                        encodeURIComponent(
+                            user.user_id
+                        );
+
+                }
+
+            };
 
 
-        /* ==========================================
-           SAFE HTML
-        ========================================== */
+            connections.appendChild(row);
 
-        function escapeHtml(value) {
-
-            return String(value)
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#039;");
-
-        }
+        });
 
 
-        /* ==========================================
-           OPEN USER
-        ========================================== */
+    }catch(error){
 
-        function openUser(userId) {
+        console.error(
+            error
+        );
 
-            window.location.href =
-                "/search?user_id=" +
-                encodeURIComponent(userId);
+        connections.innerHTML = "";
 
-        }
+        empty.style.display =
+            "flex";
 
+    }
 
-        /* ==========================================
-           NAVIGATION
-        ========================================== */
-
-        function openSearch() {
-
-            window.location.href = "/search";
-
-        }
+}
 
 
-        function openNotifications() {
+/* =========================================================
+   SECURITY
+========================================================= */
 
-            window.location.href =
-                "/notifications";
+function escapeHtml(value){
 
-        }
+    return String(value)
 
+        .replace(/&/g,"&amp;")
 
-        function openWallet() {
+        .replace(/</g,"&lt;")
 
-            window.location.href =
-                "/wallet";
+        .replace(/>/g,"&gt;")
 
-        }
+        .replace(/"/g,"&quot;")
 
+        .replace(/'/g,"&#039;");
 
-        function openMenu() {
-
-            alert("Menu will be connected next.");
-
-        }
+}
 
 
-        function openCamera() {
+/* =========================================================
+   HEADER
+========================================================= */
 
-            alert("Camera will be connected next.");
+function openSearch(){
 
-        }
+    document
+        .getElementById(
+            "searchInput"
+        )
+        .focus();
 
-
-        function goHome() {
-
-            window.location.href = "/home";
-
-        }
-
-
-        function openReels() {
-
-            alert("Reels will be connected next.");
-
-        }
+}
 
 
-        function openCollection() {
+function openNotifications(){
 
-            alert("Collection will be connected next.");
+    alert(
+        "Notifications will be available here."
+    );
 
-        }
-
-
-        function openProfile() {
-
-            window.location.href = "/profile";
-
-        }
+}
 
 
-        /* ==========================================
-           START
-        ========================================== */
+function openMenu(){
 
-        loadConnections();
+    alert(
+        "Menu will be available here."
+    );
 
-    </script>
+}
+
+
+/* =========================================================
+   CAMERA
+========================================================= */
+
+function openCamera(){
+
+    alert(
+        "Camera will be available here."
+    );
+
+}
+
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+function goHome(){
+
+    window.location.href =
+        "/home";
+
+}
+
+
+function openReels(){
+
+    alert(
+        "Reels will be available here."
+    );
+
+}
+
+
+function openCreate(){
+
+    alert(
+        "Create option will be available here."
+    );
+
+}
+
+
+function openCollection(){
+
+    alert(
+        "Collection will be available here."
+    );
+
+}
+
+
+function openProfile(){
+
+    alert(
+        "Profile will be available here."
+    );
+
+}
+
+
+/* =========================================================
+   START
+========================================================= */
+
+loadConnections();
+
+</script>
 
 </body>
+
 </html>
