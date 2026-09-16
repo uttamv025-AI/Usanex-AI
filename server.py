@@ -38,9 +38,7 @@ BASE_DIR = os.path.dirname(
 class ConnectionManager:
 
     def __init__(self):
-
         self.active_connections = {}
-
         self.lock = asyncio.Lock()
 
     async def connect(
@@ -54,7 +52,6 @@ class ConnectionManager:
         async with self.lock:
 
             if user_id not in self.active_connections:
-
                 self.active_connections[user_id] = set()
 
             self.active_connections[user_id].add(
@@ -77,7 +74,6 @@ class ConnectionManager:
             )
 
             if not self.active_connections[user_id]:
-
                 del self.active_connections[user_id]
 
     async def send_to_user(
@@ -249,7 +245,6 @@ def save_otp(
     )
 
     for old in old_otps:
-
         db.delete(old)
 
     new_otp = OTPVerification(
@@ -370,8 +365,7 @@ async def websocket_endpoint(
 
 
 # ============================================================
-# HELPER:
-# SEND REAL-TIME NOTIFICATION
+# REALTIME NOTIFICATION HELPER
 # ============================================================
 
 async def push_notification(
@@ -382,7 +376,9 @@ async def push_notification(
     message: str,
     sender: dict | None = None,
     connection_request_id: int | None = None,
-    verification_code: str | None = None
+    verification_code: str | None = None,
+    requester_user_id: str | None = None,
+    target_user_id: str | None = None
 ):
 
     await manager.send_to_user(
@@ -416,6 +412,12 @@ async def push_notification(
 
                 "verification_code":
                     verification_code,
+
+                "requester_user_id":
+                    requester_user_id,
+
+                "target_user_id":
+                    target_user_id,
 
                 "is_read":
                     False,
@@ -482,9 +484,7 @@ async def search_users(
     if not q:
 
         return {
-
             "ok": True,
-
             "users": []
         }
 
@@ -1293,6 +1293,10 @@ async def follow_user(
                 "User not found"
         }
 
+    # --------------------------------------------------------
+    # ALREADY CONNECTED
+    # --------------------------------------------------------
+
     existing_connection = (
 
         db.query(Connection)
@@ -1333,6 +1337,10 @@ async def follow_user(
             "message":
                 "You are already connected"
         }
+
+    # --------------------------------------------------------
+    # EXISTING REQUEST
+    # --------------------------------------------------------
 
     existing_request = (
 
@@ -1378,7 +1386,7 @@ async def follow_user(
                 "status": "accepted",
 
                 "message":
-                    "Request accepted. Verification code required"
+                    "Request accepted. Verification required"
             }
 
         if existing_request.status == "verified":
@@ -1392,6 +1400,8 @@ async def follow_user(
                 "message":
                     "Connection already verified"
             }
+
+        # Rejected request can be sent again.
 
         existing_request.status = "pending"
 
@@ -1413,6 +1423,10 @@ async def follow_user(
         db.add(request_row)
 
         db.flush()
+
+    # --------------------------------------------------------
+    # CREATE FOLLOW NOTIFICATION
+    # --------------------------------------------------------
 
     notification = Notification(
 
@@ -1441,6 +1455,10 @@ async def follow_user(
 
     db.refresh(notification)
 
+    # --------------------------------------------------------
+    # REALTIME FOLLOW NOTIFICATION
+    # --------------------------------------------------------
+
     await push_notification(
 
         target_id,
@@ -1463,10 +1481,17 @@ async def follow_user(
 
             "profile_photo":
                 requester.profile_photo
+
         },
 
         connection_request_id=
-            request_row.id
+            request_row.id,
+
+        requester_user_id=
+            requester_id,
+
+        target_user_id=
+            target_id
     )
 
     return {
@@ -1591,6 +1616,10 @@ async def cancel_follow(
 
     db.commit()
 
+    # --------------------------------------------------------
+    # REALTIME CANCEL
+    # --------------------------------------------------------
+
     await manager.send_to_user(
 
         target_id,
@@ -1647,6 +1676,10 @@ async def follow_status(
                 "User IDs are required"
         }
 
+    # --------------------------------------------------------
+    # CONNECTION
+    # --------------------------------------------------------
+
     connection = (
 
         db.query(Connection)
@@ -1684,6 +1717,10 @@ async def follow_status(
 
             "status": "verified"
         }
+
+    # --------------------------------------------------------
+    # REQUEST
+    # --------------------------------------------------------
 
     row = (
 
@@ -1897,6 +1934,10 @@ async def accept_follow(
     db: Session = Depends(get_db)
 ):
 
+    # --------------------------------------------------------
+    # FIND NOTIFICATION
+    # --------------------------------------------------------
+
     notification = (
 
         db.query(Notification)
@@ -1934,6 +1975,10 @@ async def accept_follow(
                 "Invalid follow request"
         }
 
+    # --------------------------------------------------------
+    # FIND CONNECTION REQUEST
+    # --------------------------------------------------------
+
     connection_request = (
 
         db.query(ConnectionRequest)
@@ -1959,18 +2004,6 @@ async def accept_follow(
 
             "message":
                 "Follow request not found"
-        }
-
-    if connection_request.status == "verified":
-
-        return {
-
-            "ok": True,
-
-            "status": "verified",
-
-            "message":
-                "Connection already verified"
         }
 
     requester_id = (
@@ -2013,13 +2046,114 @@ async def accept_follow(
                 "User account not found"
         }
 
+    # --------------------------------------------------------
+    # ALREADY VERIFIED
+    # --------------------------------------------------------
+
+    if connection_request.status == "verified":
+
+        notification.is_read = True
+
+        db.commit()
+
+        return {
+
+            "ok": True,
+
+            "status": "verified",
+
+            "message":
+                "Connection already verified"
+        }
+
+    # --------------------------------------------------------
+    # ALREADY ACCEPTED
+    # --------------------------------------------------------
+
+    if connection_request.status == "accepted":
+
+        notification.is_read = True
+
+        db.commit()
+
+        active_code = (
+
+            db.query(ConnectionCode)
+
+            .filter(
+
+                ConnectionCode.requester_user_id
+                == requester_id,
+
+                ConnectionCode.target_user_id
+                == target_id,
+
+                ConnectionCode.verified
+                == False,
+
+                ConnectionCode.expires_at
+                > datetime.utcnow()
+
+            )
+
+            .order_by(
+                ConnectionCode.id.desc()
+            )
+
+            .first()
+        )
+
+        if active_code:
+
+            return {
+
+                "ok": True,
+
+                "status": "accepted",
+
+                "message":
+                    "Request already accepted. Verification code already sent"
+            }
+
+        return {
+
+            "ok": True,
+
+            "status": "accepted",
+
+            "message":
+                "Request already accepted. Verification code expired"
+        }
+
+    # --------------------------------------------------------
+    # ONLY PENDING CAN BE ACCEPTED
+    # --------------------------------------------------------
+
+    if connection_request.status != "pending":
+
+        return {
+
+            "ok": False,
+
+            "message":
+                "This request is no longer pending"
+        }
+
+    # --------------------------------------------------------
+    # ACCEPT
+    # --------------------------------------------------------
+
     connection_request.status = "accepted"
 
     connection_request.updated_at = datetime.utcnow()
 
     notification.is_read = True
 
-    old_codes = (
+    # --------------------------------------------------------
+    # INVALIDATE OLD ACTIVE CODES
+    # --------------------------------------------------------
+
+    active_codes = (
 
         db.query(ConnectionCode)
 
@@ -2039,19 +2173,26 @@ async def accept_follow(
         .all()
     )
 
-    for old_code in old_codes:
+    for old_code in active_codes:
 
         old_code.verified = True
+
+    # --------------------------------------------------------
+    # CREATE ONE NEW CODE
+    # --------------------------------------------------------
 
     code = generate_otp()
 
     connection_code = ConnectionCode(
 
-        requester_user_id=requester_id,
+        requester_user_id=
+            requester_id,
 
-        target_user_id=target_id,
+        target_user_id=
+            target_id,
 
-        code=code,
+        code=
+            code,
 
         expires_at=(
 
@@ -2065,30 +2206,34 @@ async def accept_follow(
 
     db.add(connection_code)
 
+    # --------------------------------------------------------
+    # REQUESTER NOTIFICATION
+    # --------------------------------------------------------
+
     requester_notification = Notification(
 
-        receiver_user_id=requester_id,
+        receiver_user_id=
+            requester_id,
 
-        sender_user_id=target_id,
+        sender_user_id=
+            target_id,
 
-        type="connection_code",
+        type=
+            "connection_code",
 
-        title="Connection Accepted",
+        title=
+            "Connection Accepted",
 
         message=(
-
             f"{target.name} accepted your connection request. "
-
-            f"Your verification code is {code}. "
-
-            f"Search {target.user_id} and enter this code."
-
+            f"Your verification code is {code}."
         ),
 
         connection_request_id=
             connection_request.id,
 
-        verification_code=code,
+        verification_code=
+            code,
 
         is_read=False
     )
@@ -2098,6 +2243,10 @@ async def accept_follow(
     db.commit()
 
     db.refresh(requester_notification)
+
+    # --------------------------------------------------------
+    # REALTIME CODE NOTIFICATION
+    # --------------------------------------------------------
 
     await push_notification(
 
@@ -2127,7 +2276,14 @@ async def accept_follow(
         connection_request_id=
             connection_request.id,
 
-        verification_code=code
+        verification_code=
+            code,
+
+        requester_user_id=
+            requester_id,
+
+        target_user_id=
+            target_id
     )
 
     return {
@@ -2137,10 +2293,7 @@ async def accept_follow(
         "status": "accepted",
 
         "message":
-            "Request accepted. Verification code sent",
-
-        "verification_code":
-            code
+            "Request accepted. Verification code sent"
     }
 
 
@@ -2237,6 +2390,30 @@ async def reject_follow(
         .first()
     )
 
+    # --------------------------------------------------------
+    # IF ALREADY VERIFIED
+    # --------------------------------------------------------
+
+    if connection_request.status == "verified":
+
+        notification.is_read = True
+
+        db.commit()
+
+        return {
+
+            "ok": True,
+
+            "status": "verified",
+
+            "message":
+                "Connection is already verified"
+        }
+
+    # --------------------------------------------------------
+    # REJECT
+    # --------------------------------------------------------
+
     connection_request.status = "rejected"
 
     connection_request.updated_at = datetime.utcnow()
@@ -2245,13 +2422,17 @@ async def reject_follow(
 
     requester_notification = Notification(
 
-        receiver_user_id=requester_id,
+        receiver_user_id=
+            requester_id,
 
-        sender_user_id=target_id,
+        sender_user_id=
+            target_id,
 
-        type="follow_rejected",
+        type=
+            "follow_rejected",
 
-        title="Connection Request Rejected",
+        title=
+            "Connection Request Rejected",
 
         message=(
 
@@ -2273,6 +2454,10 @@ async def reject_follow(
     db.commit()
 
     db.refresh(requester_notification)
+
+    # --------------------------------------------------------
+    # REALTIME REJECT
+    # --------------------------------------------------------
 
     await push_notification(
 
@@ -2303,7 +2488,13 @@ async def reject_follow(
         },
 
         connection_request_id=
-            connection_request.id
+            connection_request.id,
+
+        requester_user_id=
+            requester_id,
+
+        target_user_id=
+            target_id
     )
 
     return {
@@ -2353,6 +2544,10 @@ async def verify_connection(
                 "Verification code is required"
         }
 
+    # --------------------------------------------------------
+    # FIND REQUEST
+    # --------------------------------------------------------
+
     connection_request = (
 
         db.query(ConnectionRequest)
@@ -2384,19 +2579,27 @@ async def verify_connection(
                 "Connection request not found"
         }
 
+    # --------------------------------------------------------
+    # ALREADY VERIFIED
+    # --------------------------------------------------------
+
+    if connection_request.status == "verified":
+
+        return {
+
+            "ok": True,
+
+            "status": "verified",
+
+            "message":
+                "Connection already verified"
+        }
+
+    # --------------------------------------------------------
+    # MUST BE ACCEPTED
+    # --------------------------------------------------------
+
     if connection_request.status != "accepted":
-
-        if connection_request.status == "verified":
-
-            return {
-
-                "ok": True,
-
-                "status": "verified",
-
-                "message":
-                    "Connection already verified"
-            }
 
         return {
 
@@ -2405,6 +2608,10 @@ async def verify_connection(
             "message":
                 "Connection has not been accepted"
         }
+
+    # --------------------------------------------------------
+    # FIND ACTIVE CODE
+    # --------------------------------------------------------
 
     connection_code = (
 
@@ -2437,8 +2644,12 @@ async def verify_connection(
             "ok": False,
 
             "message":
-                "Verification code not found"
+                "Verification code not found or already used"
         }
+
+    # --------------------------------------------------------
+    # CHECK EXPIRY
+    # --------------------------------------------------------
 
     if datetime.utcnow() > connection_code.expires_at:
 
@@ -2454,6 +2665,10 @@ async def verify_connection(
                 "Verification code expired"
         }
 
+    # --------------------------------------------------------
+    # CHECK CODE
+    # --------------------------------------------------------
+
     if connection_code.code != code:
 
         return {
@@ -2464,11 +2679,45 @@ async def verify_connection(
                 "Invalid verification code"
         }
 
-    connection_code.verified = True
+    # --------------------------------------------------------
+    # FIND USERS
+    # --------------------------------------------------------
 
-    connection_request.status = "verified"
+    requester = (
 
-    connection_request.updated_at = datetime.utcnow()
+        db.query(User)
+
+        .filter(
+            User.user_id == requester_id
+        )
+
+        .first()
+    )
+
+    target = (
+
+        db.query(User)
+
+        .filter(
+            User.user_id == target_id
+        )
+
+        .first()
+    )
+
+    if not requester or not target:
+
+        return {
+
+            "ok": False,
+
+            "message":
+                "User account not found"
+        }
+
+    # --------------------------------------------------------
+    # CHECK EXISTING CONNECTION
+    # --------------------------------------------------------
 
     existing_connection = (
 
@@ -2499,53 +2748,55 @@ async def verify_connection(
         .first()
     )
 
+    # --------------------------------------------------------
+    # MARK CODE USED
+    # --------------------------------------------------------
+
+    connection_code.verified = True
+
+    connection_request.status = "verified"
+
+    connection_request.updated_at = datetime.utcnow()
+
+    # --------------------------------------------------------
+    # CREATE CONNECTION ONLY ONCE
+    # --------------------------------------------------------
+
     if not existing_connection:
 
         new_connection = Connection(
 
-            user_a_id=requester_id,
+            user_a_id=
+                requester_id,
 
-            user_b_id=target_id
+            user_b_id=
+                target_id
         )
 
         db.add(new_connection)
 
-    target = (
-
-        db.query(User)
-
-        .filter(
-            User.user_id == target_id
-        )
-
-        .first()
-    )
-
-    requester = (
-
-        db.query(User)
-
-        .filter(
-            User.user_id == requester_id
-        )
-
-        .first()
-    )
+    # --------------------------------------------------------
+    # TARGET NOTIFICATION
+    # --------------------------------------------------------
 
     target_notification = Notification(
 
-        receiver_user_id=target_id,
+        receiver_user_id=
+            target_id,
 
-        sender_user_id=requester_id,
+        sender_user_id=
+            requester_id,
 
-        type="connection_verified",
+        type=
+            "connection_verified",
 
-        title="Connection Verified",
+        title=
+            "Connection Verified",
 
         message=(
 
             f"You are now connected with "
-            f"{requester.name if requester else requester_id}."
+            f"{requester.name}."
 
         ),
 
@@ -2557,20 +2808,28 @@ async def verify_connection(
         is_read=False
     )
 
+    # --------------------------------------------------------
+    # REQUESTER NOTIFICATION
+    # --------------------------------------------------------
+
     requester_notification = Notification(
 
-        receiver_user_id=requester_id,
+        receiver_user_id=
+            requester_id,
 
-        sender_user_id=target_id,
+        sender_user_id=
+            target_id,
 
-        type="connection_verified",
+        type=
+            "connection_verified",
 
-        title="Connection Verified",
+        title=
+            "Connection Verified",
 
         message=(
 
             f"You are now connected with "
-            f"{target.name if target else target_id}."
+            f"{target.name}."
 
         ),
 
@@ -2586,11 +2845,29 @@ async def verify_connection(
 
     db.add(requester_notification)
 
-    db.commit()
+    try:
+
+        db.commit()
+
+    except IntegrityError:
+
+        db.rollback()
+
+        return {
+
+            "ok": False,
+
+            "message":
+                "Connection verification failed"
+        }
 
     db.refresh(target_notification)
 
     db.refresh(requester_notification)
+
+    # --------------------------------------------------------
+    # REALTIME TARGET
+    # --------------------------------------------------------
 
     await push_notification(
 
@@ -2607,22 +2884,29 @@ async def verify_connection(
         sender={
 
             "user_id":
-                requester.user_id
-                if requester else requester_id,
+                requester.user_id,
 
             "name":
-                requester.name
-                if requester else requester_id,
+                requester.name,
 
             "profile_photo":
                 requester.profile_photo
-                if requester else None
 
         },
 
         connection_request_id=
-            connection_request.id
+            connection_request.id,
+
+        requester_user_id=
+            requester_id,
+
+        target_user_id=
+            target_id
     )
+
+    # --------------------------------------------------------
+    # REALTIME REQUESTER
+    # --------------------------------------------------------
 
     await push_notification(
 
@@ -2639,21 +2923,24 @@ async def verify_connection(
         sender={
 
             "user_id":
-                target.user_id
-                if target else target_id,
+                target.user_id,
 
             "name":
-                target.name
-                if target else target_id,
+                target.name,
 
             "profile_photo":
                 target.profile_photo
-                if target else None
 
         },
 
         connection_request_id=
-            connection_request.id
+            connection_request.id,
+
+        requester_user_id=
+            requester_id,
+
+        target_user_id=
+            target_id
     )
 
     return {
@@ -2868,7 +3155,6 @@ if __name__ == "__main__":
     import uvicorn
 
     port = int(
-
         os.getenv(
             "PORT",
             "8000"
