@@ -143,7 +143,7 @@ body{
 
 
 /* =========================================================
-   SEARCH BOX
+   SEARCH
 ========================================================= */
 
 .search-box{
@@ -366,8 +366,12 @@ body{
     transform:scale(.985);
 }
 
-.user-card.incoming{
-    border-color:rgba(50,150,255,.30);
+.user-card.verify-ready{
+    border-color:rgba(50,150,255,.40);
+
+    box-shadow:
+        0 8px 30px
+        rgba(20,110,240,.18);
 }
 
 
@@ -444,8 +448,6 @@ body{
     white-space:nowrap;
     overflow:hidden;
     text-overflow:ellipsis;
-
-    cursor:pointer;
 }
 
 .user-id{
@@ -521,29 +523,21 @@ body{
 
 
 /* =========================================================
-   INCOMING REQUEST ACTIONS
+   VERIFY BADGE
 ========================================================= */
 
-.request-actions{
-    display:flex;
-    gap:7px;
-    flex-shrink:0;
-}
-
-.request-action{
+.verify-badge{
+    min-width:72px;
     height:34px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
     padding:0 10px;
 
-    border:0;
     border-radius:11px;
 
-    font-size:11px;
-    font-weight:700;
-
-    cursor:pointer;
-}
-
-.accept-request{
     background:
         linear-gradient(
             145deg,
@@ -552,33 +546,9 @@ body{
         );
 
     color:#fff;
-}
 
-.reject-request{
-    background:#252b36;
-    color:#ff9b9b;
-}
-
-
-/* =========================================================
-   REQUEST BADGE
-========================================================= */
-
-.request-badge{
-    display:inline-flex;
-
-    margin-left:6px;
-
-    padding:3px 7px;
-
-    border-radius:8px;
-
-    background:rgba(50,150,255,.15);
-
-    color:#7eb8ff;
-
-    font-size:9px;
-    font-weight:700;
+    font-size:11px;
+    font-weight:800;
 }
 
 
@@ -707,7 +677,7 @@ body{
 
 
 /* =========================================================
-   INCOMING MODAL
+   INCOMING REQUEST MODAL
 ========================================================= */
 
 .request-modal{
@@ -903,7 +873,7 @@ body{
 
 
 /* =========================================================
-   STATUS POPUP
+   POPUP
 ========================================================= */
 
 .status-popup{
@@ -956,7 +926,7 @@ body{
 
 
 /* =========================================================
-   LARGE DP MODAL
+   DP MODAL
 ========================================================= */
 
 .dp-modal{
@@ -1110,15 +1080,6 @@ body{
         padding:0 9px;
     }
 
-    .request-actions{
-        gap:4px;
-    }
-
-    .request-action{
-        padding:0 7px;
-        font-size:10px;
-    }
-
 }
 
 </style>
@@ -1130,20 +1091,13 @@ body{
 
 <div class="app">
 
-
 <header class="header">
 
     <div class="brand">
 
         <div class="logo-mark">
-
-            <span class="logo-u">
-                U
-            </span>
-
-            <span class="logo-shine">
-            </span>
-
+            <span class="logo-u">U</span>
+            <span class="logo-shine"></span>
         </div>
 
         <div class="logo-name">
@@ -1228,11 +1182,7 @@ body{
         class="empty">
 
         <div class="empty-circle">
-
-            <div class="empty-icon">
-                🔎
-            </div>
-
+            <div class="empty-icon">🔎</div>
         </div>
 
         <div class="empty-title">
@@ -1255,7 +1205,9 @@ body{
 </div>
 
 
-<!-- DP MODAL -->
+<!-- =====================================================
+     DP MODAL
+===================================================== -->
 
 <div
     id="dpModal"
@@ -1274,7 +1226,9 @@ body{
 </div>
 
 
-<!-- VERIFY MODAL -->
+<!-- =====================================================
+     VERIFY MODAL
+===================================================== -->
 
 <div
     id="verifyModal"
@@ -1330,7 +1284,9 @@ body{
 </div>
 
 
-<!-- INCOMING REQUEST MODAL -->
+<!-- =====================================================
+     INCOMING REQUEST MODAL
+===================================================== -->
 
 <div
     id="requestModal"
@@ -1501,14 +1457,14 @@ let incomingRequest = null;
 
 
 /* =========================================================
-   SEARCH TIMER
+   SEARCH
 ========================================================= */
 
 let searchTimer = null;
 
 
 /* =========================================================
-   WEBSOCKET
+   REALTIME
 ========================================================= */
 
 let socket = null;
@@ -1535,7 +1491,6 @@ function startRealtime(){
 
     }
 
-
     connectWebSocket();
 
 }
@@ -1550,11 +1505,8 @@ function connectWebSocket(){
     if(
         socket &&
         (
-            socket.readyState ===
-            WebSocket.OPEN
-            ||
-            socket.readyState ===
-            WebSocket.CONNECTING
+            socket.readyState === WebSocket.OPEN ||
+            socket.readyState === WebSocket.CONNECTING
         )
     ){
 
@@ -1602,10 +1554,6 @@ function connectWebSocket(){
 
                 socketReconnectDelay =
                     1000;
-
-                showPopup(
-                    "Realtime notifications connected."
-                );
 
             };
 
@@ -1698,9 +1646,7 @@ function scheduleReconnect(){
    REALTIME MESSAGE
 ========================================================= */
 
-function handleRealtimeMessage(
-    event
-){
+function handleRealtimeMessage(event){
 
     let data = null;
 
@@ -1725,32 +1671,57 @@ function handleRealtimeMessage(
 
 
     console.log(
-        "Realtime notification:",
+        "Usanex realtime:",
         data
     );
 
 
+    /*
+       Backend kabhi direct event bhej sakta hai:
+
+       {
+          type:"follow_request"
+       }
+
+       aur kabhi:
+
+       {
+          type:"notification",
+          notification:{
+             notification_type:"follow_request"
+          }
+       }
+
+       Dono format handle honge.
+    */
+
+    const notification =
+        data.notification || {};
+
+
     const type =
-        data.type ||
         data.notification_type ||
-        data.event;
+        notification.notification_type ||
+        data.event ||
+        data.type;
 
 
     /* =====================================================
-       FOLLOW REQUEST RECEIVED
+       FOLLOW REQUEST
     ===================================================== */
 
     if(
-        type === "follow_request"
-        ||
-        type === "follow"
-        ||
+        type === "follow_request" ||
+        type === "follow" ||
         type === "new_follow"
     ){
 
-        showIncomingRequest(
-            data
-        );
+        showIncomingRequest({
+
+            ...notification,
+            ...data
+
+        });
 
         refreshCurrentSearch();
 
@@ -1764,13 +1735,13 @@ function handleRealtimeMessage(
     ===================================================== */
 
     if(
-        type === "follow_cancelled"
-        ||
+        type === "follow_cancelled" ||
         type === "request_cancelled"
     ){
 
         showPopup(
             data.message ||
+            notification.message ||
             "Follow request cancelled."
         );
 
@@ -1786,29 +1757,25 @@ function handleRealtimeMessage(
     ===================================================== */
 
     if(
-        type === "connection_code"
-        ||
+        type === "connection_code" ||
         type === "verification_code"
     ){
 
         const code =
             data.verification_code ||
+            notification.verification_code ||
             data.code ||
+            notification.code ||
             "";
 
 
-        showPopup(
-            code
-            ?
-            "Verification code received: " +
-            code
-            :
-            (
-                data.message ||
-                "Verification code received."
-            )
-        );
+        if(code){
 
+            showPopup(
+                "Verification code received."
+            );
+
+        }
 
         refreshCurrentSearch();
 
@@ -1822,13 +1789,13 @@ function handleRealtimeMessage(
     ===================================================== */
 
     if(
-        type === "follow_rejected"
-        ||
+        type === "follow_rejected" ||
         type === "request_rejected"
     ){
 
         showPopup(
             data.message ||
+            notification.message ||
             "Follow request was rejected."
         );
 
@@ -1844,17 +1811,31 @@ function handleRealtimeMessage(
     ===================================================== */
 
     if(
-        type === "connection_verified"
-        ||
+        type === "connection_verified" ||
         type === "connected"
     ){
 
         showPopup(
-            data.message ||
             "Connection verified successfully."
         );
 
-        refreshCurrentSearch();
+
+        /*
+           IMPORTANT:
+
+           Verification complete hone ke baad
+           receiver ko bhi automatically Home par bhejna hai.
+        */
+
+        setTimeout(
+            function(){
+
+                window.location.href =
+                    "/home";
+
+            },
+            700
+        );
 
         return;
 
@@ -1879,7 +1860,7 @@ function handleRealtimeMessage(
 
 
 /* =========================================================
-   REFRESH CURRENT SEARCH
+   REFRESH SEARCH
 ========================================================= */
 
 function refreshCurrentSearch(){
@@ -1918,6 +1899,7 @@ searchInput.addEventListener(
         clearTimeout(
             searchTimer
         );
+
 
         const q =
             this.value.trim();
@@ -2121,6 +2103,7 @@ function createUserCard(user){
             "div"
         );
 
+
     card.className =
         "user-card";
 
@@ -2172,22 +2155,17 @@ function createUserCard(user){
         <div class="user-info">
 
             <div class="user-name">
-
                 ${escapeHtml(
                     user.name ||
                     "User"
                 )}
-
             </div>
 
-
             <div class="user-id">
-
                 ${escapeHtml(
                     user.user_id ||
                     ""
                 )}
-
             </div>
 
         </div>
@@ -2213,7 +2191,7 @@ function createUserCard(user){
 
 
     /* =====================================================
-       DP CLICK
+       DP
     ===================================================== */
 
     const dp =
@@ -2268,34 +2246,6 @@ function createUserCard(user){
 
 
     /* =====================================================
-       NAME CLICK
-    ===================================================== */
-
-    const name =
-        card.querySelector(
-            ".user-name"
-        );
-
-
-    if(name){
-
-        name.addEventListener(
-            "click",
-            function(event){
-
-                event.stopPropagation();
-
-                showUserStatus(
-                    user
-                );
-
-            }
-        );
-
-    }
-
-
-    /* =====================================================
        CARD CLICK
     ===================================================== */
 
@@ -2303,9 +2253,34 @@ function createUserCard(user){
         "click",
         function(){
 
+            if(isMe){
+
+                return;
+
+            }
+
+
+            /*
+               Accepted request hai to
+               card par click karte hi Verify popup.
+            */
+
+            const button =
+                card.querySelector(
+                    ".follow-btn"
+                );
+
+
             if(
-                isMe
+                button &&
+                button.classList.contains(
+                    "accepted"
+                )
             ){
+
+                openVerify(
+                    user
+                );
 
                 return;
 
@@ -2337,6 +2312,25 @@ function createUserCard(user){
             function(event){
 
                 event.stopPropagation();
+
+                /*
+                   Accepted ke case me Verify.
+                */
+
+                if(
+                    followBtn.classList.contains(
+                        "accepted"
+                    )
+                ){
+
+                    openVerify(
+                        user
+                    );
+
+                    return;
+
+                }
+
 
                 handleFollow(
                     user,
@@ -2434,7 +2428,7 @@ async function loadFollowStatus(
 
 
 /* =========================================================
-   UPDATE BUTTON
+   UPDATE FOLLOW BUTTON
 ========================================================= */
 
 function updateFollowButton(
@@ -2464,12 +2458,13 @@ function updateFollowButton(
     );
 
 
+    card.classList.remove(
+        "verify-ready"
+    );
+
+
     button.disabled =
         false;
-
-
-    button.onclick =
-        null;
 
 
     if(status === "pending"){
@@ -2495,16 +2490,9 @@ function updateFollowButton(
         button.textContent =
             "Verify";
 
-        button.onclick =
-            function(event){
-
-                event.stopPropagation();
-
-                openVerify(
-                    user
-                );
-
-            };
+        card.classList.add(
+            "verify-ready"
+        );
 
         return;
 
@@ -2549,7 +2537,7 @@ function updateFollowButton(
 
 
 /* =========================================================
-   FOLLOW / CANCEL
+   FOLLOW
 ========================================================= */
 
 async function handleFollow(
@@ -2683,11 +2671,7 @@ async function handleFollow(
 
 
         showPopup(
-            "Follow request sent to " +
-            (
-                user.name ||
-                "User"
-            )
+            "Follow request sent."
         );
 
 
@@ -2719,7 +2703,7 @@ async function handleFollow(
 
 
 /* =========================================================
-   CANCEL FOLLOW
+   CANCEL
 ========================================================= */
 
 async function cancelFollow(
@@ -2810,7 +2794,6 @@ async function cancelFollow(
             "Unable to cancel request."
         );
 
-
     }finally{
 
         button.disabled =
@@ -2822,7 +2805,7 @@ async function cancelFollow(
 
 
 /* =========================================================
-   OPEN INCOMING REQUEST
+   OPEN INCOMING
 ========================================================= */
 
 function openIncomingForUser(
@@ -2840,12 +2823,6 @@ function openIncomingForUser(
 
     }
 
-
-    /*
-       Card tap par pehle status check karenge.
-       Agar saamne wale ne follow request bheji hai
-       to Accept / Reject modal khulega.
-    */
 
     fetch(
         "/api/follow/status" +
@@ -2904,6 +2881,24 @@ function openIncomingForUser(
             }
 
 
+            /*
+               Agar incoming accepted ho chuka hai
+               to verification open karo.
+            */
+
+            if(
+                data.status === "accepted"
+            ){
+
+                openVerify(
+                    user
+                );
+
+                return;
+
+            }
+
+
             showUserStatus(
                 user
             );
@@ -2924,7 +2919,7 @@ function openIncomingForUser(
 
 
 /* =========================================================
-   SHOW INCOMING REQUEST
+   INCOMING REQUEST
 ========================================================= */
 
 function showIncomingRequest(
@@ -2968,9 +2963,7 @@ function showIncomingRequest(
         "";
 
 
-    if(
-        data.profile_photo
-    ){
+    if(data.profile_photo){
 
         const image =
             document.createElement(
@@ -3024,7 +3017,7 @@ function showIncomingRequest(
 
 
 /* =========================================================
-   ACCEPT INCOMING REQUEST
+   ACCEPT
 ========================================================= */
 
 async function acceptIncomingRequest(){
@@ -3101,9 +3094,15 @@ async function acceptIncomingRequest(){
 
 
         showPopup(
-            "Follow request accepted."
+            "Request accepted. Verification code sent."
         );
 
+
+        /*
+           Search page par requester ko ab
+           automatic target search karna hai.
+           Ye requester ke side par bhi useful rahega.
+        */
 
         refreshCurrentSearch();
 
@@ -3126,7 +3125,7 @@ async function acceptIncomingRequest(){
 
 
 /* =========================================================
-   REJECT INCOMING REQUEST
+   REJECT
 ========================================================= */
 
 async function rejectIncomingRequest(){
@@ -3224,7 +3223,7 @@ async function rejectIncomingRequest(){
 
 
 /* =========================================================
-   CLOSE REQUEST MODAL
+   CLOSE REQUEST
 ========================================================= */
 
 function closeRequestModal(){
@@ -3243,7 +3242,7 @@ function closeRequestModal(){
 
 
 /* =========================================================
-   VERIFY MODAL
+   VERIFY
 ========================================================= */
 
 function openVerify(user){
@@ -3323,7 +3322,7 @@ function closeVerify(){
 
 
 /* =========================================================
-   SUBMIT VERIFICATION
+   SUBMIT VERIFY
 ========================================================= */
 
 async function submitVerification(){
@@ -3339,8 +3338,7 @@ async function submitVerification(){
 
 
     const code =
-        verifyInput.value
-        .trim();
+        verifyInput.value.trim();
 
 
     if(!/^\d{6}$/.test(code)){
@@ -3409,11 +3407,25 @@ async function submitVerification(){
 
 
         showPopup(
-            "Connection verified successfully."
+            "Connection verified. Opening Home..."
         );
 
 
-        refreshCurrentSearch();
+        /*
+           Current requester ko bhi Home.
+           Target ko backend realtime event se
+           Home par bheja jayega.
+        */
+
+        setTimeout(
+            function(){
+
+                window.location.href =
+                    "/home";
+
+            },
+            700
+        );
 
 
     }catch(error){
@@ -3490,17 +3502,28 @@ async function showUserStatus(
 
 
                 if(
-                    data.status ===
-                    "accepted"
+                    data.status === "accepted"
+                ){
+
+                    openVerify(
+                        user
+                    );
+
+                    return;
+
+                }
+
+
+                if(
+                    data.status === "verified"
                 ){
 
                     status =
-                        "Accepted";
+                        "Connected";
 
                 }
                 else if(
-                    data.status ===
-                    "rejected"
+                    data.status === "rejected"
                 ){
 
                     status =
@@ -3508,27 +3531,11 @@ async function showUserStatus(
 
                 }
                 else if(
-                    data.status ===
-                    "verified"
-                ){
-
-                    status =
-                        "Accepted";
-
-                }
-                else if(
-                    data.status ===
-                    "pending"
+                    data.status === "pending"
                 ){
 
                     status =
                         "Request Sent";
-
-                }
-                else{
-
-                    status =
-                        "Not Accepted";
 
                 }
 
@@ -3623,7 +3630,7 @@ function openDp(user){
 
 
 /* =========================================================
-   LARGE LETTER DP
+   LETTER DP
 ========================================================= */
 
 function showLetterDp(user){
@@ -3663,7 +3670,7 @@ function showLetterDp(user){
 
 
 /* =========================================================
-   SMALL LETTER DP
+   SMALL DP
 ========================================================= */
 
 function showSmallLetterDp(
@@ -3721,8 +3728,7 @@ dpModal.addEventListener(
     function(event){
 
         if(
-            event.target ===
-            dpModal
+            event.target === dpModal
         ){
 
             closeDp();
@@ -3734,7 +3740,7 @@ dpModal.addEventListener(
 
 
 /* =========================================================
-   VERIFY OUTSIDE CLICK
+   VERIFY OUTSIDE
 ========================================================= */
 
 verifyModal.addEventListener(
@@ -3742,8 +3748,7 @@ verifyModal.addEventListener(
     function(event){
 
         if(
-            event.target ===
-            verifyModal
+            event.target === verifyModal
         ){
 
             closeVerify();
@@ -3755,7 +3760,7 @@ verifyModal.addEventListener(
 
 
 /* =========================================================
-   REQUEST OUTSIDE CLICK
+   REQUEST OUTSIDE
 ========================================================= */
 
 requestModal.addEventListener(
@@ -3763,8 +3768,7 @@ requestModal.addEventListener(
     function(event){
 
         if(
-            event.target ===
-            requestModal
+            event.target === requestModal
         ){
 
             closeRequestModal();
@@ -3776,7 +3780,7 @@ requestModal.addEventListener(
 
 
 /* =========================================================
-   ESC KEY
+   ESC
 ========================================================= */
 
 document.addEventListener(
@@ -3784,8 +3788,7 @@ document.addEventListener(
     function(event){
 
         if(
-            event.key ===
-            "Escape"
+            event.key === "Escape"
         ){
 
             closeDp();
@@ -3809,8 +3812,7 @@ verifyInput.addEventListener(
     function(event){
 
         if(
-            event.key ===
-            "Enter"
+            event.key === "Enter"
         ){
 
             submitVerification();
@@ -3848,9 +3850,7 @@ verifyInput.addEventListener(
    OWN ACCOUNT
 ========================================================= */
 
-function checkOwnAccount(
-    users
-){
+function checkOwnAccount(users){
 
     if(
         !currentUser ||
@@ -3878,8 +3878,7 @@ function checkOwnAccount(
 
                 return (
                     String(
-                        user.user_id ||
-                        ""
+                        user.user_id || ""
                     )
                     .toLowerCase()
                     ===
@@ -3911,9 +3910,7 @@ let popupTimer =
     null;
 
 
-function showPopup(
-    text
-){
+function showPopup(text){
 
     clearTimeout(
         popupTimer
@@ -3948,9 +3945,7 @@ function showPopup(
    MESSAGE
 ========================================================= */
 
-function showMessage(
-    text
-){
+function showMessage(text){
 
     message.textContent =
         text;
@@ -4008,13 +4003,9 @@ function clearResults(){
    ESCAPE HTML
 ========================================================= */
 
-function escapeHtml(
-    value
-){
+function escapeHtml(value){
 
-    return String(
-        value
-    )
+    return String(value)
 
         .replace(
             /&/g,
@@ -4057,7 +4048,7 @@ function goHome(){
 
 
 /* =========================================================
-   PAGE CLOSE
+   CLOSE SOCKET
 ========================================================= */
 
 window.addEventListener(
@@ -4101,7 +4092,7 @@ startRealtime();
 
 
 /* =========================================================
-   URL USER ID
+   AUTOMATIC USER ID SEARCH
 ========================================================= */
 
 const params =
