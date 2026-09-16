@@ -6,14 +6,15 @@ from sqlalchemy import (
     String,
     DateTime,
     Boolean,
-    text,
+    Integer,
+    Text
 )
 
 from sqlalchemy.orm import (
     DeclarativeBase,
     sessionmaker,
     Mapped,
-    mapped_column,
+    mapped_column
 )
 
 
@@ -29,11 +30,8 @@ if not DATABASE_URL:
     )
 
 
-# ============================================================
-# POSTGRESQL + PSYCOPG3
-# ============================================================
-
 if DATABASE_URL.startswith("postgresql://"):
+
     DATABASE_URL = DATABASE_URL.replace(
         "postgresql://",
         "postgresql+psycopg://",
@@ -41,16 +39,20 @@ if DATABASE_URL.startswith("postgresql://"):
     )
 
 
+# ============================================================
+# ENGINE
+# ============================================================
+
 engine = create_engine(
     DATABASE_URL,
-    pool_pre_ping=True,
+    pool_pre_ping=True
 )
 
 
 SessionLocal = sessionmaker(
     bind=engine,
     autoflush=False,
-    autocommit=False,
+    autocommit=False
 )
 
 
@@ -63,10 +65,11 @@ class Base(DeclarativeBase):
 
 
 # ============================================================
-# USER TABLE
+# USERS
 # ============================================================
 
 class User(Base):
+
     __tablename__ = "users"
 
     id: Mapped[int] = mapped_column(
@@ -104,10 +107,11 @@ class User(Base):
 
 
 # ============================================================
-# OTP TABLE
+# OTP VERIFICATION
 # ============================================================
 
 class OTPVerification(Base):
+
     __tablename__ = "otp_verifications"
 
     id: Mapped[int] = mapped_column(
@@ -144,22 +148,204 @@ class OTPVerification(Base):
 
 
 # ============================================================
+# CONNECTION REQUESTS
+#
+# requester = Follow bhejne wala
+# target    = Jisko Follow request bheji gayi
+#
+# status:
+# pending
+# accepted
+# rejected
+# verified
+# ============================================================
+
+class ConnectionRequest(Base):
+
+    __tablename__ = "connection_requests"
+
+    id: Mapped[int] = mapped_column(
+        primary_key=True,
+        autoincrement=True
+    )
+
+    requester_user_id: Mapped[str] = mapped_column(
+        String(20),
+        index=True,
+        nullable=False
+    )
+
+    target_user_id: Mapped[str] = mapped_column(
+        String(20),
+        index=True,
+        nullable=False
+    )
+
+    status: Mapped[str] = mapped_column(
+        String(20),
+        default="pending",
+        nullable=False
+    )
+
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime,
+        default=datetime.utcnow,
+        nullable=False
+    )
+
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime,
+        default=datetime.utcnow,
+        nullable=False
+    )
+
+
+# ============================================================
+# CONNECTION VERIFICATION CODE
+# ============================================================
+
+class ConnectionCode(Base):
+
+    __tablename__ = "connection_codes"
+
+    id: Mapped[int] = mapped_column(
+        primary_key=True,
+        autoincrement=True
+    )
+
+    requester_user_id: Mapped[str] = mapped_column(
+        String(20),
+        index=True,
+        nullable=False
+    )
+
+    target_user_id: Mapped[str] = mapped_column(
+        String(20),
+        index=True,
+        nullable=False
+    )
+
+    code: Mapped[str] = mapped_column(
+        String(6),
+        nullable=False
+    )
+
+    expires_at: Mapped[datetime] = mapped_column(
+        DateTime,
+        nullable=False
+    )
+
+    verified: Mapped[bool] = mapped_column(
+        Boolean,
+        default=False,
+        nullable=False
+    )
+
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime,
+        default=datetime.utcnow,
+        nullable=False
+    )
+
+
+# ============================================================
+# NOTIFICATIONS
+# ============================================================
+
+class Notification(Base):
+
+    __tablename__ = "notifications"
+
+    id: Mapped[int] = mapped_column(
+        primary_key=True,
+        autoincrement=True
+    )
+
+    receiver_user_id: Mapped[str] = mapped_column(
+        String(20),
+        index=True,
+        nullable=False
+    )
+
+    sender_user_id: Mapped[str | None] = mapped_column(
+        String(20),
+        nullable=True
+    )
+
+    type: Mapped[str] = mapped_column(
+        String(40),
+        nullable=False
+    )
+
+    title: Mapped[str] = mapped_column(
+        String(150),
+        nullable=False
+    )
+
+    message: Mapped[str] = mapped_column(
+        Text,
+        nullable=False
+    )
+
+    connection_request_id: Mapped[int | None] = mapped_column(
+        Integer,
+        nullable=True
+    )
+
+    verification_code: Mapped[str | None] = mapped_column(
+        String(6),
+        nullable=True
+    )
+
+    is_read: Mapped[bool] = mapped_column(
+        Boolean,
+        default=False,
+        nullable=False
+    )
+
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime,
+        default=datetime.utcnow,
+        nullable=False
+    )
+
+
+# ============================================================
+# VERIFIED CONNECTIONS
+# ============================================================
+
+class Connection(Base):
+
+    __tablename__ = "connections"
+
+    id: Mapped[int] = mapped_column(
+        primary_key=True,
+        autoincrement=True
+    )
+
+    user_a_id: Mapped[str] = mapped_column(
+        String(20),
+        index=True,
+        nullable=False
+    )
+
+    user_b_id: Mapped[str] = mapped_column(
+        String(20),
+        index=True,
+        nullable=False
+    )
+
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime,
+        default=datetime.utcnow,
+        nullable=False
+    )
+
+
+# ============================================================
 # CREATE TABLES
 # ============================================================
 
-Base.metadata.create_all(bind=engine)
-
-
-# ============================================================
-# DATABASE MIGRATION
-# ============================================================
-
-with engine.begin() as connection:
-    connection.execute(
-        text(
-            """
-            ALTER TABLE users
-            ADD COLUMN IF NOT EXISTS profile_photo VARCHAR(500)
-            """
-        )
-    )
+Base.metadata.create_all(
+    bind=engine
+)
