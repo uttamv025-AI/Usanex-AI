@@ -6,6 +6,7 @@
 <title>Usanex AI - Home</title>
 
 <style>
+
 *{
     margin:0;
     padding:0;
@@ -19,35 +20,132 @@ body{
     min-height:100vh;
 }
 
-/* ================= HEADER ================= */
+/* ============================================================
+   HEADER
+============================================================ */
 
 .header{
-    height:70px;
-    padding:0 18px;
+    height:72px;
+    padding:0 16px;
     display:flex;
     align-items:center;
-    justify-content:space-between;
+    gap:12px;
     border-bottom:1px solid rgba(255,255,255,.08);
-    background:rgba(5,8,13,.96);
+    background:rgba(5,8,13,.97);
     position:sticky;
     top:0;
     z-index:100;
+    backdrop-filter:blur(14px);
 }
 
-.logo{
+/* ============================================================
+   USANEX LOGO
+============================================================ */
+
+.brand{
+    display:flex;
+    align-items:center;
+    flex-shrink:0;
+}
+
+.logo-mark{
+    width:43px;
+    height:43px;
+    border-radius:14px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    background:linear-gradient(145deg,#2d91ff,#0756c9);
+    box-shadow:0 7px 22px rgba(18,105,232,.38);
+    overflow:hidden;
+}
+
+.logo-u{
     font-size:25px;
-    font-weight:800;
-    letter-spacing:-1px;
+    font-weight:900;
+    color:#fff;
+    z-index:2;
 }
 
-.logo span{
-    color:#21d4fd;
+.logo-shine{
+    position:absolute;
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    background:#fff;
+    right:7px;
+    top:6px;
+    opacity:.9;
 }
+
+.logo-mark:after{
+    content:"";
+    position:absolute;
+    width:21px;
+    height:4px;
+    border-radius:10px;
+    background:rgba(255,255,255,.25);
+    left:11px;
+    bottom:6px;
+}
+
+.logo-name{
+    margin-left:9px;
+    font-size:20px;
+    font-weight:800;
+    letter-spacing:-.5px;
+    color:#fff;
+}
+
+/* ============================================================
+   HEADER SEARCH
+============================================================ */
+
+.header-search{
+    flex:1;
+    min-width:0;
+    height:43px;
+    display:flex;
+    align-items:center;
+    padding:0 15px;
+    border-radius:23px;
+    background:#151a22;
+    border:1px solid rgba(255,255,255,.08);
+    cursor:pointer;
+    transition:.2s;
+}
+
+.header-search:active{
+    transform:scale(.98);
+}
+
+.header-search:hover{
+    background:#191f29;
+    border-color:rgba(45,145,255,.20);
+}
+
+.header-search-icon{
+    font-size:21px;
+    color:#8993a5;
+    margin-right:9px;
+    line-height:1;
+}
+
+.header-search-text{
+    color:#8993a5;
+    font-size:14px;
+}
+
+/* ============================================================
+   HEADER ACTIONS
+============================================================ */
 
 .header-actions{
     display:flex;
-    gap:10px;
+    gap:8px;
     align-items:center;
+    flex-shrink:0;
 }
 
 .header-btn{
@@ -57,7 +155,7 @@ body{
     border:1px solid rgba(255,255,255,.10);
     background:#0c121a;
     color:#fff;
-    font-size:20px;
+    font-size:19px;
     cursor:pointer;
     display:flex;
     align-items:center;
@@ -74,7 +172,9 @@ body{
     background:#121b27;
 }
 
-/* ================= NOTIFICATION BADGE ================= */
+/* ============================================================
+   NOTIFICATION BADGE
+============================================================ */
 
 .notification-wrap{
     position:relative;
@@ -116,18 +216,24 @@ body{
 }
 
 @keyframes badgeBump{
+
     0%{
         transform:scale(.7);
     }
+
     55%{
         transform:scale(1.25);
     }
+
     100%{
         transform:scale(1);
     }
+
 }
 
-/* ================= MAIN ================= */
+/* ============================================================
+   MAIN
+============================================================ */
 
 .container{
     max-width:700px;
@@ -135,31 +241,9 @@ body{
     padding:18px 16px 100px;
 }
 
-/* ================= SEARCH ================= */
-
-.search-box{
-    background:#0c121a;
-    border:1px solid rgba(255,255,255,.08);
-    border-radius:18px;
-    padding:14px 16px;
-    display:flex;
-    align-items:center;
-    gap:10px;
-    cursor:pointer;
-    margin-bottom:20px;
-}
-
-.search-icon{
-    font-size:20px;
-    opacity:.7;
-}
-
-.search-text{
-    color:#8893a3;
-    font-size:14px;
-}
-
-/* ================= STATUS ================= */
+/* ============================================================
+   STATUS
+============================================================ */
 
 .section-title{
     font-size:17px;
@@ -210,7 +294,9 @@ body{
     text-overflow:ellipsis;
 }
 
-/* ================= CONNECTIONS ================= */
+/* ============================================================
+   CONNECTIONS
+============================================================ */
 
 .connections{
     display:flex;
@@ -238,20 +324,29 @@ body{
 
 .connection-info{
     flex:1;
+    min-width:0;
 }
 
 .connection-name{
     font-size:15px;
     font-weight:700;
+    overflow:hidden;
+    white-space:nowrap;
+    text-overflow:ellipsis;
 }
 
 .connection-id{
     font-size:12px;
     color:#758194;
     margin-top:4px;
+    overflow:hidden;
+    white-space:nowrap;
+    text-overflow:ellipsis;
 }
 
-/* ================= CAMERA ================= */
+/* ============================================================
+   CAMERA
+============================================================ */
 
 .camera-btn{
     position:fixed;
@@ -273,7 +368,9 @@ body{
     transform:scale(.92);
 }
 
-/* ================= BOTTOM NAV ================= */
+/* ============================================================
+   BOTTOM NAV
+============================================================ */
 
 .bottom-nav{
     position:fixed;
@@ -318,7 +415,9 @@ body{
     font-weight:500;
 }
 
-/* ================= EMPTY / LOADING ================= */
+/* ============================================================
+   EMPTY / LOADING
+============================================================ */
 
 .loading{
     text-align:center;
@@ -334,7 +433,9 @@ body{
     font-size:13px;
 }
 
-/* ================= TOAST ================= */
+/* ============================================================
+   TOAST
+============================================================ */
 
 .toast{
     position:fixed;
@@ -357,22 +458,143 @@ body{
     opacity:1;
     transform:translateX(-50%) translateY(0);
 }
+
+/* ============================================================
+   MOBILE
+============================================================ */
+
+@media(max-width:600px){
+
+    .header{
+        height:68px;
+        padding:0 10px;
+        gap:8px;
+    }
+
+    .logo-mark{
+        width:38px;
+        height:38px;
+        border-radius:12px;
+    }
+
+    .logo-u{
+        font-size:22px;
+    }
+
+    .logo-name{
+        margin-left:6px;
+        font-size:16px;
+    }
+
+    .header-search{
+        height:40px;
+        padding:0 11px;
+    }
+
+    .header-search-icon{
+        font-size:19px;
+        margin-right:6px;
+    }
+
+    .header-search-text{
+        font-size:13px;
+    }
+
+    .header-actions{
+        gap:5px;
+    }
+
+    .header-btn{
+        width:37px;
+        height:37px;
+        font-size:17px;
+    }
+
+}
+
+@media(max-width:390px){
+
+    .logo-name{
+        display:none;
+    }
+
+    .header{
+        gap:7px;
+    }
+
+    .header-search{
+        height:39px;
+    }
+
+    .header-search-text{
+        font-size:12px;
+    }
+
+    .header-btn{
+        width:36px;
+        height:36px;
+    }
+
+}
+
 </style>
 </head>
 
+
 <body>
 
-<!-- ================= HEADER ================= -->
+
+<!-- ============================================================
+     HEADER
+============================================================ -->
 
 <header class="header">
 
-    <div class="logo">
-        Usa<span>nex</span>
+    <!-- Usanex Logo -->
+
+    <div class="brand">
+
+        <div class="logo-mark">
+
+            <span class="logo-u">
+                U
+            </span>
+
+            <span class="logo-shine"></span>
+
+        </div>
+
+        <div class="logo-name">
+            Usanex
+        </div>
+
     </div>
+
+
+    <!-- Search -->
+
+    <div
+        class="header-search"
+        onclick="openSearch()"
+    >
+
+        <span class="header-search-icon">
+            ⌕
+        </span>
+
+        <span class="header-search-text">
+            Search
+        </span>
+
+    </div>
+
+
+    <!-- Header Actions -->
 
     <div class="header-actions">
 
         <!-- Notification -->
+
         <div class="notification-wrap">
 
             <button
@@ -392,7 +614,9 @@ body{
 
         </div>
 
+
         <!-- Menu -->
+
         <button
             class="header-btn"
             onclick="openMenu()"
@@ -406,21 +630,12 @@ body{
 </header>
 
 
-<!-- ================= MAIN ================= -->
+
+<!-- ============================================================
+     MAIN
+============================================================ -->
 
 <main class="container">
-
-    <!-- Search -->
-
-    <div
-        class="search-box"
-        onclick="openSearch()"
-    >
-        <div class="search-icon">🔍</div>
-        <div class="search-text">
-            Search by User ID or phone number
-        </div>
-    </div>
 
 
     <!-- Status -->
@@ -445,15 +660,20 @@ body{
         id="connections"
         class="connections"
     >
+
         <div class="loading">
             Loading connections...
         </div>
+
     </div>
 
 </main>
 
 
-<!-- Camera -->
+
+<!-- ============================================================
+     CAMERA
+============================================================ -->
 
 <button
     class="camera-btn"
@@ -463,7 +683,10 @@ body{
 </button>
 
 
-<!-- ================= BOTTOM NAV ================= -->
+
+<!-- ============================================================
+     BOTTOM NAV
+============================================================ -->
 
 <nav class="bottom-nav">
 
@@ -471,17 +694,29 @@ body{
         class="nav-item active"
         onclick="goHome()"
     >
-        <div class="nav-icon">⌂</div>
+
+        <div class="nav-icon">
+            ⌂
+        </div>
+
         Home
+
     </div>
+
 
     <div
         class="nav-item"
         onclick="openReels()"
     >
-        <div class="nav-icon">▶</div>
+
+        <div class="nav-icon">
+            ▶
+        </div>
+
         Reels
+
     </div>
+
 
     <div
         class="plus-btn"
@@ -490,29 +725,47 @@ body{
         +
     </div>
 
+
     <div
         class="nav-item"
         onclick="openCollections()"
     >
-        <div class="nav-icon">▣</div>
+
+        <div class="nav-icon">
+            ▣
+        </div>
+
         Coll
+
     </div>
+
 
     <div
         class="nav-item"
         onclick="openProfile()"
     >
-        <div class="nav-icon">◉</div>
+
+        <div class="nav-icon">
+            ◉
+        </div>
+
         Profile
+
     </div>
 
 </nav>
 
 
+
+<!-- ============================================================
+     TOAST
+============================================================ -->
+
 <div
     id="toast"
     class="toast"
 ></div>
+
 
 
 <script>
@@ -532,7 +785,7 @@ function getCurrentUser(){
 
         return user;
 
-    }catch(e){
+    }catch(error){
 
         return null;
 
@@ -612,12 +865,19 @@ function openProfile(){
    TOAST
 ============================================================ */
 
-let toastTimer;
+let toastTimer = null;
+
 
 function showToast(message){
 
     const toast =
         document.getElementById("toast");
+
+    if(!toast){
+
+        return;
+
+    }
 
     toast.textContent = message;
 
@@ -626,11 +886,14 @@ function showToast(message){
     clearTimeout(toastTimer);
 
     toastTimer =
-        setTimeout(() => {
+        setTimeout(
+            function(){
 
-            toast.classList.remove("show");
+                toast.classList.remove("show");
 
-        },2500);
+            },
+            2500
+        );
 
 }
 
@@ -642,12 +905,25 @@ function showToast(message){
 let lastNotificationCount = 0;
 
 
-function setNotificationBadge(count, animate = false){
+function setNotificationBadge(
+    count,
+    animate = false
+){
 
     const badge =
-        document.getElementById("notificationBadge");
+        document.getElementById(
+            "notificationBadge"
+        );
 
-    count = Number(count) || 0;
+    if(!badge){
+
+        return;
+
+    }
+
+    count =
+        Number(count) || 0;
+
 
     if(count <= 0){
 
@@ -655,11 +931,15 @@ function setNotificationBadge(count, animate = false){
 
         badge.classList.add("hidden");
 
+        lastNotificationCount = 0;
+
         return;
 
     }
 
+
     badge.classList.remove("hidden");
+
 
     if(count > 99){
 
@@ -667,9 +947,11 @@ function setNotificationBadge(count, animate = false){
 
     }else{
 
-        badge.textContent = String(count);
+        badge.textContent =
+            String(count);
 
     }
+
 
     if(
         animate &&
@@ -684,6 +966,7 @@ function setNotificationBadge(count, animate = false){
 
     }
 
+
     lastNotificationCount = count;
 
 }
@@ -693,6 +976,7 @@ async function loadNotificationCount(){
 
     const user =
         getCurrentUser();
+
 
     if(
         !user ||
@@ -705,16 +989,20 @@ async function loadNotificationCount(){
 
     }
 
+
     try{
 
         const response =
             await fetch(
                 "/api/notifications?user_id=" +
-                encodeURIComponent(user.user_id),
+                encodeURIComponent(
+                    user.user_id
+                ),
                 {
                     cache:"no-store"
                 }
             );
+
 
         if(!response.ok){
 
@@ -722,8 +1010,10 @@ async function loadNotificationCount(){
 
         }
 
+
         const data =
             await response.json();
+
 
         if(!data.ok){
 
@@ -731,21 +1021,30 @@ async function loadNotificationCount(){
 
         }
 
+
         const notifications =
-            Array.isArray(data.notifications)
-                ? data.notifications
-                : [];
+            Array.isArray(
+                data.notifications
+            )
+            ? data.notifications
+            : [];
+
 
         const unreadCount =
             notifications.filter(
-                notification =>
-                    !notification.is_read
+                function(notification){
+
+                    return !notification.is_read;
+
+                }
             ).length;
+
 
         setNotificationBadge(
             unreadCount,
             true
         );
+
 
     }catch(error){
 
@@ -772,6 +1071,7 @@ function connectNotificationSocket(){
     const user =
         getCurrentUser();
 
+
     if(
         !user ||
         !user.user_id
@@ -781,6 +1081,7 @@ function connectNotificationSocket(){
 
     }
 
+
     try{
 
         const protocol =
@@ -788,26 +1089,41 @@ function connectNotificationSocket(){
                 ? "wss:"
                 : "ws:";
 
+
+        /*
+         * Backend endpoint:
+         *
+         * /ws/{user_id}
+         *
+         * NOT:
+         *
+         * /ws/notifications/{user_id}
+         */
+
         const socketUrl =
             protocol +
             "//" +
             window.location.host +
-            "/ws/notifications/" +
-            encodeURIComponent(user.user_id);
+            "/ws/" +
+            encodeURIComponent(
+                user.user_id
+            );
+
 
         notificationSocket =
             new WebSocket(socketUrl);
 
 
-        notificationSocket.onopen = function(){
+        notificationSocket.onopen =
+            function(){
 
-            console.log(
-                "Notification realtime connected"
-            );
+                console.log(
+                    "Notification realtime connected"
+                );
 
-            loadNotificationCount();
+                loadNotificationCount();
 
-        };
+            };
 
 
         notificationSocket.onmessage =
@@ -816,16 +1132,10 @@ function connectNotificationSocket(){
                 try{
 
                     const payload =
-                        JSON.parse(event.data);
+                        JSON.parse(
+                            event.data
+                        );
 
-                    /*
-                       Backend notification format:
-
-                       {
-                           type:"notification",
-                           notification:{...}
-                       }
-                    */
 
                     if(
                         payload.type ===
@@ -834,7 +1144,49 @@ function connectNotificationSocket(){
 
                         loadNotificationCount();
 
+                        /*
+                         * Verification complete hone
+                         * par Home connections refresh.
+                         */
+
+                        const notification =
+                            payload.notification || {};
+
+
+                        if(
+                            notification.type ===
+                            "connection_verified"
+                        ){
+
+                            loadConnections();
+
+                            /*
+                             * Agar user verification ke baad
+                             * kisi aur page par hai to Home par
+                             * bhej do.
+                             */
+
+                            if(
+                                window.location.pathname !==
+                                "/home"
+                            ){
+
+                                setTimeout(
+                                    function(){
+
+                                        window.location.href =
+                                            "/home";
+
+                                    },
+                                    400
+                                );
+
+                            }
+
+                        }
+
                     }
+
 
                 }catch(error){
 
@@ -849,10 +1201,11 @@ function connectNotificationSocket(){
 
 
         notificationSocket.onerror =
-            function(){
+            function(error){
 
                 console.log(
-                    "Notification socket error"
+                    "Notification socket error:",
+                    error
                 );
 
             };
@@ -865,17 +1218,24 @@ function connectNotificationSocket(){
                     "Notification realtime disconnected"
                 );
 
+
                 clearTimeout(
                     reconnectTimer
                 );
 
+
                 reconnectTimer =
                     setTimeout(
-                        connectNotificationSocket,
+                        function(){
+
+                            connectNotificationSocket();
+
+                        },
                         5000
                     );
 
             };
+
 
     }catch(error){
 
@@ -884,13 +1244,19 @@ function connectNotificationSocket(){
             error
         );
 
+
         clearTimeout(
             reconnectTimer
         );
 
+
         reconnectTimer =
             setTimeout(
-                connectNotificationSocket,
+                function(){
+
+                    connectNotificationSocket();
+
+                },
                 5000
             );
 
@@ -906,7 +1272,17 @@ function connectNotificationSocket(){
 function loadStatuses(){
 
     const statusRow =
-        document.getElementById("statusRow");
+        document.getElementById(
+            "statusRow"
+        );
+
+
+    if(!statusRow){
+
+        return;
+
+    }
+
 
     const demoStatuses = [
 
@@ -935,26 +1311,33 @@ function loadStatuses(){
 
     statusRow.innerHTML =
         demoStatuses.map(
-            status => `
+            function(status){
 
-                <div class="status">
+                return `
 
-                    <div class="status-img">
+                    <div class="status">
 
-                        <img
-                            src="${status.image}"
-                            alt=""
-                        >
+                        <div class="status-img">
+
+                            <img
+                                src="${status.image}"
+                                alt=""
+                                onerror="
+                                    this.style.display='none'
+                                "
+                            >
+
+                        </div>
+
+                        <div class="status-name">
+                            ${status.name}
+                        </div>
 
                     </div>
 
-                    <div class="status-name">
-                        ${status.name}
-                    </div>
+                `;
 
-                </div>
-
-            `
+            }
         ).join("");
 
 }
@@ -971,15 +1354,53 @@ async function loadConnections(){
             "connections"
         );
 
+
+    if(!container){
+
+        return;
+
+    }
+
+
+    const currentUser =
+        getCurrentUser();
+
+
+    if(
+        !currentUser ||
+        !currentUser.user_id
+    ){
+
+        container.innerHTML = `
+
+            <div class="empty">
+                Please login again.
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
     try{
+
+        /*
+         * Backend ko current user ID deni zaroori hai.
+         */
 
         const response =
             await fetch(
-                "/api/home/connections",
+                "/api/home/connections?user_id=" +
+                encodeURIComponent(
+                    currentUser.user_id
+                ),
                 {
                     cache:"no-store"
                 }
             );
+
 
         if(!response.ok){
 
@@ -989,12 +1410,23 @@ async function loadConnections(){
 
         }
 
+
         const data =
             await response.json();
 
+
+        /*
+         * Backend response:
+         *
+         * {
+         *   ok:true,
+         *   users:[...]
+         * }
+         */
+
         const connections =
-            Array.isArray(data.connections)
-                ? data.connections
+            Array.isArray(data.users)
+                ? data.users
                 : [];
 
 
@@ -1003,9 +1435,7 @@ async function loadConnections(){
             container.innerHTML = `
 
                 <div class="empty">
-
                     No connections yet.
-
                 </div>
 
             `;
@@ -1017,48 +1447,54 @@ async function loadConnections(){
 
         container.innerHTML =
             connections.map(
-                user => `
+                function(user){
 
-                    <div class="connection-card">
+                    const photo =
+                        user.profile_photo ||
+                        "https://i.pravatar.cc/100";
 
-                        <img
-                            class="connection-dp"
-                            src="${
-                                user.profile_photo ||
-                                "https://i.pravatar.cc/100"
-                            }"
-                            alt=""
-                            onerror="
-                                this.src='https://i.pravatar.cc/100'
-                            "
-                        >
 
-                        <div class="connection-info">
+                    const name =
+                        user.name ||
+                        user.user_id ||
+                        "User";
 
-                            <div class="connection-name">
 
-                                ${
-                                    user.name ||
-                                    user.user_id ||
-                                    "User"
-                                }
+                    const userId =
+                        user.user_id ||
+                        "";
 
-                            </div>
 
-                            <div class="connection-id">
+                    return `
 
-                                ${
-                                    user.user_id ||
-                                    ""
-                                }
+                        <div class="connection-card">
+
+                            <img
+                                class="connection-dp"
+                                src="${photo}"
+                                alt=""
+                                onerror="
+                                    this.src='https://i.pravatar.cc/100'
+                                "
+                            >
+
+                            <div class="connection-info">
+
+                                <div class="connection-name">
+                                    ${name}
+                                </div>
+
+                                <div class="connection-id">
+                                    ${userId}
+                                </div>
 
                             </div>
 
                         </div>
 
-                    </div>
+                    `;
 
-                `
+                }
             ).join("");
 
 
@@ -1069,12 +1505,11 @@ async function loadConnections(){
             error
         );
 
+
         container.innerHTML = `
 
             <div class="empty">
-
                 Unable to load connections.
-
             </div>
 
         `;
@@ -1085,7 +1520,7 @@ async function loadConnections(){
 
 
 /* ============================================================
-   PAGE VISIBILITY / FALLBACK REFRESH
+   PAGE VISIBILITY
 ============================================================ */
 
 document.addEventListener(
@@ -1099,19 +1534,26 @@ document.addEventListener(
 
             loadNotificationCount();
 
+            loadConnections();
+
         }
 
     }
 );
 
 
-/*
-   WebSocket realtime ke saath
-   30 second fallback bhi rakha hai.
-*/
+/* ============================================================
+   FALLBACK REFRESH
+============================================================ */
 
 setInterval(
-    loadNotificationCount,
+    function(){
+
+        loadNotificationCount();
+
+        loadConnections();
+
+    },
     30000
 );
 
