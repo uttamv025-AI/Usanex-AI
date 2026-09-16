@@ -2,7 +2,6 @@
 <html lang="en">
 
 <head>
-
 <meta charset="UTF-8">
 
 <meta name="viewport"
@@ -15,10 +14,6 @@ user-scalable=no">
 
 <style>
 
-/* =========================================================
-   RESET
-========================================================= */
-
 *{
     box-sizing:border-box;
     margin:0;
@@ -26,8 +21,7 @@ user-scalable=no">
     -webkit-tap-highlight-color:transparent;
 }
 
-html,
-body{
+html,body{
     width:100%;
     min-height:100%;
     font-family:Arial,sans-serif;
@@ -39,11 +33,6 @@ body{
     min-height:100vh;
     overflow-x:hidden;
 }
-
-
-/* =========================================================
-   APP
-========================================================= */
 
 .app{
     min-height:100vh;
@@ -73,9 +62,7 @@ body{
 
     background:rgba(7,9,13,.88);
 
-    border-bottom:
-        1px solid
-        rgba(255,255,255,.07);
+    border-bottom:1px solid rgba(255,255,255,.07);
 
     position:sticky;
     top:0;
@@ -86,7 +73,7 @@ body{
 
 
 /* =========================================================
-   HOME PAGE SAME LOGO
+   LOGO
 ========================================================= */
 
 .brand{
@@ -98,7 +85,6 @@ body{
 .logo-mark{
     width:43px;
     height:43px;
-
     border-radius:14px;
 
     display:flex;
@@ -128,43 +114,30 @@ body{
 
 .logo-shine{
     position:absolute;
-
     width:8px;
     height:8px;
-
     border-radius:50%;
-
     background:#fff;
-
     right:7px;
     top:6px;
-
     opacity:.9;
 }
 
 .logo-mark:after{
     content:"";
-
     position:absolute;
-
     width:21px;
     height:4px;
-
     border-radius:10px;
-
-    background:
-        rgba(255,255,255,.25);
-
+    background:rgba(255,255,255,.25);
     left:11px;
     bottom:6px;
 }
 
 .logo-name{
     margin-left:9px;
-
     font-size:20px;
     font-weight:800;
-
     letter-spacing:-.5px;
 }
 
@@ -175,7 +148,6 @@ body{
 
 .search-box{
     flex:1;
-
     height:45px;
     min-width:0;
 
@@ -188,9 +160,7 @@ body{
 
     background:#151820;
 
-    border:
-        1px solid
-        rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.08);
 }
 
 .search-icon{
@@ -231,12 +201,9 @@ body{
     border-radius:13px;
 
     background:#151820;
-
     color:#fff;
 
-    border:
-        1px solid
-        rgba(255,255,255,.07);
+    border:1px solid rgba(255,255,255,.07);
 
     font-size:22px;
 
@@ -289,9 +256,7 @@ body{
             rgba(14,17,23,.98)
         );
 
-    border:
-        1px solid
-        rgba(45,145,255,.18);
+    border:1px solid rgba(45,145,255,.18);
 
     margin-bottom:18px;
 }
@@ -317,9 +282,7 @@ body{
 
     background:#11151d;
 
-    border:
-        1px solid
-        rgba(255,255,255,.07);
+    border:1px solid rgba(255,255,255,.07);
 
     font-size:12px;
 
@@ -344,9 +307,7 @@ body{
 
     background:#151a23;
 
-    border:
-        1px solid
-        rgba(255,255,255,.07);
+    border:1px solid rgba(255,255,255,.07);
 
     color:#aeb7c5;
 
@@ -388,9 +349,7 @@ body{
             rgba(14,17,23,.95)
         );
 
-    border:
-        1px solid
-        rgba(255,255,255,.065);
+    border:1px solid rgba(255,255,255,.065);
 
     box-shadow:
         0 8px 25px
@@ -403,7 +362,6 @@ body{
 ========================================================= */
 
 .user-dp{
-
     width:52px;
     height:52px;
 
@@ -431,9 +389,7 @@ body{
             #0757c8
         );
 
-    border:
-        2px solid
-        rgba(255,255,255,.08);
+    border:2px solid rgba(255,255,255,.08);
 
     box-shadow:
         0 5px 16px
@@ -449,14 +405,10 @@ body{
 }
 
 .user-dp img{
-
     width:100%;
     height:100%;
-
     display:block;
-
     object-fit:cover;
-
     border-radius:50%;
 }
 
@@ -467,14 +419,11 @@ body{
 
 .user-info{
     flex:1;
-
     min-width:0;
-
     margin-left:12px;
 }
 
 .user-name{
-
     font-size:15px;
     font-weight:700;
 
@@ -486,7 +435,6 @@ body{
 }
 
 .user-id{
-
     margin-top:5px;
 
     font-size:11px;
@@ -500,11 +448,10 @@ body{
 
 
 /* =========================================================
-   FOLLOW
+   FOLLOW BUTTON
 ========================================================= */
 
 .follow-btn{
-
     min-width:84px;
     height:36px;
 
@@ -530,10 +477,28 @@ body{
 }
 
 .follow-btn.sent{
-
     background:#252b36;
-
     color:#aeb7c5;
+}
+
+.follow-btn.accepted{
+    background:#252b36;
+    color:#8dbdff;
+}
+
+.follow-btn.connected{
+    background:#252b36;
+    color:#75e0a2;
+}
+
+.follow-btn.rejected{
+    background:#252b36;
+    color:#ff9b9b;
+}
+
+.follow-btn:disabled{
+    opacity:.75;
+    cursor:default;
 }
 
 .follow-btn:active{
@@ -542,11 +507,134 @@ body{
 
 
 /* =========================================================
+   VERIFY MODAL
+========================================================= */
+
+.verify-modal{
+    position:fixed;
+    inset:0;
+
+    display:none;
+
+    align-items:center;
+    justify-content:center;
+
+    padding:25px;
+
+    background:rgba(0,0,0,.82);
+
+    z-index:600;
+}
+
+.verify-modal.show{
+    display:flex;
+}
+
+.verify-box{
+    width:100%;
+    max-width:360px;
+
+    padding:24px;
+
+    border-radius:23px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #1a1f29,
+            #0e1219
+        );
+
+    border:1px solid rgba(255,255,255,.09);
+
+    box-shadow:
+        0 25px 70px
+        rgba(0,0,0,.65);
+}
+
+.verify-title{
+    font-size:20px;
+    font-weight:800;
+    margin-bottom:8px;
+}
+
+.verify-subtitle{
+    color:#818a9a;
+    font-size:12px;
+    line-height:1.5;
+    margin-bottom:18px;
+}
+
+.verify-input{
+    width:100%;
+    height:50px;
+
+    border:0;
+    outline:0;
+
+    border-radius:14px;
+
+    background:#0b0f15;
+
+    border:1px solid rgba(255,255,255,.08);
+
+    color:#fff;
+
+    text-align:center;
+
+    font-size:21px;
+    font-weight:800;
+
+    letter-spacing:7px;
+}
+
+.verify-actions{
+    display:flex;
+    gap:10px;
+    margin-top:15px;
+}
+
+.verify-cancel,
+.verify-submit{
+    flex:1;
+
+    height:43px;
+
+    border:0;
+    border-radius:13px;
+
+    font-size:12px;
+    font-weight:700;
+
+    cursor:pointer;
+}
+
+.verify-cancel{
+    background:#252b36;
+    color:#aeb7c5;
+}
+
+.verify-submit{
+    background:
+        linear-gradient(
+            145deg,
+            #3296ff,
+            #0758cb
+        );
+
+    color:#fff;
+}
+
+.verify-submit:disabled{
+    opacity:.6;
+}
+
+
+/* =========================================================
    EMPTY
 ========================================================= */
 
 .empty{
-
     min-height:45vh;
 
     display:flex;
@@ -562,7 +650,6 @@ body{
 }
 
 .empty-circle{
-
     width:92px;
     height:92px;
 
@@ -579,9 +666,7 @@ body{
             rgba(35,133,245,.04)
         );
 
-    border:
-        1px solid
-        rgba(50,140,255,.16);
+    border:1px solid rgba(50,140,255,.16);
 
     margin-bottom:20px;
 }
@@ -597,7 +682,6 @@ body{
 }
 
 .empty-text{
-
     max-width:290px;
 
     color:#7e8797;
@@ -613,7 +697,6 @@ body{
 ========================================================= */
 
 .status-popup{
-
     position:fixed;
 
     left:50%;
@@ -630,12 +713,9 @@ body{
 
     border-radius:15px;
 
-    background:
-        rgba(24,28,37,.97);
+    background:rgba(24,28,37,.97);
 
-    border:
-        1px solid
-        rgba(255,255,255,.09);
+    border:1px solid rgba(255,255,255,.09);
 
     box-shadow:
         0 15px 40px
@@ -653,11 +733,10 @@ body{
 
     transition:.25s;
 
-    z-index:100;
+    z-index:700;
 }
 
 .status-popup.show{
-
     opacity:1;
 
     transform:
@@ -671,7 +750,6 @@ body{
 ========================================================= */
 
 .dp-modal{
-
     position:fixed;
 
     inset:0;
@@ -681,8 +759,7 @@ body{
     align-items:center;
     justify-content:center;
 
-    background:
-        rgba(0,0,0,.90);
+    background:rgba(0,0,0,.90);
 
     padding:25px;
 
@@ -693,11 +770,7 @@ body{
     display:flex;
 }
 
-
-/* REAL IMAGE */
-
 .dp-image{
-
     width:min(82vw,360px);
     height:min(82vw,360px);
 
@@ -705,20 +778,14 @@ body{
 
     object-fit:cover;
 
-    border:
-        3px solid
-        rgba(255,255,255,.10);
+    border:3px solid rgba(255,255,255,.10);
 
     box-shadow:
         0 20px 70px
         rgba(0,0,0,.70);
 }
 
-
-/* DEFAULT LETTER DP */
-
 .dp-letter{
-
     width:min(70vw,300px);
     height:min(70vw,300px);
 
@@ -735,9 +802,7 @@ body{
             #0757c8
         );
 
-    border:
-        4px solid
-        rgba(255,255,255,.10);
+    border:4px solid rgba(255,255,255,.10);
 
     box-shadow:
         0 20px 70px
@@ -750,7 +815,6 @@ body{
 }
 
 .dp-close{
-
     position:absolute;
 
     top:24px;
@@ -845,7 +909,6 @@ body{
 
 <body>
 
-
 <div class="app">
 
 
@@ -854,9 +917,6 @@ body{
 ===================================================== -->
 
 <header class="header">
-
-
-    <!-- SAME HOME LOGO -->
 
     <div class="brand">
 
@@ -878,8 +938,6 @@ body{
     </div>
 
 
-    <!-- SEARCH -->
-
     <div class="search-box">
 
         <span class="search-icon">
@@ -895,8 +953,6 @@ body{
     </div>
 
 
-    <!-- BACK -->
-
     <button
         class="back-btn"
         onclick="goHome()">
@@ -904,7 +960,6 @@ body{
         ‹
 
     </button>
-
 
 </header>
 
@@ -914,7 +969,6 @@ body{
 ===================================================== -->
 
 <main class="content">
-
 
     <div class="page-title">
         Search
@@ -989,7 +1043,6 @@ body{
 
     </div>
 
-
 </main>
 
 
@@ -1019,8 +1072,64 @@ body{
 
     </button>
 
-    <div
-        id="dpViewer">
+    <div id="dpViewer"></div>
+
+</div>
+
+
+<!-- =====================================================
+     VERIFY MODAL
+===================================================== -->
+
+<div
+    id="verifyModal"
+    class="verify-modal">
+
+    <div class="verify-box">
+
+        <div class="verify-title">
+            Verify Connection
+        </div>
+
+        <div
+            id="verifySubtitle"
+            class="verify-subtitle">
+
+            Enter the 6-digit verification code
+            received in your notification.
+
+        </div>
+
+        <input
+            id="verifyInput"
+            class="verify-input"
+            type="text"
+            inputmode="numeric"
+            maxlength="6"
+            autocomplete="one-time-code"
+            placeholder="000000">
+
+        <div class="verify-actions">
+
+            <button
+                class="verify-cancel"
+                onclick="closeVerify()">
+
+                Cancel
+
+            </button>
+
+            <button
+                id="verifySubmit"
+                class="verify-submit"
+                onclick="submitVerification()">
+
+                Verify
+
+            </button>
+
+        </div>
+
     </div>
 
 </div>
@@ -1036,54 +1145,46 @@ body{
 ========================================================= */
 
 const searchInput =
-    document.getElementById(
-        "searchInput"
-    );
+    document.getElementById("searchInput");
 
 const results =
-    document.getElementById(
-        "results"
-    );
+    document.getElementById("results");
 
 const emptyState =
-    document.getElementById(
-        "emptyState"
-    );
+    document.getElementById("emptyState");
 
 const ownAccount =
-    document.getElementById(
-        "ownAccount"
-    );
+    document.getElementById("ownAccount");
 
 const ownUserId =
-    document.getElementById(
-        "ownUserId"
-    );
+    document.getElementById("ownUserId");
 
 const message =
-    document.getElementById(
-        "message"
-    );
+    document.getElementById("message");
 
 const statusPopup =
-    document.getElementById(
-        "statusPopup"
-    );
+    document.getElementById("statusPopup");
 
 const dpModal =
-    document.getElementById(
-        "dpModal"
-    );
+    document.getElementById("dpModal");
 
 const dpViewer =
-    document.getElementById(
-        "dpViewer"
-    );
+    document.getElementById("dpViewer");
 
 const dpClose =
-    document.getElementById(
-        "dpClose"
-    );
+    document.getElementById("dpClose");
+
+const verifyModal =
+    document.getElementById("verifyModal");
+
+const verifyInput =
+    document.getElementById("verifyInput");
+
+const verifySubtitle =
+    document.getElementById("verifySubtitle");
+
+const verifySubmitButton =
+    document.getElementById("verifySubmit");
 
 
 /* =========================================================
@@ -1095,24 +1196,32 @@ let currentUser = null;
 try{
 
     const savedUser =
-        localStorage.getItem(
-            "user"
-        );
+        localStorage.getItem("user");
 
     if(savedUser){
 
         currentUser =
-            JSON.parse(
-                savedUser
-            );
+            JSON.parse(savedUser);
 
     }
 
 }catch(error){
 
+    console.error(
+        "User data error:",
+        error
+    );
+
     currentUser = null;
 
 }
+
+
+/* =========================================================
+   VERIFY TARGET
+========================================================= */
+
+let verifyTarget = null;
 
 
 /* =========================================================
@@ -1130,9 +1239,7 @@ searchInput.addEventListener(
     "input",
     function(){
 
-        clearTimeout(
-            searchTimer
-        );
+        clearTimeout(searchTimer);
 
         const q =
             this.value.trim();
@@ -1162,7 +1269,7 @@ searchInput.addEventListener(
 
 
 /* =========================================================
-   SEARCH API
+   SEARCH USERS
 ========================================================= */
 
 async function searchUsers(q){
@@ -1201,15 +1308,32 @@ async function searchUsers(q){
 
     }catch(error){
 
-        console.error(error);
+        console.error(
+            error
+        );
 
-        results.innerHTML = "";
+
+        results.innerHTML =
+            "";
 
         ownAccount.style.display =
             "none";
 
         emptyState.style.display =
             "flex";
+
+
+        emptyState.querySelector(
+            ".empty-title"
+        ).textContent =
+            "Search unavailable";
+
+
+        emptyState.querySelector(
+            ".empty-text"
+        ).textContent =
+            "Please try again in a moment.";
+
 
         showMessage(
             "Unable to search right now."
@@ -1226,13 +1350,13 @@ async function searchUsers(q){
 
 function renderUsers(users){
 
-    results.innerHTML = "";
+    results.innerHTML =
+        "";
 
     ownAccount.style.display =
         "none";
 
-    message.style.display =
-        "none";
+    clearMessage();
 
 
     if(
@@ -1243,15 +1367,18 @@ function renderUsers(users){
         emptyState.style.display =
             "flex";
 
+
         emptyState.querySelector(
             ".empty-title"
         ).textContent =
             "No people found";
 
+
         emptyState.querySelector(
             ".empty-text"
         ).textContent =
             "Try another User ID or phone number.";
+
 
         return;
 
@@ -1271,157 +1398,18 @@ function renderUsers(users){
         function(user){
 
             const card =
-                document.createElement(
-                    "div"
+                createUserCard(
+                    user
                 );
-
-            card.className =
-                "user-card";
-
-
-            const firstLetter =
-                (
-                    user.name ||
-                    "U"
-                )
-                .charAt(0)
-                .toUpperCase();
-
-
-            card.innerHTML = `
-
-                <div
-                    class="user-dp">
-
-                    ${
-                        user.profile_photo
-                        ?
-                        `
-                        <img
-                            src="${escapeHtml(
-                                user.profile_photo
-                            )}"
-                            alt="Profile photo"
-                        >
-                        `
-                        :
-                        escapeHtml(
-                            firstLetter
-                        )
-                    }
-
-                </div>
-
-
-                <div class="user-info">
-
-                    <div
-                        class="user-name">
-
-                        ${escapeHtml(
-                            user.name ||
-                            "User"
-                        )}
-
-                    </div>
-
-                    <div
-                        class="user-id">
-
-                        ${escapeHtml(
-                            user.user_id ||
-                            ""
-                        )}
-
-                    </div>
-
-                </div>
-
-
-                <button
-                    class="follow-btn">
-
-                    Follow
-
-                </button>
-
-            `;
-
-
-            /* =================================================
-               DP CLICK
-            ================================================= */
-
-            const dp =
-                card.querySelector(
-                    ".user-dp"
-                );
-
-
-            dp.addEventListener(
-                "click",
-                function(event){
-
-                    event.stopPropagation();
-
-                    openDp(
-                        user
-                    );
-
-                }
-            );
-
-
-            /* =================================================
-               NAME CLICK
-            ================================================= */
-
-            const name =
-                card.querySelector(
-                    ".user-name"
-                );
-
-
-            name.addEventListener(
-                "click",
-                function(event){
-
-                    event.stopPropagation();
-
-                    showUserStatus(
-                        user
-                    );
-
-                }
-            );
-
-
-            /* =================================================
-               FOLLOW CLICK
-            ================================================= */
-
-            const followBtn =
-                card.querySelector(
-                    ".follow-btn"
-                );
-
-
-            followBtn.addEventListener(
-                "click",
-                function(event){
-
-                    event.stopPropagation();
-
-                    toggleFollow(
-                        user,
-                        followBtn
-                    );
-
-                }
-            );
 
 
             results.appendChild(
+                card
+            );
+
+
+            loadFollowStatus(
+                user,
                 card
             );
 
@@ -1432,39 +1420,904 @@ function renderUsers(users){
 
 
 /* =========================================================
-   DP OPEN
+   CREATE USER CARD
+========================================================= */
+
+function createUserCard(user){
+
+    const card =
+        document.createElement(
+            "div"
+        );
+
+    card.className =
+        "user-card";
+
+
+    const firstLetter =
+        (
+            user.name ||
+            "U"
+        )
+        .charAt(0)
+        .toUpperCase();
+
+
+    const isMe =
+        currentUser &&
+        currentUser.user_id &&
+        String(
+            currentUser.user_id
+        ).toLowerCase()
+        ===
+        String(
+            user.user_id || ""
+        ).toLowerCase();
+
+
+    card.innerHTML = `
+
+        <div class="user-dp">
+
+            ${
+                user.profile_photo
+                ?
+                `
+                <img
+                    src="${escapeHtml(
+                        user.profile_photo
+                    )}"
+                    alt="Profile photo">
+                `
+                :
+                escapeHtml(
+                    firstLetter
+                )
+            }
+
+        </div>
+
+
+        <div class="user-info">
+
+            <div class="user-name">
+
+                ${escapeHtml(
+                    user.name ||
+                    "User"
+                )}
+
+            </div>
+
+
+            <div class="user-id">
+
+                ${escapeHtml(
+                    user.user_id ||
+                    ""
+                )}
+
+            </div>
+
+        </div>
+
+
+        ${
+            isMe
+            ?
+            ""
+            :
+            `
+            <button
+                class="follow-btn"
+                type="button">
+
+                Follow
+
+            </button>
+            `
+        }
+
+    `;
+
+
+    /* =====================================================
+       DP CLICK
+    ===================================================== */
+
+    const dp =
+        card.querySelector(
+            ".user-dp"
+        );
+
+
+    if(dp){
+
+        dp.addEventListener(
+            "click",
+            function(event){
+
+                event.stopPropagation();
+
+                openDp(
+                    user
+                );
+
+            }
+        );
+
+    }
+
+
+    /* =====================================================
+       IMAGE ERROR
+    ===================================================== */
+
+    const image =
+        card.querySelector(
+            ".user-dp img"
+        );
+
+
+    if(image){
+
+        image.addEventListener(
+            "error",
+            function(){
+
+                showSmallLetterDp(
+                    this.parentElement,
+                    user
+                );
+
+            }
+        );
+
+    }
+
+
+    /* =====================================================
+       NAME CLICK
+    ===================================================== */
+
+    const name =
+        card.querySelector(
+            ".user-name"
+        );
+
+
+    if(name){
+
+        name.addEventListener(
+            "click",
+            function(event){
+
+                event.stopPropagation();
+
+                showUserStatus(
+                    user
+                );
+
+            }
+        );
+
+    }
+
+
+    /* =====================================================
+       FOLLOW CLICK
+    ===================================================== */
+
+    const followBtn =
+        card.querySelector(
+            ".follow-btn"
+        );
+
+
+    if(followBtn){
+
+        followBtn.addEventListener(
+            "click",
+            function(event){
+
+                event.stopPropagation();
+
+                handleFollow(
+                    user,
+                    followBtn
+                );
+
+            }
+        );
+
+    }
+
+
+    return card;
+
+}
+
+
+/* =========================================================
+   FOLLOW STATUS
+========================================================= */
+
+async function loadFollowStatus(
+    user,
+    card
+){
+
+    if(
+        !currentUser ||
+        !currentUser.user_id ||
+        !user.user_id
+    ){
+
+        return;
+
+    }
+
+
+    if(
+        String(currentUser.user_id)
+        .toLowerCase()
+        ===
+        String(user.user_id)
+        .toLowerCase()
+    ){
+
+        return;
+
+    }
+
+
+    try{
+
+        const response =
+            await fetch(
+                "/api/follow/status" +
+                "?requester_user_id=" +
+                encodeURIComponent(
+                    currentUser.user_id
+                ) +
+                "&target_user_id=" +
+                encodeURIComponent(
+                    user.user_id
+                )
+            );
+
+
+        if(!response.ok){
+
+            return;
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        updateFollowButton(
+            user,
+            card,
+            data.status
+        );
+
+
+    }catch(error){
+
+        console.error(
+            "Follow status error:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   UPDATE BUTTON
+========================================================= */
+
+function updateFollowButton(
+    user,
+    card,
+    status
+){
+
+    const button =
+        card.querySelector(
+            ".follow-btn"
+        );
+
+
+    if(!button){
+
+        return;
+
+    }
+
+
+    button.classList.remove(
+        "sent",
+        "accepted",
+        "connected",
+        "rejected"
+    );
+
+
+    button.disabled =
+        false;
+
+
+    if(status === "pending"){
+
+        button.classList.add(
+            "sent"
+        );
+
+        button.textContent =
+            "Request Sent";
+
+        return;
+
+    }
+
+
+    if(status === "accepted"){
+
+        button.classList.add(
+            "accepted"
+        );
+
+        button.textContent =
+            "Verify";
+
+        button.onclick =
+            function(event){
+
+                event.stopPropagation();
+
+                openVerify(
+                    user
+                );
+
+            };
+
+        return;
+
+    }
+
+
+    if(status === "verified"){
+
+        button.classList.add(
+            "connected"
+        );
+
+        button.textContent =
+            "Connected";
+
+        button.disabled =
+            true;
+
+        return;
+
+    }
+
+
+    if(status === "rejected"){
+
+        button.classList.add(
+            "rejected"
+        );
+
+        button.textContent =
+            "Follow Again";
+
+        return;
+
+    }
+
+
+    button.textContent =
+        "Follow";
+
+}
+
+
+/* =========================================================
+   FOLLOW REQUEST
+========================================================= */
+
+async function handleFollow(
+    user,
+    button
+){
+
+    if(
+        !currentUser ||
+        !currentUser.user_id
+    ){
+
+        showPopup(
+            "Please login first."
+        );
+
+        return;
+
+    }
+
+
+    if(
+        !user ||
+        !user.user_id
+    ){
+
+        return;
+
+    }
+
+
+    if(
+        String(currentUser.user_id)
+        .toLowerCase()
+        ===
+        String(user.user_id)
+        .toLowerCase()
+    ){
+
+        showPopup(
+            "You cannot follow yourself."
+        );
+
+        return;
+
+    }
+
+
+    button.disabled =
+        true;
+
+    const oldText =
+        button.textContent;
+
+
+    button.textContent =
+        "Sending...";
+
+
+    try{
+
+        const response =
+            await fetch(
+                "/api/follow",
+                {
+                    method:"POST",
+
+                    headers:{
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:JSON.stringify({
+
+                        requester_user_id:
+                            currentUser.user_id,
+
+                        target_user_id:
+                            user.user_id
+
+                    })
+
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if(!response.ok){
+
+            throw new Error(
+                data.detail ||
+                data.message ||
+                "Unable to send request."
+            );
+
+        }
+
+
+        button.classList.remove(
+            "rejected"
+        );
+
+        button.classList.add(
+            "sent"
+        );
+
+        button.textContent =
+            "Request Sent";
+
+
+        showPopup(
+            "Follow request sent to " +
+            (
+                user.name ||
+                "User"
+            )
+        );
+
+
+    }catch(error){
+
+        console.error(
+            error
+        );
+
+
+        button.textContent =
+            oldText;
+
+
+        showPopup(
+            error.message ||
+            "Unable to send request."
+        );
+
+
+    }finally{
+
+        button.disabled =
+            false;
+
+    }
+
+}
+
+
+/* =========================================================
+   VERIFY MODAL
+========================================================= */
+
+function openVerify(user){
+
+    if(
+        !currentUser ||
+        !currentUser.user_id
+    ){
+
+        showPopup(
+            "Please login first."
+        );
+
+        return;
+
+    }
+
+
+    verifyTarget =
+        user;
+
+
+    verifyInput.value =
+        "";
+
+
+    verifySubtitle.textContent =
+        "Enter the 6-digit verification code received in your notification for " +
+        (
+            user.name ||
+            "this user"
+        ) +
+        ".";
+
+
+    verifyModal.classList.add(
+        "show"
+    );
+
+
+    setTimeout(
+        function(){
+
+            verifyInput.focus();
+
+        },
+        100
+    );
+
+}
+
+
+/* =========================================================
+   CLOSE VERIFY
+========================================================= */
+
+function closeVerify(){
+
+    verifyModal.classList.remove(
+        "show"
+    );
+
+    verifyInput.value =
+        "";
+
+    verifyTarget =
+        null;
+
+}
+
+
+/* =========================================================
+   SUBMIT VERIFICATION
+========================================================= */
+
+async function submitVerification(){
+
+    if(
+        !verifyTarget ||
+        !verifyTarget.user_id
+    ){
+
+        return;
+
+    }
+
+
+    const code =
+        verifyInput.value
+        .trim();
+
+
+    if(!/^\d{6}$/.test(code)){
+
+        showPopup(
+            "Enter a valid 6-digit code."
+        );
+
+        return;
+
+    }
+
+
+    verifySubmitButton.disabled =
+        true;
+
+    verifySubmitButton.textContent =
+        "Checking...";
+
+
+    try{
+
+        const response =
+            await fetch(
+                "/api/follow/verify",
+                {
+                    method:"POST",
+
+                    headers:{
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:JSON.stringify({
+
+                        requester_user_id:
+                            currentUser.user_id,
+
+                        target_user_id:
+                            verifyTarget.user_id,
+
+                        code:code
+
+                    })
+
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if(!response.ok){
+
+            throw new Error(
+                data.detail ||
+                data.message ||
+                "Invalid verification code."
+            );
+
+        }
+
+
+        closeVerify();
+
+
+        showPopup(
+            "Connection verified successfully."
+        );
+
+
+        /*
+           Search ko dobara load karenge
+           taaki button Connected ho jaye.
+        */
+
+        const q =
+            searchInput.value.trim();
+
+
+        if(q){
+
+            await searchUsers(q);
+
+        }
+
+
+    }catch(error){
+
+        console.error(
+            error
+        );
+
+
+        showPopup(
+            error.message ||
+            "Verification failed."
+        );
+
+
+    }finally{
+
+        verifySubmitButton.disabled =
+            false;
+
+        verifySubmitButton.textContent =
+            "Verify";
+
+    }
+
+}
+
+
+/* =========================================================
+   USER STATUS
+========================================================= */
+
+async function showUserStatus(user){
+
+    let status =
+        "Not Accepted";
+
+
+    if(
+        currentUser &&
+        currentUser.user_id &&
+        user.user_id &&
+        String(
+            currentUser.user_id
+        ).toLowerCase()
+        !==
+        String(
+            user.user_id
+        ).toLowerCase()
+    ){
+
+        try{
+
+            const response =
+                await fetch(
+                    "/api/follow/status" +
+                    "?requester_user_id=" +
+                    encodeURIComponent(
+                        currentUser.user_id
+                    ) +
+                    "&target_user_id=" +
+                    encodeURIComponent(
+                        user.user_id
+                    )
+                );
+
+
+            if(response.ok){
+
+                const data =
+                    await response.json();
+
+
+                if(
+                    data.status ===
+                    "accepted"
+                ){
+
+                    status =
+                        "Accepted";
+
+                }
+                else if(
+                    data.status ===
+                    "rejected"
+                ){
+
+                    status =
+                        "Rejected";
+
+                }
+                else if(
+                    data.status ===
+                    "verified"
+                ){
+
+                    status =
+                        "Accepted";
+
+                }
+                else{
+
+                    status =
+                        "Not Accepted";
+
+                }
+
+            }
+
+        }catch(error){
+
+            console.error(
+                error
+            );
+
+        }
+
+    }
+
+
+    showPopup(
+        (
+            user.name ||
+            "User"
+        ) +
+        " • " +
+        status
+    );
+
+}
+
+
+/* =========================================================
+   DP
 ========================================================= */
 
 function openDp(user){
 
-    dpViewer.innerHTML = "";
+    dpViewer.innerHTML =
+        "";
 
 
-    const photo =
-        user.profile_photo;
-
-
-    if(photo){
+    if(user.profile_photo){
 
         const image =
             document.createElement(
                 "img"
             );
 
+
         image.className =
             "dp-image";
 
+
         image.src =
-            photo;
+            user.profile_photo;
+
 
         image.alt =
             "Profile photo";
 
-
-        /*
-           Agar image load fail ho,
-           default letter DP show hoga.
-        */
 
         image.onerror =
             function(){
@@ -1480,7 +2333,8 @@ function openDp(user){
             image
         );
 
-    }else{
+    }
+    else{
 
         showLetterDp(
             user
@@ -1501,12 +2355,13 @@ function openDp(user){
 
 
 /* =========================================================
-   DEFAULT LARGE LETTER DP
+   LARGE LETTER DP
 ========================================================= */
 
 function showLetterDp(user){
 
-    dpViewer.innerHTML = "";
+    dpViewer.innerHTML =
+        "";
 
 
     const letter =
@@ -1523,8 +2378,10 @@ function showLetterDp(user){
             "div"
         );
 
+
     div.className =
         "dp-letter";
+
 
     div.textContent =
         letter;
@@ -1533,6 +2390,30 @@ function showLetterDp(user){
     dpViewer.appendChild(
         div
     );
+
+}
+
+
+/* =========================================================
+   SMALL LETTER DP
+========================================================= */
+
+function showSmallLetterDp(
+    container,
+    user
+){
+
+    container.innerHTML =
+        "";
+
+
+    container.textContent =
+        (
+            user.name ||
+            "U"
+        )
+        .charAt(0)
+        .toUpperCase();
 
 }
 
@@ -1547,17 +2428,14 @@ function closeDp(){
         "show"
     );
 
-    dpViewer.innerHTML = "";
+    dpViewer.innerHTML =
+        "";
 
     document.body.style.overflow =
         "";
 
 }
 
-
-/* =========================================================
-   DP CLOSE BUTTON
-========================================================= */
 
 dpClose.addEventListener(
     "click",
@@ -1571,19 +2449,37 @@ dpClose.addEventListener(
 );
 
 
-/* =========================================================
-   OUTSIDE DP CLICK
-========================================================= */
-
 dpModal.addEventListener(
     "click",
     function(event){
 
         if(
-            event.target === dpModal
+            event.target ===
+            dpModal
         ){
 
             closeDp();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   VERIFY OUTSIDE CLICK
+========================================================= */
+
+verifyModal.addEventListener(
+    "click",
+    function(event){
+
+        if(
+            event.target ===
+            verifyModal
+        ){
+
+            closeVerify();
 
         }
 
@@ -1600,10 +2496,13 @@ document.addEventListener(
     function(event){
 
         if(
-            event.key === "Escape"
+            event.key ===
+            "Escape"
         ){
 
             closeDp();
+
+            closeVerify();
 
         }
 
@@ -1612,98 +2511,47 @@ document.addEventListener(
 
 
 /* =========================================================
-   FOLLOW
+   VERIFY ENTER
 ========================================================= */
 
-function toggleFollow(
-    user,
-    button
-){
+verifyInput.addEventListener(
+    "keydown",
+    function(event){
 
-    const isSent =
-        button.classList.contains(
-            "sent"
-        );
+        if(
+            event.key ===
+            "Enter"
+        ){
 
+            submitVerification();
 
-    if(isSent){
-
-        button.classList.remove(
-            "sent"
-        );
-
-        button.textContent =
-            "Follow";
-
-
-        showPopup(
-            "Follow request cancelled"
-        );
-
-        return;
+        }
 
     }
-
-
-    button.classList.add(
-        "sent"
-    );
-
-    button.textContent =
-        "Request Sent";
-
-
-    showPopup(
-        "Follow request sent to " +
-        (user.name || "User")
-    );
-
-
-    /*
-       Backend Follow API
-       next step me connect hoga.
-    */
-
-}
+);
 
 
 /* =========================================================
-   USER STATUS
+   ONLY NUMBERS
 ========================================================= */
 
-function showUserStatus(user){
+verifyInput.addEventListener(
+    "input",
+    function(){
 
-    let status =
-        user.connection_status ||
-        "Not Accepted";
-
-
-    const allowed = [
-        "Not Accepted",
-        "Rejected",
-        "Accepted"
-    ];
-
-
-    if(
-        !allowed.includes(
-            status
-        )
-    ){
-
-        status =
-            "Not Accepted";
+        this.value =
+            this.value
+            .replace(
+                /\D/g,
+                ""
+            )
+            .slice(
+                0,
+                6
+            );
 
     }
-
-
-    showPopup(
-        (user.name || "User") +
-        " • " +
-        status
-    );
-
-}
+);
 
 
 /* =========================================================
@@ -1738,7 +2586,8 @@ function checkOwnAccount(users){
 
                 return (
                     String(
-                        user.user_id || ""
+                        user.user_id ||
+                        ""
                     )
                     .toLowerCase()
                     ===
@@ -1766,7 +2615,8 @@ function checkOwnAccount(users){
    POPUP
 ========================================================= */
 
-let popupTimer = null;
+let popupTimer =
+    null;
 
 
 function showPopup(text){
@@ -1827,12 +2677,13 @@ function clearMessage(){
 
 
 /* =========================================================
-   CLEAR SEARCH
+   CLEAR RESULTS
 ========================================================= */
 
 function clearResults(){
 
-    results.innerHTML = "";
+    results.innerHTML =
+        "";
 
     ownAccount.style.display =
         "none";
@@ -1913,6 +2764,7 @@ const params =
     new URLSearchParams(
         window.location.search
     );
+
 
 const urlUserId =
     params.get(
