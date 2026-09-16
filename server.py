@@ -277,14 +277,6 @@ def save_otp(
 
 # ============================================================
 # WEBSOCKET
-#
-# Frontend will connect:
-#
-# /ws/{user_id}
-#
-# Example:
-#
-# wss://usanex-ai.onrender.com/ws/UX123456
 # ============================================================
 
 @app.websocket("/ws/{user_id}")
@@ -334,7 +326,8 @@ async def websocket_endpoint(
 
         await websocket.send_json({
 
-            "type": "websocket_connected",
+            "type":
+                "websocket_connected",
 
             "message":
                 "Real-time connection active",
@@ -353,7 +346,8 @@ async def websocket_endpoint(
 
                     await websocket.send_json({
 
-                        "type": "pong",
+                        "type":
+                            "pong",
 
                         "timestamp":
                             datetime.utcnow().isoformat()
@@ -1736,6 +1730,46 @@ async def follow_status(
 
         "status": row.status
     }
+
+
+# ============================================================
+# NOTIFICATIONS PAGE
+# ============================================================
+
+@app.get("/notifications")
+async def notifications_page():
+
+    notifications_file = os.path.join(
+        BASE_DIR,
+        "notifications.html"
+    )
+
+    if not os.path.isfile(notifications_file):
+
+        raise HTTPException(
+            status_code=404,
+            detail="notifications.html file not found"
+        )
+
+    return FileResponse(notifications_file)
+
+
+@app.get("/notifications.html")
+async def notifications_html():
+
+    notifications_file = os.path.join(
+        BASE_DIR,
+        "notifications.html"
+    )
+
+    if not os.path.isfile(notifications_file):
+
+        raise HTTPException(
+            status_code=404,
+            detail="notifications.html file not found"
+        )
+
+    return FileResponse(notifications_file)
 
 
 # ============================================================
