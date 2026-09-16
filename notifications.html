@@ -95,6 +95,10 @@ body{
     justify-content:center;
 
     font-size:24px;
+
+    transition:
+        transform .15s ease,
+        background .2s ease;
 }
 
 .back-btn:active{
@@ -176,6 +180,10 @@ body{
     box-shadow:
         0 8px 25px
         rgba(0,0,0,.18);
+
+    transition:
+        transform .2s ease,
+        border-color .2s ease;
 }
 
 .notification.unread{
@@ -277,7 +285,11 @@ body{
 
 .action-btn{
 
+    position:relative;
+
     height:36px;
+
+    min-width:82px;
 
     padding:0 17px;
 
@@ -286,7 +298,29 @@ body{
 
     font-size:11px;
     font-weight:750;
+
+    cursor:pointer;
+
+    overflow:hidden;
+
+    transition:
+        transform .15s ease,
+        opacity .2s ease,
+        filter .2s ease,
+        background .25s ease,
+        box-shadow .25s ease;
 }
+
+.action-btn:active{
+    transform:scale(.93);
+}
+
+.action-btn:disabled{
+    cursor:default;
+}
+
+
+/* ACCEPT */
 
 .accept-btn{
 
@@ -304,6 +338,9 @@ body{
         rgba(18,105,232,.25);
 }
 
+
+/* REJECT */
+
 .reject-btn{
 
     color:#cbd1db;
@@ -312,6 +349,121 @@ body{
 
     border:1px solid
         rgba(255,255,255,.08);
+}
+
+
+/* PROCESSING */
+
+.action-btn.processing{
+
+    opacity:.78;
+
+    transform:scale(.97);
+
+    pointer-events:none;
+
+    padding-right:30px;
+}
+
+
+/* SPINNER */
+
+.action-btn.processing::after{
+
+    content:"";
+
+    position:absolute;
+
+    width:13px;
+    height:13px;
+
+    right:9px;
+    top:50%;
+
+    margin-top:-7px;
+
+    border:
+        2px solid
+        rgba(255,255,255,.30);
+
+    border-top-color:#fff;
+
+    border-radius:50%;
+
+    animation:
+        buttonSpin .7s linear infinite;
+}
+
+@keyframes buttonSpin{
+
+    to{
+        transform:rotate(360deg);
+    }
+
+}
+
+
+/* ACCEPTED */
+
+.action-btn.success{
+
+    color:#fff;
+
+    background:
+        linear-gradient(
+            145deg,
+            #22c982,
+            #078654
+        );
+
+    box-shadow:
+        0 6px 20px
+        rgba(32,201,130,.28);
+
+    animation:
+        successPop .28s ease;
+}
+
+
+/* REJECTED */
+
+.action-btn.rejected{
+
+    color:#fff;
+
+    background:
+        linear-gradient(
+            145deg,
+            #9a343d,
+            #681f27
+        );
+
+    border-color:
+        rgba(255,255,255,.10);
+
+    box-shadow:
+        0 5px 16px
+        rgba(130,35,45,.25);
+
+    animation:
+        successPop .28s ease;
+}
+
+
+@keyframes successPop{
+
+    0%{
+        transform:scale(.90);
+    }
+
+    65%{
+        transform:scale(1.04);
+    }
+
+    100%{
+        transform:scale(1);
+    }
+
 }
 
 
@@ -378,11 +530,16 @@ body{
             #3296ff,
             #0758cb
         );
+
+    transition:
+        transform .15s ease,
+        filter .2s ease;
 }
 
 .copy-code-btn:active{
 
     transform:scale(.96);
+
 }
 
 
@@ -631,6 +788,13 @@ body{
     box-shadow:
         0 9px 25px
         rgba(18,105,232,.40);
+
+    transition:
+        transform .15s ease;
+}
+
+.plus-btn:active{
+    transform:scale(.92);
 }
 
 
@@ -691,7 +855,6 @@ body{
 
 
 <body>
-
 
 <div class="app">
 
@@ -789,8 +952,7 @@ body{
     </div>
 
 
-    <div
-        class="nav-item">
+    <div class="nav-item">
 
         <div class="nav-icon">
             ▶
@@ -864,7 +1026,8 @@ try{
             localStorage.getItem("user")
         );
 
-}catch(error){
+}
+catch(error){
 
     currentUser = null;
 
@@ -1363,7 +1526,9 @@ function createNotificationCard(
 
                 handleFollowRequest(
                     notification,
-                    "accept"
+                    "accept",
+                    acceptButton,
+                    rejectButton
                 );
 
             };
@@ -1380,7 +1545,9 @@ function createNotificationCard(
 
                 handleFollowRequest(
                     notification,
-                    "reject"
+                    "reject",
+                    rejectButton,
+                    acceptButton
                 );
 
             };
@@ -1415,18 +1582,15 @@ function createNotificationCard(
 
 async function handleFollowRequest(
     notification,
-    action
+    action,
+    clickedButton,
+    otherButton
 ){
 
     if(!requireUser()){
         return;
     }
 
-
-    /*
-       Backend ko notification_id
-       aur current user bhejenge.
-    */
 
     const notificationId =
         notification.id ||
@@ -1441,6 +1605,45 @@ async function handleFollowRequest(
 
         return;
 
+    }
+
+
+    /*
+       Double click protection
+    */
+
+    if(
+        clickedButton &&
+        clickedButton.disabled
+    ){
+
+        return;
+
+    }
+
+
+    /*
+       PROCESSING UI
+    */
+
+    if(clickedButton){
+
+        clickedButton.disabled = true;
+
+        clickedButton.classList.add(
+            "processing"
+        );
+
+        clickedButton.textContent =
+            action === "accept"
+            ? "Accepting..."
+            : "Rejecting...";
+    }
+
+
+    if(otherButton){
+
+        otherButton.disabled = true;
     }
 
 
@@ -1477,8 +1680,19 @@ async function handleFollowRequest(
             );
 
 
-        const data =
-            await response.json();
+        let data = {};
+
+        try{
+
+            data =
+                await response.json();
+
+        }
+        catch(error){
+
+            data = {};
+
+        }
 
 
         if(!response.ok){
@@ -1489,6 +1703,53 @@ async function handleFollowRequest(
                 "Request failed"
             );
 
+        }
+
+
+        /*
+           SUCCESS STATE
+        */
+
+        if(clickedButton){
+
+            clickedButton.classList.remove(
+                "processing"
+            );
+
+
+            if(action === "accept"){
+
+                clickedButton.classList.add(
+                    "success"
+                );
+
+                clickedButton.textContent =
+                    "Accepted ✓";
+
+            }
+            else{
+
+                clickedButton.classList.add(
+                    "rejected"
+                );
+
+                clickedButton.textContent =
+                    "Rejected ✕";
+
+            }
+
+            clickedButton.disabled = true;
+
+        }
+
+
+        /*
+           Other button stays disabled
+        */
+
+        if(otherButton){
+
+            otherButton.disabled = true;
         }
 
 
@@ -1508,12 +1769,54 @@ async function handleFollowRequest(
         }
 
 
-        await loadNotifications();
+        /*
+           Notification list ko immediately
+           reload nahi karenge.
+           
+           Pehle user ko success effect
+           clearly dikhega.
+        */
+
+        setTimeout(
+            async function(){
+
+                await loadNotifications();
+
+            },
+            1400
+        );
 
     }
     catch(error){
 
         console.error(error);
+
+
+        /*
+           ERROR STATE
+        */
+
+        if(clickedButton){
+
+            clickedButton.disabled = false;
+
+            clickedButton.classList.remove(
+                "processing"
+            );
+
+            clickedButton.textContent =
+                action === "accept"
+                ? "Accept"
+                : "Reject";
+
+        }
+
+
+        if(otherButton){
+
+            otherButton.disabled = false;
+        }
+
 
         showToast(
             error.message ||
@@ -1560,10 +1863,6 @@ async function copyVerificationCode(
     }
     catch(error){
 
-        /*
-           Fallback
-        */
-
         const input =
             document.createElement("textarea");
 
@@ -1584,11 +1883,6 @@ async function copyVerificationCode(
     }
 
 
-    /*
-       Target user ID:
-       requester = jisne follow kiya tha.
-    */
-
     const targetUserId =
         notification.sender_user_id ||
         notification.requester_user_id;
@@ -1604,11 +1898,6 @@ async function copyVerificationCode(
 
     }
 
-
-    /*
-       Search page ko bata rahe hain
-       ki verification mode me open hona hai.
-    */
 
     localStorage.setItem(
         "usanex_pending_verification",
@@ -1634,11 +1923,6 @@ async function copyVerificationCode(
         "Code copied. Opening search..."
     );
 
-
-    /*
-       Thoda delay taaki user ko
-       copied message dikhe.
-    */
 
     setTimeout(
         function(){
@@ -1714,7 +1998,7 @@ function connectRealtime(){
 
                 try{
 
-                    const payload =
+                    let payload =
                         JSON.parse(
                             event.data
                         );
@@ -1790,8 +2074,7 @@ function handleRealtimeNotification(
 
 
     /*
-       Backend kabhi outer type
-       "notification" bhej sakta hai.
+       Backend notification wrapper
     */
 
     if(
@@ -1806,8 +2089,7 @@ function handleRealtimeNotification(
 
 
     /*
-       Agar connection verified ho gaya
-       to notifications refresh kar do.
+       Connection verified
     */
 
     if(
@@ -1923,11 +2205,6 @@ async function markAllRead(){
         return;
     }
 
-
-    /*
-       फिलहाल UI state.
-       Backend individual read support karta hai.
-    */
 
     notificationList =
         notificationList.map(
