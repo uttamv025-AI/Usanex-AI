@@ -72,7 +72,6 @@ class ResetPasswordRequest(BaseModel):
 # ============================================================
 
 class FollowRequest(BaseModel):
-
     requester_user_id: str
     target_user_id: str
 
@@ -82,7 +81,6 @@ class FollowRequest(BaseModel):
 # ============================================================
 
 class ConnectionActionRequest(BaseModel):
-
     notification_id: int
     user_id: str
 
@@ -92,7 +90,6 @@ class ConnectionActionRequest(BaseModel):
 # ============================================================
 
 class VerifyConnectionCodeRequest(BaseModel):
-
     requester_user_id: str
     target_user_id: str
     code: str
@@ -103,7 +100,6 @@ class VerifyConnectionCodeRequest(BaseModel):
 # ============================================================
 
 class NotificationReadRequest(BaseModel):
-
     notification_id: int
     user_id: str
 
@@ -123,16 +119,18 @@ from database import (
 )
 
 
+# ============================================================
+# DATABASE SESSION
+# ============================================================
+
 def get_db():
 
     db = SessionLocal()
 
     try:
-
         yield db
 
     finally:
-
         db.close()
 
 
@@ -165,22 +163,16 @@ def save_otp(
     )
 
     for old in old_otps:
-
         db.delete(old)
 
     new_otp = OTPVerification(
-
         identifier=identifier,
-
         otp=otp,
-
         purpose=purpose,
-
         expires_at=(
             datetime.utcnow()
             + timedelta(minutes=2)
         ),
-
         verified=False
     )
 
@@ -233,6 +225,13 @@ async def search_html():
 
 # ============================================================
 # SEARCH API
+#
+# Search by:
+# User ID
+# OR
+# Mobile number
+#
+# Mobile number is NEVER returned publicly.
 # ============================================================
 
 @app.get("/api/search")
@@ -262,20 +261,14 @@ async def search_users(
     )
 
     return {
-
         "ok": True,
 
         "users": [
 
             {
-                "user_id":
-                    user.user_id,
-
-                "name":
-                    user.name,
-
-                "profile_photo":
-                    user.profile_photo
+                "user_id": user.user_id,
+                "name": user.name,
+                "profile_photo": user.profile_photo
             }
 
             for user in users
@@ -341,9 +334,7 @@ async def login(
     if not identifier or not password:
 
         return {
-
             "ok": False,
-
             "message":
                 "User ID/mobile and password are required"
         }
@@ -361,9 +352,7 @@ async def login(
     if not user:
 
         return {
-
             "ok": False,
-
             "message":
                 "Invalid User ID/mobile or password"
         }
@@ -381,14 +370,18 @@ async def login(
     ):
 
         return {
-
             "ok": False,
-
             "message":
                 "Invalid User ID/mobile or password"
         }
 
     token = secrets.token_urlsafe(32)
+
+    # IMPORTANT:
+    # User data is returned BOTH directly
+    # AND inside "user".
+    #
+    # This makes old and new frontend code compatible.
 
     return {
 
@@ -399,6 +392,26 @@ async def login(
 
         "token":
             token,
+
+        # ----------------------------------------------------
+        # DIRECT USER DATA
+        # ----------------------------------------------------
+
+        "user_id":
+            user.user_id,
+
+        "name":
+            user.name,
+
+        "mobile":
+            user.mobile,
+
+        "profile_photo":
+            user.profile_photo,
+
+        # ----------------------------------------------------
+        # NESTED USER DATA
+        # ----------------------------------------------------
 
         "user": {
 
@@ -444,7 +457,8 @@ async def register_request_otp(
 
         return {
             "ok": False,
-            "message": "Mobile number is required"
+            "message":
+                "Mobile number is required"
         }
 
     if (
@@ -462,7 +476,8 @@ async def register_request_otp(
 
         return {
             "ok": False,
-            "message": "Password is required"
+            "message":
+                "Password is required"
         }
 
     if len(password) < 6:
@@ -528,7 +543,9 @@ async def register_verify_otp(
         db.query(OTPVerification)
         .filter(
             OTPVerification.identifier == mobile,
+
             OTPVerification.purpose == "register",
+
             OTPVerification.verified == False
         )
         .order_by(
@@ -540,9 +557,7 @@ async def register_verify_otp(
     if not verification:
 
         return {
-
             "ok": False,
-
             "message":
                 "OTP not found. Please request a new OTP"
         }
@@ -554,9 +569,7 @@ async def register_verify_otp(
         db.commit()
 
         return {
-
             "ok": False,
-
             "message":
                 "OTP expired. Please request a new OTP"
         }
@@ -564,9 +577,7 @@ async def register_verify_otp(
     if verification.otp != otp:
 
         return {
-
             "ok": False,
-
             "message":
                 "Invalid OTP"
         }
@@ -582,9 +593,7 @@ async def register_verify_otp(
     if existing_user:
 
         return {
-
             "ok": False,
-
             "message":
                 "Mobile number already registered"
         }
@@ -601,13 +610,9 @@ async def register_verify_otp(
     )
 
     new_user = User(
-
         user_id=user_id,
-
         name=request.name.strip(),
-
         mobile=mobile,
-
         password_hash=password_hash
     )
 
@@ -626,9 +631,7 @@ async def register_verify_otp(
         db.rollback()
 
         return {
-
             "ok": False,
-
             "message":
                 "Registration failed. Please try again"
         }
@@ -647,7 +650,10 @@ async def register_verify_otp(
             new_user.name,
 
         "mobile":
-            new_user.mobile
+            new_user.mobile,
+
+        "profile_photo":
+            new_user.profile_photo
     }
 
 
@@ -666,9 +672,7 @@ async def forgot_password_request_otp(
     if not identifier:
 
         return {
-
             "ok": False,
-
             "message":
                 "User ID or mobile number is required"
         }
@@ -686,9 +690,7 @@ async def forgot_password_request_otp(
     if not user:
 
         return {
-
             "ok": False,
-
             "message":
                 "User ID or mobile number not found"
         }
@@ -741,9 +743,7 @@ async def forgot_password_verify_otp(
     if not user:
 
         return {
-
             "ok": False,
-
             "message":
                 "User not found"
         }
@@ -769,9 +769,7 @@ async def forgot_password_verify_otp(
     if not verification:
 
         return {
-
             "ok": False,
-
             "message":
                 "OTP not found. Please request a new OTP"
         }
@@ -783,9 +781,7 @@ async def forgot_password_verify_otp(
         db.commit()
 
         return {
-
             "ok": False,
-
             "message":
                 "OTP expired. Please request a new OTP"
         }
@@ -793,9 +789,7 @@ async def forgot_password_verify_otp(
     if verification.otp != otp:
 
         return {
-
             "ok": False,
-
             "message":
                 "Invalid OTP"
         }
@@ -828,9 +822,7 @@ async def reset_password(
     if len(request.new_password) < 6:
 
         return {
-
             "ok": False,
-
             "message":
                 "Password must be at least 6 characters"
         }
@@ -842,9 +834,7 @@ async def reset_password(
     ):
 
         return {
-
             "ok": False,
-
             "message":
                 "Passwords do not match"
         }
@@ -862,9 +852,7 @@ async def reset_password(
     if not user:
 
         return {
-
             "ok": False,
-
             "message":
                 "User not found"
         }
@@ -890,9 +878,7 @@ async def reset_password(
     if not verification:
 
         return {
-
             "ok": False,
-
             "message":
                 "OTP verification required"
         }
@@ -904,9 +890,7 @@ async def reset_password(
         db.commit()
 
         return {
-
             "ok": False,
-
             "message":
                 "OTP verification expired"
         }
@@ -922,18 +906,14 @@ async def reset_password(
     db.commit()
 
     return {
-
         "ok": True,
-
         "message":
             "Password changed successfully"
     }
 
 
 # ============================================================
-# ============================================================
 # FOLLOW SYSTEM
-# ============================================================
 # ============================================================
 
 
@@ -955,37 +935,21 @@ async def follow_user(
         request.target_user_id.strip()
     )
 
-    # --------------------------------------------------------
-    # Empty check
-    # --------------------------------------------------------
-
     if not requester_id or not target_id:
 
         return {
-
             "ok": False,
-
             "message":
                 "User IDs are required"
         }
 
-    # --------------------------------------------------------
-    # Cannot follow yourself
-    # --------------------------------------------------------
-
     if requester_id == target_id:
 
         return {
-
             "ok": False,
-
             "message":
                 "You cannot follow your own account"
         }
-
-    # --------------------------------------------------------
-    # Check users
-    # --------------------------------------------------------
 
     requester = (
         db.query(User)
@@ -1006,9 +970,7 @@ async def follow_user(
     if not requester:
 
         return {
-
             "ok": False,
-
             "message":
                 "Requester account not found"
         }
@@ -1016,15 +978,13 @@ async def follow_user(
     if not target:
 
         return {
-
             "ok": False,
-
             "message":
                 "User not found"
         }
 
     # --------------------------------------------------------
-    # Existing connection?
+    # Already connected
     # --------------------------------------------------------
 
     existing_connection = (
@@ -1048,12 +1008,8 @@ async def follow_user(
     if existing_connection:
 
         return {
-
-            "ok": False,
-
-            "status":
-                "verified",
-
+            "ok": True,
+            "status": "verified",
             "message":
                 "You are already connected"
         }
@@ -1082,12 +1038,8 @@ async def follow_user(
         if existing_request.status == "pending":
 
             return {
-
                 "ok": True,
-
-                "status":
-                    "pending",
-
+                "status": "pending",
                 "message":
                     "Follow request already sent"
             }
@@ -1095,12 +1047,8 @@ async def follow_user(
         if existing_request.status == "accepted":
 
             return {
-
                 "ok": True,
-
-                "status":
-                    "accepted",
-
+                "status": "accepted",
                 "message":
                     "Request accepted. Verification code required"
             }
@@ -1108,17 +1056,14 @@ async def follow_user(
         if existing_request.status == "verified":
 
             return {
-
                 "ok": True,
-
-                "status":
-                    "verified",
-
+                "status": "verified",
                 "message":
                     "Connection already verified"
             }
 
-        # rejected request ko dobara bhejne ki permission
+        # rejected -> allow again
+
         existing_request.status = "pending"
 
         existing_request.updated_at = datetime.utcnow()
@@ -1128,11 +1073,8 @@ async def follow_user(
     else:
 
         request_row = ConnectionRequest(
-
             requester_user_id=requester_id,
-
             target_user_id=target_id,
-
             status="pending"
         )
 
@@ -1141,27 +1083,19 @@ async def follow_user(
         db.flush()
 
     # --------------------------------------------------------
-    # Notification to target
+    # Notification
     # --------------------------------------------------------
 
     notification = Notification(
-
         receiver_user_id=target_id,
-
         sender_user_id=requester_id,
-
         type="follow_request",
-
         title="New Follow Request",
-
         message=(
             f"{requester.name} wants to connect with you."
         ),
-
         connection_request_id=request_row.id,
-
         verification_code=None,
-
         is_read=False
     )
 
@@ -1170,12 +1104,8 @@ async def follow_user(
     db.commit()
 
     return {
-
         "ok": True,
-
-        "status":
-            "pending",
-
+        "status": "pending",
         "message":
             "Follow request sent"
     }
@@ -1199,9 +1129,7 @@ async def follow_status(
     if not requester_id or not target_id:
 
         return {
-
             "ok": False,
-
             "message":
                 "User IDs are required"
         }
@@ -1227,11 +1155,8 @@ async def follow_status(
     if connection:
 
         return {
-
             "ok": True,
-
-            "status":
-                "verified"
+            "status": "verified"
         }
 
     row = (
@@ -1252,19 +1177,13 @@ async def follow_status(
     if not row:
 
         return {
-
             "ok": True,
-
-            "status":
-                "none"
+            "status": "none"
         }
 
     return {
-
         "ok": True,
-
-        "status":
-            row.status
+        "status": row.status
     }
 
 
@@ -1283,9 +1202,7 @@ async def get_notifications(
     if not user_id:
 
         return {
-
             "ok": False,
-
             "message":
                 "User ID is required"
         }
@@ -1363,11 +1280,8 @@ async def get_notifications(
         })
 
     return {
-
         "ok": True,
-
-        "notifications":
-            result
+        "notifications": result
     }
 
 
@@ -1396,9 +1310,7 @@ async def accept_follow(
     if not notification:
 
         return {
-
             "ok": False,
-
             "message":
                 "Notification not found"
         }
@@ -1406,9 +1318,7 @@ async def accept_follow(
     if notification.type != "follow_request":
 
         return {
-
             "ok": False,
-
             "message":
                 "Invalid follow request"
         }
@@ -1428,23 +1338,16 @@ async def accept_follow(
     if not connection_request:
 
         return {
-
             "ok": False,
-
             "message":
                 "Follow request not found"
         }
 
-    # Already verified
     if connection_request.status == "verified":
 
         return {
-
             "ok": True,
-
-            "status":
-                "verified",
-
+            "status": "verified",
             "message":
                 "Connection already verified"
         }
@@ -1476,9 +1379,7 @@ async def accept_follow(
     if not requester or not target:
 
         return {
-
             "ok": False,
-
             "message":
                 "User account not found"
         }
@@ -1494,7 +1395,7 @@ async def accept_follow(
     notification.is_read = True
 
     # --------------------------------------------------------
-    # Generate verification code
+    # Invalidate old codes
     # --------------------------------------------------------
 
     old_codes = (
@@ -1515,6 +1416,10 @@ async def accept_follow(
     for old_code in old_codes:
 
         old_code.verified = True
+
+    # --------------------------------------------------------
+    # Generate new verification code
+    # --------------------------------------------------------
 
     code = generate_otp()
 
@@ -1572,8 +1477,7 @@ async def accept_follow(
 
         "ok": True,
 
-        "status":
-            "accepted",
+        "status": "accepted",
 
         "message":
             "Request accepted. Verification code sent",
@@ -1608,9 +1512,7 @@ async def reject_follow(
     if not notification:
 
         return {
-
             "ok": False,
-
             "message":
                 "Notification not found"
         }
@@ -1618,9 +1520,7 @@ async def reject_follow(
     if notification.type != "follow_request":
 
         return {
-
             "ok": False,
-
             "message":
                 "Invalid follow request"
         }
@@ -1640,9 +1540,7 @@ async def reject_follow(
     if not connection_request:
 
         return {
-
             "ok": False,
-
             "message":
                 "Follow request not found"
         }
@@ -1663,19 +1561,11 @@ async def reject_follow(
         .first()
     )
 
-    # --------------------------------------------------------
-    # Reject
-    # --------------------------------------------------------
-
     connection_request.status = "rejected"
 
     connection_request.updated_at = datetime.utcnow()
 
     notification.is_read = True
-
-    # --------------------------------------------------------
-    # Notify requester
-    # --------------------------------------------------------
 
     requester_notification = Notification(
 
@@ -1708,8 +1598,7 @@ async def reject_follow(
 
         "ok": True,
 
-        "status":
-            "rejected",
+        "status": "rejected",
 
         "message":
             "Follow request rejected"
@@ -1739,9 +1628,7 @@ async def verify_connection(
     if not requester_id or not target_id:
 
         return {
-
             "ok": False,
-
             "message":
                 "User IDs are required"
         }
@@ -1749,15 +1636,13 @@ async def verify_connection(
     if not code:
 
         return {
-
             "ok": False,
-
             "message":
                 "Verification code is required"
         }
 
     # --------------------------------------------------------
-    # Check request
+    # Find request
     # --------------------------------------------------------
 
     connection_request = (
@@ -1778,9 +1663,7 @@ async def verify_connection(
     if not connection_request:
 
         return {
-
             "ok": False,
-
             "message":
                 "Connection request not found"
         }
@@ -1790,20 +1673,14 @@ async def verify_connection(
         if connection_request.status == "verified":
 
             return {
-
                 "ok": True,
-
-                "status":
-                    "verified",
-
+                "status": "verified",
                 "message":
                     "Connection already verified"
             }
 
         return {
-
             "ok": False,
-
             "message":
                 "Connection has not been accepted"
         }
@@ -1833,37 +1710,35 @@ async def verify_connection(
     if not connection_code:
 
         return {
-
             "ok": False,
-
             "message":
                 "Verification code not found"
         }
 
     # --------------------------------------------------------
-    # Expired
+    # Expiry
     # --------------------------------------------------------
 
     if datetime.utcnow() > connection_code.expires_at:
 
+        connection_code.verified = True
+
+        db.commit()
+
         return {
-
             "ok": False,
-
             "message":
                 "Verification code expired"
         }
 
     # --------------------------------------------------------
-    # Wrong code
+    # Check code
     # --------------------------------------------------------
 
     if connection_code.code != code:
 
         return {
-
             "ok": False,
-
             "message":
                 "Invalid verification code"
         }
@@ -1912,7 +1787,7 @@ async def verify_connection(
         db.add(new_connection)
 
     # --------------------------------------------------------
-    # Notification
+    # Get users
     # --------------------------------------------------------
 
     target = (
@@ -1930,6 +1805,10 @@ async def verify_connection(
         )
         .first()
     )
+
+    # --------------------------------------------------------
+    # Notifications
+    # --------------------------------------------------------
 
     db.add(
         Notification(
@@ -1987,8 +1866,7 @@ async def verify_connection(
 
         "ok": True,
 
-        "status":
-            "verified",
+        "status": "verified",
 
         "message":
             "Connection verified successfully"
@@ -2020,9 +1898,7 @@ async def mark_notification_read(
     if not notification:
 
         return {
-
             "ok": False,
-
             "message":
                 "Notification not found"
         }
@@ -2032,9 +1908,7 @@ async def mark_notification_read(
     db.commit()
 
     return {
-
         "ok": True,
-
         "message":
             "Notification marked as read"
     }
@@ -2064,6 +1938,9 @@ async def home_page():
 
 # ============================================================
 # HOME CONNECTIONS
+#
+# ONLY VERIFIED CONNECTIONS EXIST IN connections TABLE.
+# Therefore Home will only show verified connections.
 # ============================================================
 
 @app.get("/api/home/connections")
@@ -2077,9 +1954,7 @@ async def home_connections(
     if not user_id:
 
         return {
-
             "ok": True,
-
             "users": []
         }
 
@@ -2111,7 +1986,6 @@ async def home_connections(
             other_id = connection.user_a_id
 
         if other_id in seen:
-
             continue
 
         seen.add(other_id)
@@ -2125,7 +1999,6 @@ async def home_connections(
         )
 
         if not user:
-
             continue
 
         users.append({
