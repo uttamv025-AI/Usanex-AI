@@ -30,11 +30,8 @@ html,
 body{
     width:100%;
     min-height:100%;
-
     font-family:Arial,sans-serif;
-
     background:#07090d;
-
     color:#fff;
 }
 
@@ -49,9 +46,7 @@ body{
 ========================================================= */
 
 .app{
-
     min-height:100vh;
-
     padding-bottom:100px;
 
     background:
@@ -69,13 +64,11 @@ body{
 ========================================================= */
 
 .header{
-
     height:78px;
 
     padding:0 18px;
 
     display:flex;
-
     align-items:center;
 
     gap:13px;
@@ -98,11 +91,10 @@ body{
 
 
 /* =========================================================
-   BACK BUTTON
+   BACK
 ========================================================= */
 
 .back-btn{
-
     width:42px;
     height:42px;
 
@@ -129,7 +121,6 @@ body{
 }
 
 .back-btn:active{
-
     transform:scale(.92);
 }
 
@@ -139,14 +130,11 @@ body{
 ========================================================= */
 
 .header-title{
-
     flex:1;
-
     min-width:0;
 }
 
 .header-title h1{
-
     font-size:20px;
 
     font-weight:800;
@@ -155,7 +143,6 @@ body{
 }
 
 .header-title p{
-
     margin-top:3px;
 
     font-size:11px;
@@ -165,11 +152,10 @@ body{
 
 
 /* =========================================================
-   MARK READ BUTTON
+   MARK READ
 ========================================================= */
 
 .read-btn{
-
     border:0;
 
     background:transparent;
@@ -181,31 +167,30 @@ body{
     font-weight:700;
 
     cursor:pointer;
+
+    white-space:nowrap;
 }
 
 .read-btn:active{
-
     opacity:.65;
 }
 
 
 /* =========================================================
-   MAIN
+   CONTENT
 ========================================================= */
 
 .content{
-
     padding:
         18px 15px 25px;
 }
 
 
 /* =========================================================
-   NOTIFICATION LIST
+   LIST
 ========================================================= */
 
 .notifications{
-
     display:flex;
 
     flex-direction:column;
@@ -215,11 +200,10 @@ body{
 
 
 /* =========================================================
-   NOTIFICATION CARD
+   CARD
 ========================================================= */
 
 .notification{
-
     position:relative;
 
     display:flex;
@@ -251,7 +235,6 @@ body{
 }
 
 .notification.unread{
-
     border-color:
         rgba(45,145,255,.22);
 
@@ -264,7 +247,6 @@ body{
 }
 
 .notification:active{
-
     transform:scale(.99);
 }
 
@@ -274,7 +256,6 @@ body{
 ========================================================= */
 
 .notification-avatar{
-
     width:48px;
     height:48px;
 
@@ -307,7 +288,6 @@ body{
 }
 
 .notification-avatar img{
-
     width:100%;
     height:100%;
 
@@ -316,18 +296,18 @@ body{
 
 
 /* =========================================================
-   NOTIFICATION BODY
+   BODY
 ========================================================= */
 
 .notification-body{
-
     flex:1;
 
     min-width:0;
+
+    padding-right:5px;
 }
 
 .notification-title{
-
     font-size:14px;
 
     font-weight:750;
@@ -336,7 +316,6 @@ body{
 }
 
 .notification-message{
-
     margin-top:5px;
 
     color:#9aa3b2;
@@ -347,7 +326,6 @@ body{
 }
 
 .notification-time{
-
     margin-top:7px;
 
     color:#687181;
@@ -361,13 +339,14 @@ body{
 ========================================================= */
 
 .unread-dot{
-
     position:absolute;
 
     right:12px;
+
     top:13px;
 
     width:7px;
+
     height:7px;
 
     border-radius:50%;
@@ -385,7 +364,6 @@ body{
 ========================================================= */
 
 .notification-actions{
-
     display:flex;
 
     gap:8px;
@@ -394,7 +372,6 @@ body{
 }
 
 .action-btn{
-
     height:34px;
 
     padding:0 16px;
@@ -411,7 +388,6 @@ body{
 }
 
 .accept-btn{
-
     color:#fff;
 
     background:
@@ -427,7 +403,6 @@ body{
 }
 
 .reject-btn{
-
     color:#cbd1db;
 
     background:#252b36;
@@ -437,17 +412,21 @@ body{
 }
 
 .action-btn:active{
-
     transform:scale(.94);
+}
+
+.action-btn:disabled{
+    opacity:.55;
+
+    cursor:not-allowed;
 }
 
 
 /* =========================================================
-   VERIFICATION CODE
+   CODE BOX
 ========================================================= */
 
 .code-box{
-
     margin-top:12px;
 
     padding:12px;
@@ -465,7 +444,6 @@ body{
 }
 
 .code-label{
-
     color:#7e8797;
 
     font-size:10px;
@@ -476,7 +454,6 @@ body{
 }
 
 .code{
-
     margin-top:5px;
 
     font-size:25px;
@@ -494,7 +471,6 @@ body{
 ========================================================= */
 
 .empty{
-
     min-height:
         calc(100vh - 190px);
 
@@ -512,8 +488,8 @@ body{
 }
 
 .empty-circle{
-
     width:105px;
+
     height:105px;
 
     border-radius:50%;
@@ -543,12 +519,10 @@ body{
 }
 
 .empty-icon{
-
     font-size:43px;
 }
 
 .empty-title{
-
     font-size:21px;
 
     font-weight:800;
@@ -557,7 +531,6 @@ body{
 }
 
 .empty-text{
-
     max-width:300px;
 
     color:#7e8797;
@@ -573,7 +546,6 @@ body{
 ========================================================= */
 
 .toast{
-
     position:fixed;
 
     left:50%;
@@ -619,7 +591,6 @@ body{
 }
 
 .toast.show{
-
     opacity:1;
 
     transform:
@@ -632,10 +603,10 @@ body{
 ========================================================= */
 
 .bottom-nav{
-
     position:fixed;
 
     left:10px;
+
     right:10px;
 
     bottom:10px;
@@ -669,11 +640,10 @@ body{
 
 
 /* =========================================================
-   NAV
+   NAV ITEM
 ========================================================= */
 
 .nav-item{
-
     height:70px;
 
     display:flex;
@@ -692,26 +662,22 @@ body{
 }
 
 .nav-icon{
-
     font-size:21px;
 
     line-height:1;
 }
 
 .nav-label{
-
     font-size:10px;
 
     font-weight:600;
 }
 
 .nav-item.active{
-
     color:#fff;
 }
 
 .nav-item.active .nav-icon{
-
     filter:
         drop-shadow(
             0 0 8px
@@ -725,7 +691,6 @@ body{
 ========================================================= */
 
 .nav-center{
-
     display:flex;
 
     align-items:center;
@@ -734,8 +699,8 @@ body{
 }
 
 .plus-btn{
-
     width:55px;
+
     height:55px;
 
     border-radius:18px;
@@ -769,19 +734,17 @@ body{
 }
 
 .plus-btn:active{
-
     transform:scale(.90);
 }
 
 
 /* =========================================================
-   SMALL MOBILE
+   MOBILE
 ========================================================= */
 
 @media(max-width:390px){
 
     .header{
-
         height:72px;
 
         padding:0 10px;
@@ -790,8 +753,8 @@ body{
     }
 
     .back-btn{
-
         width:37px;
+
         height:37px;
 
         border-radius:12px;
@@ -800,39 +763,37 @@ body{
     }
 
     .header-title h1{
-
         font-size:18px;
     }
 
     .read-btn{
-
         font-size:11px;
     }
 
     .content{
-
         padding-left:10px;
+
         padding-right:10px;
     }
 
     .notification{
-
         padding:12px;
 
         gap:10px;
     }
 
     .notification-avatar{
-
         width:44px;
+
         height:44px;
     }
 
     .bottom-nav{
-
         left:7px;
+
         right:7px;
     }
+
 }
 
 </style>
@@ -842,7 +803,6 @@ body{
 
 <body>
 
-
 <div class="app">
 
 
@@ -851,7 +811,6 @@ body{
 ===================================================== -->
 
 <header class="header">
-
 
     <button
         class="back-btn"
@@ -883,7 +842,6 @@ body{
 
     </button>
 
-
 </header>
 
 
@@ -893,7 +851,6 @@ body{
 
 <main class="content">
 
-
     <div
         id="notifications"
         class="notifications">
@@ -902,7 +859,8 @@ body{
 
     <div
         id="emptyState"
-        class="empty">
+        class="empty"
+        style="display:none;">
 
         <div class="empty-circle">
 
@@ -912,9 +870,11 @@ body{
 
         </div>
 
+
         <div class="empty-title">
             No notifications
         </div>
+
 
         <div class="empty-text">
             New follow requests, connection updates
@@ -922,7 +882,6 @@ body{
         </div>
 
     </div>
-
 
 </main>
 
@@ -1019,7 +978,6 @@ body{
 
 </nav>
 
-
 </div>
 
 
@@ -1030,6 +988,7 @@ body{
 ========================================================= */
 
 let currentUser = null;
+
 
 try{
 
@@ -1069,10 +1028,14 @@ function showToast(message){
             "toast"
         );
 
+
     toast.textContent =
         message;
 
-    toast.classList.add("show");
+
+    toast.classList.add(
+        "show"
+    );
 
 
     clearTimeout(
@@ -1110,6 +1073,7 @@ function requireUser(){
             "Please login first."
         );
 
+
         setTimeout(
             function(){
 
@@ -1120,9 +1084,11 @@ function requireUser(){
             900
         );
 
+
         return false;
 
     }
+
 
     return true;
 
@@ -1142,17 +1108,6 @@ async function loadNotifications(){
     }
 
 
-    const container =
-        document.getElementById(
-            "notifications"
-        );
-
-    const empty =
-        document.getElementById(
-            "emptyState"
-        );
-
-
     try{
 
         const response =
@@ -1164,17 +1119,18 @@ async function loadNotifications(){
             );
 
 
+        const data =
+            await response.json();
+
+
         if(!response.ok){
 
             throw new Error(
-                "Notification API failed"
+                data.detail ||
+                "Unable to load notifications."
             );
 
         }
-
-
-        const data =
-            await response.json();
 
 
         notificationList =
@@ -1199,11 +1155,9 @@ async function loadNotifications(){
             error
         );
 
-        notificationList = [];
-
-        renderNotifications();
 
         showToast(
+            error.message ||
             "Unable to load notifications."
         );
 
@@ -1213,7 +1167,7 @@ async function loadNotifications(){
 
 
 /* =========================================================
-   RENDER NOTIFICATIONS
+   RENDER
 ========================================================= */
 
 function renderNotifications(){
@@ -1223,10 +1177,12 @@ function renderNotifications(){
             "notifications"
         );
 
+
     const empty =
         document.getElementById(
             "emptyState"
         );
+
 
     const subtitle =
         document.getElementById(
@@ -1234,7 +1190,8 @@ function renderNotifications(){
         );
 
 
-    container.innerHTML = "";
+    container.innerHTML =
+        "";
 
 
     if(
@@ -1245,8 +1202,10 @@ function renderNotifications(){
         empty.style.display =
             "flex";
 
+
         subtitle.textContent =
             "You're all caught up";
+
 
         return;
 
@@ -1295,7 +1254,7 @@ function renderNotifications(){
 
 
 /* =========================================================
-   CREATE NOTIFICATION CARD
+   CREATE CARD
 ========================================================= */
 
 function createNotificationCard(
@@ -1321,6 +1280,7 @@ function createNotificationCard(
         notification.sender_name ||
         notification.name ||
         notification.sender_user_id ||
+        notification.requester_user_id ||
         "Someone";
 
 
@@ -1330,7 +1290,7 @@ function createNotificationCard(
         null;
 
 
-    let avatarHtml = "";
+    let avatarHtml;
 
 
     if(senderPhoto){
@@ -1359,6 +1319,7 @@ function createNotificationCard(
     const type =
         String(
             notification.type ||
+            notification.notification_type ||
             ""
         ).toLowerCase();
 
@@ -1373,9 +1334,7 @@ function createNotificationCard(
         "";
 
 
-    /*
-       Follow request
-    */
+    /* ================= FOLLOW ================= */
 
     if(
         type === "follow_request"
@@ -1383,7 +1342,8 @@ function createNotificationCard(
 
         title =
             notification.title ||
-            "New follow request";
+            "New Follow Request";
+
 
         message =
             notification.message ||
@@ -1395,9 +1355,7 @@ function createNotificationCard(
     }
 
 
-    /*
-       Connection code
-    */
+    /* ================= CODE ================= */
 
     if(
         type === "connection_code"
@@ -1405,7 +1363,8 @@ function createNotificationCard(
 
         title =
             notification.title ||
-            "Verification code";
+            "Verification Code";
+
 
         message =
             notification.message ||
@@ -1414,9 +1373,7 @@ function createNotificationCard(
     }
 
 
-    /*
-       Rejected
-    */
+    /* ================= REJECT ================= */
 
     if(
         type === "follow_rejected"
@@ -1424,14 +1381,12 @@ function createNotificationCard(
 
         title =
             notification.title ||
-            "Follow request rejected";
+            "Follow Request Rejected";
 
     }
 
 
-    /*
-       Verified
-    */
+    /* ================= VERIFIED ================= */
 
     if(
         type === "connection_verified"
@@ -1439,7 +1394,7 @@ function createNotificationCard(
 
         title =
             notification.title ||
-            "Connection verified";
+            "Connection Verified";
 
     }
 
@@ -1454,6 +1409,7 @@ function createNotificationCard(
 
 
         <div class="notification-body">
+
 
             <div class="notification-title">
 
@@ -1485,6 +1441,7 @@ function createNotificationCard(
             ${
                 type === "follow_request"
                 ? `
+
                     <div
                         class="notification-actions">
 
@@ -1496,6 +1453,7 @@ function createNotificationCard(
 
                         </button>
 
+
                         <button
                             class="action-btn reject-btn"
                             data-action="reject">
@@ -1505,20 +1463,25 @@ function createNotificationCard(
                         </button>
 
                     </div>
+
                   `
                 : ""
             }
 
 
             ${
-                type === "connection_code"
-                && notification.verification_code
+                type === "connection_code" &&
+                notification.verification_code
                 ? `
+
                     <div class="code-box">
 
                         <div class="code-label">
+
                             Verification Code
+
                         </div>
+
 
                         <div class="code">
 
@@ -1529,9 +1492,11 @@ function createNotificationCard(
                         </div>
 
                     </div>
+
                   `
                 : ""
             }
+
 
         </div>
 
@@ -1552,6 +1517,7 @@ function createNotificationCard(
             '[data-action="accept"]'
         );
 
+
     const rejectButton =
         card.querySelector(
             '[data-action="reject"]'
@@ -1565,9 +1531,12 @@ function createNotificationCard(
 
                 event.stopPropagation();
 
+
                 handleFollowRequest(
                     notification,
-                    "accept"
+                    "accept",
+                    acceptButton,
+                    rejectButton
                 );
 
             };
@@ -1582,9 +1551,12 @@ function createNotificationCard(
 
                 event.stopPropagation();
 
+
                 handleFollowRequest(
                     notification,
-                    "reject"
+                    "reject",
+                    acceptButton,
+                    rejectButton
                 );
 
             };
@@ -1598,12 +1570,14 @@ function createNotificationCard(
 
 
 /* =========================================================
-   ACCEPT / REJECT FOLLOW
+   ACCEPT / REJECT FOLLOW REQUEST
 ========================================================= */
 
 async function handleFollowRequest(
     notification,
-    action
+    action,
+    acceptButton,
+    rejectButton
 ){
 
     if(!requireUser()){
@@ -1613,18 +1587,50 @@ async function handleFollowRequest(
     }
 
 
-    const requesterUserId =
-        notification.sender_user_id ||
-        notification.requester_user_id;
+    /*
+       IMPORTANT:
+
+       Backend current API:
+       notification_id
+       user_id
+    */
 
 
-    if(!requesterUserId){
+    const notificationId =
+        notification.id ||
+        notification.notification_id;
 
-        showToast(
-            "Requester information missing."
+
+    if(!notificationId){
+
+        console.error(
+            "Full notification:",
+            notification
         );
 
+
+        showToast(
+            "Notification ID missing."
+        );
+
+
         return;
+
+    }
+
+
+    if(acceptButton){
+
+        acceptButton.disabled =
+            true;
+
+    }
+
+
+    if(rejectButton){
+
+        rejectButton.disabled =
+            true;
 
     }
 
@@ -1650,10 +1656,10 @@ async function handleFollowRequest(
 
                     body:JSON.stringify({
 
-                        requester_user_id:
-                            requesterUserId,
+                        notification_id:
+                            notificationId,
 
-                        target_user_id:
+                        user_id:
                             currentUser.user_id
 
                     })
@@ -1671,10 +1677,37 @@ async function handleFollowRequest(
             throw new Error(
                 data.detail ||
                 data.message ||
-                "Request failed"
+                "Request failed."
             );
 
         }
+
+
+        /*
+           Remove old request locally.
+        */
+
+        notificationList =
+            notificationList.filter(
+                function(item){
+
+                    const itemId =
+                        item.id ||
+                        item.notification_id;
+
+
+                    return String(
+                        itemId
+                    ) !==
+                    String(
+                        notificationId
+                    );
+
+                }
+            );
+
+
+        renderNotifications();
 
 
         showToast(
@@ -1684,14 +1717,36 @@ async function handleFollowRequest(
         );
 
 
+        /*
+           Fresh notifications.
+        */
+
         await loadNotifications();
 
 
     }catch(error){
 
         console.error(
+            "Follow action error:",
             error
         );
+
+
+        if(acceptButton){
+
+            acceptButton.disabled =
+                false;
+
+        }
+
+
+        if(rejectButton){
+
+            rejectButton.disabled =
+                false;
+
+        }
+
 
         showToast(
             error.message ||
@@ -1721,7 +1776,9 @@ function connectRealtime(){
         if(socket){
 
             try{
+
                 socket.close();
+
             }catch(error){}
 
         }
@@ -1764,15 +1821,16 @@ function connectRealtime(){
 
                 try{
 
-                    const notification =
+                    const raw =
                         JSON.parse(
                             event.data
                         );
 
 
                     handleRealtimeNotification(
-                        notification
+                        raw
                     );
+
 
                 }catch(error){
 
@@ -1790,8 +1848,9 @@ function connectRealtime(){
             function(){
 
                 console.log(
-                    "Realtime disconnected."
+                    "Usanex realtime disconnected."
                 );
+
 
                 scheduleReconnect();
 
@@ -1802,7 +1861,7 @@ function connectRealtime(){
             function(error){
 
                 console.error(
-                    "Realtime error:",
+                    "Usanex realtime error:",
                     error
                 );
 
@@ -1811,8 +1870,10 @@ function connectRealtime(){
     }catch(error){
 
         console.error(
+            "WebSocket connection error:",
             error
         );
+
 
         scheduleReconnect();
 
@@ -1822,12 +1883,54 @@ function connectRealtime(){
 
 
 /* =========================================================
-   REALTIME MESSAGE
+   REALTIME NOTIFICATION
 ========================================================= */
 
 function handleRealtimeNotification(
-    notification
+    raw
 ){
+
+    if(
+        !raw ||
+        typeof raw !== "object"
+    ){
+
+        return;
+
+    }
+
+
+    /*
+       Backend may send:
+
+       {
+           type:"notification",
+           notification:{...}
+       }
+
+       OR direct notification object.
+    */
+
+
+    let notification;
+
+
+    if(
+        raw.type === "notification" &&
+        raw.notification &&
+        typeof raw.notification === "object"
+    ){
+
+        notification =
+            raw.notification;
+
+    }else{
+
+        notification =
+            raw;
+
+    }
+
 
     if(
         !notification ||
@@ -1840,14 +1943,78 @@ function handleRealtimeNotification(
 
 
     /*
-       Backend realtime message
-       ko notification list ke
-       format me add kar rahe hain.
+       Important realtime event types
+       ko ignore nahi karna.
+    */
+
+    const eventType =
+        String(
+            notification.type ||
+            notification.notification_type ||
+            raw.type ||
+            ""
+        ).toLowerCase();
+
+
+    /*
+       Cancelled request
+    */
+
+    if(
+        eventType === "follow_cancelled"
+    ){
+
+        const cancelledId =
+            notification.notification_id ||
+            notification.id;
+
+
+        if(cancelledId){
+
+            notificationList =
+                notificationList.filter(
+                    function(item){
+
+                        return String(
+                            item.id ||
+                            item.notification_id ||
+                            ""
+                        ) !==
+                        String(
+                            cancelledId
+                        );
+
+                    }
+                );
+
+        }
+
+
+        renderNotifications();
+
+
+        showToast(
+            notification.message ||
+            "Follow request cancelled."
+        );
+
+
+        return;
+
+    }
+
+
+    /*
+       Normal notification
     */
 
     const incoming = {
 
         ...notification,
+
+        type:
+            notification.type ||
+            notification.notification_type,
 
         is_read:false,
 
@@ -1858,15 +2025,14 @@ function handleRealtimeNotification(
     };
 
 
-    /*
-       Agar same notification_id
-       already hai to duplicate nahi.
-    */
-
     const notificationId =
-        notification.id ||
-        notification.notification_id;
+        incoming.id ||
+        incoming.notification_id;
 
+
+    /*
+       Duplicate protection
+    */
 
     if(notificationId){
 
@@ -1874,10 +2040,13 @@ function handleRealtimeNotification(
             notificationList.some(
                 function(item){
 
-                    return String(
+                    const itemId =
                         item.id ||
-                        item.notification_id ||
-                        ""
+                        item.notification_id;
+
+
+                    return String(
+                        itemId || ""
                     ) ===
                     String(
                         notificationId
@@ -1905,7 +2074,7 @@ function handleRealtimeNotification(
 
 
     showToast(
-        notification.title ||
+        incoming.title ||
         "New notification"
     );
 
@@ -1927,7 +2096,14 @@ function scheduleReconnect(){
         setTimeout(
             function(){
 
-                connectRealtime();
+                if(
+                    document.visibilityState !==
+                    "hidden"
+                ){
+
+                    connectRealtime();
+
+                }
 
             },
             3000
@@ -1949,42 +2125,111 @@ async function markAllRead(){
     }
 
 
-    /*
-       Current backend implementation
-       agar individual notification read
-       support karti hai to yahan call hoga.
-
-       Filhaal UI state ko update kar rahe hain.
-    */
-
-    notificationList =
-        notificationList.map(
+    const unread =
+        notificationList.filter(
             function(item){
 
-                return {
-
-                    ...item,
-
-                    is_read:true
-
-                };
+                return !item.is_read;
 
             }
         );
+
+
+    if(unread.length === 0){
+
+        showToast(
+            "No unread notifications."
+        );
+
+
+        return;
+
+    }
+
+
+    let successCount =
+        0;
+
+
+    for(
+        const notification
+        of unread
+    ){
+
+        const notificationId =
+            notification.id ||
+            notification.notification_id;
+
+
+        if(!notificationId){
+
+            continue;
+
+        }
+
+
+        try{
+
+            const response =
+                await fetch(
+                    "/api/notifications/read",
+                    {
+                        method:"POST",
+
+                        headers:{
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body:JSON.stringify({
+
+                            notification_id:
+                                notificationId,
+
+                            user_id:
+                                currentUser.user_id
+
+                        })
+
+                    }
+                );
+
+
+            if(response.ok){
+
+                notification.is_read =
+                    true;
+
+                successCount++;
+
+            }
+
+        }catch(error){
+
+            console.error(
+                "Mark read error:",
+                error
+            );
+
+        }
+
+    }
 
 
     renderNotifications();
 
 
     showToast(
-        "Notifications marked as read."
+        successCount > 0
+        ? "Notifications marked as read."
+        : "Unable to mark notifications as read."
     );
 
 }
 
 
 /* =========================================================
-   TIME FORMAT
+   TIME
 ========================================================= */
 
 function formatTime(value){
@@ -2090,7 +2335,7 @@ function formatTime(value){
 
 
 /* =========================================================
-   SECURITY
+   ESCAPE HTML
 ========================================================= */
 
 function escapeHtml(value){
@@ -2192,6 +2437,7 @@ window.addEventListener(
         clearTimeout(
             reconnectTimer
         );
+
 
         if(socket){
 
