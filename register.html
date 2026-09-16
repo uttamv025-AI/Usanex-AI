@@ -377,7 +377,9 @@ label{
 
 <div class="card">
 
-<!-- LOGO -->
+<!-- =====================================================
+     LOGO
+===================================================== -->
 
 <div class="logo">
 
@@ -399,7 +401,9 @@ label{
 </div>
 
 
-<!-- REGISTER -->
+<!-- =====================================================
+     REGISTER
+===================================================== -->
 
 <div id="registerBox" class="box active">
 
@@ -461,7 +465,9 @@ label{
                 class="eye"
                 id="eye1"
                 onclick="togglePassword('password','eye1')">
+
                 👁
+
             </span>
 
         </div>
@@ -499,7 +505,9 @@ label{
 </div>
 
 
-<!-- REGISTER OTP -->
+<!-- =====================================================
+     REGISTER OTP
+===================================================== -->
 
 <div id="registerOtpBox" class="box">
 
@@ -561,7 +569,9 @@ label{
 </div>
 
 
-<!-- USERNAME -->
+<!-- =====================================================
+     USERNAME
+===================================================== -->
 
 <div id="usernameBox" class="box">
 
@@ -614,7 +624,9 @@ label{
 </div>
 
 
-<!-- LOGIN -->
+<!-- =====================================================
+     LOGIN
+===================================================== -->
 
 <div id="loginBox" class="box">
 
@@ -636,7 +648,8 @@ label{
             id="loginIdentifier"
             class="input"
             type="text"
-            placeholder="Username or mobile">
+            placeholder="Username or mobile"
+            autocomplete="username">
 
     </div>
 
@@ -652,7 +665,8 @@ label{
                 id="loginPassword"
                 class="input"
                 type="password"
-                placeholder="Password">
+                placeholder="Password"
+                autocomplete="current-password">
 
             <span
                 class="eye"
@@ -716,7 +730,9 @@ label{
 </div>
 
 
-<!-- FORGOT PASSWORD -->
+<!-- =====================================================
+     FORGOT PASSWORD
+===================================================== -->
 
 <div id="forgotBox" class="box">
 
@@ -727,6 +743,7 @@ label{
     <div class="subtitle">
         Reset your Usanex password
     </div>
+
 
     <!-- STEP 1 -->
 
@@ -859,7 +876,9 @@ label{
 </div>
 
 
-<!-- OLD HOME BOX - NOT USED AFTER LOGIN -->
+<!-- =====================================================
+     OLD HOME BOX
+===================================================== -->
 
 <div id="homeBox" class="box">
 
@@ -1349,6 +1368,8 @@ async function copyUsername(){
 
 /* =========================================================
    LOGIN
+   IMPORTANT:
+   USER IS SAVED IN LOCAL STORAGE HERE
 ========================================================= */
 
 async function loginUser(){
@@ -1429,7 +1450,13 @@ async function loginUser(){
             await response.json();
 
 
-        if(!data.ok){
+        console.log(
+            "LOGIN RESPONSE:",
+            data
+        );
+
+
+        if(!response.ok || !data.ok){
 
             message.textContent =
                 data.message ||
@@ -1441,16 +1468,113 @@ async function loginUser(){
 
 
         /* =================================================
-           LOGIN SUCCESS
-           DIRECTLY OPEN REAL HOME PAGE
+           GET USER INFORMATION
         ================================================= */
 
-        window.location.href = "/home";
+        const loggedInUser = {
+
+            user_id:
+                data.user_id ||
+                (data.user && data.user.user_id) ||
+                "",
+
+            name:
+                data.name ||
+                (data.user && data.user.name) ||
+                "",
+
+            mobile:
+                data.mobile ||
+                (data.user && data.user.mobile) ||
+                "",
+
+            profile_photo:
+                data.profile_photo ||
+                (data.user && data.user.profile_photo) ||
+                null,
+
+            token:
+                data.token ||
+                ""
+
+        };
+
+
+        /* =================================================
+           USER ID CHECK
+        ================================================= */
+
+        if(!loggedInUser.user_id){
+
+            console.error(
+                "LOGIN RESPONSE DOES NOT CONTAIN USER ID:",
+                data
+            );
+
+            message.textContent =
+                "Login successful, but user information was not received.";
+
+            return;
+
+        }
+
+
+        /* =================================================
+           SAVE USER
+        ================================================= */
+
+        localStorage.setItem(
+
+            "user",
+
+            JSON.stringify(
+                loggedInUser
+            )
+
+        );
+
+
+        /* =================================================
+           SAVE TOKEN
+        ================================================= */
+
+        if(loggedInUser.token){
+
+            localStorage.setItem(
+
+                "token",
+
+                loggedInUser.token
+
+            );
+
+        }
+
+
+        /* =================================================
+           DEBUG
+        ================================================= */
+
+        console.log(
+            "USER SAVED TO LOCAL STORAGE:",
+            loggedInUser
+        );
+
+
+        /* =================================================
+           OPEN HOME
+        ================================================= */
+
+        window.location.href =
+            "/home";
 
 
     }catch(error){
 
-        console.error(error);
+        console.error(
+            "LOGIN ERROR:",
+            error
+        );
 
         message.textContent =
             "Server connection failed.";
@@ -1729,6 +1853,16 @@ async function resetPassword(){
         .getElementById("forgotMessage");
 
 
+    if(!identifier){
+
+        message.textContent =
+            "Please start password reset again.";
+
+        return;
+
+    }
+
+
     if(newPassword.length < 6){
 
         message.textContent =
@@ -1827,6 +1961,19 @@ async function resetPassword(){
 ========================================================= */
 
 function logout(){
+
+    /* Remove saved login */
+
+    localStorage.removeItem(
+        "user"
+    );
+
+    localStorage.removeItem(
+        "token"
+    );
+
+
+    /* Return to login */
 
     showLogin();
 
