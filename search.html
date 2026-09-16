@@ -1,428 +1,439 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="viewport"
+content="width=device-width,
+initial-scale=1.0,
+maximum-scale=1.0,
+user-scalable=no">
 
 <title>Search • Usanex</title>
 
 <style>
 
+/* =========================================================
+   RESET
+========================================================= */
+
 *{
+    box-sizing:border-box;
     margin:0;
     padding:0;
-    box-sizing:border-box;
-    font-family:Arial,Helvetica,sans-serif;
+    -webkit-tap-highlight-color:transparent;
+}
+
+html,
+body{
+    width:100%;
+    min-height:100%;
+    font-family:Arial,sans-serif;
+    background:#07090d;
+    color:#fff;
 }
 
 body{
     min-height:100vh;
-    background:#05070b;
-    color:#fff;
+    overflow-x:hidden;
 }
+
+
+/* =========================================================
+   APP
+========================================================= */
 
 .app{
-    width:100%;
-    max-width:600px;
     min-height:100vh;
-    margin:auto;
-    padding-bottom:90px;
+
+    padding-bottom:30px;
 
     background:
-    radial-gradient(
-        circle at top,
-        #141b2b 0%,
-        #080b12 38%,
-        #05070b 75%
-    );
+        radial-gradient(
+            circle at 50% -10%,
+            rgba(24,105,232,.18),
+            transparent 38%
+        ),
+        #07090d;
 }
 
 
-/* =====================================================
+/* =========================================================
    HEADER
-===================================================== */
+========================================================= */
 
 .header{
-    height:68px;
+
+    height:88px;
+
+    padding:0 20px;
 
     display:flex;
+
     align-items:center;
 
-    padding:0 17px;
+    gap:14px;
 
-    position:sticky;
-    top:0;
-    z-index:20;
-
-    background:rgba(5,7,11,.90);
+    background:rgba(7,9,13,.88);
 
     border-bottom:
-    1px solid rgba(255,255,255,.07);
+        1px solid
+        rgba(255,255,255,.07);
 
-    backdrop-filter:blur(20px);
+    position:sticky;
+
+    top:0;
+
+    z-index:30;
+
+    backdrop-filter:blur(18px);
 }
 
-.back-btn{
-    width:40px;
-    height:40px;
 
-    border-radius:13px;
+/* =========================================================
+   SAME HOME PAGE LOGO
+========================================================= */
 
-    border:
-    1px solid rgba(255,255,255,.09);
+.brand{
 
-    background:#101520;
+    display:flex;
+
+    align-items:center;
+
+    flex-shrink:0;
+}
+
+.logo-mark{
+
+    width:43px;
+    height:43px;
+
+    border-radius:14px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    position:relative;
+
+    background:
+        linear-gradient(
+            145deg,
+            #2d91ff,
+            #0756c9
+        );
+
+    box-shadow:
+        0 7px 22px
+        rgba(18,105,232,.38);
+}
+
+.logo-u{
+
+    font-size:25px;
+
+    font-weight:900;
 
     color:#fff;
 
-    font-size:27px;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    cursor:pointer;
-
-    transition:.2s;
-}
-
-.back-btn:active{
-    transform:scale(.90);
-}
-
-
-/* =====================================================
-   USANEX BRAND
-===================================================== */
-
-.brand{
-    display:flex;
-    align-items:center;
-    gap:9px;
-    margin-left:12px;
-}
-
-.brand-logo{
-    width:36px;
-    height:36px;
-
-    border-radius:11px;
-
-    background:
-    linear-gradient(
-        135deg,
-        #ffffff 0%,
-        #e5e8ee 42%,
-        #9ba5b7 100%
-    );
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    position:relative;
-    overflow:hidden;
-
-    box-shadow:
-    0 5px 22px rgba(255,255,255,.10);
-}
-
-.brand-logo::before{
-    content:"U";
-
-    color:#05070b;
-
-    font-size:21px;
-    font-weight:950;
-
-    position:relative;
     z-index:2;
-
-    letter-spacing:-2px;
 }
 
-.brand-logo::after{
+.logo-shine{
+
+    position:absolute;
+
+    width:8px;
+    height:8px;
+
+    border-radius:50%;
+
+    background:#fff;
+
+    right:7px;
+    top:6px;
+
+    opacity:.9;
+}
+
+.logo-mark:after{
+
     content:"";
 
     position:absolute;
 
-    width:20px;
-    height:55px;
+    width:21px;
+    height:4px;
 
-    left:-30px;
-    top:-10px;
-
-    transform:rotate(30deg);
+    border-radius:10px;
 
     background:
-    linear-gradient(
-        to right,
-        transparent,
-        rgba(255,255,255,.75),
-        transparent
-    );
+        rgba(255,255,255,.25);
 
-    animation:logoShine 4s infinite;
+    left:11px;
+    bottom:6px;
 }
 
-@keyframes logoShine{
+.logo-name{
 
-    0%{
-        left:-35px;
-    }
+    margin-left:9px;
 
-    30%,100%{
-        left:48px;
-    }
-
-}
-
-.brand-name{
     font-size:20px;
-    font-weight:850;
+
+    font-weight:800;
+
+    letter-spacing:-.5px;
 }
 
 
-/* =====================================================
-   SEARCH
-===================================================== */
-
-.search-area{
-    padding:25px 17px 10px;
-}
-
-.page-title{
-    font-size:28px;
-    font-weight:850;
-
-    margin-bottom:6px;
-}
-
-.page-subtitle{
-    color:#7f899b;
-
-    font-size:13px;
-
-    margin-bottom:18px;
-}
+/* =========================================================
+   SEARCH BOX
+========================================================= */
 
 .search-box{
-    height:55px;
+
+    flex:1;
+
+    height:45px;
+
+    min-width:0;
 
     display:flex;
+
     align-items:center;
 
     padding:0 15px;
 
-    border-radius:17px;
+    border-radius:24px;
 
-    background:
-    rgba(18,24,35,.90);
+    background:#151820;
 
     border:
-    1px solid rgba(255,255,255,.08);
-
-    transition:.2s;
-}
-
-.search-box:focus-within{
-    border-color:
-    rgba(255,255,255,.23);
+        1px solid
+        rgba(255,255,255,.08);
 
     box-shadow:
-    0 12px 40px rgba(0,0,0,.38);
+        inset 0 1px 0
+        rgba(255,255,255,.03);
 }
 
 .search-icon{
-    font-size:19px;
+
+    font-size:22px;
+
     color:#8993a5;
-    margin-right:10px;
+
+    margin-right:9px;
 }
 
-#searchInput{
+.search-box input{
+
     width:100%;
 
-    border:none;
-    outline:none;
+    border:0;
+
+    outline:0;
 
     background:transparent;
 
     color:#fff;
 
-    font-size:15px;
+    font-size:14px;
 }
 
-#searchInput::placeholder{
-    color:#697386;
+.search-box input::placeholder{
+
+    color:#747d8d;
 }
 
-.clear-btn{
-    width:30px;
-    height:30px;
 
-    border:none;
-    border-radius:50%;
+/* =========================================================
+   BACK BUTTON
+========================================================= */
 
-    background:#202735;
+.back-btn{
 
-    color:#b8c0cf;
+    width:40px;
+    height:40px;
 
-    font-size:17px;
+    flex-shrink:0;
+
+    border:0;
+
+    border-radius:13px;
+
+    background:#151820;
+
+    color:#fff;
+
+    border:
+        1px solid
+        rgba(255,255,255,.07);
+
+    font-size:22px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
 
     cursor:pointer;
+}
 
-    display:none;
+.back-btn:active{
+
+    transform:scale(.92);
 }
 
 
-/* =====================================================
-   RESULTS
-===================================================== */
+/* =========================================================
+   MAIN
+========================================================= */
 
-.results-area{
-    padding:10px 17px;
+.content{
+
+    padding:22px 20px 30px;
 }
 
-.result-heading{
-    color:#737d90;
 
-    font-size:11px;
+/* =========================================================
+   TITLE
+========================================================= */
+
+.page-title{
+
+    font-size:23px;
 
     font-weight:800;
 
-    letter-spacing:1.2px;
-
-    margin:8px 3px 12px;
-
-    display:none;
+    margin-bottom:6px;
 }
 
+.page-subtitle{
+
+    font-size:12px;
+
+    color:#7f8898;
+
+    margin-bottom:22px;
+}
+
+
+/* =========================================================
+   RESULTS
+========================================================= */
+
 .results{
+
     display:flex;
+
     flex-direction:column;
+
     gap:10px;
 }
 
 
-/* =====================================================
+/* =========================================================
    USER CARD
-===================================================== */
+========================================================= */
 
 .user-card{
-    min-height:78px;
+
+    min-height:76px;
 
     display:flex;
+
     align-items:center;
 
-    padding:12px;
+    padding:12px 13px;
 
     border-radius:19px;
 
     background:
-    linear-gradient(
-        135deg,
-        rgba(20,27,39,.97),
-        rgba(12,17,26,.97)
-    );
+        linear-gradient(
+            135deg,
+            rgba(25,29,38,.95),
+            rgba(14,17,23,.95)
+        );
 
     border:
-    1px solid rgba(255,255,255,.07);
+        1px solid
+        rgba(255,255,255,.065);
 
     box-shadow:
-    0 10px 30px rgba(0,0,0,.22);
-
-    animation:cardIn .25s ease;
-}
-
-@keyframes cardIn{
-
-    from{
-        opacity:0;
-        transform:translateY(8px);
-    }
-
-    to{
-        opacity:1;
-        transform:translateY(0);
-    }
-
+        0 8px 25px
+        rgba(0,0,0,.16);
 }
 
 
-/* =====================================================
-   AVATAR
-===================================================== */
+/* =========================================================
+   DP
+========================================================= */
 
-.avatar{
-    width:53px;
-    height:53px;
+.user-dp{
+
+    width:52px;
+    height:52px;
 
     flex-shrink:0;
 
     border-radius:50%;
 
-    overflow:hidden;
-
-    position:relative;
-
-    background:
-    linear-gradient(
-        135deg,
-        #293348,
-        #101520
-    );
-
-    border:
-    2px solid rgba(255,255,255,.11);
-
     display:flex;
+
     align-items:center;
     justify-content:center;
 
-    color:#e1e6ef;
+    overflow:hidden;
 
     font-size:20px;
+
     font-weight:800;
 
+    background:
+        linear-gradient(
+            145deg,
+            #2b8cff,
+            #0757c8
+        );
+
+    box-shadow:
+        0 5px 16px
+        rgba(15,105,235,.25);
+
     cursor:pointer;
-
-    transition:.2s;
 }
 
-.avatar:active{
-    transform:scale(.92);
-}
+.user-dp img{
 
-.avatar img{
     width:100%;
     height:100%;
 
     object-fit:cover;
-
-    display:none;
 }
 
 
-/* =====================================================
-   USER DETAILS
-===================================================== */
+/* =========================================================
+   USER INFO
+========================================================= */
 
-.user-details{
+.user-info{
+
     flex:1;
 
     min-width:0;
 
     margin-left:12px;
-
-    overflow:hidden;
 }
 
 .user-name{
-    color:#fff;
 
-    font-size:16px;
+    font-size:15px;
 
-    font-weight:750;
+    font-weight:700;
 
     white-space:nowrap;
 
@@ -434,15 +445,17 @@ body{
 }
 
 .user-name:active{
-    opacity:.65;
+
+    opacity:.7;
 }
 
 .user-id{
+
     margin-top:5px;
 
-    color:#7f899b;
+    font-size:11px;
 
-    font-size:12px;
+    color:#818a9a;
 
     white-space:nowrap;
 
@@ -452,165 +465,270 @@ body{
 }
 
 
-/* =====================================================
-   FOLLOW
-===================================================== */
+/* =========================================================
+   FOLLOW BUTTON
+========================================================= */
 
 .follow-btn{
-    height:38px;
 
-    min-width:78px;
+    min-width:84px;
 
-    padding:0 14px;
+    height:36px;
 
-    border:none;
+    padding:0 13px;
+
+    border:0;
 
     border-radius:12px;
 
-    background:#fff;
+    background:
+        linear-gradient(
+            145deg,
+            #3296ff,
+            #0758cb
+        );
 
-    color:#05070b;
+    color:#fff;
+
+    font-size:12px;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    box-shadow:
+        0 6px 16px
+        rgba(18,105,232,.25);
+}
+
+.follow-btn.sent{
+
+    background:#252b36;
+
+    color:#aeb7c5;
+
+    box-shadow:none;
+}
+
+.follow-btn:active{
+
+    transform:scale(.94);
+}
+
+
+/* =========================================================
+   YOUR ACCOUNT
+========================================================= */
+
+.own-account{
+
+    padding:17px;
+
+    border-radius:19px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(25,29,38,.98),
+            rgba(14,17,23,.98)
+        );
+
+    border:
+        1px solid
+        rgba(45,145,255,.18);
+
+    box-shadow:
+        0 10px 30px
+        rgba(0,0,0,.20);
+
+    margin-bottom:18px;
+}
+
+.own-title{
 
     font-size:13px;
 
     font-weight:800;
 
-    cursor:pointer;
-
-    flex-shrink:0;
-
-    transition:.2s;
-}
-
-.follow-btn:active{
-    transform:scale(.93);
-}
-
-.follow-btn.sent{
-    background:#202735;
-
-    color:#b7c0cf;
-
-    border:
-    1px solid rgba(255,255,255,.08);
-
-    cursor:pointer;
-}
-
-
-/* =====================================================
-   OWN ACCOUNT
-===================================================== */
-
-.own-card{
-    padding:16px;
-
-    border-radius:19px;
-
-    background:
-    linear-gradient(
-        135deg,
-        rgba(35,42,57,.96),
-        rgba(16,21,32,.96)
-    );
-
-    border:
-    1px solid rgba(255,255,255,.10);
-
-    box-shadow:
-    0 10px 30px rgba(0,0,0,.22);
-
-    animation:cardIn .25s ease;
-}
-
-.own-top{
-    display:flex;
-    align-items:center;
-    gap:12px;
-}
-
-.own-icon{
-    width:46px;
-    height:46px;
-
-    flex-shrink:0;
-
-    border-radius:14px;
-
-    background:#fff;
-
-    color:#05070b;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    font-size:19px;
-    font-weight:900;
-}
-
-.own-title{
-    font-size:15px;
-    font-weight:800;
+    color:#fff;
 
     margin-bottom:5px;
 }
 
 .own-text{
-    color:#8993a5;
 
-    font-size:12px;
+    font-size:11px;
+
+    color:#7f8999;
+
+    margin-bottom:12px;
 }
 
 .own-id{
-    margin-top:13px;
 
-    padding:11px 13px;
+    display:inline-flex;
 
-    border-radius:11px;
+    padding:8px 11px;
 
-    background:
-    rgba(255,255,255,.05);
+    border-radius:10px;
 
-    color:#dbe1eb;
+    background:#11151d;
 
-    font-size:13px;
+    border:
+        1px solid
+        rgba(255,255,255,.07);
+
+    font-size:12px;
+
+    color:#8dbdff;
 
     font-weight:700;
 }
 
 
-/* =====================================================
-   STATUS BOX
-===================================================== */
+/* =========================================================
+   MESSAGE
+========================================================= */
 
-.status-box{
-    position:fixed;
+.message{
 
-    left:50%;
-    bottom:88px;
+    display:none;
 
-    transform:
-    translate(-50%,15px);
+    padding:13px 15px;
 
-    width:calc(100% - 34px);
-
-    max-width:430px;
-
-    padding:12px 16px;
+    margin-bottom:14px;
 
     border-radius:14px;
 
-    background:
-    rgba(24,29,40,.97);
+    background:#151a23;
 
     border:
-    1px solid rgba(255,255,255,.10);
+        1px solid
+        rgba(255,255,255,.07);
+
+    color:#aeb7c5;
+
+    font-size:12px;
+
+    line-height:1.5;
+
+    text-align:center;
+}
+
+
+/* =========================================================
+   EMPTY
+========================================================= */
+
+.empty{
+
+    min-height:45vh;
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    justify-content:center;
+
+    text-align:center;
+
+    padding:30px 25px;
+}
+
+.empty-circle{
+
+    width:92px;
+    height:92px;
+
+    border-radius:50%;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(35,133,245,.20),
+            rgba(35,133,245,.04)
+        );
+
+    border:
+        1px solid
+        rgba(50,140,255,.16);
 
     box-shadow:
-    0 15px 45px rgba(0,0,0,.45);
+        0 0 45px
+        rgba(25,115,245,.10);
 
-    color:#e7ebf2;
+    margin-bottom:20px;
+}
+
+.empty-icon{
+
+    font-size:38px;
+}
+
+.empty-title{
+
+    font-size:19px;
+
+    font-weight:800;
+
+    margin-bottom:8px;
+}
+
+.empty-text{
+
+    max-width:290px;
+
+    color:#7e8797;
+
+    font-size:12px;
+
+    line-height:1.6;
+}
+
+
+/* =========================================================
+   STATUS POPUP
+========================================================= */
+
+.status-popup{
+
+    position:fixed;
+
+    left:50%;
+
+    bottom:32px;
+
+    transform:
+        translateX(-50%)
+        translateY(20px);
+
+    width:calc(100% - 40px);
+
+    max-width:360px;
+
+    padding:13px 17px;
+
+    border-radius:15px;
+
+    background:
+        rgba(24,28,37,.97);
+
+    border:
+        1px solid
+        rgba(255,255,255,.09);
+
+    box-shadow:
+        0 15px 40px
+        rgba(0,0,0,.45);
+
+    color:#fff;
 
     font-size:13px;
 
@@ -625,31 +743,33 @@ body{
     z-index:100;
 }
 
-.status-box.show{
+.status-popup.show{
+
     opacity:1;
 
     transform:
-    translate(-50%,0);
+        translateX(-50%)
+        translateY(0);
 }
 
 
-/* =====================================================
+/* =========================================================
    DP MODAL
-===================================================== */
+========================================================= */
 
 .dp-modal{
+
     position:fixed;
 
     inset:0;
 
     background:
-    rgba(0,0,0,.88);
-
-    backdrop-filter:blur(12px);
+        rgba(0,0,0,.86);
 
     display:none;
 
     align-items:center;
+
     justify-content:center;
 
     z-index:200;
@@ -658,787 +778,523 @@ body{
 }
 
 .dp-modal.show{
+
     display:flex;
 }
 
-.dp-container{
-    position:relative;
+.dp-modal img{
 
-    width:min(82vw,390px);
-    height:min(82vw,390px);
+    max-width:90vw;
 
-    border-radius:50%;
+    max-height:75vh;
 
-    overflow:hidden;
+    border-radius:20px;
 
-    background:#101520;
-
-    border:
-    2px solid rgba(255,255,255,.14);
+    object-fit:contain;
 
     box-shadow:
-    0 20px 70px rgba(0,0,0,.7);
-
-    animation:dpOpen .22s ease;
-}
-
-@keyframes dpOpen{
-
-    from{
-        opacity:0;
-        transform:scale(.85);
-    }
-
-    to{
-        opacity:1;
-        transform:scale(1);
-    }
-
-}
-
-.dp-container img{
-    width:100%;
-    height:100%;
-
-    object-fit:cover;
-}
-
-.dp-placeholder{
-    width:100%;
-    height:100%;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    color:#dfe5ef;
-
-    font-size:100px;
-    font-weight:800;
+        0 20px 60px
+        rgba(0,0,0,.65);
 }
 
 .dp-close{
+
     position:absolute;
 
-    top:22px;
-    right:22px;
+    top:25px;
 
-    width:40px;
-    height:40px;
+    right:20px;
+
+    width:42px;
+    height:42px;
+
+    border:0;
 
     border-radius:50%;
 
-    border:
-    1px solid rgba(255,255,255,.12);
-
-    background:
-    rgba(20,25,35,.90);
+    background:#191e27;
 
     color:#fff;
 
     font-size:22px;
 
     cursor:pointer;
-
-    z-index:210;
 }
 
 
-/* =====================================================
-   EMPTY
-===================================================== */
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
 
-.empty{
-    display:none;
+@media(max-width:390px){
 
-    text-align:center;
+    .header{
 
-    padding:65px 25px 40px;
+        padding:0 10px;
 
-    color:#737d90;
-}
-
-.empty-icon{
-    width:66px;
-    height:66px;
-
-    margin:
-    auto auto 17px;
-
-    border-radius:20px;
-
-    background:#101520;
-
-    border:
-    1px solid rgba(255,255,255,.07);
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    font-size:27px;
-}
-
-.empty-title{
-    color:#c7cedb;
-
-    font-size:16px;
-
-    font-weight:700;
-
-    margin-bottom:7px;
-}
-
-.empty-text{
-    font-size:13px;
-
-    line-height:1.6;
-}
-
-
-/* =====================================================
-   LOADING
-===================================================== */
-
-.loading{
-    display:none;
-
-    text-align:center;
-
-    padding:35px 20px;
-
-    color:#7f899b;
-
-    font-size:13px;
-}
-
-.spinner{
-    width:25px;
-    height:25px;
-
-    margin:
-    0 auto 12px;
-
-    border-radius:50%;
-
-    border:
-    2px solid #303848;
-
-    border-top-color:#fff;
-
-    animation:
-    spin .8s linear infinite;
-}
-
-@keyframes spin{
-
-    to{
-        transform:rotate(360deg);
+        gap:7px;
     }
 
-}
+    .logo-mark{
 
+        width:38px;
+        height:38px;
 
-/* =====================================================
-   ERROR
-===================================================== */
+        border-radius:12px;
+    }
 
-.error{
-    display:none;
+    .logo-u{
 
-    margin-top:15px;
+        font-size:22px;
+    }
 
-    padding:13px 15px;
+    .logo-name{
 
-    border-radius:13px;
+        margin-left:6px;
 
-    background:
-    rgba(120,30,30,.16);
+        font-size:16px;
+    }
 
-    border:
-    1px solid rgba(255,80,80,.12);
+    .search-box{
 
-    color:#ff9b9b;
+        height:40px;
 
-    font-size:13px;
+        padding:0 11px;
+    }
 
-    text-align:center;
-}
+    .search-icon{
 
+        font-size:19px;
 
-/* =====================================================
-   BOTTOM NAV
-===================================================== */
+        margin-right:5px;
+    }
 
-.bottom-nav{
-    position:fixed;
+    .back-btn{
 
-    bottom:0;
-    left:50%;
+        width:35px;
+        height:35px;
 
-    transform:
-    translateX(-50%);
+        font-size:19px;
+    }
 
-    width:100%;
-    max-width:600px;
+    .content{
 
-    height:72px;
+        padding-left:15px;
 
-    background:
-    rgba(7,9,14,.95);
-
-    backdrop-filter:blur(20px);
-
-    border-top:
-    1px solid rgba(255,255,255,.08);
-
-    display:flex;
-
-    align-items:center;
-    justify-content:space-around;
-
-    z-index:30;
-}
-
-.nav-item{
-    color:#687286;
-
-    text-align:center;
-
-    font-size:11px;
-
-    cursor:pointer;
-
-    min-width:55px;
-}
-
-.nav-icon{
-    font-size:21px;
-
-    margin-bottom:4px;
-}
-
-.nav-item.active{
-    color:#fff;
-}
-
-.plus{
-    width:48px;
-    height:48px;
-
-    margin:auto;
-
-    border-radius:15px;
-
-    background:#fff;
-
-    color:#05070b;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    font-size:28px;
-}
-
-
-/* =====================================================
-   MOBILE
-===================================================== */
-
-@media(max-width:420px){
-
-    .page-title{
-        font-size:25px;
+        padding-right:15px;
     }
 
     .user-card{
+
         padding:10px;
     }
 
-    .avatar{
-        width:50px;
-        height:50px;
-    }
+    .user-dp{
 
-    .user-name{
-        font-size:15px;
+        width:47px;
+        height:47px;
     }
 
     .follow-btn{
-        min-width:72px;
-        padding:0 11px;
-        font-size:12px;
+
+        min-width:75px;
+
+        padding:0 9px;
     }
 
-    .brand-name{
-        font-size:19px;
+}
+
+
+/* =========================================================
+   DESKTOP
+========================================================= */
+
+@media(min-width:700px){
+
+    .content{
+
+        max-width:700px;
+
+        margin:auto;
     }
 
 }
 
 </style>
+
 </head>
 
 
 <body>
 
+
 <div class="app">
 
 
-<!-- ===================================================
+<!-- =====================================================
      HEADER
-=================================================== -->
+===================================================== -->
 
 <header class="header">
 
-    <button
-        class="back-btn"
-        onclick="goHome()"
-    >
-        ‹
-    </button>
 
+    <!-- SAME HOME LOGO -->
 
     <div class="brand">
 
-        <div class="brand-logo"></div>
+        <div class="logo-mark">
 
-        <div class="brand-name">
+            <span class="logo-u">
+                U
+            </span>
+
+            <span class="logo-shine">
+            </span>
+
+        </div>
+
+        <div class="logo-name">
             Usanex
         </div>
 
     </div>
 
-</header>
 
-
-<!-- ===================================================
-     SEARCH AREA
-=================================================== -->
-
-<section class="search-area">
-
-    <h1 class="page-title">
-        Search
-    </h1>
-
-    <p class="page-subtitle">
-        Find people using their User ID or phone number
-    </p>
-
+    <!-- SEARCH -->
 
     <div class="search-box">
 
         <span class="search-icon">
-            🔍
+            ⌕
         </span>
-
 
         <input
             id="searchInput"
             type="text"
-            autocomplete="off"
-            placeholder="User ID or phone number"
-        >
-
-
-        <button
-            id="clearBtn"
-            class="clear-btn"
-            onclick="clearSearch()"
-        >
-            ×
-        </button>
+            placeholder="Search User ID or phone"
+            autocomplete="off">
 
     </div>
 
 
-    <div
-        id="errorBox"
-        class="error"
-    ></div>
+    <!-- BACK -->
 
-</section>
+    <button
+        class="back-btn"
+        onclick="goHome()">
+
+        ‹
+
+    </button>
 
 
-<!-- ===================================================
-     RESULTS
-=================================================== -->
+</header>
 
-<section class="results-area">
 
-    <div
-        id="resultHeading"
-        class="result-heading"
-    >
-        PEOPLE
+<!-- =====================================================
+     MAIN
+===================================================== -->
+
+<main class="content">
+
+
+    <div class="page-title">
+        Search
+    </div>
+
+    <div class="page-subtitle">
+        Find people using User ID or phone number.
     </div>
 
 
+    <!-- YOUR ACCOUNT -->
+
     <div
-        id="loading"
-        class="loading"
-    >
+        id="ownAccount"
+        class="own-account"
+        style="display:none;">
 
-        <div class="spinner"></div>
+        <div class="own-title">
+            Your Account
+        </div>
 
-        Searching...
+        <div class="own-text">
+            This is your User ID.
+        </div>
+
+        <div
+            id="ownUserId"
+            class="own-id">
+        </div>
 
     </div>
 
+
+    <!-- MESSAGE -->
+
+    <div
+        id="message"
+        class="message">
+    </div>
+
+
+    <!-- RESULTS -->
 
     <div
         id="results"
-        class="results"
-    ></div>
+        class="results">
+    </div>
 
+
+    <!-- EMPTY -->
 
     <div
-        id="empty"
-        class="empty"
-    >
+        id="emptyState"
+        class="empty">
 
-        <div class="empty-icon">
-            🔍
+        <div class="empty-circle">
+
+            <div class="empty-icon">
+                🔎
+            </div>
+
         </div>
 
         <div class="empty-title">
-            No users found
+            Search for people
         </div>
 
         <div class="empty-text">
-            Try searching with a different
-            User ID or phone number.
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- ===================================================
-     BOTTOM NAV
-=================================================== -->
-
-<nav class="bottom-nav">
-
-    <div
-        class="nav-item active"
-        onclick="goHome()"
-    >
-
-        <div class="nav-icon">
-            ⌂
-        </div>
-
-        Home
-
-    </div>
-
-
-    <div class="nav-item">
-
-        <div class="nav-icon">
-            ▶
-        </div>
-
-        Reels
-
-    </div>
-
-
-    <div class="nav-item">
-
-        <div class="plus">
-            +
+            Enter a User ID or phone number
+            to find a person on Usanex.
         </div>
 
     </div>
 
 
-    <div class="nav-item">
-
-        <div class="nav-icon">
-            ▣
-        </div>
-
-        Coll
-
-    </div>
+</main>
 
 
-    <div class="nav-item">
+<!-- =====================================================
+     STATUS POPUP
+===================================================== -->
 
-        <div class="nav-icon">
-            ●
-        </div>
-
-        Profile
-
-    </div>
-
-</nav>
-
+<div
+    id="statusPopup"
+    class="status-popup">
 </div>
 
 
-<!-- ===================================================
-     STATUS BOX
-=================================================== -->
-
-<div
-    id="statusBox"
-    class="status-box"
-></div>
-
-
-<!-- ===================================================
+<!-- =====================================================
      DP MODAL
-=================================================== -->
+===================================================== -->
 
 <div
     id="dpModal"
     class="dp-modal"
-    onclick="closeDp(event)"
->
+    onclick="closeDp(event)">
 
     <button
         class="dp-close"
-        onclick="closeDp()"
-    >
+        onclick="closeDp()">
+
         ×
+
     </button>
 
+    <img
+        id="largeDp"
+        src=""
+        alt="Profile photo">
 
-    <div
-        id="dpContainer"
-        class="dp-container"
-    ></div>
+</div>
+
 
 </div>
 
 
 <script>
 
-/* =====================================================
-   API
-===================================================== */
-
-const API =
-    "https://usanex-ai.onrender.com";
-
-
-/* =====================================================
+/* =========================================================
    ELEMENTS
-===================================================== */
+========================================================= */
 
 const searchInput =
-    document.getElementById("searchInput");
+    document.getElementById(
+        "searchInput"
+    );
 
 const results =
-    document.getElementById("results");
+    document.getElementById(
+        "results"
+    );
 
-const empty =
-    document.getElementById("empty");
+const emptyState =
+    document.getElementById(
+        "emptyState"
+    );
 
-const loading =
-    document.getElementById("loading");
+const ownAccount =
+    document.getElementById(
+        "ownAccount"
+    );
 
-const errorBox =
-    document.getElementById("errorBox");
+const ownUserId =
+    document.getElementById(
+        "ownUserId"
+    );
 
-const resultHeading =
-    document.getElementById("resultHeading");
+const message =
+    document.getElementById(
+        "message"
+    );
 
-const clearBtn =
-    document.getElementById("clearBtn");
-
-const statusBox =
-    document.getElementById("statusBox");
-
-const dpModal =
-    document.getElementById("dpModal");
-
-const dpContainer =
-    document.getElementById("dpContainer");
-
-
-let searchTimer = null;
-let statusTimer = null;
+const statusPopup =
+    document.getElementById(
+        "statusPopup"
+    );
 
 
-/* =====================================================
+/* =========================================================
    CURRENT USER
-===================================================== */
+========================================================= */
 
-function getCurrentUser(){
-
-    const keys = [
-        "user",
-        "currentUser",
-        "usanex_user",
-        "loggedInUser"
-    ];
+let currentUser =
+    null;
 
 
-    for(
-        const key of keys
-    ){
+/*
+   Login ke baad future me yahan
+   real logged-in user ka data aayega.
 
-        try{
+   Abhi localStorage se try kar rahe hain.
+*/
 
-            const raw =
-                localStorage.getItem(key);
+try{
 
-            if(!raw){
-                continue;
-            }
+    const savedUser =
+        localStorage.getItem(
+            "user"
+        );
 
+    if(savedUser){
 
-            const data =
-                JSON.parse(raw);
-
-
-            if(
-                data &&
-                typeof data === "object"
-            ){
-
-                return data;
-
-            }
-
-        }
-        catch(error){
-
-            console.log(error);
-
-        }
+        currentUser =
+            JSON.parse(
+                savedUser
+            );
 
     }
 
+}catch(error){
 
-    return null;
+    currentUser = null;
+
 }
 
 
-/* =====================================================
-   OWN USER
-===================================================== */
+/* =========================================================
+   SHOW OWN ACCOUNT
+========================================================= */
 
-function isOwnUser(user){
+function checkOwnAccount(users){
 
-    const me =
-        getCurrentUser();
+    if(
+        !currentUser ||
+        !currentUser.user_id
+    ){
 
+        ownAccount.style.display =
+            "none";
 
-    if(!me){
-        return false;
+        return;
+
     }
-
 
     const myId =
         String(
-            me.user_id ||
-            me.id ||
-            ""
-        )
-        .trim()
-        .toLowerCase();
+            currentUser.user_id
+        ).toLowerCase();
 
 
     const myMobile =
-        String(
-            me.mobile ||
-            me.phone ||
-            ""
-        )
-        .trim();
+        currentUser.mobile
+            ? String(
+                currentUser.mobile
+              )
+            : "";
 
 
-    const targetId =
-        String(
-            user.user_id ||
-            ""
-        )
-        .trim()
-        .toLowerCase();
+    const isOwn =
+        users.some(
+            user => {
+
+                const uid =
+                    String(
+                        user.user_id || ""
+                    )
+                    .toLowerCase();
+
+                const mobile =
+                    String(
+                        user.mobile || ""
+                    );
+
+                return (
+                    uid === myId ||
+                    (
+                        myMobile &&
+                        mobile === myMobile
+                    )
+                );
+
+            }
+        );
 
 
-    const targetMobile =
-        String(
-            user.mobile ||
-            ""
-        )
-        .trim();
+    if(isOwn){
 
+        ownAccount.style.display =
+            "block";
 
-    if(
-        myId &&
-        targetId &&
-        myId === targetId
-    ){
+        ownUserId.textContent =
+            currentUser.user_id;
 
-        return true;
+    }else{
+
+        ownAccount.style.display =
+            "none";
 
     }
 
-
-    if(
-        myMobile &&
-        targetMobile &&
-        myMobile === targetMobile
-    ){
-
-        return true;
-
-    }
-
-
-    return false;
 }
 
 
-/* =====================================================
-   SEARCH INPUT
-===================================================== */
+/* =========================================================
+   SEARCH
+========================================================= */
+
+let searchTimer = null;
+
 
 searchInput.addEventListener(
     "input",
     function(){
 
-        const value =
-            this.value.trim();
-
-
         clearTimeout(
             searchTimer
         );
 
+        const q =
+            this.value.trim();
 
-        clearBtn.style.display =
-            value ? "block" : "none";
 
+        if(!q){
 
-        if(!value){
-
-            results.innerHTML =
-                "";
-
-            empty.style.display =
-                "none";
-
-            loading.style.display =
-                "none";
-
-            resultHeading.style.display =
-                "none";
-
-            errorBox.style.display =
-                "none";
+            clearResults();
 
             return;
+
         }
 
 
@@ -1446,52 +1302,40 @@ searchInput.addEventListener(
             setTimeout(
                 function(){
 
-                    searchUsers(value);
+                    searchUsers(q);
 
                 },
-                400
+                300
             );
 
     }
 );
 
 
-/* =====================================================
-   SEARCH USERS
-===================================================== */
+/* =========================================================
+   SEARCH API
+========================================================= */
 
-async function searchUsers(query){
+async function searchUsers(q){
 
-    loading.style.display =
-        "block";
-
-    empty.style.display =
-        "none";
-
-    errorBox.style.display =
-        "none";
-
-    results.innerHTML =
-        "";
-
-    resultHeading.style.display =
-        "none";
+    showMessage(
+        "Searching..."
+    );
 
 
     try{
 
         const response =
             await fetch(
-                API +
                 "/api/search?q=" +
-                encodeURIComponent(query)
+                encodeURIComponent(q)
             );
 
 
         if(!response.ok){
 
             throw new Error(
-                "Server error"
+                "Search failed"
             );
 
         }
@@ -1501,481 +1345,369 @@ async function searchUsers(query){
             await response.json();
 
 
-        loading.style.display =
-            "none";
+        const users =
+            data.users || [];
 
 
-        if(
-            !data.ok ||
-            !data.users ||
-            data.users.length === 0
-        ){
-
-            empty.style.display =
-                "block";
-
-            return;
-        }
+        renderUsers(users);
 
 
-        resultHeading.style.display =
-            "block";
+    }catch(error){
 
-
-        data.users.forEach(
-            function(user){
-
-                createUserCard(
-                    user
-                );
-
-            }
+        console.error(
+            error
         );
 
-    }
-    catch(error){
+        results.innerHTML = "";
 
-        console.error(error);
+        emptyState.style.display =
+            "flex";
 
-        loading.style.display =
+        ownAccount.style.display =
             "none";
 
-        errorBox.textContent =
-            "Server connection failed. Please try again.";
-
-        errorBox.style.display =
-            "block";
+        showMessage(
+            "Unable to search right now."
+        );
 
     }
 
 }
 
 
-/* =====================================================
-   CREATE USER CARD
-===================================================== */
+/* =========================================================
+   RENDER USERS
+========================================================= */
 
-function createUserCard(user){
+function renderUsers(users){
 
-    /*
-       Agar searched user khud hai
-       to professional own-account card
-       show hoga.
-    */
+    results.innerHTML = "";
+
+    ownAccount.style.display =
+        "none";
+
+    message.style.display =
+        "none";
+
 
     if(
-        isOwnUser(user)
+        !users ||
+        users.length === 0
     ){
 
-        createOwnCard(
-            user
-        );
+        emptyState.style.display =
+            "flex";
+
+        emptyState.querySelector(
+            ".empty-title"
+        ).textContent =
+            "No people found";
+
+        emptyState.querySelector(
+            ".empty-text"
+        ).textContent =
+            "Try another User ID or phone number.";
 
         return;
+
     }
 
 
-    const card =
-        document.createElement("div");
-
-    card.className =
-        "user-card";
+    emptyState.style.display =
+        "none";
 
 
-    /* ---------- AVATAR ---------- */
-
-    const avatar =
-        document.createElement("div");
-
-    avatar.className =
-        "avatar";
+    checkOwnAccount(users);
 
 
-    const initial =
-        document.createElement("span");
+    users.forEach(
+        function(user){
 
-    initial.textContent =
-        (
-            user.name ||
-            "U"
-        )
-        .charAt(0)
-        .toUpperCase();
-
-
-    avatar.appendChild(
-        initial
-    );
-
-
-    if(user.profile_photo){
-
-        const img =
-            document.createElement("img");
-
-        img.src =
-            user.profile_photo;
-
-        img.alt =
-            user.name ||
-            "Profile photo";
-
-
-        img.onload =
-            function(){
-
-                initial.style.display =
-                    "none";
-
-                img.style.display =
-                    "block";
-
-            };
-
-
-        img.onerror =
-            function(){
-
-                img.remove();
-
-            };
-
-
-        avatar.appendChild(
-            img
-        );
-
-
-        avatar.onclick =
-            function(){
-
-                openDp(
-                    user.profile_photo,
-                    user.name
+            const card =
+                document.createElement(
+                    "div"
                 );
 
-            };
+            card.className =
+                "user-card";
 
-    }
-    else{
 
-        avatar.onclick =
-            function(){
+            const firstLetter =
+                (
+                    user.name ||
+                    "U"
+                )
+                .charAt(0)
+                .toUpperCase();
 
-                openDpPlaceholder(
-                    user.name
+
+            let dpHTML = "";
+
+
+            if(
+                user.profile_photo
+            ){
+
+                dpHTML = `
+
+                    <img
+                        src="${escapeHtml(
+                            user.profile_photo
+                        )}"
+                        alt="Profile photo"
+                        onerror="
+                            this.style.display='none';
+                            this.parentElement.textContent='${firstLetter}';
+                        "
+                    >
+
+                `;
+
+            }else{
+
+                dpHTML =
+                    escapeHtml(
+                        firstLetter
+                    );
+
+            }
+
+
+            card.innerHTML = `
+
+                <div
+                    class="user-dp"
+                    data-dp="${escapeHtml(
+                        user.profile_photo || ""
+                    )}">
+
+                    ${dpHTML}
+
+                </div>
+
+
+                <div class="user-info">
+
+                    <div
+                        class="user-name">
+
+                        ${escapeHtml(
+                            user.name ||
+                            "User"
+                        )}
+
+                    </div>
+
+                    <div
+                        class="user-id">
+
+                        ${escapeHtml(
+                            user.user_id ||
+                            ""
+                        )}
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    class="follow-btn">
+
+                    Follow
+
+                </button>
+
+            `;
+
+
+            /* =================================================
+               DP CLICK
+            ================================================= */
+
+            const dp =
+                card.querySelector(
+                    ".user-dp"
                 );
 
-            };
 
-    }
+            dp.addEventListener(
+                "click",
+                function(event){
 
+                    event.stopPropagation();
 
-    /* ---------- DETAILS ---------- */
-
-    const details =
-        document.createElement("div");
-
-    details.className =
-        "user-details";
+                    const photo =
+                        this.dataset.dp;
 
 
-    const name =
-        document.createElement("div");
+                    if(photo){
 
-    name.className =
-        "user-name";
+                        openDp(photo);
 
-    name.textContent =
-        user.name ||
-        "Usanex User";
+                    }
 
-
-    /*
-       Name click:
-       sirf status box.
-       Profile page open nahi hoga.
-    */
-
-    name.onclick =
-        function(){
-
-            showUserStatus(
-                user
+                }
             );
 
-        };
+
+            /* =================================================
+               NAME CLICK
+            ================================================= */
+
+            const name =
+                card.querySelector(
+                    ".user-name"
+                );
 
 
-    const userId =
-        document.createElement("div");
+            name.addEventListener(
+                "click",
+                function(event){
 
-    userId.className =
-        "user-id";
+                    event.stopPropagation();
 
-    userId.textContent =
-        "ID: " +
-        (
-            user.user_id ||
-            "---"
-        );
+                    showUserStatus(
+                        user
+                    );
 
-
-    details.appendChild(
-        name
-    );
-
-    details.appendChild(
-        userId
-    );
-
-
-    /* ---------- FOLLOW ---------- */
-
-    const followBtn =
-        document.createElement("button");
-
-    followBtn.className =
-        "follow-btn";
-
-    followBtn.textContent =
-        "Follow";
-
-
-    followBtn.onclick =
-        function(){
-
-            toggleFollow(
-                user,
-                followBtn
+                }
             );
 
-        };
+
+            /* =================================================
+               FOLLOW
+            ================================================= */
+
+            const followBtn =
+                card.querySelector(
+                    ".follow-btn"
+                );
 
 
-    card.appendChild(
-        avatar
-    );
+            followBtn.addEventListener(
+                "click",
+                function(event){
 
-    card.appendChild(
-        details
-    );
+                    event.stopPropagation();
 
-    card.appendChild(
-        followBtn
-    );
+                    toggleFollow(
+                        user,
+                        followBtn
+                    );
+
+                }
+            );
 
 
-    results.appendChild(
-        card
+            results.appendChild(
+                card
+            );
+
+        }
     );
 
 }
 
 
-/* =====================================================
-   OWN ACCOUNT CARD
-===================================================== */
-
-function createOwnCard(user){
-
-    const card =
-        document.createElement("div");
-
-    card.className =
-        "own-card";
-
-
-    const top =
-        document.createElement("div");
-
-    top.className =
-        "own-top";
-
-
-    const icon =
-        document.createElement("div");
-
-    icon.className =
-        "own-icon";
-
-    icon.textContent =
-        "✓";
-
-
-    const content =
-        document.createElement("div");
-
-
-    const title =
-        document.createElement("div");
-
-    title.className =
-        "own-title";
-
-    title.textContent =
-        "Your Account";
-
-
-    const text =
-        document.createElement("div");
-
-    text.className =
-        "own-text";
-
-    text.textContent =
-        "This is your User ID.";
-
-
-    content.appendChild(
-        title
-    );
-
-    content.appendChild(
-        text
-    );
-
-
-    top.appendChild(
-        icon
-    );
-
-    top.appendChild(
-        content
-    );
-
-
-    const ownId =
-        document.createElement("div");
-
-    ownId.className =
-        "own-id";
-
-    ownId.textContent =
-        "User ID: " +
-        (
-            user.user_id ||
-            "---"
-        );
-
-
-    card.appendChild(
-        top
-    );
-
-    card.appendChild(
-        ownId
-    );
-
-
-    results.appendChild(
-        card
-    );
-
-}
-
-
-/* =====================================================
-   FOLLOW TOGGLE
-===================================================== */
+/* =========================================================
+   FOLLOW UI
+========================================================= */
 
 function toggleFollow(
     user,
     button
 ){
 
-    const requestSent =
+    const isSent =
         button.classList.contains(
             "sent"
         );
 
 
-    /*
-       Request Sent -> Follow
-       Cancel request
-    */
-
-    if(requestSent){
-
-        button.textContent =
-            "Follow";
+    if(isSent){
 
         button.classList.remove(
             "sent"
         );
 
-        showStatus(
+        button.textContent =
+            "Follow";
+
+
+        showPopup(
             "Follow request cancelled"
         );
 
+
         return;
+
     }
 
-
-    /*
-       Follow -> Request Sent
-    */
-
-    button.textContent =
-        "Request Sent";
 
     button.classList.add(
         "sent"
     );
 
+    button.textContent =
+        "Request Sent";
 
-    showStatus(
+
+    showPopup(
         "Follow request sent to " +
-        (
-            user.name ||
-            "this user"
-        )
+        (user.name || "User")
     );
+
+
+    /*
+       IMPORTANT:
+
+       Abhi ye UI action hai.
+
+       Real database Follow system
+       next backend step me connect hoga:
+
+       POST /api/follow/request
+    */
 
 }
 
 
-/* =====================================================
-   NAME STATUS
-===================================================== */
+/* =========================================================
+   USER STATUS
+========================================================= */
 
 function showUserStatus(user){
 
-    /*
-       Backend connection system ke baad
-       yahan real status automatically
-       load hoga.
-
-       Possible statuses:
-       Not Accepted
-       Rejected
-       Accepted
-    */
-
     let status =
+        user.connection_status ||
         "Not Accepted";
 
 
-    /*
-       Agar future backend status bheje:
-       user.connection_status
-    */
+    status =
+        String(status)
+            .trim();
+
+
+    const allowed = [
+        "Not Accepted",
+        "Rejected",
+        "Accepted"
+    ];
+
 
     if(
-        user.connection_status
+        !allowed.includes(status)
     ){
 
         status =
-            user.connection_status;
+            "Not Accepted";
 
     }
 
 
-    showStatus(
-        (
-            user.name ||
-            "User"
-        ) +
+    showPopup(
+        (user.name || "User") +
         " • " +
         status
     );
@@ -1983,135 +1715,139 @@ function showUserStatus(user){
 }
 
 
-/* =====================================================
-   SHOW STATUS
-===================================================== */
+/* =========================================================
+   POPUP
+========================================================= */
 
-function showStatus(message){
+let popupTimer = null;
+
+
+function showPopup(text){
 
     clearTimeout(
-        statusTimer
+        popupTimer
     );
 
 
-    statusBox.textContent =
-        message;
+    statusPopup.textContent =
+        text;
 
 
-    statusBox.classList.add(
+    statusPopup.classList.add(
         "show"
     );
 
 
-    statusTimer =
+    popupTimer =
         setTimeout(
             function(){
 
-                statusBox.classList.remove(
+                statusPopup.classList.remove(
                     "show"
                 );
 
             },
-            2300
+            2500
         );
 
 }
 
 
-/* =====================================================
-   OPEN DP
-===================================================== */
+/* =========================================================
+   MESSAGE
+========================================================= */
 
-function openDp(
-    imageUrl,
-    name
-){
+function showMessage(text){
 
-    dpContainer.innerHTML =
+    message.textContent =
+        text;
+
+    message.style.display =
+        "block";
+
+}
+
+
+function clearMessage(){
+
+    message.textContent =
         "";
 
+    message.style.display =
+        "none";
 
-    const img =
-        document.createElement("img");
-
-
-    img.src =
-        imageUrl;
-
-    img.alt =
-        name ||
-        "Profile photo";
+}
 
 
-    img.onerror =
-        function(){
+/* =========================================================
+   CLEAR RESULTS
+========================================================= */
 
-            openDpPlaceholder(
-                name
-            );
+function clearResults(){
 
-        };
+    results.innerHTML = "";
 
+    ownAccount.style.display =
+        "none";
 
-    dpContainer.appendChild(
-        img
-    );
+    clearMessage();
 
 
-    dpModal.classList.add(
+    emptyState.style.display =
+        "flex";
+
+
+    emptyState.querySelector(
+        ".empty-title"
+    ).textContent =
+        "Search for people";
+
+
+    emptyState.querySelector(
+        ".empty-text"
+    ).textContent =
+        "Enter a User ID or phone number to find a person on Usanex.";
+
+}
+
+
+/* =========================================================
+   DP
+========================================================= */
+
+function openDp(photo){
+
+    const modal =
+        document.getElementById(
+            "dpModal"
+        );
+
+    const image =
+        document.getElementById(
+            "largeDp"
+        );
+
+
+    image.src =
+        photo;
+
+
+    modal.classList.add(
         "show"
     );
 
 }
 
-
-/* =====================================================
-   DP PLACEHOLDER
-===================================================== */
-
-function openDpPlaceholder(name){
-
-    dpContainer.innerHTML =
-        "";
-
-
-    const placeholder =
-        document.createElement("div");
-
-    placeholder.className =
-        "dp-placeholder";
-
-
-    placeholder.textContent =
-        (
-            name ||
-            "U"
-        )
-        .charAt(0)
-        .toUpperCase();
-
-
-    dpContainer.appendChild(
-        placeholder
-    );
-
-
-    dpModal.classList.add(
-        "show"
-    );
-
-}
-
-
-/* =====================================================
-   CLOSE DP
-===================================================== */
 
 function closeDp(event){
 
     if(
         event &&
-        event.target !== dpModal
+        event.target &&
+        event.target.id !== "dpModal" &&
+        !event.target.classList.contains(
+            "dp-close"
+        )
     ){
 
         return;
@@ -2119,48 +1855,55 @@ function closeDp(event){
     }
 
 
-    dpModal.classList.remove(
+    document.getElementById(
+        "dpModal"
+    )
+    .classList.remove(
         "show"
     );
 
 }
 
 
-/* =====================================================
-   CLEAR SEARCH
-===================================================== */
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
 
-function clearSearch(){
+function escapeHtml(value){
 
-    searchInput.value =
-        "";
+    return String(value)
 
-    clearBtn.style.display =
-        "none";
+        .replace(
+            /&/g,
+            "&amp;"
+        )
 
-    results.innerHTML =
-        "";
+        .replace(
+            /</g,
+            "&lt;"
+        )
 
-    empty.style.display =
-        "none";
+        .replace(
+            />/g,
+            "&gt;"
+        )
 
-    loading.style.display =
-        "none";
+        .replace(
+            /"/g,
+            "&quot;"
+        )
 
-    errorBox.style.display =
-        "none";
-
-    resultHeading.style.display =
-        "none";
-
-    searchInput.focus();
+        .replace(
+            /'/g,
+            "&#039;"
+        );
 
 }
 
 
-/* =====================================================
-   GO HOME
-===================================================== */
+/* =========================================================
+   HOME
+========================================================= */
 
 function goHome(){
 
@@ -2170,28 +1913,34 @@ function goHome(){
 }
 
 
-/* =====================================================
-   ESCAPE
-===================================================== */
+/* =========================================================
+   URL USER ID
+========================================================= */
 
-document.addEventListener(
-    "keydown",
-    function(event){
+const params =
+    new URLSearchParams(
+        window.location.search
+    );
 
-        if(
-            event.key === "Escape"
-        ){
+const urlUserId =
+    params.get(
+        "user_id"
+    );
 
-            dpModal.classList.remove(
-                "show"
-            );
 
-        }
+if(urlUserId){
 
-    }
-);
+    searchInput.value =
+        urlUserId;
+
+    searchUsers(
+        urlUserId
+    );
+
+}
 
 </script>
 
 </body>
+
 </html>
