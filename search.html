@@ -354,6 +354,20 @@ body{
     box-shadow:
         0 8px 25px
         rgba(0,0,0,.16);
+
+    cursor:pointer;
+
+    transition:
+        transform .15s,
+        border-color .15s;
+}
+
+.user-card:active{
+    transform:scale(.985);
+}
+
+.user-card.incoming{
+    border-color:rgba(50,150,255,.30);
 }
 
 
@@ -507,6 +521,68 @@ body{
 
 
 /* =========================================================
+   INCOMING REQUEST ACTIONS
+========================================================= */
+
+.request-actions{
+    display:flex;
+    gap:7px;
+    flex-shrink:0;
+}
+
+.request-action{
+    height:34px;
+    padding:0 10px;
+
+    border:0;
+    border-radius:11px;
+
+    font-size:11px;
+    font-weight:700;
+
+    cursor:pointer;
+}
+
+.accept-request{
+    background:
+        linear-gradient(
+            145deg,
+            #3296ff,
+            #0758cb
+        );
+
+    color:#fff;
+}
+
+.reject-request{
+    background:#252b36;
+    color:#ff9b9b;
+}
+
+
+/* =========================================================
+   REQUEST BADGE
+========================================================= */
+
+.request-badge{
+    display:inline-flex;
+
+    margin-left:6px;
+
+    padding:3px 7px;
+
+    border-radius:8px;
+
+    background:rgba(50,150,255,.15);
+
+    color:#7eb8ff;
+
+    font-size:9px;
+    font-weight:700;
+}
+
+
+/* =========================================================
    VERIFY MODAL
 ========================================================= */
 
@@ -627,6 +703,140 @@ body{
 
 .verify-submit:disabled{
     opacity:.6;
+}
+
+
+/* =========================================================
+   INCOMING MODAL
+========================================================= */
+
+.request-modal{
+    position:fixed;
+    inset:0;
+
+    display:none;
+
+    align-items:center;
+    justify-content:center;
+
+    padding:25px;
+
+    background:rgba(0,0,0,.82);
+
+    z-index:650;
+}
+
+.request-modal.show{
+    display:flex;
+}
+
+.request-box{
+    width:100%;
+    max-width:360px;
+
+    padding:24px;
+
+    border-radius:23px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #1a1f29,
+            #0e1219
+        );
+
+    border:1px solid rgba(255,255,255,.09);
+
+    box-shadow:
+        0 25px 70px
+        rgba(0,0,0,.65);
+
+    text-align:center;
+}
+
+.request-avatar{
+    width:72px;
+    height:72px;
+
+    margin:0 auto 15px;
+
+    border-radius:50%;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    overflow:hidden;
+
+    background:
+        linear-gradient(
+            145deg,
+            #2b8cff,
+            #0757c8
+        );
+
+    font-size:27px;
+    font-weight:900;
+}
+
+.request-avatar img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.request-title{
+    font-size:20px;
+    font-weight:800;
+    margin-bottom:7px;
+}
+
+.request-text{
+    color:#818a9a;
+    font-size:12px;
+    line-height:1.5;
+}
+
+.request-user-id{
+    margin-top:8px;
+
+    color:#8dbdff;
+
+    font-size:11px;
+}
+
+.request-modal-actions{
+    display:flex;
+    gap:10px;
+    margin-top:20px;
+}
+
+.request-modal-actions button{
+    flex:1;
+
+    height:44px;
+
+    border:0;
+    border-radius:13px;
+
+    font-size:12px;
+    font-weight:700;
+}
+
+.modal-reject{
+    background:#252b36;
+    color:#ff9b9b;
+}
+
+.modal-accept{
+    background:
+        linear-gradient(
+            145deg,
+            #3296ff,
+            #0758cb
+        );
+
+    color:#fff;
 }
 
 
@@ -900,6 +1110,15 @@ body{
         padding:0 9px;
     }
 
+    .request-actions{
+        gap:4px;
+    }
+
+    .request-action{
+        padding:0 7px;
+        font-size:10px;
+    }
+
 }
 
 </style>
@@ -911,10 +1130,6 @@ body{
 
 <div class="app">
 
-
-<!-- =====================================================
-     HEADER
-===================================================== -->
 
 <header class="header">
 
@@ -964,10 +1179,6 @@ body{
 </header>
 
 
-<!-- =====================================================
-     MAIN
-===================================================== -->
-
 <main class="content">
 
     <div class="page-title">
@@ -978,8 +1189,6 @@ body{
         Find people using User ID or phone number.
     </div>
 
-
-    <!-- YOUR ACCOUNT -->
 
     <div
         id="ownAccount"
@@ -1002,23 +1211,17 @@ body{
     </div>
 
 
-    <!-- MESSAGE -->
-
     <div
         id="message"
         class="message">
     </div>
 
 
-    <!-- RESULTS -->
-
     <div
         id="results"
         class="results">
     </div>
 
-
-    <!-- EMPTY -->
 
     <div
         id="emptyState"
@@ -1046,19 +1249,13 @@ body{
 </main>
 
 
-<!-- =====================================================
-     STATUS POPUP
-===================================================== -->
-
 <div
     id="statusPopup"
     class="status-popup">
 </div>
 
 
-<!-- =====================================================
-     DP MODAL
-===================================================== -->
+<!-- DP MODAL -->
 
 <div
     id="dpModal"
@@ -1077,9 +1274,7 @@ body{
 </div>
 
 
-<!-- =====================================================
-     VERIFY MODAL
-===================================================== -->
+<!-- VERIFY MODAL -->
 
 <div
     id="verifyModal"
@@ -1125,6 +1320,65 @@ body{
                 onclick="submitVerification()">
 
                 Verify
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- INCOMING REQUEST MODAL -->
+
+<div
+    id="requestModal"
+    class="request-modal">
+
+    <div class="request-box">
+
+        <div
+            id="requestAvatar"
+            class="request-avatar">
+        </div>
+
+        <div
+            id="requestTitle"
+            class="request-title">
+
+            Follow Request
+
+        </div>
+
+        <div
+            id="requestText"
+            class="request-text">
+
+            Someone wants to connect with you.
+
+        </div>
+
+        <div
+            id="requestUserId"
+            class="request-user-id">
+        </div>
+
+        <div class="request-modal-actions">
+
+            <button
+                class="modal-reject"
+                onclick="rejectIncomingRequest()">
+
+                Reject
+
+            </button>
+
+            <button
+                class="modal-accept"
+                onclick="acceptIncomingRequest()">
+
+                Accept
 
             </button>
 
@@ -1186,6 +1440,21 @@ const verifySubtitle =
 const verifySubmitButton =
     document.getElementById("verifySubmit");
 
+const requestModal =
+    document.getElementById("requestModal");
+
+const requestAvatar =
+    document.getElementById("requestAvatar");
+
+const requestTitle =
+    document.getElementById("requestTitle");
+
+const requestText =
+    document.getElementById("requestText");
+
+const requestUserId =
+    document.getElementById("requestUserId");
+
 
 /* =========================================================
    CURRENT USER
@@ -1225,10 +1494,417 @@ let verifyTarget = null;
 
 
 /* =========================================================
+   INCOMING REQUEST
+========================================================= */
+
+let incomingRequest = null;
+
+
+/* =========================================================
    SEARCH TIMER
 ========================================================= */
 
 let searchTimer = null;
+
+
+/* =========================================================
+   WEBSOCKET
+========================================================= */
+
+let socket = null;
+
+let socketReconnectTimer = null;
+
+let socketReconnectDelay = 1000;
+
+let socketManuallyClosed = false;
+
+
+/* =========================================================
+   START REALTIME
+========================================================= */
+
+function startRealtime(){
+
+    if(
+        !currentUser ||
+        !currentUser.user_id
+    ){
+
+        return;
+
+    }
+
+
+    connectWebSocket();
+
+}
+
+
+/* =========================================================
+   CONNECT WEBSOCKET
+========================================================= */
+
+function connectWebSocket(){
+
+    if(
+        socket &&
+        (
+            socket.readyState ===
+            WebSocket.OPEN
+            ||
+            socket.readyState ===
+            WebSocket.CONNECTING
+        )
+    ){
+
+        return;
+
+    }
+
+
+    socketManuallyClosed =
+        false;
+
+
+    const protocol =
+        location.protocol === "https:"
+        ?
+        "wss:"
+        :
+        "ws:";
+
+
+    const wsUrl =
+        protocol +
+        "//" +
+        location.host +
+        "/ws/" +
+        encodeURIComponent(
+            currentUser.user_id
+        );
+
+
+    try{
+
+        socket =
+            new WebSocket(
+                wsUrl
+            );
+
+
+        socket.onopen =
+            function(){
+
+                console.log(
+                    "Usanex realtime connected."
+                );
+
+                socketReconnectDelay =
+                    1000;
+
+                showPopup(
+                    "Realtime notifications connected."
+                );
+
+            };
+
+
+        socket.onmessage =
+            function(event){
+
+                handleRealtimeMessage(
+                    event
+                );
+
+            };
+
+
+        socket.onerror =
+            function(error){
+
+                console.error(
+                    "WebSocket error:",
+                    error
+                );
+
+            };
+
+
+        socket.onclose =
+            function(){
+
+                console.log(
+                    "Realtime disconnected."
+                );
+
+
+                if(
+                    !socketManuallyClosed
+                ){
+
+                    scheduleReconnect();
+
+                }
+
+            };
+
+    }catch(error){
+
+        console.error(
+            "WebSocket connection failed:",
+            error
+        );
+
+        scheduleReconnect();
+
+    }
+
+}
+
+
+/* =========================================================
+   RECONNECT
+========================================================= */
+
+function scheduleReconnect(){
+
+    clearTimeout(
+        socketReconnectTimer
+    );
+
+
+    socketReconnectTimer =
+        setTimeout(
+            function(){
+
+                connectWebSocket();
+
+            },
+            socketReconnectDelay
+        );
+
+
+    socketReconnectDelay =
+        Math.min(
+            socketReconnectDelay * 2,
+            15000
+        );
+
+}
+
+
+/* =========================================================
+   REALTIME MESSAGE
+========================================================= */
+
+function handleRealtimeMessage(
+    event
+){
+
+    let data = null;
+
+
+    try{
+
+        data =
+            JSON.parse(
+                event.data
+            );
+
+    }catch(error){
+
+        console.error(
+            "Realtime JSON error:",
+            error
+        );
+
+        return;
+
+    }
+
+
+    console.log(
+        "Realtime notification:",
+        data
+    );
+
+
+    const type =
+        data.type ||
+        data.notification_type ||
+        data.event;
+
+
+    /* =====================================================
+       FOLLOW REQUEST RECEIVED
+    ===================================================== */
+
+    if(
+        type === "follow_request"
+        ||
+        type === "follow"
+        ||
+        type === "new_follow"
+    ){
+
+        showIncomingRequest(
+            data
+        );
+
+        refreshCurrentSearch();
+
+        return;
+
+    }
+
+
+    /* =====================================================
+       FOLLOW CANCELLED
+    ===================================================== */
+
+    if(
+        type === "follow_cancelled"
+        ||
+        type === "request_cancelled"
+    ){
+
+        showPopup(
+            data.message ||
+            "Follow request cancelled."
+        );
+
+        refreshCurrentSearch();
+
+        return;
+
+    }
+
+
+    /* =====================================================
+       CONNECTION CODE
+    ===================================================== */
+
+    if(
+        type === "connection_code"
+        ||
+        type === "verification_code"
+    ){
+
+        const code =
+            data.verification_code ||
+            data.code ||
+            "";
+
+
+        showPopup(
+            code
+            ?
+            "Verification code received: " +
+            code
+            :
+            (
+                data.message ||
+                "Verification code received."
+            )
+        );
+
+
+        refreshCurrentSearch();
+
+        return;
+
+    }
+
+
+    /* =====================================================
+       FOLLOW REJECTED
+    ===================================================== */
+
+    if(
+        type === "follow_rejected"
+        ||
+        type === "request_rejected"
+    ){
+
+        showPopup(
+            data.message ||
+            "Follow request was rejected."
+        );
+
+        refreshCurrentSearch();
+
+        return;
+
+    }
+
+
+    /* =====================================================
+       CONNECTION VERIFIED
+    ===================================================== */
+
+    if(
+        type === "connection_verified"
+        ||
+        type === "connected"
+    ){
+
+        showPopup(
+            data.message ||
+            "Connection verified successfully."
+        );
+
+        refreshCurrentSearch();
+
+        return;
+
+    }
+
+
+    /* =====================================================
+       GENERIC NOTIFICATION
+    ===================================================== */
+
+    if(
+        data.message
+    ){
+
+        showPopup(
+            data.message
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   REFRESH CURRENT SEARCH
+========================================================= */
+
+function refreshCurrentSearch(){
+
+    const q =
+        searchInput.value.trim();
+
+
+    if(q){
+
+        setTimeout(
+            function(){
+
+                searchUsers(
+                    q,
+                    true
+                );
+
+            },
+            250
+        );
+
+    }
+
+}
 
 
 /* =========================================================
@@ -1239,7 +1915,9 @@ searchInput.addEventListener(
     "input",
     function(){
 
-        clearTimeout(searchTimer);
+        clearTimeout(
+            searchTimer
+        );
 
         const q =
             this.value.trim();
@@ -1258,7 +1936,9 @@ searchInput.addEventListener(
             setTimeout(
                 function(){
 
-                    searchUsers(q);
+                    searchUsers(
+                        q
+                    );
 
                 },
                 300
@@ -1272,11 +1952,18 @@ searchInput.addEventListener(
    SEARCH USERS
 ========================================================= */
 
-async function searchUsers(q){
+async function searchUsers(
+    q,
+    silent = false
+){
 
-    showMessage(
-        "Searching..."
-    );
+    if(!silent){
+
+        showMessage(
+            "Searching..."
+        );
+
+    }
 
 
     try{
@@ -1335,9 +2022,13 @@ async function searchUsers(q){
             "Please try again in a moment.";
 
 
-        showMessage(
-            "Unable to search right now."
-        );
+        if(!silent){
+
+            showMessage(
+                "Unable to search right now."
+            );
+
+        }
 
     }
 
@@ -1605,6 +2296,31 @@ function createUserCard(user){
 
 
     /* =====================================================
+       CARD CLICK
+    ===================================================== */
+
+    card.addEventListener(
+        "click",
+        function(){
+
+            if(
+                isMe
+            ){
+
+                return;
+
+            }
+
+
+            openIncomingForUser(
+                user
+            );
+
+        }
+    );
+
+
+    /* =====================================================
        FOLLOW CLICK
     ===================================================== */
 
@@ -1752,6 +2468,10 @@ function updateFollowButton(
         false;
 
 
+    button.onclick =
+        null;
+
+
     if(status === "pending"){
 
         button.classList.add(
@@ -1829,7 +2549,7 @@ function updateFollowButton(
 
 
 /* =========================================================
-   FOLLOW REQUEST
+   FOLLOW / CANCEL
 ========================================================= */
 
 async function handleFollow(
@@ -1878,8 +2598,27 @@ async function handleFollow(
     }
 
 
+    const isSent =
+        button.classList.contains(
+            "sent"
+        );
+
+
+    if(isSent){
+
+        await cancelFollow(
+            user,
+            button
+        );
+
+        return;
+
+    }
+
+
     button.disabled =
         true;
+
 
     const oldText =
         button.textContent;
@@ -1980,6 +2719,530 @@ async function handleFollow(
 
 
 /* =========================================================
+   CANCEL FOLLOW
+========================================================= */
+
+async function cancelFollow(
+    user,
+    button
+){
+
+    button.disabled =
+        true;
+
+    button.textContent =
+        "Cancelling...";
+
+
+    try{
+
+        const response =
+            await fetch(
+                "/api/follow/cancel",
+                {
+                    method:"POST",
+
+                    headers:{
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:JSON.stringify({
+
+                        requester_user_id:
+                            currentUser.user_id,
+
+                        target_user_id:
+                            user.user_id
+
+                    })
+
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if(!response.ok){
+
+            throw new Error(
+                data.detail ||
+                data.message ||
+                "Unable to cancel request."
+            );
+
+        }
+
+
+        button.classList.remove(
+            "sent"
+        );
+
+
+        button.textContent =
+            "Follow";
+
+
+        showPopup(
+            "Follow request cancelled."
+        );
+
+
+    }catch(error){
+
+        console.error(
+            error
+        );
+
+
+        button.classList.add(
+            "sent"
+        );
+
+        button.textContent =
+            "Request Sent";
+
+
+        showPopup(
+            error.message ||
+            "Unable to cancel request."
+        );
+
+
+    }finally{
+
+        button.disabled =
+            false;
+
+    }
+
+}
+
+
+/* =========================================================
+   OPEN INCOMING REQUEST
+========================================================= */
+
+function openIncomingForUser(
+    user
+){
+
+    if(
+        !user ||
+        !user.user_id ||
+        !currentUser ||
+        !currentUser.user_id
+    ){
+
+        return;
+
+    }
+
+
+    /*
+       Card tap par pehle status check karenge.
+       Agar saamne wale ne follow request bheji hai
+       to Accept / Reject modal khulega.
+    */
+
+    fetch(
+        "/api/follow/status" +
+        "?requester_user_id=" +
+        encodeURIComponent(
+            user.user_id
+        ) +
+        "&target_user_id=" +
+        encodeURIComponent(
+            currentUser.user_id
+        )
+    )
+    .then(
+        function(response){
+
+            if(!response.ok){
+
+                throw new Error(
+                    "Status unavailable"
+                );
+
+            }
+
+            return response.json();
+
+        }
+    )
+    .then(
+        function(data){
+
+            if(
+                data.status === "pending"
+            ){
+
+                showIncomingRequest({
+
+                    requester_user_id:
+                        user.user_id,
+
+                    sender_user_id:
+                        user.user_id,
+
+                    user_id:
+                        user.user_id,
+
+                    name:
+                        user.name,
+
+                    profile_photo:
+                        user.profile_photo
+
+                });
+
+                return;
+
+            }
+
+
+            showUserStatus(
+                user
+            );
+
+        }
+    )
+    .catch(
+        function(){
+
+            showUserStatus(
+                user
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   SHOW INCOMING REQUEST
+========================================================= */
+
+function showIncomingRequest(
+    data
+){
+
+    incomingRequest =
+        data;
+
+
+    const senderId =
+        data.sender_user_id ||
+        data.requester_user_id ||
+        data.user_id ||
+        "";
+
+
+    const senderName =
+        data.sender_name ||
+        data.name ||
+        "Someone";
+
+
+    requestTitle.textContent =
+        senderName;
+
+
+    requestText.textContent =
+        "wants to connect with you.";
+
+
+    requestUserId.textContent =
+        senderId
+        ?
+        "User ID: " + senderId
+        :
+        "";
+
+
+    requestAvatar.innerHTML =
+        "";
+
+
+    if(
+        data.profile_photo
+    ){
+
+        const image =
+            document.createElement(
+                "img"
+            );
+
+
+        image.src =
+            data.profile_photo;
+
+
+        image.alt =
+            "Profile photo";
+
+
+        image.onerror =
+            function(){
+
+                requestAvatar.textContent =
+                    senderName
+                    .charAt(0)
+                    .toUpperCase();
+
+            };
+
+
+        requestAvatar.appendChild(
+            image
+        );
+
+    }
+    else{
+
+        requestAvatar.textContent =
+            senderName
+            .charAt(0)
+            .toUpperCase();
+
+    }
+
+
+    requestModal.classList.add(
+        "show"
+    );
+
+
+    document.body.style.overflow =
+        "hidden";
+
+}
+
+
+/* =========================================================
+   ACCEPT INCOMING REQUEST
+========================================================= */
+
+async function acceptIncomingRequest(){
+
+    if(
+        !incomingRequest
+    ){
+
+        return;
+
+    }
+
+
+    const requesterId =
+        incomingRequest.requester_user_id ||
+        incomingRequest.sender_user_id ||
+        incomingRequest.user_id;
+
+
+    if(!requesterId){
+
+        showPopup(
+            "Request information missing."
+        );
+
+        return;
+
+    }
+
+
+    try{
+
+        const response =
+            await fetch(
+                "/api/follow/accept",
+                {
+                    method:"POST",
+
+                    headers:{
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:JSON.stringify({
+
+                        requester_user_id:
+                            requesterId,
+
+                        target_user_id:
+                            currentUser.user_id
+
+                    })
+
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if(!response.ok){
+
+            throw new Error(
+                data.detail ||
+                data.message ||
+                "Unable to accept request."
+            );
+
+        }
+
+
+        closeRequestModal();
+
+
+        showPopup(
+            "Follow request accepted."
+        );
+
+
+        refreshCurrentSearch();
+
+
+    }catch(error){
+
+        console.error(
+            error
+        );
+
+
+        showPopup(
+            error.message ||
+            "Unable to accept request."
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   REJECT INCOMING REQUEST
+========================================================= */
+
+async function rejectIncomingRequest(){
+
+    if(
+        !incomingRequest
+    ){
+
+        return;
+
+    }
+
+
+    const requesterId =
+        incomingRequest.requester_user_id ||
+        incomingRequest.sender_user_id ||
+        incomingRequest.user_id;
+
+
+    if(!requesterId){
+
+        return;
+
+    }
+
+
+    try{
+
+        const response =
+            await fetch(
+                "/api/follow/reject",
+                {
+                    method:"POST",
+
+                    headers:{
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:JSON.stringify({
+
+                        requester_user_id:
+                            requesterId,
+
+                        target_user_id:
+                            currentUser.user_id
+
+                    })
+
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if(!response.ok){
+
+            throw new Error(
+                data.detail ||
+                data.message ||
+                "Unable to reject request."
+            );
+
+        }
+
+
+        closeRequestModal();
+
+
+        showPopup(
+            "Follow request rejected."
+        );
+
+
+        refreshCurrentSearch();
+
+
+    }catch(error){
+
+        console.error(
+            error
+        );
+
+
+        showPopup(
+            error.message ||
+            "Unable to reject request."
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   CLOSE REQUEST MODAL
+========================================================= */
+
+function closeRequestModal(){
+
+    requestModal.classList.remove(
+        "show"
+    );
+
+    incomingRequest =
+        null;
+
+    document.body.style.overflow =
+        "";
+
+}
+
+
+/* =========================================================
    VERIFY MODAL
 ========================================================= */
 
@@ -2021,6 +3284,10 @@ function openVerify(user){
     );
 
 
+    document.body.style.overflow =
+        "hidden";
+
+
     setTimeout(
         function(){
 
@@ -2048,6 +3315,9 @@ function closeVerify(){
 
     verifyTarget =
         null;
+
+    document.body.style.overflow =
+        "";
 
 }
 
@@ -2143,20 +3413,7 @@ async function submitVerification(){
         );
 
 
-        /*
-           Search ko dobara load karenge
-           taaki button Connected ho jaye.
-        */
-
-        const q =
-            searchInput.value.trim();
-
-
-        if(q){
-
-            await searchUsers(q);
-
-        }
+        refreshCurrentSearch();
 
 
     }catch(error){
@@ -2189,7 +3446,9 @@ async function submitVerification(){
    USER STATUS
 ========================================================= */
 
-async function showUserStatus(user){
+async function showUserStatus(
+    user
+){
 
     let status =
         "Not Accepted";
@@ -2255,6 +3514,15 @@ async function showUserStatus(user){
 
                     status =
                         "Accepted";
+
+                }
+                else if(
+                    data.status ===
+                    "pending"
+                ){
+
+                    status =
+                        "Request Sent";
 
                 }
                 else{
@@ -2406,7 +3674,6 @@ function showSmallLetterDp(
     container.innerHTML =
         "";
 
-
     container.textContent =
         (
             user.name ||
@@ -2488,6 +3755,27 @@ verifyModal.addEventListener(
 
 
 /* =========================================================
+   REQUEST OUTSIDE CLICK
+========================================================= */
+
+requestModal.addEventListener(
+    "click",
+    function(event){
+
+        if(
+            event.target ===
+            requestModal
+        ){
+
+            closeRequestModal();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
    ESC KEY
 ========================================================= */
 
@@ -2503,6 +3791,8 @@ document.addEventListener(
             closeDp();
 
             closeVerify();
+
+            closeRequestModal();
 
         }
 
@@ -2558,7 +3848,9 @@ verifyInput.addEventListener(
    OWN ACCOUNT
 ========================================================= */
 
-function checkOwnAccount(users){
+function checkOwnAccount(
+    users
+){
 
     if(
         !currentUser ||
@@ -2619,7 +3911,9 @@ let popupTimer =
     null;
 
 
-function showPopup(text){
+function showPopup(
+    text
+){
 
     clearTimeout(
         popupTimer
@@ -2654,7 +3948,9 @@ function showPopup(text){
    MESSAGE
 ========================================================= */
 
-function showMessage(text){
+function showMessage(
+    text
+){
 
     message.textContent =
         text;
@@ -2712,9 +4008,13 @@ function clearResults(){
    ESCAPE HTML
 ========================================================= */
 
-function escapeHtml(value){
+function escapeHtml(
+    value
+){
 
-    return String(value)
+    return String(
+        value
+    )
 
         .replace(
             /&/g,
@@ -2754,6 +4054,50 @@ function goHome(){
         "/home";
 
 }
+
+
+/* =========================================================
+   PAGE CLOSE
+========================================================= */
+
+window.addEventListener(
+    "beforeunload",
+    function(){
+
+        socketManuallyClosed =
+            true;
+
+
+        clearTimeout(
+            socketReconnectTimer
+        );
+
+
+        if(socket){
+
+            try{
+
+                socket.close();
+
+            }catch(error){
+
+                console.error(
+                    error
+                );
+
+            }
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   START
+========================================================= */
+
+startRealtime();
 
 
 /* =========================================================
