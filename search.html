@@ -47,7 +47,6 @@ body{
 
 .app{
     min-height:100vh;
-
     padding-bottom:30px;
 
     background:
@@ -65,15 +64,11 @@ body{
 ========================================================= */
 
 .header{
-
     height:88px;
-
     padding:0 20px;
 
     display:flex;
-
     align-items:center;
-
     gap:14px;
 
     background:rgba(7,9,13,.88);
@@ -83,9 +78,7 @@ body{
         rgba(255,255,255,.07);
 
     position:sticky;
-
     top:0;
-
     z-index:30;
 
     backdrop-filter:blur(18px);
@@ -93,27 +86,22 @@ body{
 
 
 /* =========================================================
-   SAME HOME PAGE LOGO
+   HOME PAGE SAME LOGO
 ========================================================= */
 
 .brand{
-
     display:flex;
-
     align-items:center;
-
     flex-shrink:0;
 }
 
 .logo-mark{
-
     width:43px;
     height:43px;
 
     border-radius:14px;
 
     display:flex;
-
     align-items:center;
     justify-content:center;
 
@@ -132,18 +120,13 @@ body{
 }
 
 .logo-u{
-
     font-size:25px;
-
     font-weight:900;
-
     color:#fff;
-
     z-index:2;
 }
 
 .logo-shine{
-
     position:absolute;
 
     width:8px;
@@ -160,7 +143,6 @@ body{
 }
 
 .logo-mark:after{
-
     content:"";
 
     position:absolute;
@@ -178,11 +160,9 @@ body{
 }
 
 .logo-name{
-
     margin-left:9px;
 
     font-size:20px;
-
     font-weight:800;
 
     letter-spacing:-.5px;
@@ -194,15 +174,12 @@ body{
 ========================================================= */
 
 .search-box{
-
     flex:1;
 
     height:45px;
-
     min-width:0;
 
     display:flex;
-
     align-items:center;
 
     padding:0 15px;
@@ -214,27 +191,18 @@ body{
     border:
         1px solid
         rgba(255,255,255,.08);
-
-    box-shadow:
-        inset 0 1px 0
-        rgba(255,255,255,.03);
 }
 
 .search-icon{
-
     font-size:22px;
-
     color:#8993a5;
-
     margin-right:9px;
 }
 
 .search-box input{
-
     width:100%;
 
     border:0;
-
     outline:0;
 
     background:transparent;
@@ -245,24 +213,21 @@ body{
 }
 
 .search-box input::placeholder{
-
     color:#747d8d;
 }
 
 
 /* =========================================================
-   BACK BUTTON
+   BACK
 ========================================================= */
 
 .back-btn{
-
     width:40px;
     height:40px;
 
     flex-shrink:0;
 
     border:0;
-
     border-radius:13px;
 
     background:#151820;
@@ -276,7 +241,6 @@ body{
     font-size:22px;
 
     display:flex;
-
     align-items:center;
     justify-content:center;
 
@@ -284,41 +248,111 @@ body{
 }
 
 .back-btn:active{
-
     transform:scale(.92);
 }
 
 
 /* =========================================================
-   MAIN
+   CONTENT
 ========================================================= */
 
 .content{
-
     padding:22px 20px 30px;
 }
 
-
-/* =========================================================
-   TITLE
-========================================================= */
-
 .page-title{
-
     font-size:23px;
-
     font-weight:800;
-
     margin-bottom:6px;
 }
 
 .page-subtitle{
+    font-size:12px;
+    color:#7f8898;
+    margin-bottom:22px;
+}
+
+
+/* =========================================================
+   YOUR ACCOUNT
+========================================================= */
+
+.own-account{
+    padding:17px;
+
+    border-radius:19px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(25,29,38,.98),
+            rgba(14,17,23,.98)
+        );
+
+    border:
+        1px solid
+        rgba(45,145,255,.18);
+
+    margin-bottom:18px;
+}
+
+.own-title{
+    font-size:13px;
+    font-weight:800;
+    margin-bottom:5px;
+}
+
+.own-text{
+    font-size:11px;
+    color:#7f8999;
+    margin-bottom:12px;
+}
+
+.own-id{
+    display:inline-flex;
+
+    padding:8px 11px;
+
+    border-radius:10px;
+
+    background:#11151d;
+
+    border:
+        1px solid
+        rgba(255,255,255,.07);
 
     font-size:12px;
 
-    color:#7f8898;
+    color:#8dbdff;
 
-    margin-bottom:22px;
+    font-weight:700;
+}
+
+
+/* =========================================================
+   MESSAGE
+========================================================= */
+
+.message{
+    display:none;
+
+    padding:13px 15px;
+
+    margin-bottom:14px;
+
+    border-radius:14px;
+
+    background:#151a23;
+
+    border:
+        1px solid
+        rgba(255,255,255,.07);
+
+    color:#aeb7c5;
+
+    font-size:12px;
+
+    text-align:center;
 }
 
 
@@ -327,11 +361,8 @@ body{
 ========================================================= */
 
 .results{
-
     display:flex;
-
     flex-direction:column;
-
     gap:10px;
 }
 
@@ -341,11 +372,9 @@ body{
 ========================================================= */
 
 .user-card{
-
     min-height:76px;
 
     display:flex;
-
     align-items:center;
 
     padding:12px 13px;
@@ -382,16 +411,18 @@ body{
 
     border-radius:50%;
 
-    display:flex;
+    overflow:hidden;
 
+    display:flex;
     align-items:center;
     justify-content:center;
 
-    overflow:hidden;
+    position:relative;
 
     font-size:20px;
-
     font-weight:800;
+
+    color:#fff;
 
     background:
         linear-gradient(
@@ -400,11 +431,21 @@ body{
             #0757c8
         );
 
+    border:
+        2px solid
+        rgba(255,255,255,.08);
+
     box-shadow:
         0 5px 16px
         rgba(15,105,235,.25);
 
     cursor:pointer;
+
+    user-select:none;
+}
+
+.user-dp:active{
+    transform:scale(.94);
 }
 
 .user-dp img{
@@ -412,7 +453,11 @@ body{
     width:100%;
     height:100%;
 
+    display:block;
+
     object-fit:cover;
+
+    border-radius:50%;
 }
 
 
@@ -421,7 +466,6 @@ body{
 ========================================================= */
 
 .user-info{
-
     flex:1;
 
     min-width:0;
@@ -432,21 +476,13 @@ body{
 .user-name{
 
     font-size:15px;
-
     font-weight:700;
 
     white-space:nowrap;
-
     overflow:hidden;
-
     text-overflow:ellipsis;
 
     cursor:pointer;
-}
-
-.user-name:active{
-
-    opacity:.7;
 }
 
 .user-id{
@@ -458,21 +494,18 @@ body{
     color:#818a9a;
 
     white-space:nowrap;
-
     overflow:hidden;
-
     text-overflow:ellipsis;
 }
 
 
 /* =========================================================
-   FOLLOW BUTTON
+   FOLLOW
 ========================================================= */
 
 .follow-btn{
 
     min-width:84px;
-
     height:36px;
 
     padding:0 13px;
@@ -491,14 +524,9 @@ body{
     color:#fff;
 
     font-size:12px;
-
     font-weight:700;
 
     cursor:pointer;
-
-    box-shadow:
-        0 6px 16px
-        rgba(18,105,232,.25);
 }
 
 .follow-btn.sent{
@@ -506,113 +534,10 @@ body{
     background:#252b36;
 
     color:#aeb7c5;
-
-    box-shadow:none;
 }
 
 .follow-btn:active{
-
     transform:scale(.94);
-}
-
-
-/* =========================================================
-   YOUR ACCOUNT
-========================================================= */
-
-.own-account{
-
-    padding:17px;
-
-    border-radius:19px;
-
-    background:
-        linear-gradient(
-            135deg,
-            rgba(25,29,38,.98),
-            rgba(14,17,23,.98)
-        );
-
-    border:
-        1px solid
-        rgba(45,145,255,.18);
-
-    box-shadow:
-        0 10px 30px
-        rgba(0,0,0,.20);
-
-    margin-bottom:18px;
-}
-
-.own-title{
-
-    font-size:13px;
-
-    font-weight:800;
-
-    color:#fff;
-
-    margin-bottom:5px;
-}
-
-.own-text{
-
-    font-size:11px;
-
-    color:#7f8999;
-
-    margin-bottom:12px;
-}
-
-.own-id{
-
-    display:inline-flex;
-
-    padding:8px 11px;
-
-    border-radius:10px;
-
-    background:#11151d;
-
-    border:
-        1px solid
-        rgba(255,255,255,.07);
-
-    font-size:12px;
-
-    color:#8dbdff;
-
-    font-weight:700;
-}
-
-
-/* =========================================================
-   MESSAGE
-========================================================= */
-
-.message{
-
-    display:none;
-
-    padding:13px 15px;
-
-    margin-bottom:14px;
-
-    border-radius:14px;
-
-    background:#151a23;
-
-    border:
-        1px solid
-        rgba(255,255,255,.07);
-
-    color:#aeb7c5;
-
-    font-size:12px;
-
-    line-height:1.5;
-
-    text-align:center;
 }
 
 
@@ -629,7 +554,6 @@ body{
     flex-direction:column;
 
     align-items:center;
-
     justify-content:center;
 
     text-align:center;
@@ -645,7 +569,6 @@ body{
     border-radius:50%;
 
     display:flex;
-
     align-items:center;
     justify-content:center;
 
@@ -660,24 +583,16 @@ body{
         1px solid
         rgba(50,140,255,.16);
 
-    box-shadow:
-        0 0 45px
-        rgba(25,115,245,.10);
-
     margin-bottom:20px;
 }
 
 .empty-icon{
-
     font-size:38px;
 }
 
 .empty-title{
-
     font-size:19px;
-
     font-weight:800;
-
     margin-bottom:8px;
 }
 
@@ -702,7 +617,6 @@ body{
     position:fixed;
 
     left:50%;
-
     bottom:32px;
 
     transform:
@@ -710,7 +624,6 @@ body{
         translateY(20px);
 
     width:calc(100% - 40px);
-
     max-width:360px;
 
     padding:13px 17px;
@@ -754,7 +667,7 @@ body{
 
 
 /* =========================================================
-   DP MODAL
+   LARGE DP MODAL
 ========================================================= */
 
 .dp-modal{
@@ -763,50 +676,88 @@ body{
 
     inset:0;
 
-    background:
-        rgba(0,0,0,.86);
-
     display:none;
 
     align-items:center;
-
     justify-content:center;
 
-    z-index:200;
+    background:
+        rgba(0,0,0,.90);
 
     padding:25px;
+
+    z-index:500;
 }
 
 .dp-modal.show{
-
     display:flex;
 }
 
-.dp-modal img{
 
-    max-width:90vw;
+/* REAL IMAGE */
 
-    max-height:75vh;
+.dp-image{
 
-    border-radius:20px;
+    width:min(82vw,360px);
+    height:min(82vw,360px);
 
-    object-fit:contain;
+    border-radius:50%;
+
+    object-fit:cover;
+
+    border:
+        3px solid
+        rgba(255,255,255,.10);
 
     box-shadow:
-        0 20px 60px
-        rgba(0,0,0,.65);
+        0 20px 70px
+        rgba(0,0,0,.70);
+}
+
+
+/* DEFAULT LETTER DP */
+
+.dp-letter{
+
+    width:min(70vw,300px);
+    height:min(70vw,300px);
+
+    border-radius:50%;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:
+        linear-gradient(
+            145deg,
+            #2b8cff,
+            #0757c8
+        );
+
+    border:
+        4px solid
+        rgba(255,255,255,.10);
+
+    box-shadow:
+        0 20px 70px
+        rgba(0,0,0,.70);
+
+    font-size:100px;
+    font-weight:900;
+
+    color:#fff;
 }
 
 .dp-close{
 
     position:absolute;
 
-    top:25px;
-
+    top:24px;
     right:20px;
 
-    width:42px;
-    height:42px;
+    width:44px;
+    height:44px;
 
     border:0;
 
@@ -816,106 +767,73 @@ body{
 
     color:#fff;
 
-    font-size:22px;
+    font-size:25px;
 
     cursor:pointer;
+
+    z-index:510;
 }
 
 
 /* =========================================================
-   SMALL MOBILE
+   MOBILE
 ========================================================= */
 
 @media(max-width:390px){
 
     .header{
-
         padding:0 10px;
-
         gap:7px;
     }
 
     .logo-mark{
-
         width:38px;
         height:38px;
-
         border-radius:12px;
     }
 
     .logo-u{
-
         font-size:22px;
     }
 
     .logo-name{
-
         margin-left:6px;
-
         font-size:16px;
     }
 
     .search-box{
-
         height:40px;
-
         padding:0 11px;
     }
 
     .search-icon{
-
         font-size:19px;
-
         margin-right:5px;
     }
 
     .back-btn{
-
         width:35px;
         height:35px;
-
         font-size:19px;
     }
 
     .content{
-
         padding-left:15px;
-
         padding-right:15px;
     }
 
     .user-card{
-
         padding:10px;
     }
 
     .user-dp{
-
         width:47px;
         height:47px;
     }
 
     .follow-btn{
-
         min-width:75px;
-
         padding:0 9px;
-    }
-
-}
-
-
-/* =========================================================
-   DESKTOP
-========================================================= */
-
-@media(min-width:700px){
-
-    .content{
-
-        max-width:700px;
-
-        margin:auto;
     }
 
 }
@@ -1091,21 +1009,19 @@ body{
 
 <div
     id="dpModal"
-    class="dp-modal"
-    onclick="closeDp(event)">
+    class="dp-modal">
 
     <button
-        class="dp-close"
-        onclick="closeDp()">
+        id="dpClose"
+        class="dp-close">
 
         ×
 
     </button>
 
-    <img
-        id="largeDp"
-        src=""
-        alt="Profile photo">
+    <div
+        id="dpViewer">
+    </div>
 
 </div>
 
@@ -1154,21 +1070,27 @@ const statusPopup =
         "statusPopup"
     );
 
+const dpModal =
+    document.getElementById(
+        "dpModal"
+    );
+
+const dpViewer =
+    document.getElementById(
+        "dpViewer"
+    );
+
+const dpClose =
+    document.getElementById(
+        "dpClose"
+    );
+
 
 /* =========================================================
    CURRENT USER
 ========================================================= */
 
-let currentUser =
-    null;
-
-
-/*
-   Login ke baad future me yahan
-   real logged-in user ka data aayega.
-
-   Abhi localStorage se try kar rahe hain.
-*/
+let currentUser = null;
 
 try{
 
@@ -1194,88 +1116,15 @@ try{
 
 
 /* =========================================================
-   SHOW OWN ACCOUNT
-========================================================= */
-
-function checkOwnAccount(users){
-
-    if(
-        !currentUser ||
-        !currentUser.user_id
-    ){
-
-        ownAccount.style.display =
-            "none";
-
-        return;
-
-    }
-
-    const myId =
-        String(
-            currentUser.user_id
-        ).toLowerCase();
-
-
-    const myMobile =
-        currentUser.mobile
-            ? String(
-                currentUser.mobile
-              )
-            : "";
-
-
-    const isOwn =
-        users.some(
-            user => {
-
-                const uid =
-                    String(
-                        user.user_id || ""
-                    )
-                    .toLowerCase();
-
-                const mobile =
-                    String(
-                        user.mobile || ""
-                    );
-
-                return (
-                    uid === myId ||
-                    (
-                        myMobile &&
-                        mobile === myMobile
-                    )
-                );
-
-            }
-        );
-
-
-    if(isOwn){
-
-        ownAccount.style.display =
-            "block";
-
-        ownUserId.textContent =
-            currentUser.user_id;
-
-    }else{
-
-        ownAccount.style.display =
-            "none";
-
-    }
-
-}
-
-
-/* =========================================================
-   SEARCH
+   SEARCH TIMER
 ========================================================= */
 
 let searchTimer = null;
 
+
+/* =========================================================
+   SEARCH INPUT
+========================================================= */
 
 searchInput.addEventListener(
     "input",
@@ -1345,26 +1194,22 @@ async function searchUsers(q){
             await response.json();
 
 
-        const users =
-            data.users || [];
-
-
-        renderUsers(users);
+        renderUsers(
+            data.users || []
+        );
 
 
     }catch(error){
 
-        console.error(
-            error
-        );
+        console.error(error);
 
         results.innerHTML = "";
 
-        emptyState.style.display =
-            "flex";
-
         ownAccount.style.display =
             "none";
+
+        emptyState.style.display =
+            "flex";
 
         showMessage(
             "Unable to search right now."
@@ -1417,7 +1262,9 @@ function renderUsers(users){
         "none";
 
 
-    checkOwnAccount(users);
+    checkOwnAccount(
+        users
+    );
 
 
     users.forEach(
@@ -1441,47 +1288,27 @@ function renderUsers(users){
                 .toUpperCase();
 
 
-            let dpHTML = "";
-
-
-            if(
-                user.profile_photo
-            ){
-
-                dpHTML = `
-
-                    <img
-                        src="${escapeHtml(
-                            user.profile_photo
-                        )}"
-                        alt="Profile photo"
-                        onerror="
-                            this.style.display='none';
-                            this.parentElement.textContent='${firstLetter}';
-                        "
-                    >
-
-                `;
-
-            }else{
-
-                dpHTML =
-                    escapeHtml(
-                        firstLetter
-                    );
-
-            }
-
-
             card.innerHTML = `
 
                 <div
-                    class="user-dp"
-                    data-dp="${escapeHtml(
-                        user.profile_photo || ""
-                    )}">
+                    class="user-dp">
 
-                    ${dpHTML}
+                    ${
+                        user.profile_photo
+                        ?
+                        `
+                        <img
+                            src="${escapeHtml(
+                                user.profile_photo
+                            )}"
+                            alt="Profile photo"
+                        >
+                        `
+                        :
+                        escapeHtml(
+                            firstLetter
+                        )
+                    }
 
                 </div>
 
@@ -1537,15 +1364,9 @@ function renderUsers(users){
 
                     event.stopPropagation();
 
-                    const photo =
-                        this.dataset.dp;
-
-
-                    if(photo){
-
-                        openDp(photo);
-
-                    }
+                    openDp(
+                        user
+                    );
 
                 }
             );
@@ -1576,7 +1397,7 @@ function renderUsers(users){
 
 
             /* =================================================
-               FOLLOW
+               FOLLOW CLICK
             ================================================= */
 
             const followBtn =
@@ -1611,7 +1432,187 @@ function renderUsers(users){
 
 
 /* =========================================================
-   FOLLOW UI
+   DP OPEN
+========================================================= */
+
+function openDp(user){
+
+    dpViewer.innerHTML = "";
+
+
+    const photo =
+        user.profile_photo;
+
+
+    if(photo){
+
+        const image =
+            document.createElement(
+                "img"
+            );
+
+        image.className =
+            "dp-image";
+
+        image.src =
+            photo;
+
+        image.alt =
+            "Profile photo";
+
+
+        /*
+           Agar image load fail ho,
+           default letter DP show hoga.
+        */
+
+        image.onerror =
+            function(){
+
+                showLetterDp(
+                    user
+                );
+
+            };
+
+
+        dpViewer.appendChild(
+            image
+        );
+
+    }else{
+
+        showLetterDp(
+            user
+        );
+
+    }
+
+
+    dpModal.classList.add(
+        "show"
+    );
+
+
+    document.body.style.overflow =
+        "hidden";
+
+}
+
+
+/* =========================================================
+   DEFAULT LARGE LETTER DP
+========================================================= */
+
+function showLetterDp(user){
+
+    dpViewer.innerHTML = "";
+
+
+    const letter =
+        (
+            user.name ||
+            "U"
+        )
+        .charAt(0)
+        .toUpperCase();
+
+
+    const div =
+        document.createElement(
+            "div"
+        );
+
+    div.className =
+        "dp-letter";
+
+    div.textContent =
+        letter;
+
+
+    dpViewer.appendChild(
+        div
+    );
+
+}
+
+
+/* =========================================================
+   CLOSE DP
+========================================================= */
+
+function closeDp(){
+
+    dpModal.classList.remove(
+        "show"
+    );
+
+    dpViewer.innerHTML = "";
+
+    document.body.style.overflow =
+        "";
+
+}
+
+
+/* =========================================================
+   DP CLOSE BUTTON
+========================================================= */
+
+dpClose.addEventListener(
+    "click",
+    function(event){
+
+        event.stopPropagation();
+
+        closeDp();
+
+    }
+);
+
+
+/* =========================================================
+   OUTSIDE DP CLICK
+========================================================= */
+
+dpModal.addEventListener(
+    "click",
+    function(event){
+
+        if(
+            event.target === dpModal
+        ){
+
+            closeDp();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   ESC KEY
+========================================================= */
+
+document.addEventListener(
+    "keydown",
+    function(event){
+
+        if(
+            event.key === "Escape"
+        ){
+
+            closeDp();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   FOLLOW
 ========================================================= */
 
 function toggleFollow(
@@ -1639,7 +1640,6 @@ function toggleFollow(
             "Follow request cancelled"
         );
 
-
         return;
 
     }
@@ -1660,14 +1660,8 @@ function toggleFollow(
 
 
     /*
-       IMPORTANT:
-
-       Abhi ye UI action hai.
-
-       Real database Follow system
-       next backend step me connect hoga:
-
-       POST /api/follow/request
+       Backend Follow API
+       next step me connect hoga.
     */
 
 }
@@ -1684,11 +1678,6 @@ function showUserStatus(user){
         "Not Accepted";
 
 
-    status =
-        String(status)
-            .trim();
-
-
     const allowed = [
         "Not Accepted",
         "Rejected",
@@ -1697,7 +1686,9 @@ function showUserStatus(user){
 
 
     if(
-        !allowed.includes(status)
+        !allowed.includes(
+            status
+        )
     ){
 
         status =
@@ -1711,6 +1702,62 @@ function showUserStatus(user){
         " • " +
         status
     );
+
+}
+
+
+/* =========================================================
+   OWN ACCOUNT
+========================================================= */
+
+function checkOwnAccount(users){
+
+    if(
+        !currentUser ||
+        !currentUser.user_id
+    ){
+
+        ownAccount.style.display =
+            "none";
+
+        return;
+
+    }
+
+
+    const myId =
+        String(
+            currentUser.user_id
+        )
+        .toLowerCase();
+
+
+    const found =
+        users.some(
+            function(user){
+
+                return (
+                    String(
+                        user.user_id || ""
+                    )
+                    .toLowerCase()
+                    ===
+                    myId
+                );
+
+            }
+        );
+
+
+    if(found){
+
+        ownAccount.style.display =
+            "block";
+
+        ownUserId.textContent =
+            currentUser.user_id;
+
+    }
 
 }
 
@@ -1780,7 +1827,7 @@ function clearMessage(){
 
 
 /* =========================================================
-   CLEAR RESULTS
+   CLEAR SEARCH
 ========================================================= */
 
 function clearResults(){
@@ -1791,7 +1838,6 @@ function clearResults(){
         "none";
 
     clearMessage();
-
 
     emptyState.style.display =
         "flex";
@@ -1807,60 +1853,6 @@ function clearResults(){
         ".empty-text"
     ).textContent =
         "Enter a User ID or phone number to find a person on Usanex.";
-
-}
-
-
-/* =========================================================
-   DP
-========================================================= */
-
-function openDp(photo){
-
-    const modal =
-        document.getElementById(
-            "dpModal"
-        );
-
-    const image =
-        document.getElementById(
-            "largeDp"
-        );
-
-
-    image.src =
-        photo;
-
-
-    modal.classList.add(
-        "show"
-    );
-
-}
-
-
-function closeDp(event){
-
-    if(
-        event &&
-        event.target &&
-        event.target.id !== "dpModal" &&
-        !event.target.classList.contains(
-            "dp-close"
-        )
-    ){
-
-        return;
-
-    }
-
-
-    document.getElementById(
-        "dpModal"
-    )
-    .classList.remove(
-        "show"
-    );
 
 }
 
