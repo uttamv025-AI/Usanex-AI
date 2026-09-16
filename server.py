@@ -5,7 +5,10 @@ from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 
 from argon2 import PasswordHasher
-from argon2.exceptions import VerifyMismatchError, VerificationError
+from argon2.exceptions import (
+    VerifyMismatchError,
+    VerificationError
+)
 
 from datetime import datetime, timedelta
 
@@ -65,13 +68,58 @@ class ResetPasswordRequest(BaseModel):
 
 
 # ============================================================
+# FOLLOW REQUEST
+# ============================================================
+
+class FollowRequest(BaseModel):
+
+    requester_user_id: str
+    target_user_id: str
+
+
+# ============================================================
+# ACCEPT / REJECT
+# ============================================================
+
+class ConnectionActionRequest(BaseModel):
+
+    notification_id: int
+    user_id: str
+
+
+# ============================================================
+# VERIFY CONNECTION CODE
+# ============================================================
+
+class VerifyConnectionCodeRequest(BaseModel):
+
+    requester_user_id: str
+    target_user_id: str
+    code: str
+
+
+# ============================================================
+# NOTIFICATION READ
+# ============================================================
+
+class NotificationReadRequest(BaseModel):
+
+    notification_id: int
+    user_id: str
+
+
+# ============================================================
 # DATABASE
 # ============================================================
 
 from database import (
     SessionLocal,
     User,
-    OTPVerification
+    OTPVerification,
+    ConnectionRequest,
+    ConnectionCode,
+    Notification,
+    Connection
 )
 
 
@@ -80,9 +128,11 @@ def get_db():
     db = SessionLocal()
 
     try:
+
         yield db
 
     finally:
+
         db.close()
 
 
@@ -115,20 +165,27 @@ def save_otp(
     )
 
     for old in old_otps:
+
         db.delete(old)
 
     new_otp = OTPVerification(
+
         identifier=identifier,
+
         otp=otp,
+
         purpose=purpose,
+
         expires_at=(
             datetime.utcnow()
             + timedelta(minutes=2)
         ),
+
         verified=False
     )
 
     db.add(new_otp)
+
     db.commit()
 
     return otp
@@ -205,14 +262,22 @@ async def search_users(
     )
 
     return {
+
         "ok": True,
+
         "users": [
+
             {
-                "user_id": user.user_id,
-                "name": user.name,
+                "user_id":
+                    user.user_id,
+
+                "name":
+                    user.name,
+
                 "profile_photo":
                     user.profile_photo
             }
+
             for user in users
         ]
     }
@@ -260,7 +325,7 @@ async def register_html():
 
 # ============================================================
 # LOGIN
-# USER ID OR MOBILE NUMBER
+# USER ID OR MOBILE
 # ============================================================
 
 @app.post("/login")
@@ -270,12 +335,15 @@ async def login(
 ):
 
     identifier = request.identifier.strip()
+
     password = request.password
 
     if not identifier or not password:
 
         return {
+
             "ok": False,
+
             "message":
                 "User ID/mobile and password are required"
         }
@@ -293,7 +361,9 @@ async def login(
     if not user:
 
         return {
+
             "ok": False,
+
             "message":
                 "Invalid User ID/mobile or password"
         }
@@ -311,7 +381,9 @@ async def login(
     ):
 
         return {
+
             "ok": False,
+
             "message":
                 "Invalid User ID/mobile or password"
         }
@@ -319,7 +391,9 @@ async def login(
     token = secrets.token_urlsafe(32)
 
     return {
+
         "ok": True,
+
         "message":
             "Login successful",
 
@@ -335,7 +409,10 @@ async def login(
                 user.name,
 
             "mobile":
-                user.mobile
+                user.mobile,
+
+            "profile_photo":
+                user.profile_photo
         }
     }
 
@@ -351,23 +428,23 @@ async def register_request_otp(
 ):
 
     name = request.name.strip()
+
     mobile = request.mobile.strip()
+
     password = request.password
 
     if not name:
 
         return {
             "ok": False,
-            "message":
-                "Name is required"
+            "message": "Name is required"
         }
 
     if not mobile:
 
         return {
             "ok": False,
-            "message":
-                "Mobile number is required"
+            "message": "Mobile number is required"
         }
 
     if (
@@ -385,8 +462,7 @@ async def register_request_otp(
 
         return {
             "ok": False,
-            "message":
-                "Password is required"
+            "message": "Password is required"
         }
 
     if len(password) < 6:
@@ -420,11 +496,15 @@ async def register_request_otp(
     )
 
     return {
+
         "ok": True,
+
         "message":
             "OTP generated",
+
         "otp":
             otp,
+
         "expires_in":
             120
     }
@@ -441,6 +521,7 @@ async def register_verify_otp(
 ):
 
     mobile = request.mobile.strip()
+
     otp = request.otp.strip()
 
     verification = (
@@ -459,7 +540,9 @@ async def register_verify_otp(
     if not verification:
 
         return {
+
             "ok": False,
+
             "message":
                 "OTP not found. Please request a new OTP"
         }
@@ -467,10 +550,13 @@ async def register_verify_otp(
     if datetime.utcnow() > verification.expires_at:
 
         db.delete(verification)
+
         db.commit()
 
         return {
+
             "ok": False,
+
             "message":
                 "OTP expired. Please request a new OTP"
         }
@@ -478,7 +564,9 @@ async def register_verify_otp(
     if verification.otp != otp:
 
         return {
+
             "ok": False,
+
             "message":
                 "Invalid OTP"
         }
@@ -494,7 +582,9 @@ async def register_verify_otp(
     if existing_user:
 
         return {
+
             "ok": False,
+
             "message":
                 "Mobile number already registered"
         }
@@ -511,9 +601,13 @@ async def register_verify_otp(
     )
 
     new_user = User(
+
         user_id=user_id,
+
         name=request.name.strip(),
+
         mobile=mobile,
+
         password_hash=password_hash
     )
 
@@ -532,13 +626,17 @@ async def register_verify_otp(
         db.rollback()
 
         return {
+
             "ok": False,
+
             "message":
                 "Registration failed. Please try again"
         }
 
     return {
+
         "ok": True,
+
         "message":
             "Registration successful",
 
@@ -568,7 +666,9 @@ async def forgot_password_request_otp(
     if not identifier:
 
         return {
+
             "ok": False,
+
             "message":
                 "User ID or mobile number is required"
         }
@@ -586,7 +686,9 @@ async def forgot_password_request_otp(
     if not user:
 
         return {
+
             "ok": False,
+
             "message":
                 "User ID or mobile number not found"
         }
@@ -598,11 +700,15 @@ async def forgot_password_request_otp(
     )
 
     return {
+
         "ok": True,
+
         "message":
             "OTP generated",
+
         "otp":
             otp,
+
         "expires_in":
             120
     }
@@ -619,6 +725,7 @@ async def forgot_password_verify_otp(
 ):
 
     identifier = request.identifier.strip()
+
     otp = request.otp.strip()
 
     user = (
@@ -634,7 +741,9 @@ async def forgot_password_verify_otp(
     if not user:
 
         return {
+
             "ok": False,
+
             "message":
                 "User not found"
         }
@@ -660,7 +769,9 @@ async def forgot_password_verify_otp(
     if not verification:
 
         return {
+
             "ok": False,
+
             "message":
                 "OTP not found. Please request a new OTP"
         }
@@ -668,10 +779,13 @@ async def forgot_password_verify_otp(
     if datetime.utcnow() > verification.expires_at:
 
         db.delete(verification)
+
         db.commit()
 
         return {
+
             "ok": False,
+
             "message":
                 "OTP expired. Please request a new OTP"
         }
@@ -679,7 +793,9 @@ async def forgot_password_verify_otp(
     if verification.otp != otp:
 
         return {
+
             "ok": False,
+
             "message":
                 "Invalid OTP"
         }
@@ -689,7 +805,9 @@ async def forgot_password_verify_otp(
     db.commit()
 
     return {
+
         "ok": True,
+
         "message":
             "OTP verified"
     }
@@ -710,7 +828,9 @@ async def reset_password(
     if len(request.new_password) < 6:
 
         return {
+
             "ok": False,
+
             "message":
                 "Password must be at least 6 characters"
         }
@@ -722,7 +842,9 @@ async def reset_password(
     ):
 
         return {
+
             "ok": False,
+
             "message":
                 "Passwords do not match"
         }
@@ -740,7 +862,9 @@ async def reset_password(
     if not user:
 
         return {
+
             "ok": False,
+
             "message":
                 "User not found"
         }
@@ -766,7 +890,9 @@ async def reset_password(
     if not verification:
 
         return {
+
             "ok": False,
+
             "message":
                 "OTP verification required"
         }
@@ -778,7 +904,9 @@ async def reset_password(
         db.commit()
 
         return {
+
             "ok": False,
+
             "message":
                 "OTP verification expired"
         }
@@ -794,9 +922,1121 @@ async def reset_password(
     db.commit()
 
     return {
+
         "ok": True,
+
         "message":
             "Password changed successfully"
+    }
+
+
+# ============================================================
+# ============================================================
+# FOLLOW SYSTEM
+# ============================================================
+# ============================================================
+
+
+# ============================================================
+# SEND FOLLOW REQUEST
+# ============================================================
+
+@app.post("/api/follow")
+async def follow_user(
+    request: FollowRequest,
+    db: Session = Depends(get_db)
+):
+
+    requester_id = (
+        request.requester_user_id.strip()
+    )
+
+    target_id = (
+        request.target_user_id.strip()
+    )
+
+    # --------------------------------------------------------
+    # Empty check
+    # --------------------------------------------------------
+
+    if not requester_id or not target_id:
+
+        return {
+
+            "ok": False,
+
+            "message":
+                "User IDs are required"
+        }
+
+    # --------------------------------------------------------
+    # Cannot follow yourself
+    # --------------------------------------------------------
+
+    if requester_id == target_id:
+
+        return {
+
+            "ok": False,
+
+            "message":
+                "You cannot follow your own account"
+        }
+
+    # --------------------------------------------------------
+    # Check users
+    # --------------------------------------------------------
+
+    requester = (
+        db.query(User)
+        .filter(
+            User.user_id == requester_id
+        )
+        .first()
+    )
+
+    target = (
+        db.query(User)
+        .filter(
+            User.user_id == target_id
+        )
+        .first()
+    )
+
+    if not requester:
+
+        return {
+
+            "ok": False,
+
+            "message":
+                "Requester account not found"
+        }
+
+    if not target:
+
+        return {
+
+            "ok": False,
+
+            "message":
+                "User not found"
+        }
+
+    # --------------------------------------------------------
+    # Existing connection?
+    # --------------------------------------------------------
+
+    existing_connection = (
+        db.query(Connection)
+        .filter(
+            (
+                (Connection.user_a_id == requester_id)
+                &
+                (Connection.user_b_id == target_id)
+            )
+            |
+            (
+                (Connection.user_a_id == target_id)
+                &
+                (Connection.user_b_id == requester_id)
+            )
+        )
+        .first()
+    )
+
+    if existing_connection:
+
+        return {
+
+            "ok": False,
+
+            "status":
+                "verified",
+
+            "message":
+                "You are already connected"
+        }
+
+    # --------------------------------------------------------
+    # Existing request
+    # --------------------------------------------------------
+
+    existing_request = (
+        db.query(ConnectionRequest)
+        .filter(
+            ConnectionRequest.requester_user_id
+            == requester_id,
+
+            ConnectionRequest.target_user_id
+            == target_id
+        )
+        .order_by(
+            ConnectionRequest.id.desc()
+        )
+        .first()
+    )
+
+    if existing_request:
+
+        if existing_request.status == "pending":
+
+            return {
+
+                "ok": True,
+
+                "status":
+                    "pending",
+
+                "message":
+                    "Follow request already sent"
+            }
+
+        if existing_request.status == "accepted":
+
+            return {
+
+                "ok": True,
+
+                "status":
+                    "accepted",
+
+                "message":
+                    "Request accepted. Verification code required"
+            }
+
+        if existing_request.status == "verified":
+
+            return {
+
+                "ok": True,
+
+                "status":
+                    "verified",
+
+                "message":
+                    "Connection already verified"
+            }
+
+        # rejected request ko dobara bhejne ki permission
+        existing_request.status = "pending"
+
+        existing_request.updated_at = datetime.utcnow()
+
+        request_row = existing_request
+
+    else:
+
+        request_row = ConnectionRequest(
+
+            requester_user_id=requester_id,
+
+            target_user_id=target_id,
+
+            status="pending"
+        )
+
+        db.add(request_row)
+
+        db.flush()
+
+    # --------------------------------------------------------
+    # Notification to target
+    # --------------------------------------------------------
+
+    notification = Notification(
+
+        receiver_user_id=target_id,
+
+        sender_user_id=requester_id,
+
+        type="follow_request",
+
+        title="New Follow Request",
+
+        message=(
+            f"{requester.name} wants to connect with you."
+        ),
+
+        connection_request_id=request_row.id,
+
+        verification_code=None,
+
+        is_read=False
+    )
+
+    db.add(notification)
+
+    db.commit()
+
+    return {
+
+        "ok": True,
+
+        "status":
+            "pending",
+
+        "message":
+            "Follow request sent"
+    }
+
+
+# ============================================================
+# FOLLOW STATUS
+# ============================================================
+
+@app.get("/api/follow/status")
+async def follow_status(
+    requester_user_id: str,
+    target_user_id: str,
+    db: Session = Depends(get_db)
+):
+
+    requester_id = requester_user_id.strip()
+
+    target_id = target_user_id.strip()
+
+    if not requester_id or not target_id:
+
+        return {
+
+            "ok": False,
+
+            "message":
+                "User IDs are required"
+        }
+
+    connection = (
+        db.query(Connection)
+        .filter(
+            (
+                (Connection.user_a_id == requester_id)
+                &
+                (Connection.user_b_id == target_id)
+            )
+            |
+            (
+                (Connection.user_a_id == target_id)
+                &
+                (Connection.user_b_id == requester_id)
+            )
+        )
+        .first()
+    )
+
+    if connection:
+
+        return {
+
+            "ok": True,
+
+            "status":
+                "verified"
+        }
+
+    row = (
+        db.query(ConnectionRequest)
+        .filter(
+            ConnectionRequest.requester_user_id
+            == requester_id,
+
+            ConnectionRequest.target_user_id
+            == target_id
+        )
+        .order_by(
+            ConnectionRequest.id.desc()
+        )
+        .first()
+    )
+
+    if not row:
+
+        return {
+
+            "ok": True,
+
+            "status":
+                "none"
+        }
+
+    return {
+
+        "ok": True,
+
+        "status":
+            row.status
+    }
+
+
+# ============================================================
+# GET NOTIFICATIONS
+# ============================================================
+
+@app.get("/api/notifications")
+async def get_notifications(
+    user_id: str,
+    db: Session = Depends(get_db)
+):
+
+    user_id = user_id.strip()
+
+    if not user_id:
+
+        return {
+
+            "ok": False,
+
+            "message":
+                "User ID is required"
+        }
+
+    notifications = (
+        db.query(Notification)
+        .filter(
+            Notification.receiver_user_id
+            == user_id
+        )
+        .order_by(
+            Notification.id.desc()
+        )
+        .limit(50)
+        .all()
+    )
+
+    result = []
+
+    for notification in notifications:
+
+        sender = None
+
+        if notification.sender_user_id:
+
+            sender = (
+                db.query(User)
+                .filter(
+                    User.user_id
+                    == notification.sender_user_id
+                )
+                .first()
+            )
+
+        result.append({
+
+            "id":
+                notification.id,
+
+            "type":
+                notification.type,
+
+            "title":
+                notification.title,
+
+            "message":
+                notification.message,
+
+            "sender": {
+
+                "user_id":
+                    sender.user_id
+                    if sender else None,
+
+                "name":
+                    sender.name
+                    if sender else None,
+
+                "profile_photo":
+                    sender.profile_photo
+                    if sender else None
+            },
+
+            "connection_request_id":
+                notification.connection_request_id,
+
+            "verification_code":
+                notification.verification_code,
+
+            "is_read":
+                notification.is_read,
+
+            "created_at":
+                notification.created_at.isoformat()
+        })
+
+    return {
+
+        "ok": True,
+
+        "notifications":
+            result
+    }
+
+
+# ============================================================
+# ACCEPT FOLLOW REQUEST
+# ============================================================
+
+@app.post("/api/follow/accept")
+async def accept_follow(
+    request: ConnectionActionRequest,
+    db: Session = Depends(get_db)
+):
+
+    notification = (
+        db.query(Notification)
+        .filter(
+            Notification.id
+            == request.notification_id,
+
+            Notification.receiver_user_id
+            == request.user_id
+        )
+        .first()
+    )
+
+    if not notification:
+
+        return {
+
+            "ok": False,
+
+            "message":
+                "Notification not found"
+        }
+
+    if notification.type != "follow_request":
+
+        return {
+
+            "ok": False,
+
+            "message":
+                "Invalid follow request"
+        }
+
+    connection_request = (
+        db.query(ConnectionRequest)
+        .filter(
+            ConnectionRequest.id
+            == notification.connection_request_id,
+
+            ConnectionRequest.target_user_id
+            == request.user_id
+        )
+        .first()
+    )
+
+    if not connection_request:
+
+        return {
+
+            "ok": False,
+
+            "message":
+                "Follow request not found"
+        }
+
+    # Already verified
+    if connection_request.status == "verified":
+
+        return {
+
+            "ok": True,
+
+            "status":
+                "verified",
+
+            "message":
+                "Connection already verified"
+        }
+
+    requester_id = (
+        connection_request.requester_user_id
+    )
+
+    target_id = (
+        connection_request.target_user_id
+    )
+
+    requester = (
+        db.query(User)
+        .filter(
+            User.user_id == requester_id
+        )
+        .first()
+    )
+
+    target = (
+        db.query(User)
+        .filter(
+            User.user_id == target_id
+        )
+        .first()
+    )
+
+    if not requester or not target:
+
+        return {
+
+            "ok": False,
+
+            "message":
+                "User account not found"
+        }
+
+    # --------------------------------------------------------
+    # Mark accepted
+    # --------------------------------------------------------
+
+    connection_request.status = "accepted"
+
+    connection_request.updated_at = datetime.utcnow()
+
+    notification.is_read = True
+
+    # --------------------------------------------------------
+    # Generate verification code
+    # --------------------------------------------------------
+
+    old_codes = (
+        db.query(ConnectionCode)
+        .filter(
+            ConnectionCode.requester_user_id
+            == requester_id,
+
+            ConnectionCode.target_user_id
+            == target_id,
+
+            ConnectionCode.verified
+            == False
+        )
+        .all()
+    )
+
+    for old_code in old_codes:
+
+        old_code.verified = True
+
+    code = generate_otp()
+
+    connection_code = ConnectionCode(
+
+        requester_user_id=requester_id,
+
+        target_user_id=target_id,
+
+        code=code,
+
+        expires_at=(
+            datetime.utcnow()
+            + timedelta(minutes=10)
+        ),
+
+        verified=False
+    )
+
+    db.add(connection_code)
+
+    # --------------------------------------------------------
+    # Notification to requester
+    # --------------------------------------------------------
+
+    requester_notification = Notification(
+
+        receiver_user_id=requester_id,
+
+        sender_user_id=target_id,
+
+        type="connection_code",
+
+        title="Connection Accepted",
+
+        message=(
+            f"{target.name} accepted your connection request. "
+            f"Your verification code is {code}. "
+            f"Search {target.user_id} and enter this code."
+        ),
+
+        connection_request_id=
+            connection_request.id,
+
+        verification_code=code,
+
+        is_read=False
+    )
+
+    db.add(requester_notification)
+
+    db.commit()
+
+    return {
+
+        "ok": True,
+
+        "status":
+            "accepted",
+
+        "message":
+            "Request accepted. Verification code sent",
+
+        "verification_code":
+            code
+    }
+
+
+# ============================================================
+# REJECT FOLLOW REQUEST
+# ============================================================
+
+@app.post("/api/follow/reject")
+async def reject_follow(
+    request: ConnectionActionRequest,
+    db: Session = Depends(get_db)
+):
+
+    notification = (
+        db.query(Notification)
+        .filter(
+            Notification.id
+            == request.notification_id,
+
+            Notification.receiver_user_id
+            == request.user_id
+        )
+        .first()
+    )
+
+    if not notification:
+
+        return {
+
+            "ok": False,
+
+            "message":
+                "Notification not found"
+        }
+
+    if notification.type != "follow_request":
+
+        return {
+
+            "ok": False,
+
+            "message":
+                "Invalid follow request"
+        }
+
+    connection_request = (
+        db.query(ConnectionRequest)
+        .filter(
+            ConnectionRequest.id
+            == notification.connection_request_id,
+
+            ConnectionRequest.target_user_id
+            == request.user_id
+        )
+        .first()
+    )
+
+    if not connection_request:
+
+        return {
+
+            "ok": False,
+
+            "message":
+                "Follow request not found"
+        }
+
+    requester_id = (
+        connection_request.requester_user_id
+    )
+
+    target_id = (
+        connection_request.target_user_id
+    )
+
+    target = (
+        db.query(User)
+        .filter(
+            User.user_id == target_id
+        )
+        .first()
+    )
+
+    # --------------------------------------------------------
+    # Reject
+    # --------------------------------------------------------
+
+    connection_request.status = "rejected"
+
+    connection_request.updated_at = datetime.utcnow()
+
+    notification.is_read = True
+
+    # --------------------------------------------------------
+    # Notify requester
+    # --------------------------------------------------------
+
+    requester_notification = Notification(
+
+        receiver_user_id=requester_id,
+
+        sender_user_id=target_id,
+
+        type="follow_rejected",
+
+        title="Connection Request Rejected",
+
+        message=(
+            f"{target.name if target else target_id} "
+            "rejected your connection request."
+        ),
+
+        connection_request_id=
+            connection_request.id,
+
+        verification_code=None,
+
+        is_read=False
+    )
+
+    db.add(requester_notification)
+
+    db.commit()
+
+    return {
+
+        "ok": True,
+
+        "status":
+            "rejected",
+
+        "message":
+            "Follow request rejected"
+    }
+
+
+# ============================================================
+# VERIFY CONNECTION CODE
+# ============================================================
+
+@app.post("/api/follow/verify")
+async def verify_connection(
+    request: VerifyConnectionCodeRequest,
+    db: Session = Depends(get_db)
+):
+
+    requester_id = (
+        request.requester_user_id.strip()
+    )
+
+    target_id = (
+        request.target_user_id.strip()
+    )
+
+    code = request.code.strip()
+
+    if not requester_id or not target_id:
+
+        return {
+
+            "ok": False,
+
+            "message":
+                "User IDs are required"
+        }
+
+    if not code:
+
+        return {
+
+            "ok": False,
+
+            "message":
+                "Verification code is required"
+        }
+
+    # --------------------------------------------------------
+    # Check request
+    # --------------------------------------------------------
+
+    connection_request = (
+        db.query(ConnectionRequest)
+        .filter(
+            ConnectionRequest.requester_user_id
+            == requester_id,
+
+            ConnectionRequest.target_user_id
+            == target_id
+        )
+        .order_by(
+            ConnectionRequest.id.desc()
+        )
+        .first()
+    )
+
+    if not connection_request:
+
+        return {
+
+            "ok": False,
+
+            "message":
+                "Connection request not found"
+        }
+
+    if connection_request.status != "accepted":
+
+        if connection_request.status == "verified":
+
+            return {
+
+                "ok": True,
+
+                "status":
+                    "verified",
+
+                "message":
+                    "Connection already verified"
+            }
+
+        return {
+
+            "ok": False,
+
+            "message":
+                "Connection has not been accepted"
+        }
+
+    # --------------------------------------------------------
+    # Find active code
+    # --------------------------------------------------------
+
+    connection_code = (
+        db.query(ConnectionCode)
+        .filter(
+            ConnectionCode.requester_user_id
+            == requester_id,
+
+            ConnectionCode.target_user_id
+            == target_id,
+
+            ConnectionCode.verified
+            == False
+        )
+        .order_by(
+            ConnectionCode.id.desc()
+        )
+        .first()
+    )
+
+    if not connection_code:
+
+        return {
+
+            "ok": False,
+
+            "message":
+                "Verification code not found"
+        }
+
+    # --------------------------------------------------------
+    # Expired
+    # --------------------------------------------------------
+
+    if datetime.utcnow() > connection_code.expires_at:
+
+        return {
+
+            "ok": False,
+
+            "message":
+                "Verification code expired"
+        }
+
+    # --------------------------------------------------------
+    # Wrong code
+    # --------------------------------------------------------
+
+    if connection_code.code != code:
+
+        return {
+
+            "ok": False,
+
+            "message":
+                "Invalid verification code"
+        }
+
+    # --------------------------------------------------------
+    # Verify
+    # --------------------------------------------------------
+
+    connection_code.verified = True
+
+    connection_request.status = "verified"
+
+    connection_request.updated_at = datetime.utcnow()
+
+    # --------------------------------------------------------
+    # Avoid duplicate connection
+    # --------------------------------------------------------
+
+    existing_connection = (
+        db.query(Connection)
+        .filter(
+            (
+                (Connection.user_a_id == requester_id)
+                &
+                (Connection.user_b_id == target_id)
+            )
+            |
+            (
+                (Connection.user_a_id == target_id)
+                &
+                (Connection.user_b_id == requester_id)
+            )
+        )
+        .first()
+    )
+
+    if not existing_connection:
+
+        new_connection = Connection(
+
+            user_a_id=requester_id,
+
+            user_b_id=target_id
+        )
+
+        db.add(new_connection)
+
+    # --------------------------------------------------------
+    # Notification
+    # --------------------------------------------------------
+
+    target = (
+        db.query(User)
+        .filter(
+            User.user_id == target_id
+        )
+        .first()
+    )
+
+    requester = (
+        db.query(User)
+        .filter(
+            User.user_id == requester_id
+        )
+        .first()
+    )
+
+    db.add(
+        Notification(
+
+            receiver_user_id=target_id,
+
+            sender_user_id=requester_id,
+
+            type="connection_verified",
+
+            title="Connection Verified",
+
+            message=(
+                f"You are now connected with "
+                f"{requester.name if requester else requester_id}."
+            ),
+
+            connection_request_id=
+                connection_request.id,
+
+            verification_code=None,
+
+            is_read=False
+        )
+    )
+
+    db.add(
+        Notification(
+
+            receiver_user_id=requester_id,
+
+            sender_user_id=target_id,
+
+            type="connection_verified",
+
+            title="Connection Verified",
+
+            message=(
+                f"You are now connected with "
+                f"{target.name if target else target_id}."
+            ),
+
+            connection_request_id=
+                connection_request.id,
+
+            verification_code=None,
+
+            is_read=False
+        )
+    )
+
+    db.commit()
+
+    return {
+
+        "ok": True,
+
+        "status":
+            "verified",
+
+        "message":
+            "Connection verified successfully"
+    }
+
+
+# ============================================================
+# MARK NOTIFICATION READ
+# ============================================================
+
+@app.post("/api/notifications/read")
+async def mark_notification_read(
+    request: NotificationReadRequest,
+    db: Session = Depends(get_db)
+):
+
+    notification = (
+        db.query(Notification)
+        .filter(
+            Notification.id
+            == request.notification_id,
+
+            Notification.receiver_user_id
+            == request.user_id
+        )
+        .first()
+    )
+
+    if not notification:
+
+        return {
+
+            "ok": False,
+
+            "message":
+                "Notification not found"
+        }
+
+    notification.is_read = True
+
+    db.commit()
+
+    return {
+
+        "ok": True,
+
+        "message":
+            "Notification marked as read"
     }
 
 
@@ -828,12 +2068,84 @@ async def home_page():
 
 @app.get("/api/home/connections")
 async def home_connections(
+    user_id: str = "",
     db: Session = Depends(get_db)
 ):
 
+    user_id = user_id.strip()
+
+    if not user_id:
+
+        return {
+
+            "ok": True,
+
+            "users": []
+        }
+
+    connections = (
+        db.query(Connection)
+        .filter(
+            (Connection.user_a_id == user_id)
+            |
+            (Connection.user_b_id == user_id)
+        )
+        .order_by(
+            Connection.id.desc()
+        )
+        .all()
+    )
+
+    users = []
+
+    seen = set()
+
+    for connection in connections:
+
+        if connection.user_a_id == user_id:
+
+            other_id = connection.user_b_id
+
+        else:
+
+            other_id = connection.user_a_id
+
+        if other_id in seen:
+
+            continue
+
+        seen.add(other_id)
+
+        user = (
+            db.query(User)
+            .filter(
+                User.user_id == other_id
+            )
+            .first()
+        )
+
+        if not user:
+
+            continue
+
+        users.append({
+
+            "user_id":
+                user.user_id,
+
+            "name":
+                user.name,
+
+            "profile_photo":
+                user.profile_photo
+        })
+
     return {
+
         "ok": True,
-        "users": []
+
+        "users":
+            users
     }
 
 
@@ -845,9 +2157,12 @@ async def home_connections(
 async def health():
 
     return {
+
         "ok": True,
+
         "status":
             "online",
+
         "app":
             "Usanex"
     }
@@ -869,7 +2184,10 @@ if __name__ == "__main__":
     )
 
     uvicorn.run(
+
         app,
+
         host="0.0.0.0",
+
         port=port
     )
