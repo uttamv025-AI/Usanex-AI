@@ -1,11 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
+
 <meta name="viewport"
       content="width=device-width, initial-scale=1.0">
 
 <title>Usanex</title>
+
 
 <style>
 
@@ -24,9 +28,7 @@ html,
 body{
     width:100%;
     min-height:100%;
-
     font-family:Arial,sans-serif;
-
     background:#07090d;
     color:#fff;
 }
@@ -48,8 +50,7 @@ input{
 
 .app{
     min-height:100vh;
-
-    padding-bottom:100px;
+    padding-bottom:82px;
 
     background:
         radial-gradient(
@@ -124,11 +125,8 @@ input{
 
 .logo-u{
     font-size:24px;
-
     font-weight:900;
-
     color:#fff;
-
     z-index:2;
 }
 
@@ -177,7 +175,7 @@ input{
 
 
 /* =========================================================
-   SEARCH
+   SEARCH BOX
 ========================================================= */
 
 .search-box{
@@ -188,6 +186,7 @@ input{
     height:42px;
 
     display:flex;
+
     align-items:center;
 
     padding:0 13px;
@@ -199,6 +198,19 @@ input{
     border:
         1px solid
         rgba(255,255,255,.08);
+
+    cursor:pointer;
+
+    transition:
+        border-color .2s,
+        transform .15s;
+}
+
+.search-box:active{
+    transform:scale(.985);
+
+    border-color:
+        rgba(50,150,255,.35);
 }
 
 .search-icon{
@@ -207,6 +219,8 @@ input{
     color:#8993a5;
 
     margin-right:7px;
+
+    flex-shrink:0;
 }
 
 .search-box input{
@@ -220,6 +234,8 @@ input{
     color:#fff;
 
     font-size:13px;
+
+    cursor:pointer;
 }
 
 .search-box input::placeholder{
@@ -250,6 +266,7 @@ input{
         rgba(255,255,255,.07);
 
     display:flex;
+
     align-items:center;
     justify-content:center;
 
@@ -290,6 +307,7 @@ input{
     font-weight:800;
 
     display:flex;
+
     align-items:center;
     justify-content:center;
 
@@ -333,7 +351,7 @@ input{
 ========================================================= */
 
 .status-wrapper{
-    padding:16px 15px 8px;
+    padding:16px 15px 12px;
 
     border-bottom:
         1px solid
@@ -380,6 +398,7 @@ input{
         );
 
     display:flex;
+
     align-items:center;
     justify-content:center;
 }
@@ -393,6 +412,7 @@ input{
     background:#151820;
 
     display:flex;
+
     align-items:center;
     justify-content:center;
 
@@ -454,6 +474,7 @@ input{
         #07090d;
 
     display:flex;
+
     align-items:center;
     justify-content:center;
 
@@ -542,24 +563,11 @@ input{
         0 8px 25px
         rgba(0,0,0,.16);
 
-    cursor:pointer;
+    cursor:default;
 
     transition:
-        transform .15s,
-        border-color .15s,
-        opacity .25s;
-}
-
-.user-card:active{
-    transform:scale(.985);
-}
-
-.user-card.removing{
-    opacity:0;
-
-    transform:
-        translateX(35px)
-        scale(.96);
+        opacity .25s,
+        border-color .2s;
 }
 
 
@@ -578,6 +586,7 @@ input{
     overflow:hidden;
 
     display:flex;
+
     align-items:center;
     justify-content:center;
 
@@ -629,6 +638,8 @@ input{
     min-width:0;
 
     margin-left:12px;
+
+    overflow:hidden;
 }
 
 .user-name{
@@ -659,7 +670,7 @@ input{
 
 
 /* =========================================================
-   FOLLOW BUTTON
+   CONNECTED BUTTON
 ========================================================= */
 
 .follow-btn{
@@ -673,55 +684,23 @@ input{
 
     border-radius:12px;
 
-    background:
-        linear-gradient(
-            145deg,
-            #3296ff,
-            #0758cb
-        );
-
-    color:#fff;
-
     font-size:12px;
 
     font-weight:700;
 
-    cursor:pointer;
-
     flex-shrink:0;
-}
-
-.follow-btn:active{
-    transform:scale(.96);
 }
 
 .follow-btn.connected{
     background:#252b36;
 
     color:#75e0a2;
-}
 
-.follow-btn.follow{
-    background:
-        linear-gradient(
-            145deg,
-            #3296ff,
-            #0758cb
-        );
-
-    color:#fff;
-}
-
-.follow-btn.loading{
-    background:#252b36;
-
-    color:#aeb7c5;
+    cursor:default;
 }
 
 .follow-btn:disabled{
-    opacity:.75;
-
-    cursor:default;
+    opacity:1;
 }
 
 
@@ -754,7 +733,6 @@ input{
     display:flex;
 
     align-items:center;
-
     justify-content:center;
 
     margin-bottom:16px;
@@ -823,11 +801,13 @@ input{
 
     z-index:100;
 
-    padding:0 5px;
+    padding:0 4px;
 }
 
 .nav-item{
-    min-width:60px;
+    flex:1;
+
+    min-width:0;
 
     display:flex;
 
@@ -844,12 +824,24 @@ input{
     font-size:10px;
 
     cursor:pointer;
+
+    transition:
+        color .15s,
+        transform .15s;
 }
 
 .nav-icon{
     font-size:21px;
 
     line-height:1;
+
+    height:23px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
 }
 
 .nav-item.active{
@@ -858,87 +850,6 @@ input{
 
 .nav-item:active{
     transform:scale(.94);
-}
-
-
-/* =========================================================
-   CAMERA ABOVE PROFILE
-========================================================= */
-
-.camera-wrap{
-    position:absolute;
-
-    right:46px;
-
-    bottom:54px;
-
-    width:56px;
-    height:56px;
-
-    border-radius:18px;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    background:
-        linear-gradient(
-            145deg,
-            #3296ff,
-            #0758cb
-        );
-
-    border:
-        4px solid
-        #07090d;
-
-    box-shadow:
-        0 9px 28px
-        rgba(20,105,232,.45);
-
-    cursor:pointer;
-
-    z-index:110;
-}
-
-.camera-icon{
-    font-size:22px;
-}
-
-
-/* CAMERA PLUS */
-
-.camera-plus{
-    position:absolute;
-
-    right:-5px;
-
-    top:-8px;
-
-    width:21px;
-    height:21px;
-
-    border-radius:50%;
-
-    background:#2d91ff;
-
-    border:
-        2px solid
-        #07090d;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    font-size:13px;
-
-    font-weight:900;
-
-    color:#fff;
 }
 
 
@@ -1193,19 +1104,23 @@ input{
         padding:0 9px;
     }
 
-    .camera-wrap{
-        right:38px;
-
-        width:54px;
-        height:54px;
+    .nav-item{
+        font-size:9px;
     }
+
+    .nav-icon{
+        font-size:20px;
+    }
+
 }
 
 </style>
+
 </head>
 
 
 <body>
+
 
 <div class="app">
 
@@ -1215,6 +1130,9 @@ input{
 ======================================================= -->
 
 <header class="header">
+
+
+    <!-- LOGO -->
 
     <div class="logo-mark">
 
@@ -1232,6 +1150,8 @@ input{
     </div>
 
 
+    <!-- SEARCH -->
+
     <div
         class="search-box"
         id="searchBox">
@@ -1245,10 +1165,13 @@ input{
             type="text"
             placeholder="Search people..."
             autocomplete="off"
+            readonly
         >
 
     </div>
 
+
+    <!-- NOTIFICATION -->
 
     <button
         class="header-btn"
@@ -1267,6 +1190,8 @@ input{
 
     </button>
 
+
+    <!-- MENU -->
 
     <button
         class="header-btn"
@@ -1293,13 +1218,18 @@ input{
 
 <section class="status-wrapper">
 
+
     <div
         class="status-scroll"
         id="statusScroll">
 
+
+        <!-- YOUR STATUS -->
+
         <div
             class="status-item add-status"
             id="yourStatus">
+
 
             <div class="status-circle">
 
@@ -1323,7 +1253,9 @@ input{
                 You
             </div>
 
+
         </div>
+
 
     </div>
 
@@ -1356,7 +1288,6 @@ input{
         <div
             class="people-list"
             id="peopleList">
-
         </div>
 
 
@@ -1370,18 +1301,24 @@ input{
         id="noConnected"
         style="display:none;">
 
+
         <div class="no-connected-icon">
             👥
         </div>
+
 
         <div class="no-connected-title">
             No connected people
         </div>
 
+
         <div class="no-connected-text">
+
             Search people above and connect with them
             to see them here.
+
         </div>
+
 
     </section>
 
@@ -1396,6 +1333,8 @@ input{
 
 <nav class="bottom-nav">
 
+
+    <!-- HOME -->
 
     <div
         class="nav-item active"
@@ -1412,6 +1351,8 @@ input{
     </div>
 
 
+    <!-- REEL -->
+
     <div
         class="nav-item"
         id="reelNav">
@@ -1427,20 +1368,41 @@ input{
     </div>
 
 
+    <!-- CAMERA -->
+
     <div
         class="nav-item"
-        id="collNav">
+        id="cameraNav">
 
         <div class="nav-icon">
-            ◎
+            📷
         </div>
 
         <div>
-            coll
+            Camera
         </div>
 
     </div>
 
+
+    <!-- USERS -->
+
+    <div
+        class="nav-item"
+        id="usersNav">
+
+        <div class="nav-icon">
+            👥
+        </div>
+
+        <div>
+            Users
+        </div>
+
+    </div>
+
+
+    <!-- PROFILE -->
 
     <div
         class="nav-item"
@@ -1456,22 +1418,6 @@ input{
 
     </div>
 
-
-    <!-- CAMERA ABOVE PROFILE -->
-
-    <div
-        class="camera-wrap"
-        id="cameraBtn">
-
-        <div class="camera-icon">
-            📷
-        </div>
-
-        <div class="camera-plus">
-            +
-        </div>
-
-    </div>
 
 </nav>
 
@@ -1496,6 +1442,7 @@ input{
 
         <div class="menu-user">
 
+
             <div
                 class="menu-user-name"
                 id="menuUserName">
@@ -1512,6 +1459,7 @@ input{
                 @user
 
             </div>
+
 
         </div>
 
@@ -1586,7 +1534,10 @@ function getCurrentUser(){
 
     }catch(error){
 
-        console.log(error);
+        console.log(
+            "usanex_user error:",
+            error
+        );
 
     }
 
@@ -1606,7 +1557,10 @@ function getCurrentUser(){
 
     }catch(error){
 
-        console.log(error);
+        console.log(
+            "user error:",
+            error
+        );
 
     }
 
@@ -1648,16 +1602,20 @@ function showToast(message){
             "statusPopup"
         );
 
+
     popup.textContent =
         message;
+
 
     popup.classList.add(
         "show"
     );
 
+
     clearTimeout(
         toastTimer
     );
+
 
     toastTimer =
         setTimeout(
@@ -1721,6 +1679,7 @@ function updateUserUI(){
 
 
     const photo =
+        currentUser.profile_photo ||
         currentUser.profile_picture ||
         currentUser.avatar ||
         currentUser.photo ||
@@ -1884,14 +1843,36 @@ function hideNotificationBadge(){
 
 
 /* =========================================================
-   SEARCH
+   SEARCH BOX
+   TAP -> NEW SEARCH PAGE
 ========================================================= */
+
+const searchBox =
+    document.getElementById(
+        "searchBox"
+    );
+
 
 const searchInput =
     document.getElementById(
         "searchInput"
     );
 
+
+searchBox.addEventListener(
+    "click",
+    function(){
+
+        window.location.href =
+            "/search";
+
+    }
+);
+
+
+/* =========================================================
+   SEARCH ENTER
+========================================================= */
 
 searchInput.addEventListener(
     "keydown",
@@ -1907,38 +1888,8 @@ searchInput.addEventListener(
         }
 
 
-        const query =
-            searchInput.value.trim();
-
-
-        if(!query){
-
-            showToast(
-                "Enter a name or user ID"
-            );
-
-            return;
-
-        }
-
-
         window.location.href =
-            "/search?query=" +
-            encodeURIComponent(
-                query
-            );
-
-    }
-);
-
-
-document.getElementById(
-    "searchBox"
-).addEventListener(
-    "click",
-    function(){
-
-        searchInput.focus();
+            "/search";
 
     }
 );
@@ -2080,6 +2031,9 @@ document.getElementById(
    BOTTOM NAV
 ========================================================= */
 
+
+/* HOME */
+
 document.getElementById(
     "homeNav"
 ).addEventListener(
@@ -2092,6 +2046,8 @@ document.getElementById(
     }
 );
 
+
+/* REEL */
 
 document.getElementById(
     "reelNav"
@@ -2106,8 +2062,26 @@ document.getElementById(
 );
 
 
+/* CAMERA */
+
 document.getElementById(
-    "collNav"
+    "cameraNav"
+).addEventListener(
+    "click",
+    function(){
+
+        showToast(
+            "Camera feature coming soon"
+        );
+
+    }
+);
+
+
+/* USERS -> SEARCH */
+
+document.getElementById(
+    "usersNav"
 ).addEventListener(
     "click",
     function(){
@@ -2118,6 +2092,8 @@ document.getElementById(
     }
 );
 
+
+/* PROFILE */
 
 document.getElementById(
     "profileNav"
@@ -2142,24 +2118,6 @@ document.getElementById(
                 "/search";
 
         }
-
-    }
-);
-
-
-/* =========================================================
-   CAMERA
-========================================================= */
-
-document.getElementById(
-    "cameraBtn"
-).addEventListener(
-    "click",
-    function(){
-
-        showToast(
-            "Camera feature coming soon"
-        );
 
     }
 );
@@ -2227,6 +2185,7 @@ function normalizePerson(item){
 
 
     const photo =
+        person.profile_photo ||
         person.profile_picture ||
         person.avatar ||
         person.photo ||
@@ -2236,11 +2195,17 @@ function normalizePerson(item){
 
     return {
 
-        user_id:String(userId),
+        user_id:String(
+            userId
+        ),
 
-        name:String(name),
+        name:String(
+            name
+        ),
 
-        photo:String(photo)
+        photo:String(
+            photo
+        )
 
     };
 
@@ -2270,7 +2235,8 @@ async function loadConnections(){
         !currentUser.user_id
     ){
 
-        list.innerHTML = "";
+        list.innerHTML =
+            "";
 
         empty.style.display =
             "flex";
@@ -2312,11 +2278,15 @@ async function loadConnections(){
         let people = [];
 
 
-        if(Array.isArray(data)){
+        if(
+            Array.isArray(data)
+        ){
 
-            people = data;
+            people =
+                data;
 
-        }else if(
+        }
+        else if(
             Array.isArray(
                 data.connections
             )
@@ -2325,7 +2295,8 @@ async function loadConnections(){
             people =
                 data.connections;
 
-        }else if(
+        }
+        else if(
             Array.isArray(
                 data.users
             )
@@ -2334,7 +2305,8 @@ async function loadConnections(){
             people =
                 data.users;
 
-        }else if(
+        }
+        else if(
             Array.isArray(
                 data.data
             )
@@ -2348,16 +2320,20 @@ async function loadConnections(){
 
         const normalized =
             people
-                .map(normalizePerson)
+                .map(
+                    normalizePerson
+                )
                 .filter(
                     function(person){
 
-                        return person &&
-                               person.user_id &&
-                               person.user_id !==
-                               String(
-                                   currentUser.user_id
-                               );
+                        return (
+                            person &&
+                            person.user_id &&
+                            person.user_id !==
+                            String(
+                                currentUser.user_id
+                            )
+                        );
 
                     }
                 );
@@ -2376,7 +2352,8 @@ async function loadConnections(){
         );
 
 
-        list.innerHTML = "";
+        list.innerHTML =
+            "";
 
 
         empty.style.display =
@@ -2405,7 +2382,8 @@ function renderPeople(people){
         );
 
 
-    list.innerHTML = "";
+    list.innerHTML =
+        "";
 
 
     if(
@@ -2445,7 +2423,9 @@ function renderPeople(people){
 
 
 /* =========================================================
-   CREATE PERSON CARD
+   CREATE CONNECTED PERSON CARD
+   NO FOLLOW
+   NO CLICK
 ========================================================= */
 
 function createPersonCard(person){
@@ -2463,6 +2443,10 @@ function createPersonCard(person){
     card.dataset.userId =
         person.user_id;
 
+
+    /* =====================================================
+       PROFILE PHOTO
+    ===================================================== */
 
     const dp =
         document.createElement(
@@ -2487,13 +2471,14 @@ function createPersonCard(person){
 
 
         img.alt =
-            person.name;
+            "";
 
 
         img.onerror =
             function(){
 
                 this.remove();
+
 
                 dp.textContent =
                     person.name
@@ -2516,6 +2501,10 @@ function createPersonCard(person){
 
     }
 
+
+    /* =====================================================
+       USER INFO
+    ===================================================== */
 
     const info =
         document.createElement(
@@ -2560,10 +2549,15 @@ function createPersonCard(person){
         name
     );
 
+
     info.appendChild(
         userId
     );
 
+
+    /* =====================================================
+       CONNECTED BUTTON
+    ===================================================== */
 
     const button =
         document.createElement(
@@ -2583,108 +2577,30 @@ function createPersonCard(person){
         "button";
 
 
-    button.dataset.state =
-        "connected";
+    button.disabled =
+        true;
 
 
-    /* -----------------------------------------------------
-       CARD CLICK
-       Connected -> Follow
-    ----------------------------------------------------- */
+    /*
+       IMPORTANT:
 
-    card.addEventListener(
-        "click",
-        function(event){
+       No card click event.
 
-            if(
-                event.target ===
-                button
-            ){
+       No button click event.
 
-                return;
-
-            }
-
-
-            if(
-                button.dataset.state ===
-                "connected"
-            ){
-
-                button.dataset.state =
-                    "follow";
-
-
-                button.className =
-                    "follow-btn follow";
-
-
-                button.textContent =
-                    "Follow";
-
-            }
-
-        }
-    );
-
-
-    /* -----------------------------------------------------
-       FOLLOW CLICK
-    ----------------------------------------------------- */
-
-    button.addEventListener(
-        "click",
-        function(event){
-
-            event.stopPropagation();
-
-
-            if(
-                button.dataset.state ===
-                "connected"
-            ){
-
-                button.dataset.state =
-                    "follow";
-
-
-                button.className =
-                    "follow-btn follow";
-
-
-                button.textContent =
-                    "Follow";
-
-
-                return;
-
-            }
-
-
-            if(
-                button.dataset.state ===
-                "follow"
-            ){
-
-                sendFollow(
-                    person,
-                    card,
-                    button
-                );
-
-            }
-
-        }
-    );
+       Connected can NEVER become Follow.
+    */
 
 
     card.appendChild(
         dp
     );
 
+
     card.appendChild(
         info
     );
+
 
     card.appendChild(
         button
@@ -2692,195 +2608,6 @@ function createPersonCard(person){
 
 
     return card;
-
-}
-
-
-/* =========================================================
-   SEND FOLLOW
-========================================================= */
-
-async function sendFollow(
-    person,
-    card,
-    button
-){
-
-    if(
-        !currentUser ||
-        !currentUser.user_id
-    ){
-
-        showToast(
-            "Please login again"
-        );
-
-        return;
-
-    }
-
-
-    button.disabled =
-        true;
-
-
-    button.dataset.state =
-        "loading";
-
-
-    button.className =
-        "follow-btn loading";
-
-
-    button.textContent =
-        "Sending...";
-
-
-    try{
-
-        const response =
-            await fetch(
-                "/api/follow",
-                {
-                    method:"POST",
-
-                    headers:{
-                        "Content-Type":
-                            "application/json"
-                    },
-
-                    body:JSON.stringify({
-
-                        requester_id:
-                            currentUser.user_id,
-
-                        target_user_id:
-                            person.user_id
-
-                    })
-
-                }
-            );
-
-
-        const data =
-            await response.json()
-                .catch(
-                    function(){
-
-                        return {};
-
-                    }
-                );
-
-
-        if(!response.ok){
-
-            throw new Error(
-                data.detail ||
-                data.message ||
-                "Follow failed"
-            );
-
-        }
-
-
-        /* -------------------------------------------------
-           SUCCESS
-        ------------------------------------------------- */
-
-        card.classList.add(
-            "removing"
-        );
-
-
-        showToast(
-            data.message ||
-            "Follow request sent"
-        );
-
-
-        setTimeout(
-            function(){
-
-                card.remove();
-
-
-                checkEmptyPeople();
-
-            },
-            280
-        );
-
-
-        loadNotificationCount();
-
-
-    }catch(error){
-
-        console.log(
-            "Follow error:",
-            error
-        );
-
-
-        button.disabled =
-            false;
-
-
-        button.dataset.state =
-            "follow";
-
-
-        button.className =
-            "follow-btn follow";
-
-
-        button.textContent =
-            "Follow";
-
-
-        showToast(
-            error.message ||
-            "Follow request failed"
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   CHECK EMPTY
-========================================================= */
-
-function checkEmptyPeople(){
-
-    const list =
-        document.getElementById(
-            "peopleList"
-        );
-
-
-    const empty =
-        document.getElementById(
-            "noConnected"
-        );
-
-
-    if(
-        list.children.length === 0
-    ){
-
-        empty.style.display =
-            "flex";
-
-    }else{
-
-        empty.style.display =
-            "none";
-
-    }
 
 }
 
@@ -2962,11 +2689,6 @@ function connectSocket(){
                     }
 
 
-                    /* -------------------------------------
-                       Connection update
-                       Home list refresh
-                    ------------------------------------- */
-
                     if(
                         message &&
                         (
@@ -2991,6 +2713,7 @@ function connectSocket(){
                         "Socket message error:",
                         error
                     );
+
 
                     loadNotificationCount();
 
@@ -3158,6 +2881,7 @@ setInterval(
 })();
 
 </script>
+
 
 </body>
 </html>
