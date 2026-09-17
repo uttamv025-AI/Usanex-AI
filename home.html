@@ -38,95 +38,69 @@ body{
 
 /* ================= USANEX LOGO ================= */
 
+.brand{
+    display:flex;
+    align-items:center;
+    flex-shrink:0;
+}
+
 .logo-mark{
     width:43px;
     height:43px;
-    min-width:43px;
-    border-radius:13px;
-
-    position:relative;
-    overflow:hidden;
+    border-radius:14px;
 
     display:flex;
     align-items:center;
     justify-content:center;
 
+    position:relative;
+
     background:
         linear-gradient(
             145deg,
-            #2185ff 0%,
-            #0868e8 48%,
-            #0049b5 100%
+            #2d91ff,
+            #0756c9
         );
 
-    border:1px solid rgba(255,255,255,.16);
-
     box-shadow:
-        0 5px 18px rgba(0,100,255,.30),
-        inset 0 1px 2px rgba(255,255,255,.20);
+        0 7px 22px
+        rgba(18,105,232,.38);
 }
 
 .logo-u{
-    position:relative;
-    z-index:3;
-
-    color:#ffffff;
-
-    font-size:27px;
-    line-height:1;
-
+    font-size:25px;
     font-weight:900;
-
-    letter-spacing:-2px;
-
-    transform:translateY(-1px);
-
-    text-shadow:
-        0 2px 5px rgba(0,0,0,.25);
+    color:#fff;
+    z-index:2;
 }
 
 .logo-shine{
     position:absolute;
-    z-index:2;
-
-    width:65px;
-    height:15px;
-
-    top:-8px;
-    left:-24px;
-
-    background:rgba(255,255,255,.23);
-
-    transform:rotate(-38deg);
-
-    filter:blur(1px);
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    background:#fff;
+    right:7px;
+    top:6px;
+    opacity:.9;
 }
 
-.logo-mark::after{
+.logo-mark:after{
     content:"";
-
     position:absolute;
-
-    width:22px;
-    height:22px;
-
-    right:-8px;
-    bottom:-9px;
-
-    border-radius:50%;
-
-    background:rgba(255,255,255,.08);
-
-    z-index:1;
+    width:21px;
+    height:4px;
+    border-radius:10px;
+    background:rgba(255,255,255,.25);
+    left:11px;
+    bottom:6px;
 }
 
 .logo-name{
-    font-size:19px;
-    font-weight:700;
-    margin-right:3px;
-
-    color:#ffffff;
-    white-space:nowrap;
+    margin-left:9px;
+    font-size:20px;
+    font-weight:800;
+    letter-spacing:-.5px;
 }
 
 /* ================= SEARCH ================= */
@@ -536,17 +510,16 @@ body{
     .logo-mark{
         width:42px;
         height:42px;
-        min-width:42px;
     }
 
     .logo-u{
-        font-size:27px;
+        font-size:25px;
     }
 
     .logo-name{
         display:block;
         font-size:18px;
-        margin-right:0;
+        margin-left:9px;
     }
 
     .search-box{
@@ -557,6 +530,42 @@ body{
         padding-top:13px;
     }
 }
+
+/* ================= SEARCH LOGO MOBILE SIZE ================= */
+
+@media(max-width:390px){
+
+    .header{
+        padding:0 10px;
+        gap:7px;
+    }
+
+    .logo-mark{
+        width:38px;
+        height:38px;
+        border-radius:12px;
+    }
+
+    .logo-u{
+        font-size:22px;
+    }
+
+    .logo-name{
+        margin-left:6px;
+        font-size:16px;
+    }
+
+    .search-box{
+        height:40px;
+        padding:0 11px;
+    }
+
+    .search-icon{
+        font-size:19px;
+        margin-right:5px;
+    }
+
+}
 </style>
 </head>
 
@@ -566,19 +575,45 @@ body{
 
 <header class="header">
 
-    <div class="logo-mark">
-        <div class="logo-u">U</div>
-        <div class="logo-shine"></div>
+    <div class="brand">
+
+        <div class="logo-mark">
+
+            <span class="logo-u">
+                U
+            </span>
+
+            <span class="logo-shine"></span>
+
+        </div>
+
+        <div class="logo-name">
+            Usanex
+        </div>
+
     </div>
 
-    <div class="logo-name">Usanex</div>
 
     <div class="search-box" id="searchBox">
-        <span class="search-icon">⌕</span>
-        <span class="search-text">Search people...</span>
+
+        <span class="search-icon">
+            ⌕
+        </span>
+
+        <span class="search-text">
+            Search people...
+        </span>
+
     </div>
 
-    <button class="menu-btn" id="menuBtn">☰</button>
+
+    <button
+        class="menu-btn"
+        id="menuBtn">
+
+        ☰
+
+    </button>
 
 </header>
 
@@ -587,7 +622,9 @@ body{
 
 <section class="status-section">
 
-    <div class="section-title">Status</div>
+    <div class="section-title">
+        Status
+    </div>
 
     <div class="status-scroll">
 
@@ -595,29 +632,45 @@ body{
 
             <div class="status-circle you-circle">
 
-                <span id="youLetter">U</span>
+                <span id="youLetter">
+                    U
+                </span>
 
-                <div class="plus-small">+</div>
+                <div class="plus-small">
+                    +
+                </div>
 
             </div>
 
-            <div class="status-name">You</div>
+            <div class="status-name">
+                You
+            </div>
 
         </div>
 
+
         <div class="status-item">
 
-            <div class="status-circle">S</div>
+            <div class="status-circle">
+                S
+            </div>
 
-            <div class="status-name">Status</div>
+            <div class="status-name">
+                Status
+            </div>
 
         </div>
 
+
         <div class="status-item">
 
-            <div class="status-circle">K</div>
+            <div class="status-circle">
+                K
+            </div>
 
-            <div class="status-name">Status</div>
+            <div class="status-name">
+                Status
+            </div>
 
         </div>
 
@@ -636,20 +689,26 @@ body{
             Connected People
         </div>
 
-        <div class="connection-count" id="connectionCount">
+        <div
+            class="connection-count"
+            id="connectionCount">
+
             0
+
         </div>
 
     </div>
 
+
     <div
         class="connections-list"
-        id="connectionsList"
-    >
+        id="connectionsList">
 
         <div class="empty-box">
 
-            <div class="empty-icon">◌</div>
+            <div class="empty-icon">
+                ◌
+            </div>
 
             <div class="empty-title">
                 Loading connections...
@@ -675,8 +734,7 @@ body{
     <div
         class="nav-item active"
         id="homeNav"
-        onclick="goHome()"
-    >
+        onclick="goHome()">
 
         <div class="nav-icon">
             ⌂
@@ -689,8 +747,7 @@ body{
 
     <div
         class="nav-item"
-        onclick="goReels()"
-    >
+        onclick="goReels()">
 
         <div class="nav-icon">
             ▶
@@ -703,8 +760,7 @@ body{
 
     <div
         class="nav-item"
-        onclick="createPost()"
-    >
+        onclick="createPost()">
 
         <div class="plus-nav">
             +
@@ -717,8 +773,7 @@ body{
 
     <div
         class="nav-item"
-        onclick="goNotifications()"
-    >
+        onclick="goNotifications()">
 
         <div class="nav-icon">
             ♡
@@ -726,9 +781,10 @@ body{
 
         <div
             class="notification-badge"
-            id="notificationBadge"
-        >
+            id="notificationBadge">
+
             0
+
         </div>
 
     </div>
@@ -738,8 +794,7 @@ body{
 
     <div
         class="nav-item"
-        onclick="goProfile()"
-    >
+        onclick="goProfile()">
 
         <div class="nav-icon">
             ◉
@@ -754,33 +809,46 @@ body{
 
 <div
     class="menu-overlay"
-    id="menuOverlay"
->
+    id="menuOverlay">
 
     <div class="menu-panel">
 
         <div
             class="menu-item"
-            onclick="goSearch()"
-        >
+            onclick="goSearch()">
+
             🔎
-            <span>Search</span>
+
+            <span>
+                Search
+            </span>
+
         </div>
+
 
         <div
             class="menu-item"
-            onclick="goNotifications()"
-        >
+            onclick="goNotifications()">
+
             ♡
-            <span>Notifications</span>
+
+            <span>
+                Notifications
+            </span>
+
         </div>
+
 
         <div
             class="menu-item logout"
-            onclick="logoutUser()"
-        >
+            onclick="logoutUser()">
+
             ↪
-            <span>Logout</span>
+
+            <span>
+                Logout
+            </span>
+
         </div>
 
     </div>
@@ -792,8 +860,8 @@ body{
 
 <div
     class="toast"
-    id="toast"
-></div>
+    id="toast">
+</div>
 
 
 <script>
@@ -1012,7 +1080,9 @@ async function loadConnections(){
 
         <div class="empty-box">
 
-            <div class="empty-icon">◌</div>
+            <div class="empty-icon">
+                ◌
+            </div>
 
             <div class="empty-title">
                 Loading connections...
