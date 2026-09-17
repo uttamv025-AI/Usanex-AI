@@ -3,125 +3,276 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
 <title>Usanex</title>
 
 <style>
+
 *{
     box-sizing:border-box;
     margin:0;
     padding:0;
+    -webkit-tap-highlight-color:transparent;
+}
+
+html,body{
+    width:100%;
+    min-height:100%;
+    font-family:Arial,sans-serif;
+    background:#07090d;
+    color:#fff;
 }
 
 body{
-    font-family:Inter,Arial,sans-serif;
-    background:#f5f8ff;
-    color:#13233c;
     min-height:100vh;
+    overflow-x:hidden;
 }
 
 .app{
-    width:min(700px,100%);
     min-height:100vh;
-    margin:auto;
-    background:#f7f9fd;
-    position:relative;
-    padding-bottom:82px;
+    padding-bottom:100px;
+
+    background:
+        radial-gradient(
+            circle at 50% -10%,
+            rgba(24,105,232,.18),
+            transparent 38%
+        ),
+        #07090d;
 }
 
 
 /* =========================
-   TOP
+   TOPBAR
 ========================= */
 
 .topbar{
-    height:65px;
-    background:#fff;
-    border-bottom:1px solid #e7ebf2;
+    height:78px;
+
+    padding:0 14px;
+
     display:flex;
     align-items:center;
-    padding:0 13px;
-    gap:10px;
+
+    gap:9px;
+
+    background:rgba(7,9,13,.90);
+
+    border-bottom:
+        1px solid rgba(255,255,255,.07);
+
     position:sticky;
     top:0;
-    z-index:30;
+
+    z-index:50;
+
+    backdrop-filter:blur(18px);
 }
+
+
+/* =========================
+   LOGO
+========================= */
 
 .brand{
     display:flex;
     align-items:center;
     gap:7px;
+
     flex-shrink:0;
 }
 
-.logo{
-    width:39px;
-    height:39px;
-    border-radius:12px;
-    background:linear-gradient(145deg,#168bff,#0865d8);
-    color:white;
-    display:grid;
-    place-items:center;
-    font-size:21px;
-    font-weight:900;
-}
+.logo-mark{
+    width:42px;
+    height:42px;
 
-.brand-name{
-    font-size:18px;
-    font-weight:850;
-    color:#083b77;
-}
+    border-radius:13px;
 
-.search{
-    flex:1;
-    height:40px;
-    border:1px solid #dfe6f0;
-    background:#f5f8fc;
-    border-radius:14px;
     display:flex;
     align-items:center;
+    justify-content:center;
+
+    position:relative;
+
+    background:
+        linear-gradient(
+            145deg,
+            #2d91ff,
+            #0756c9
+        );
+
+    box-shadow:
+        0 7px 22px
+        rgba(18,105,232,.38);
+}
+
+.logo-u{
+    font-size:24px;
+    font-weight:900;
+    color:#fff;
+
+    z-index:2;
+}
+
+.logo-shine{
+    position:absolute;
+
+    width:7px;
+    height:7px;
+
+    border-radius:50%;
+
+    background:#fff;
+
+    right:7px;
+    top:6px;
+
+    opacity:.9;
+}
+
+.logo-mark:after{
+    content:"";
+
+    position:absolute;
+
+    width:21px;
+    height:4px;
+
+    border-radius:10px;
+
+    background:
+        rgba(255,255,255,.25);
+
+    left:10px;
+    bottom:6px;
+}
+
+.logo-name{
+    font-size:18px;
+    font-weight:800;
+
+    letter-spacing:-.4px;
+}
+
+
+/* =========================
+   SEARCH
+========================= */
+
+.search-box{
+    flex:1;
+
+    min-width:0;
+
+    height:42px;
+
+    display:flex;
+    align-items:center;
+
     padding:0 12px;
+
+    border-radius:22px;
+
+    background:#151820;
+
+    border:
+        1px solid
+        rgba(255,255,255,.08);
 }
 
-.search span{
-    font-size:16px;
+.search-icon{
+    font-size:19px;
+
+    color:#8993a5;
+
+    margin-right:7px;
 }
 
-.search input{
+.search-box input{
     width:100%;
+
     border:0;
     outline:0;
-    background:none;
-    margin-left:7px;
+
+    background:transparent;
+
+    color:#fff;
+
     font-size:13px;
 }
 
-.top-btn{
-    width:38px;
-    height:38px;
-    border:0;
-    background:#f1f5fb;
-    border-radius:12px;
-    cursor:pointer;
-    font-size:18px;
-    position:relative;
+.search-box input::placeholder{
+    color:#747d8d;
 }
+
+
+/* =========================
+   TOP BUTTON
+========================= */
+
+.top-btn{
+    width:40px;
+    height:40px;
+
+    flex-shrink:0;
+
+    border:0;
+
+    border-radius:13px;
+
+    background:#151820;
+
+    color:#fff;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:19px;
+
+    cursor:pointer;
+
+    position:relative;
+
+    border:
+        1px solid
+        rgba(255,255,255,.07);
+}
+
+
+/* =========================
+   BADGE
+========================= */
 
 .badge{
     position:absolute;
+
     top:-5px;
     right:-5px;
+
     min-width:18px;
     height:18px;
+
     padding:0 5px;
+
     border-radius:20px;
+
     background:#ef4444;
+
     color:#fff;
+
     display:none;
+
     align-items:center;
     justify-content:center;
+
     font-size:9px;
+
     font-weight:800;
-    border:2px solid white;
+
+    border:
+        2px solid
+        #07090d;
 }
 
 
@@ -130,21 +281,31 @@ body{
 ========================= */
 
 .status-wrap{
-    background:#fff;
-    border-bottom:1px solid #e9edf4;
-    padding:12px 12px 10px;
+    padding:14px 14px 12px;
+
+    border-bottom:
+        1px solid
+        rgba(255,255,255,.07);
+
+    background:
+        rgba(10,13,18,.78);
 }
 
 .status-title{
     font-size:13px;
+
     font-weight:800;
-    margin-bottom:10px;
+
+    margin-bottom:11px;
 }
 
 .status-row{
     display:flex;
-    gap:14px;
+
+    gap:15px;
+
     overflow-x:auto;
+
     scrollbar-width:none;
 }
 
@@ -153,29 +314,67 @@ body{
 }
 
 .status{
-    min-width:58px;
+    min-width:57px;
+
     text-align:center;
 }
 
 .status-circle{
     width:50px;
     height:50px;
-    border-radius:50%;
+
     margin:auto;
-    background:linear-gradient(145deg,#d9ecff,#8bc5ff);
+
+    border-radius:50%;
+
     display:grid;
     place-items:center;
-    color:#0865d8;
+
+    color:#fff;
+
+    font-size:18px;
     font-weight:800;
-    border:3px solid white;
-    box-shadow:0 0 0 2px #5daeff;
+
+    background:
+        linear-gradient(
+            145deg,
+            #2d91ff,
+            #0757c8
+        );
+
+    border:
+        2px solid
+        rgba(255,255,255,.10);
+
+    box-shadow:
+        0 5px 16px
+        rgba(15,105,235,.25);
+}
+
+.status-circle.you{
+    background:
+        #151a23;
+
+    border:
+        2px solid
+        #258cff;
+
+    color:#3296ff;
+
+    font-size:23px;
 }
 
 .status-name{
     margin-top:5px;
+
     font-size:10px;
+
+    color:#a0a8b6;
+
     white-space:nowrap;
+
     overflow:hidden;
+
     text-overflow:ellipsis;
 }
 
@@ -185,89 +384,269 @@ body{
 ========================= */
 
 .welcome{
-    padding:16px 14px 8px;
+    padding:20px 15px 10px;
 }
 
 .welcome h2{
-    font-size:20px;
+    font-size:21px;
+
+    font-weight:800;
 }
 
 .welcome p{
-    margin-top:4px;
+    margin-top:5px;
+
     font-size:12px;
-    color:#7d899b;
+
+    color:#7f8898;
 }
 
 
 /* =========================
-   USERS
+   SECTION
 ========================= */
 
+.section-head{
+    display:flex;
+
+    align-items:center;
+    justify-content:space-between;
+
+    padding:14px 15px 10px;
+}
+
 .section-title{
-    padding:10px 14px;
     font-size:14px;
+
     font-weight:800;
 }
 
-.users{
-    padding:0 12px;
+.section-count{
+    font-size:11px;
+
+    color:#737d8d;
 }
 
-.user-card{
-    background:#fff;
-    border:1px solid #e7ecf3;
-    border-radius:17px;
-    padding:13px;
-    display:flex;
-    align-items:center;
-    gap:11px;
-    margin-bottom:10px;
-    box-shadow:0 4px 14px rgba(30,70,120,.05);
+
+/* =========================
+   PEOPLE
+========================= */
+
+.people{
+    padding:0 14px;
 }
+
+
+/* =========================
+   USER CARD
+========================= */
+
+.user-card{
+    min-height:76px;
+
+    display:flex;
+
+    align-items:center;
+
+    padding:12px;
+
+    margin-bottom:10px;
+
+    border-radius:19px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(25,29,38,.96),
+            rgba(14,17,23,.96)
+        );
+
+    border:
+        1px solid
+        rgba(255,255,255,.065);
+
+    box-shadow:
+        0 8px 25px
+        rgba(0,0,0,.16);
+
+    cursor:pointer;
+
+    transition:
+        transform .15s,
+        border-color .15s;
+}
+
+.user-card:active{
+    transform:scale(.985);
+}
+
+.user-card.follow-mode{
+    border-color:
+        rgba(45,145,255,.35);
+}
+
+
+/* =========================
+   AVATAR
+========================= */
 
 .user-avatar{
     width:52px;
     height:52px;
-    min-width:52px;
+
+    flex-shrink:0;
+
     border-radius:50%;
-    background:linear-gradient(145deg,#168bff,#0865d8);
-    color:white;
-    display:grid;
-    place-items:center;
+
+    overflow:hidden;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    position:relative;
+
+    background:
+        linear-gradient(
+            145deg,
+            #2b8cff,
+            #0757c8
+        );
+
+    border:
+        2px solid
+        rgba(255,255,255,.08);
+
+    box-shadow:
+        0 5px 16px
+        rgba(15,105,235,.25);
+
+    color:#fff;
+
     font-size:19px;
+
     font-weight:800;
 }
 
+.user-avatar img{
+    width:100%;
+    height:100%;
+
+    object-fit:cover;
+
+    border-radius:50%;
+
+    display:block;
+}
+
+
+/* =========================
+   USER INFO
+========================= */
+
 .user-info{
     flex:1;
+
     min-width:0;
+
+    margin-left:12px;
 }
 
 .user-name{
     font-size:14px;
-    font-weight:800;
+
+    font-weight:750;
+
+    white-space:nowrap;
+
+    overflow:hidden;
+
+    text-overflow:ellipsis;
 }
 
 .user-id{
-    color:#7d899b;
-    font-size:11px;
-    margin-top:3px;
+    margin-top:5px;
+
+    font-size:10px;
+
+    color:#818a9a;
+
+    white-space:nowrap;
+
+    overflow:hidden;
+
+    text-overflow:ellipsis;
 }
 
-.follow{
+.user-status{
+    margin-top:4px;
+
+    font-size:10px;
+
+    color:#69d99b;
+}
+
+
+/* =========================
+   FOLLOW BUTTON
+========================= */
+
+.follow-btn{
+    min-width:84px;
+
+    height:36px;
+
+    padding:0 12px;
+
     border:0;
-    border-radius:10px;
-    padding:8px 12px;
-    background:#1682ee;
-    color:white;
+
+    border-radius:12px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #3296ff,
+            #0758cb
+        );
+
+    color:#fff;
+
     font-size:11px;
-    font-weight:750;
+
+    font-weight:700;
+
     cursor:pointer;
+
+    flex-shrink:0;
 }
 
-.follow.following{
-    background:#edf2f8;
-    color:#344054;
+.follow-btn.connected{
+    background:#252b36;
+
+    color:#75e0a2;
+}
+
+.follow-btn.follow{
+    background:
+        linear-gradient(
+            145deg,
+            #3296ff,
+            #0758cb
+        );
+
+    color:#fff;
+}
+
+.follow-btn.loading{
+    background:#252b36;
+
+    color:#aeb7c5;
+}
+
+.follow-btn:disabled{
+    opacity:.75;
+
+    cursor:default;
 }
 
 
@@ -276,14 +655,51 @@ body{
 ========================= */
 
 .empty{
-    background:white;
-    border:1px solid #e7ecf3;
-    border-radius:17px;
-    margin:10px 12px;
-    padding:35px 15px;
+    margin:10px 0;
+
+    padding:38px 20px;
+
     text-align:center;
-    color:#8995a8;
-    font-size:13px;
+
+    border-radius:19px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(25,29,38,.95),
+            rgba(14,17,23,.95)
+        );
+
+    border:
+        1px solid
+        rgba(255,255,255,.065);
+
+    color:#7f8898;
+
+    font-size:12px;
+}
+
+.empty-icon{
+    width:58px;
+    height:58px;
+
+    margin:0 auto 15px;
+
+    border-radius:50%;
+
+    display:grid;
+    place-items:center;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(42,142,255,.22),
+            rgba(42,142,255,.02)
+        );
+
+    color:#3296ff;
+
+    font-size:25px;
 }
 
 
@@ -292,39 +708,66 @@ body{
 ========================= */
 
 .bottom-nav{
-    height:68px;
-    background:rgba(255,255,255,.97);
-    border-top:1px solid #e4e9f1;
+    height:70px;
+
+    background:
+        rgba(10,13,18,.97);
+
+    border-top:
+        1px solid
+        rgba(255,255,255,.08);
+
     position:fixed;
+
     bottom:0;
     left:50%;
+
     transform:translateX(-50%);
+
     width:min(700px,100%);
+
     display:grid;
-    grid-template-columns:repeat(4,1fr);
+
+    grid-template-columns:
+        repeat(4,1fr);
+
     align-items:center;
-    z-index:40;
+
+    z-index:80;
+
+    backdrop-filter:blur(18px);
 }
 
 .nav-item{
     border:0;
+
     background:none;
-    color:#7c8798;
+
+    color:#747d8d;
+
     cursor:pointer;
+
     font-size:10px;
+
     font-weight:700;
+
     display:flex;
+
     flex-direction:column;
+
     align-items:center;
+
     gap:4px;
 }
 
 .nav-item span{
     font-size:20px;
+
+    line-height:20px;
 }
 
 .nav-item.active{
-    color:#086bd8;
+    color:#3296ff;
 }
 
 
@@ -334,20 +777,43 @@ body{
 
 .camera{
     position:absolute;
-    width:52px;
-    height:52px;
+
+    width:53px;
+    height:53px;
+
     border-radius:50%;
-    background:linear-gradient(145deg,#168bff,#0865d8);
-    color:white;
-    border:4px solid white;
-    box-shadow:0 7px 20px rgba(8,101,216,.3);
+
+    background:
+        linear-gradient(
+            145deg,
+            #3296ff,
+            #0758cb
+        );
+
+    color:#fff;
+
+    border:
+        4px solid
+        #07090d;
+
+    box-shadow:
+        0 7px 22px
+        rgba(8,101,216,.40);
+
     left:50%;
+
     top:-27px;
+
     transform:translateX(-50%);
+
     display:grid;
     place-items:center;
+
     font-size:22px;
+
     cursor:pointer;
+
+    z-index:5;
 }
 
 
@@ -357,50 +823,189 @@ body{
 
 .menu{
     display:none;
+
     position:fixed;
+
     right:12px;
-    top:61px;
+
+    top:70px;
+
     width:190px;
-    background:white;
-    border:1px solid #e3e8f0;
-    border-radius:15px;
-    box-shadow:0 15px 40px rgba(20,50,90,.15);
+
+    background:
+        linear-gradient(
+            145deg,
+            #1a1f29,
+            #0e1219
+        );
+
+    border:
+        1px solid
+        rgba(255,255,255,.09);
+
+    border-radius:16px;
+
+    box-shadow:
+        0 15px 40px
+        rgba(0,0,0,.45);
+
     padding:7px;
+
     z-index:100;
 }
 
 .menu button{
     width:100%;
+
     border:0;
-    background:white;
+
+    background:transparent;
+
+    color:#fff;
+
     padding:12px;
+
     text-align:left;
+
     border-radius:10px;
+
     cursor:pointer;
+
     font-size:13px;
 }
 
-.menu button:hover{
-    background:#f2f6fc;
+.menu button:active{
+    background:#252b36;
 }
 
+
+/* =========================
+   TOAST
+========================= */
+
 .toast{
-    display:none;
     position:fixed;
-    bottom:85px;
+
     left:50%;
-    transform:translateX(-50%);
-    background:#172033;
-    color:white;
-    padding:10px 17px;
-    border-radius:11px;
+
+    bottom:88px;
+
+    transform:
+        translateX(-50%)
+        translateY(20px);
+
+    width:
+        calc(100% - 40px);
+
+    max-width:360px;
+
+    padding:13px 17px;
+
+    border-radius:15px;
+
+    background:
+        rgba(24,28,37,.97);
+
+    border:
+        1px solid
+        rgba(255,255,255,.09);
+
+    box-shadow:
+        0 15px 40px
+        rgba(0,0,0,.45);
+
+    color:#fff;
+
     font-size:12px;
+
+    text-align:center;
+
+    opacity:0;
+
+    pointer-events:none;
+
+    transition:.25s;
+
     z-index:200;
 }
+
+.toast.show{
+    opacity:1;
+
+    transform:
+        translateX(-50%)
+        translateY(0);
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:390px){
+
+    .topbar{
+        padding:0 8px;
+
+        gap:6px;
+    }
+
+    .logo-mark{
+        width:38px;
+        height:38px;
+
+        border-radius:12px;
+    }
+
+    .logo-u{
+        font-size:22px;
+    }
+
+    .logo-name{
+        display:none;
+    }
+
+    .search-box{
+        height:39px;
+    }
+
+    .top-btn{
+        width:37px;
+        height:37px;
+    }
+
+    .status-wrap{
+        padding-left:11px;
+        padding-right:11px;
+    }
+
+    .people{
+        padding:0 11px;
+    }
+
+    .user-card{
+        padding:10px;
+    }
+
+    .user-avatar{
+        width:48px;
+        height:48px;
+    }
+
+    .follow-btn{
+        min-width:76px;
+
+        padding:0 8px;
+    }
+
+}
+
 </style>
 </head>
 
+
 <body>
+
 
 <div class="app">
 
@@ -411,27 +1016,36 @@ body{
 
 <div class="topbar">
 
+
     <div class="brand">
 
-        <div class="logo">
-            U
+        <div class="logo-mark">
+
+            <div class="logo-u">
+                U
+            </div>
+
+            <div class="logo-shine"></div>
+
         </div>
 
-        <div class="brand-name">
+        <div class="logo-name">
             Usanex
         </div>
 
     </div>
 
 
-    <div class="search">
+    <div class="search-box">
 
-        <span>🔍</span>
+        <span class="search-icon">
+            🔍
+        </span>
 
         <input
+            id="searchInput"
             type="text"
             placeholder="Search users..."
-            id="searchInput"
             onkeydown="searchKey(event)"
         >
 
@@ -441,6 +1055,7 @@ body{
     <button
         class="top-btn"
         onclick="openNotifications()"
+        aria-label="Notifications"
     >
 
         🔔
@@ -458,11 +1073,14 @@ body{
     <button
         class="top-btn"
         onclick="toggleMenu()"
+        aria-label="Menu"
     >
         ☰
     </button>
 
+
 </div>
+
 
 
 <!-- =========================
@@ -485,6 +1103,7 @@ body{
 </div>
 
 
+
 <!-- =========================
      STATUS
 ========================= -->
@@ -495,14 +1114,16 @@ body{
         Status
     </div>
 
+
     <div
         id="statusRow"
         class="status-row"
     >
 
+
         <div class="status">
 
-            <div class="status-circle">
+            <div class="status-circle you">
                 +
             </div>
 
@@ -512,19 +1133,11 @@ body{
 
         </div>
 
-        <div class="status">
-            <div class="status-circle">A</div>
-            <div class="status-name">Active</div>
-        </div>
-
-        <div class="status">
-            <div class="status-circle">U</div>
-            <div class="status-name">Usanex</div>
-        </div>
 
     </div>
 
 </div>
+
 
 
 <!-- =========================
@@ -534,7 +1147,7 @@ body{
 <div class="welcome">
 
     <h2 id="welcomeName">
-        Welcome 👋
+        Hello 👋
     </h2>
 
     <p>
@@ -544,28 +1157,53 @@ body{
 </div>
 
 
-<div class="section-title">
-    People
-</div>
-
 
 <!-- =========================
-     USERS
+     PEOPLE HEADER
 ========================= -->
 
-<div
-    id="users"
-    class="users"
->
+<div class="section-head">
 
-    <div class="empty">
-        Loading users...
+    <div class="section-title">
+        Connected People
+    </div>
+
+    <div
+        id="peopleCount"
+        class="section-count"
+    >
+        0
     </div>
 
 </div>
 
 
+
+<!-- =========================
+     PEOPLE
+========================= -->
+
+<div
+    id="people"
+    class="people"
+>
+
+    <div class="empty">
+
+        <div class="empty-icon">
+            👥
+        </div>
+
+        Loading connections...
+
+    </div>
+
 </div>
+
+
+
+</div>
+
 
 
 <!-- =========================
@@ -574,12 +1212,16 @@ body{
 
 <div class="bottom-nav">
 
+
     <button
         class="nav-item active"
         onclick="goHome()"
     >
+
         <span>⌂</span>
+
         Home
+
     </button>
 
 
@@ -587,8 +1229,11 @@ body{
         class="nav-item"
         onclick="openReels()"
     >
+
         <span>▶</span>
+
         Reel
+
     </button>
 
 
@@ -596,8 +1241,11 @@ body{
         class="nav-item"
         onclick="openConnections()"
     >
+
         <span>◎</span>
+
         coll
+
     </button>
 
 
@@ -605,8 +1253,11 @@ body{
         class="nav-item"
         onclick="openProfile()"
     >
+
         <span>♙</span>
+
         Profile
+
     </button>
 
 
@@ -614,10 +1265,14 @@ body{
         class="camera"
         onclick="openCamera()"
     >
+
         📷
+
     </button>
 
+
 </div>
+
 
 
 <div
@@ -626,27 +1281,35 @@ body{
 ></div>
 
 
+
 <script>
 
-/* =========================
-   USER
-========================= */
+/* =========================================================
+   CURRENT USER
+========================================================= */
 
-let currentUser=null;
+let currentUser = null;
+
+let socket = null;
+
+
+/* =========================================================
+   GET USER
+========================================================= */
 
 function getUser(){
 
     try{
 
-        const saved=
+        const modern =
             localStorage.getItem(
                 "usanex_user"
             );
 
-        if(saved){
+        if(modern){
 
-            const user=
-                JSON.parse(saved);
+            const user =
+                JSON.parse(modern);
 
             if(
                 user &&
@@ -660,12 +1323,14 @@ function getUser(){
         }
 
 
-        const old=
-            localStorage.getItem("user");
+        const old =
+            localStorage.getItem(
+                "user"
+            );
 
         if(old){
 
-            const user=
+            const user =
                 JSON.parse(old);
 
             if(
@@ -681,20 +1346,24 @@ function getUser(){
 
     }catch(error){
 
-        console.error(error);
+        console.error(
+            "User error:",
+            error
+        );
 
     }
 
     return null;
+
 }
 
 
-currentUser=getUser();
+currentUser = getUser();
 
 
-/* =========================
+/* =========================================================
    LOGIN CHECK
-========================= */
+========================================================= */
 
 if(!currentUser){
 
@@ -703,9 +1372,9 @@ if(!currentUser){
 }
 
 
-/* =========================
+/* =========================================================
    WELCOME
-========================= */
+========================================================= */
 
 function updateWelcome(){
 
@@ -713,21 +1382,22 @@ function updateWelcome(){
         return;
     }
 
-    const name=
-        currentUser.name ||
-        "User";
-
     document.getElementById(
         "welcomeName"
-    ).textContent=
-        "Hello, "+name+" 👋";
+    ).textContent =
+        "Hello, " +
+        (
+            currentUser.name ||
+            "User"
+        ) +
+        " 👋";
 
 }
 
 
-/* =========================
+/* =========================================================
    NOTIFICATION COUNT
-========================= */
+========================================================= */
 
 async function loadNotificationCount(){
 
@@ -735,12 +1405,15 @@ async function loadNotificationCount(){
         !currentUser ||
         !currentUser.user_id
     ){
+
         return;
+
     }
+
 
     try{
 
-        const response=
+        const response =
             await fetch(
                 "/api/notifications?user_id="+
                 encodeURIComponent(
@@ -750,12 +1423,17 @@ async function loadNotificationCount(){
                 Date.now()
             );
 
+
         if(!response.ok){
+
             return;
+
         }
 
-        const data=
+
+        const data =
             await response.json();
+
 
         if(
             !data.ok ||
@@ -769,34 +1447,35 @@ async function loadNotificationCount(){
         }
 
 
-        const unreadCount=
+        const unread =
             data.notifications.filter(
-                notification =>
-                    notification.is_read === false
+                item =>
+                    item.is_read === false
             ).length;
 
 
-        const badge=
+        const badge =
             document.getElementById(
                 "notificationBadge"
             );
 
 
-        if(unreadCount>0){
+        if(unread > 0){
 
-            badge.textContent=
-                unreadCount>99
+            badge.textContent =
+                unread > 99
                     ? "99+"
-                    : unreadCount;
+                    : unread;
 
-            badge.style.display=
+            badge.style.display =
                 "flex";
 
         }else{
 
-            badge.textContent="0";
+            badge.textContent =
+                "0";
 
-            badge.style.display=
+            badge.style.display =
                 "none";
 
         }
@@ -813,101 +1492,164 @@ async function loadNotificationCount(){
 }
 
 
-/* =========================
-   NOTIFICATION PAGE
-========================= */
+/* =========================================================
+   OPEN NOTIFICATIONS
+========================================================= */
 
 function openNotifications(){
 
-    window.location.href=
+    window.location.href =
         "/notifications";
 
 }
 
 
-/* =========================
+/* =========================================================
+   SEARCH
+========================================================= */
+
+function searchKey(event){
+
+    if(
+        event.key !== "Enter"
+    ){
+
+        return;
+
+    }
+
+
+    const input =
+        document.getElementById(
+            "searchInput"
+        );
+
+
+    const value =
+        input.value.trim();
+
+
+    if(!value){
+
+        return;
+
+    }
+
+
+    window.location.href =
+        "/search?query="+
+        encodeURIComponent(
+            value
+        );
+
+}
+
+
+/* =========================================================
    MENU
-========================= */
+========================================================= */
 
 function toggleMenu(){
 
-    const menu=
+    const menu =
         document.getElementById(
             "menu"
         );
 
-    menu.style.display=
-        menu.style.display==="block"
-            ? "none"
-            : "block";
+
+    if(
+        menu.style.display ===
+        "block"
+    ){
+
+        menu.style.display =
+            "none";
+
+    }else{
+
+        menu.style.display =
+            "block";
+
+    }
 
 }
 
 
-/* =========================
-   SEARCH
-========================= */
+/* =========================================================
+   CLOSE MENU OUTSIDE
+========================================================= */
 
-function searchKey(event){
+document.addEventListener(
+    "click",
+    function(event){
 
-    if(event.key==="Enter"){
-
-        const value=
+        const menu =
             document.getElementById(
-                "searchInput"
-            ).value.trim();
+                "menu"
+            );
 
-        if(value){
+        const button =
+            event.target.closest(
+                ".top-btn"
+            );
 
-            window.location.href=
-                "/search?query="+
-                encodeURIComponent(
-                    value
-                );
+
+        if(
+            !event.target.closest(
+                "#menu"
+            ) &&
+            !button
+        ){
+
+            menu.style.display =
+                "none";
 
         }
 
     }
+);
 
-}
 
-
-/* =========================
+/* =========================================================
    PROFILE
-========================= */
+========================================================= */
 
 function openProfile(){
 
     if(
-        currentUser &&
-        currentUser.user_id
+        !currentUser ||
+        !currentUser.user_id
     ){
 
-        window.location.href=
-            "/search?user_id="+
-            encodeURIComponent(
-                currentUser.user_id
-            );
+        return;
 
     }
+
+
+    window.location.href =
+        "/search?user_id="+
+        encodeURIComponent(
+            currentUser.user_id
+        );
 
 }
 
 
-/* =========================
-   OTHER NAV
-========================= */
+/* =========================================================
+   NAVIGATION
+========================================================= */
 
 function goHome(){
 
-    window.location.href="/home";
+    window.location.href =
+        "/home";
 
 }
 
 
 function openReels(){
 
-    window.location.href=
+    window.location.href =
         "/reels";
 
 }
@@ -915,7 +1657,7 @@ function openReels(){
 
 function openConnections(){
 
-    window.location.href=
+    window.location.href =
         "/search";
 
 }
@@ -930,9 +1672,9 @@ function openCamera(){
 }
 
 
-/* =========================
+/* =========================================================
    LOGOUT
-========================= */
+========================================================= */
 
 function logout(){
 
@@ -948,34 +1690,47 @@ function logout(){
         "user"
     );
 
-    window.location.href="/";
+
+    window.location.href =
+        "/";
 
 }
 
 
-/* =========================
+/* =========================================================
    TOAST
-========================= */
+========================================================= */
 
 function showToast(message){
 
-    const el=
+    const toast =
         document.getElementById(
             "toast"
         );
 
-    el.textContent=message;
 
-    el.style.display="block";
+    toast.textContent =
+        message;
+
+
+    toast.classList.add(
+        "show"
+    );
+
 
     clearTimeout(
         window.toastTimer
     );
 
-    window.toastTimer=
+
+    window.toastTimer =
         setTimeout(
-            ()=>{
-                el.style.display="none";
+            function(){
+
+                toast.classList.remove(
+                    "show"
+                );
+
             },
             2200
         );
@@ -983,44 +1738,752 @@ function showToast(message){
 }
 
 
-/* =========================
-   LOAD USERS
-========================= */
+/* =========================================================
+   AVATAR LETTER
+========================================================= */
 
-async function loadUsers(){
+function getInitial(name){
 
-    const container=
-        document.getElementById(
-            "users"
-        );
+    if(!name){
 
-    /*
-      अगर आपका search/users API बाद में
-      बनता है तो इसी जगह connect होगा.
-    */
+        return "U";
 
-    container.innerHTML=
-        `
-        <div class="empty">
+    }
 
-            🔎
 
-            <br><br>
-
-            Search for people using
-            the search bar above.
-
-        </div>
-        `;
+    return String(name)
+        .trim()
+        .charAt(0)
+        .toUpperCase();
 
 }
 
 
-/* =========================
-   WEBSOCKET
-========================= */
+/* =========================================================
+   CONNECTION DATA NORMALIZER
+========================================================= */
 
-let socket=null;
+function normalizePerson(item){
+
+    if(!item){
+
+        return null;
+
+    }
+
+
+    const user =
+        item.user ||
+        item.person ||
+        item.profile ||
+        item;
+
+
+    const userId =
+        user.user_id ||
+        user.id ||
+        item.user_id ||
+        item.id;
+
+
+    const name =
+        user.name ||
+        user.display_name ||
+        item.name ||
+        "User";
+
+
+    if(
+        !userId ||
+        String(userId) ===
+        String(currentUser.user_id)
+    ){
+
+        return null;
+
+    }
+
+
+    return {
+
+        user_id:
+            String(userId),
+
+        name:
+            String(name),
+
+        mobile:
+            user.mobile ||
+            item.mobile ||
+            "",
+
+        avatar:
+            user.avatar ||
+            user.profile_picture ||
+            user.profile_pic ||
+            item.avatar ||
+            item.profile_picture ||
+            "",
+
+        status:
+            "Connected"
+
+    };
+
+}
+
+
+/* =========================================================
+   RENDER PEOPLE
+========================================================= */
+
+function renderPeople(list){
+
+    const container =
+        document.getElementById(
+            "people"
+        );
+
+
+    const count =
+        document.getElementById(
+            "peopleCount"
+        );
+
+
+    const people =
+        Array.isArray(list)
+            ? list
+                .map(
+                    normalizePerson
+                )
+                .filter(Boolean)
+            : [];
+
+
+    count.textContent =
+        people.length;
+
+
+    if(!people.length){
+
+        container.innerHTML = `
+
+            <div class="empty">
+
+                <div class="empty-icon">
+                    👥
+                </div>
+
+                No connected people yet.
+
+                <br><br>
+
+                Search users and connect
+                with people on Usanex.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    container.innerHTML = "";
+
+
+    people.forEach(
+        function(person){
+
+            const card =
+                document.createElement(
+                    "div"
+                );
+
+
+            card.className =
+                "user-card";
+
+
+            card.dataset.userId =
+                person.user_id;
+
+
+            const avatar =
+                document.createElement(
+                    "div"
+                );
+
+
+            avatar.className =
+                "user-avatar";
+
+
+            if(person.avatar){
+
+                const img =
+                    document.createElement(
+                        "img"
+                    );
+
+                img.src =
+                    person.avatar;
+
+                img.alt =
+                    person.name;
+
+                img.onerror =
+                    function(){
+
+                        this.remove();
+
+                        avatar.textContent =
+                            getInitial(
+                                person.name
+                            );
+
+                    };
+
+
+                avatar.appendChild(
+                    img
+                );
+
+            }else{
+
+                avatar.textContent =
+                    getInitial(
+                        person.name
+                    );
+
+            }
+
+
+            const info =
+                document.createElement(
+                    "div"
+                );
+
+
+            info.className =
+                "user-info";
+
+
+            const name =
+                document.createElement(
+                    "div"
+                );
+
+
+            name.className =
+                "user-name";
+
+
+            name.textContent =
+                person.name;
+
+
+            const id =
+                document.createElement(
+                    "div"
+                );
+
+
+            id.className =
+                "user-id";
+
+
+            id.textContent =
+                "ID: " +
+                person.user_id;
+
+
+            const status =
+                document.createElement(
+                    "div"
+                );
+
+
+            status.className =
+                "user-status";
+
+
+            status.textContent =
+                "● Connected";
+
+
+            info.appendChild(
+                name
+            );
+
+            info.appendChild(
+                id
+            );
+
+            info.appendChild(
+                status
+            );
+
+
+            const follow =
+                document.createElement(
+                    "button"
+                );
+
+
+            follow.className =
+                "follow-btn connected";
+
+
+            follow.textContent =
+                "Connected";
+
+
+            follow.onclick =
+                function(event){
+
+                    event.stopPropagation();
+
+                    activateFollow(
+                        card,
+                        person,
+                        follow
+                    );
+
+                };
+
+
+            card.appendChild(
+                avatar
+            );
+
+            card.appendChild(
+                info
+            );
+
+            card.appendChild(
+                follow
+            );
+
+
+            card.onclick =
+                function(){
+
+                    activateFollow(
+                        card,
+                        person,
+                        follow
+                    );
+
+                };
+
+
+            container.appendChild(
+                card
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   CONNECTED → FOLLOW
+========================================================= */
+
+function activateFollow(
+    card,
+    person,
+    button
+){
+
+    if(
+        !card ||
+        !person ||
+        !button
+    ){
+
+        return;
+
+    }
+
+
+    if(
+        button.dataset.following ===
+        "true"
+    ){
+
+        return;
+
+    }
+
+
+    button.dataset.following =
+        "true";
+
+
+    card.classList.add(
+        "follow-mode"
+    );
+
+
+    button.className =
+        "follow-btn follow";
+
+
+    button.textContent =
+        "Follow";
+
+
+    button.onclick =
+        function(event){
+
+            event.stopPropagation();
+
+            sendFollow(
+                card,
+                person,
+                button
+            );
+
+        };
+
+}
+
+
+/* =========================================================
+   SEND FOLLOW
+========================================================= */
+
+async function sendFollow(
+    card,
+    person,
+    button
+){
+
+    if(
+        !currentUser ||
+        !currentUser.user_id ||
+        !person.user_id
+    ){
+
+        return;
+
+    }
+
+
+    if(
+        button.dataset.sending ===
+        "true"
+    ){
+
+        return;
+
+    }
+
+
+    button.dataset.sending =
+        "true";
+
+
+    button.disabled =
+        true;
+
+
+    button.className =
+        "follow-btn loading";
+
+
+    button.textContent =
+        "Following...";
+
+
+    try{
+
+        const response =
+            await fetch(
+                "/api/follow",
+                {
+                    method:"POST",
+
+                    headers:{
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:JSON.stringify({
+
+                        requester_id:
+                            currentUser.user_id,
+
+                        target_user_id:
+                            person.user_id
+
+                    })
+
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if(
+            !response.ok ||
+            data.ok === false
+        ){
+
+            throw new Error(
+                data.message ||
+                "Follow failed"
+            );
+
+        }
+
+
+        showToast(
+            "Follow request sent ✓"
+        );
+
+
+        /*
+          Successful follow ke baad
+          person ko Home se turant remove.
+        */
+
+        card.style.transition =
+            "opacity .25s, transform .25s";
+
+
+        card.style.opacity =
+            "0";
+
+
+        card.style.transform =
+            "translateX(35px)";
+
+
+        setTimeout(
+            function(){
+
+                card.remove();
+
+                updatePeopleCount();
+
+            },
+            260
+        );
+
+
+        /*
+          Notification count refresh.
+        */
+
+        loadNotificationCount();
+
+
+    }catch(error){
+
+        console.error(
+            "Follow error:",
+            error
+        );
+
+
+        button.dataset.sending =
+            "false";
+
+
+        button.disabled =
+            false;
+
+
+        button.className =
+            "follow-btn follow";
+
+
+        button.textContent =
+            "Follow";
+
+
+        showToast(
+            error.message ||
+            "Follow failed"
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   PEOPLE COUNT
+========================================================= */
+
+function updatePeopleCount(){
+
+    const cards =
+        document.querySelectorAll(
+            "#people .user-card"
+        );
+
+
+    document.getElementById(
+        "peopleCount"
+    ).textContent =
+        cards.length;
+
+
+    if(cards.length === 0){
+
+        document.getElementById(
+            "people"
+        ).innerHTML = `
+
+            <div class="empty">
+
+                <div class="empty-icon">
+                    👥
+                </div>
+
+                No connected people yet.
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+/* =========================================================
+   LOAD CONNECTIONS
+========================================================= */
+
+async function loadConnections(){
+
+    if(
+        !currentUser ||
+        !currentUser.user_id
+    ){
+
+        return;
+
+    }
+
+
+    const container =
+        document.getElementById(
+            "people"
+        );
+
+
+    try{
+
+        /*
+          Main connections endpoint.
+        */
+
+        const response =
+            await fetch(
+                "/api/connections?user_id="+
+                encodeURIComponent(
+                    currentUser.user_id
+                )+
+                "&_="+
+                Date.now()
+            );
+
+
+        if(
+            !response.ok
+        ){
+
+            throw new Error(
+                "Connections API unavailable"
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        if(
+            !data.ok
+        ){
+
+            throw new Error(
+                data.message ||
+                "Unable to load connections"
+            );
+
+        }
+
+
+        const list =
+            data.connections ||
+            data.users ||
+            data.people ||
+            [];
+
+
+        renderPeople(
+            list
+        );
+
+
+    }catch(error){
+
+        console.error(
+            "Connections:",
+            error
+        );
+
+
+        /*
+          Agar backend empty response
+          de raha ho to clean empty state.
+        */
+
+        container.innerHTML = `
+
+            <div class="empty">
+
+                <div class="empty-icon">
+                    👥
+                </div>
+
+                No connected people yet.
+
+                <br><br>
+
+                Find people from Search.
+
+            </div>
+
+        `;
+
+
+        document.getElementById(
+            "peopleCount"
+        ).textContent =
+            "0";
+
+    }
+
+}
+
+
+/* =========================================================
+   WEBSOCKET
+========================================================= */
 
 function connectSocket(){
 
@@ -1036,119 +2499,132 @@ function connectSocket(){
 
     try{
 
-        const protocol=
-            location.protocol==="https:"
+        const protocol =
+            location.protocol ===
+            "https:"
                 ? "wss:"
                 : "ws:";
 
 
-        socket=
+        socket =
             new WebSocket(
-
-                protocol+
-                "//"+
-                location.host+
-                "/ws/"+
+                protocol +
+                "//" +
+                location.host +
+                "/ws/" +
                 encodeURIComponent(
                     currentUser.user_id
                 )
-
             );
 
 
-        socket.onopen=()=>{
+        socket.onopen =
+            function(){
 
-            console.log(
-                "Usanex socket connected"
-            );
+                console.log(
+                    "Usanex socket connected"
+                );
 
-        };
+            };
 
 
-        socket.onmessage=event=>{
+        socket.onmessage =
+            function(event){
 
-            try{
+                try{
 
-                const payload=
-                    JSON.parse(
-                        event.data
-                    );
+                    const payload =
+                        JSON.parse(
+                            event.data
+                        );
 
-                /*
-                  New notification आते ही
-                  Home badge फिर से database
-                  से calculate होगा.
-                */
 
-                if(
-                    payload.notification ||
-                    payload.type
-                ){
+                    /*
+                      Notification aaye to
+                      badge refresh.
+                    */
 
-                    loadNotificationCount();
+                    if(
+                        payload.notification ||
+                        payload.type ===
+                        "notification" ||
+                        payload.type ===
+                        "follow_request" ||
+                        payload.type ===
+                        "connection_verified"
+                    ){
 
-                    showToast(
-                        "New notification 🔔"
+                        loadNotificationCount();
+
+                        loadConnections();
+
+                        showToast(
+                            "New notification 🔔"
+                        );
+
+                    }
+
+                }catch(error){
+
+                    console.error(
+                        "Socket message:",
+                        error
                     );
 
                 }
 
-            }catch(error){
+            };
+
+
+        socket.onclose =
+            function(){
+
+                setTimeout(
+                    connectSocket,
+                    3000
+                );
+
+            };
+
+
+        socket.onerror =
+            function(error){
 
                 console.error(
-                    "Socket message:",
+                    "Socket error:",
                     error
                 );
 
-            }
-
-        };
-
-
-        socket.onclose=()=>{
-
-            setTimeout(
-                connectSocket,
-                3000
-            );
-
-        };
-
-
-        socket.onerror=error=>{
-
-            console.error(
-                "Socket error:",
-                error
-            );
-
-        };
+            };
 
     }catch(error){
 
-        console.error(error);
+        console.error(
+            "Socket connection:",
+            error
+        );
 
     }
 
 }
 
 
-/* =========================
+/* =========================================================
    VISIBILITY
-========================= */
+========================================================= */
 
 document.addEventListener(
     "visibilitychange",
     function(){
 
         if(
-            document.visibilityState===
+            document.visibilityState ===
             "visible"
         ){
 
             loadNotificationCount();
 
-            loadUsers();
+            loadConnections();
 
         }
 
@@ -1156,46 +2632,52 @@ document.addEventListener(
 );
 
 
-/* =========================
+/* =========================================================
    PAGESHOW
-========================= */
+========================================================= */
 
 window.addEventListener(
     "pageshow",
     function(){
 
         /*
-          Notifications page से वापस
-          Home आने पर badge refresh.
+          Notifications se Home par
+          wapas aate hi badge refresh.
         */
 
         loadNotificationCount();
 
-        loadUsers();
+        loadConnections();
 
     }
 );
 
 
-/* =========================
-   PERIODIC CHECK
-========================= */
+/* =========================================================
+   PERIODIC REFRESH
+========================================================= */
 
 setInterval(
-    loadNotificationCount,
+    function(){
+
+        loadNotificationCount();
+
+        loadConnections();
+
+    },
     30000
 );
 
 
-/* =========================
+/* =========================================================
    START
-========================= */
+========================================================= */
 
 updateWelcome();
 
 loadNotificationCount();
 
-loadUsers();
+loadConnections();
 
 connectSocket();
 
