@@ -31,7 +31,6 @@ if not DATABASE_URL:
 
 
 if DATABASE_URL.startswith("postgresql://"):
-
     DATABASE_URL = DATABASE_URL.replace(
         "postgresql://",
         "postgresql+psycopg://",
@@ -69,7 +68,6 @@ class Base(DeclarativeBase):
 # ============================================================
 
 class User(Base):
-
     __tablename__ = "users"
 
     id: Mapped[int] = mapped_column(
@@ -111,7 +109,6 @@ class User(Base):
 # ============================================================
 
 class OTPVerification(Base):
-
     __tablename__ = "otp_verifications"
 
     id: Mapped[int] = mapped_column(
@@ -151,8 +148,17 @@ class OTPVerification(Base):
 # CONNECTION REQUESTS
 # ============================================================
 
-class ConnectionRequest(Base):
+# requester_user_id = Follow bhejne wala
+# target_user_id    = Jisko Follow request bheji gayi
+#
+# status:
+# pending
+# accepted
+# rejected
+# verified
 
+
+class ConnectionRequest(Base):
     __tablename__ = "connection_requests"
 
     id: Mapped[int] = mapped_column(
@@ -196,7 +202,6 @@ class ConnectionRequest(Base):
 # ============================================================
 
 class ConnectionCode(Base):
-
     __tablename__ = "connection_codes"
 
     id: Mapped[int] = mapped_column(
@@ -244,7 +249,6 @@ class ConnectionCode(Base):
 # ============================================================
 
 class Notification(Base):
-
     __tablename__ = "notifications"
 
     id: Mapped[int] = mapped_column(
@@ -306,7 +310,6 @@ class Notification(Base):
 # ============================================================
 
 class Connection(Base):
-
     __tablename__ = "connections"
 
     id: Mapped[int] = mapped_column(
@@ -338,7 +341,6 @@ class Connection(Base):
 # ============================================================
 
 class ChatMessage(Base):
-
     __tablename__ = "chat_messages"
 
     id: Mapped[int] = mapped_column(
@@ -378,13 +380,13 @@ class ChatMessage(Base):
     created_at: Mapped[datetime] = mapped_column(
         DateTime,
         default=datetime.utcnow,
-        nullable=False,
-        index=True
+        index=True,
+        nullable=False
     )
 
 
 # ============================================================
-# CREATE TABLES
+# CREATE ALL TABLES
 # ============================================================
 
 Base.metadata.create_all(
