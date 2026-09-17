@@ -36,29 +36,100 @@ body{
     border-bottom:1px solid rgba(255,255,255,.07);
 }
 
-/* LOGO */
+/* ================= USANEX LOGO ================= */
 
-.logo-box{
+.logo-mark{
     width:43px;
     height:43px;
     min-width:43px;
     border-radius:13px;
-    background:linear-gradient(145deg,#1677ff,#0052cc);
+
+    position:relative;
+    overflow:hidden;
+
     display:flex;
     align-items:center;
     justify-content:center;
-    font-size:25px;
-    font-weight:800;
-    box-shadow:0 5px 18px rgba(0,100,255,.25);
+
+    background:
+        linear-gradient(
+            145deg,
+            #2185ff 0%,
+            #0868e8 48%,
+            #0049b5 100%
+        );
+
+    border:1px solid rgba(255,255,255,.16);
+
+    box-shadow:
+        0 5px 18px rgba(0,100,255,.30),
+        inset 0 1px 2px rgba(255,255,255,.20);
+}
+
+.logo-u{
+    position:relative;
+    z-index:3;
+
+    color:#ffffff;
+
+    font-size:27px;
+    line-height:1;
+
+    font-weight:900;
+
+    letter-spacing:-2px;
+
+    transform:translateY(-1px);
+
+    text-shadow:
+        0 2px 5px rgba(0,0,0,.25);
+}
+
+.logo-shine{
+    position:absolute;
+    z-index:2;
+
+    width:65px;
+    height:15px;
+
+    top:-8px;
+    left:-24px;
+
+    background:rgba(255,255,255,.23);
+
+    transform:rotate(-38deg);
+
+    filter:blur(1px);
+}
+
+.logo-mark::after{
+    content:"";
+
+    position:absolute;
+
+    width:22px;
+    height:22px;
+
+    right:-8px;
+    bottom:-9px;
+
+    border-radius:50%;
+
+    background:rgba(255,255,255,.08);
+
+    z-index:1;
 }
 
 .logo-name{
     font-size:19px;
     font-weight:700;
     margin-right:3px;
+
+    color:#ffffff;
+    white-space:nowrap;
 }
 
-/* SEARCH */
+/* ================= SEARCH ================= */
 
 .search-box{
     flex:1;
@@ -84,7 +155,7 @@ body{
     font-size:14px;
 }
 
-/* MENU */
+/* ================= MENU ================= */
 
 .menu-btn{
     width:43px;
@@ -207,7 +278,7 @@ body{
     gap:10px;
 }
 
-/* USER CARD */
+/* ================= USER CARD ================= */
 
 .user-card{
     width:100%;
@@ -276,7 +347,7 @@ body{
     white-space:nowrap;
 }
 
-/* EMPTY */
+/* ================= EMPTY ================= */
 
 .empty-box{
     padding:32px 15px;
@@ -303,7 +374,7 @@ body{
     font-size:12px;
 }
 
-/* ERROR */
+/* ================= ERROR ================= */
 
 .error-box{
     padding:20px;
@@ -436,7 +507,7 @@ body{
     color:#ff7388;
 }
 
-/* TOAST */
+/* ================= TOAST ================= */
 
 .toast{
     position:fixed;
@@ -457,12 +528,25 @@ body{
 
 @media(max-width:500px){
 
-    .logo-name{
-        display:none;
+    .header{
+        gap:8px;
+        padding:10px 11px;
     }
 
-    .header{
-        gap:9px;
+    .logo-mark{
+        width:42px;
+        height:42px;
+        min-width:42px;
+    }
+
+    .logo-u{
+        font-size:27px;
+    }
+
+    .logo-name{
+        display:block;
+        font-size:18px;
+        margin-right:0;
     }
 
     .search-box{
@@ -482,7 +566,10 @@ body{
 
 <header class="header">
 
-    <div class="logo-box">U</div>
+    <div class="logo-mark">
+        <div class="logo-u">U</div>
+        <div class="logo-shine"></div>
+    </div>
 
     <div class="logo-name">Usanex</div>
 
@@ -727,8 +814,6 @@ function resolveCurrentUser(){
 
     let user = null;
 
-    /* ---------- FIRST STORAGE ---------- */
-
     const possibleKeys = [
         "usanex_user",
         "user",
@@ -740,20 +825,20 @@ function resolveCurrentUser(){
 
         try{
 
-            const value = localStorage.getItem(key);
+            const value =
+                localStorage.getItem(key);
 
             if(!value) continue;
 
-            const parsed = JSON.parse(value);
+            const parsed =
+                JSON.parse(value);
 
-            if(parsed && typeof parsed === "object"){
+            if(
+                parsed &&
+                typeof parsed === "object"
+            ){
 
                 user = parsed;
-
-                /*
-                 * Sometimes login response stores:
-                 * { user: { user_id: ... } }
-                 */
 
                 if(
                     !user.user_id &&
@@ -781,8 +866,6 @@ function resolveCurrentUser(){
     }
 
 
-    /* ---------- URL FALLBACK ---------- */
-
     const params =
         new URLSearchParams(
             window.location.search
@@ -808,8 +891,6 @@ function resolveCurrentUser(){
 
     }
 
-
-    /* ---------- DIRECT ID FALLBACK ---------- */
 
     if(!user){
 
@@ -850,8 +931,6 @@ function resolveCurrentUser(){
         currentUserId
     );
 
-
-    /* ---------- LETTER ---------- */
 
     const letter =
         document.getElementById(
@@ -948,10 +1027,6 @@ async function loadConnections(){
     `;
 
 
-    /* =====================================================
-       API 1
-    ===================================================== */
-
     let data = null;
     let firstError = null;
 
@@ -1008,10 +1083,6 @@ async function loadConnections(){
 
     }
 
-
-    /* =====================================================
-       API 2 FALLBACK
-    ===================================================== */
 
     if(!data){
 
@@ -1091,10 +1162,6 @@ async function loadConnections(){
     }
 
 
-    /* =====================================================
-       NORMALIZE RESPONSE
-    ===================================================== */
-
     let users = [];
 
 
@@ -1138,10 +1205,6 @@ async function loadConnections(){
     );
 
 
-    /* =====================================================
-       REMOVE DUPLICATES
-    ===================================================== */
-
     const uniqueUsers = [];
 
     const seenIds = new Set();
@@ -1149,8 +1212,13 @@ async function loadConnections(){
 
     for(const user of users){
 
-        if(!user || typeof user !== "object"){
+        if(
+            !user ||
+            typeof user !== "object"
+        ){
+
             continue;
+
         }
 
 
@@ -1195,10 +1263,6 @@ async function loadConnections(){
         String(users.length);
 
 
-    /* =====================================================
-       EMPTY
-    ===================================================== */
-
     if(users.length === 0){
 
         list.innerHTML = `
@@ -1225,10 +1289,6 @@ async function loadConnections(){
 
     }
 
-
-    /* =====================================================
-       RENDER USERS
-    ===================================================== */
 
     list.innerHTML = "";
 
@@ -1274,8 +1334,6 @@ async function loadConnections(){
                 "user-card";
 
 
-            /* ---------- PHOTO ---------- */
-
             const photoBox =
                 document.createElement(
                     "div"
@@ -1319,8 +1377,6 @@ async function loadConnections(){
             }
 
 
-            /* ---------- INFO ---------- */
-
             const info =
                 document.createElement(
                     "div"
@@ -1363,8 +1419,6 @@ async function loadConnections(){
             );
 
 
-            /* ---------- CONNECTED ---------- */
-
             const button =
                 document.createElement(
                     "div"
@@ -1376,8 +1430,6 @@ async function loadConnections(){
             button.textContent =
                 "Connected";
 
-
-            /* ---------- CARD ---------- */
 
             card.appendChild(
                 photoBox
