@@ -2,13 +2,12 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0,
-               maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Usanex</title>
 
 <style>
+
 *{
     box-sizing:border-box;
     margin:0;
@@ -30,9 +29,15 @@ body{
     overflow-x:hidden;
 }
 
+button,
+input{
+    font-family:inherit;
+}
+
 .app{
     min-height:100vh;
-    padding-bottom:95px;
+    padding-bottom:85px;
+
     background:
         radial-gradient(
             circle at 50% -10%,
@@ -42,17 +47,24 @@ body{
         #07090d;
 }
 
-/* ================= HEADER ================= */
+
+/* =========================================================
+   HEADER
+========================================================= */
 
 .header{
-    height:82px;
-    padding:0 18px;
+    height:72px;
+    padding:0 15px;
+
     display:flex;
     align-items:center;
-    gap:12px;
+    gap:10px;
 
-    background:rgba(7,9,13,.90);
-    border-bottom:1px solid rgba(255,255,255,.07);
+    background:rgba(7,9,13,.88);
+
+    border-bottom:
+        1px solid
+        rgba(255,255,255,.07);
 
     position:sticky;
     top:0;
@@ -61,14 +73,16 @@ body{
     backdrop-filter:blur(18px);
 }
 
+
 /* LOGO */
 
 .logo-mark{
-    width:43px;
-    height:43px;
+    width:42px;
+    height:42px;
+
     flex-shrink:0;
 
-    border-radius:14px;
+    border-radius:13px;
 
     display:flex;
     align-items:center;
@@ -89,7 +103,7 @@ body{
 }
 
 .logo-u{
-    font-size:25px;
+    font-size:24px;
     font-weight:900;
     color:#fff;
     z-index:2;
@@ -97,9 +111,12 @@ body{
 
 .logo-shine{
     position:absolute;
-    width:8px;
-    height:8px;
+
+    width:7px;
+    height:7px;
+
     border-radius:50%;
+
     background:#fff;
 
     right:7px;
@@ -121,23 +138,27 @@ body{
     background:
         rgba(255,255,255,.25);
 
-    left:11px;
+    left:10px;
     bottom:6px;
 }
 
 .logo-name{
-    font-size:21px;
+    font-size:18px;
     font-weight:800;
     letter-spacing:-.5px;
+    white-space:nowrap;
 }
 
-/* ================= SEARCH ================= */
+
+/* =========================================================
+   LARGE SEARCH BOX
+========================================================= */
 
 .search-box{
     flex:1;
     min-width:0;
 
-    height:46px;
+    height:45px;
 
     display:flex;
     align-items:center;
@@ -148,124 +169,210 @@ body{
 
     background:#151820;
 
-    border:1px solid
+    border:
+        1px solid
         rgba(255,255,255,.08);
 
     cursor:pointer;
 
-    transition:.18s;
+    transition:.15s;
 }
 
 .search-box:active{
-    transform:scale(.98);
+    transform:scale(.985);
 }
 
 .search-icon{
     font-size:20px;
     color:#8993a5;
-    margin-right:9px;
+    margin-right:8px;
 }
 
-.search-placeholder{
-    color:#747d8d;
+.search-box input{
+    width:100%;
+
+    border:0;
+    outline:0;
+
+    background:transparent;
+
+    color:#fff;
+
     font-size:14px;
+
+    pointer-events:none;
+}
+
+.search-box input::placeholder{
+    color:#747d8d;
+}
+
+
+/* =========================================================
+   HEADER MENU
+========================================================= */
+
+.header-btn{
+    width:40px;
+    height:40px;
+
+    flex-shrink:0;
+
+    border:0;
+    border-radius:13px;
+
+    background:#151820;
+
+    color:#fff;
+
+    border:
+        1px solid
+        rgba(255,255,255,.07);
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    cursor:pointer;
+}
+
+.header-btn:active{
+    transform:scale(.94);
+}
+
+.menu-icon{
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+}
+
+.menu-icon span{
+    width:17px;
+    height:2px;
+
+    border-radius:5px;
+
+    background:#fff;
+}
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.status-wrapper{
+    padding:16px 15px 8px;
+
+    border-bottom:
+        1px solid
+        rgba(255,255,255,.05);
+}
+
+.status-scroll{
+    display:flex;
+    gap:15px;
+
+    overflow-x:auto;
+
+    scrollbar-width:none;
+}
+
+.status-scroll::-webkit-scrollbar{
+    display:none;
+}
+
+.status-item{
+    width:58px;
+    flex-shrink:0;
+    text-align:center;
+
+    cursor:pointer;
+}
+
+.status-circle{
+    width:53px;
+    height:53px;
+
+    margin:auto;
+
+    border-radius:50%;
+
+    padding:2px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #3196ff,
+            #0758cb
+        );
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.status-inner{
+    width:100%;
+    height:100%;
+
+    border-radius:50%;
+
+    background:#151820;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:17px;
+    font-weight:800;
+
+    overflow:hidden;
+}
+
+.status-inner img{
+    width:100%;
+    height:100%;
+
+    object-fit:cover;
+
+    border-radius:50%;
+}
+
+.status-name{
+    margin-top:6px;
+
+    font-size:10px;
+
+    color:#8b94a5;
 
     white-space:nowrap;
     overflow:hidden;
     text-overflow:ellipsis;
 }
 
-/* ================= CONTENT ================= */
 
-.content{
-    padding:20px 18px 30px;
-}
+/* PLUS ON STATUS */
 
-/* ================= STATUS ================= */
-
-.status-section{
-    margin-bottom:25px;
-}
-
-.section-title{
-    font-size:18px;
-    font-weight:800;
-    margin-bottom:14px;
-}
-
-.status-row{
-    display:flex;
-    gap:15px;
-
-    overflow-x:auto;
-
-    padding:3px 2px 8px;
-
-    scrollbar-width:none;
-}
-
-.status-row::-webkit-scrollbar{
-    display:none;
-}
-
-.status-item{
-    min-width:66px;
-    text-align:center;
-    cursor:pointer;
-}
-
-.status-circle{
-    width:58px;
-    height:58px;
-
-    margin:auto;
-
-    border-radius:50%;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
+.add-status{
     position:relative;
-
-    background:
-        linear-gradient(
-            145deg,
-            #2d91ff,
-            #0756c9
-        );
-
-    border:2px solid
-        rgba(255,255,255,.10);
-
-    box-shadow:
-        0 5px 18px
-        rgba(15,105,235,.25);
-
-    overflow:hidden;
 }
 
-.status-circle img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-    border-radius:50%;
-}
-
-.status-plus{
+.add-status .plus{
     position:absolute;
 
-    right:-1px;
-    bottom:-1px;
+    right:0;
+    bottom:17px;
 
-    width:21px;
-    height:21px;
+    width:20px;
+    height:20px;
 
     border-radius:50%;
 
-    background:#1681ff;
+    background:#2788ff;
 
-    border:2px solid #07090d;
+    border:
+        2px solid
+        #07090d;
 
     display:flex;
     align-items:center;
@@ -275,26 +382,45 @@ body{
     font-weight:900;
 }
 
-.status-name{
-    margin-top:7px;
+
+/* =========================================================
+   CONTENT
+========================================================= */
+
+.content{
+    padding:22px 15px 30px;
+}
+
+.people-section{
+    width:100%;
+}
+
+.people-title{
+    font-size:21px;
+    font-weight:800;
+    margin-bottom:5px;
+}
+
+.people-subtitle{
     font-size:11px;
-    color:#9ba4b3;
+    color:#7f8898;
+    margin-bottom:18px;
 }
 
-/* ================= CONNECTED ================= */
-
-.connected-section{
-    margin-top:5px;
-}
-
-.connected-list{
+.people-list{
     display:flex;
     flex-direction:column;
-    gap:11px;
+    gap:10px;
 }
 
+
+/* =========================================================
+   CONNECTED CARD
+========================================================= */
+
 .user-card{
-    min-height:78px;
+    width:100%;
+    min-height:76px;
 
     display:flex;
     align-items:center;
@@ -310,15 +436,18 @@ body{
             rgba(14,17,23,.95)
         );
 
-    border:1px solid
+    border:
+        1px solid
         rgba(255,255,255,.065);
 
     box-shadow:
         0 8px 25px
         rgba(0,0,0,.16);
-}
 
-/* AVATAR */
+    cursor:default;
+
+    user-select:none;
+}
 
 .user-dp{
     width:52px;
@@ -348,12 +477,15 @@ body{
             #0757c8
         );
 
-    border:2px solid
+    border:
+        2px solid
         rgba(255,255,255,.08);
 
     box-shadow:
         0 5px 16px
         rgba(15,105,235,.25);
+
+    user-select:none;
 }
 
 .user-dp img{
@@ -395,10 +527,11 @@ body{
     text-overflow:ellipsis;
 }
 
+
 /* CONNECTED BUTTON */
 
 .connected-btn{
-    min-width:86px;
+    min-width:84px;
     height:36px;
 
     padding:0 13px;
@@ -415,43 +548,77 @@ body{
 
     cursor:default;
 
-    opacity:1;
+    flex-shrink:0;
+
+    pointer-events:none;
 }
 
-.connected-btn:disabled{
-    opacity:1;
-}
 
-/* ================= EMPTY ================= */
+/* =========================================================
+   EMPTY
+========================================================= */
 
-.empty-state{
-    display:none;
+.no-connected{
+    min-height:300px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+    justify-content:center;
 
     text-align:center;
 
-    padding:45px 20px;
+    padding:30px 20px;
+}
+
+.no-connected-icon{
+    width:70px;
+    height:70px;
+
+    border-radius:22px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    margin-bottom:16px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #2d91ff,
+            #0756c9
+        );
+
+    box-shadow:
+        0 10px 30px
+        rgba(20,105,232,.25);
+
+    font-size:30px;
+}
+
+.no-connected-title{
+    font-size:17px;
+    font-weight:800;
+
+    margin-bottom:7px;
+}
+
+.no-connected-text{
+    max-width:270px;
 
     color:#7f8898;
-}
 
-.empty-icon{
-    font-size:45px;
-    margin-bottom:12px;
-}
-
-.empty-title{
-    font-size:16px;
-    font-weight:700;
-    color:#cbd1db;
-    margin-bottom:6px;
-}
-
-.empty-text{
     font-size:12px;
     line-height:1.5;
 }
 
-/* ================= BOTTOM NAV ================= */
+
+/* =========================================================
+   BOTTOM NAV
+========================================================= */
 
 .bottom-nav{
     position:fixed;
@@ -460,130 +627,124 @@ body{
     right:0;
     bottom:0;
 
-    height:76px;
+    height:72px;
+
+    background:
+        rgba(10,13,18,.97);
+
+    border-top:
+        1px solid
+        rgba(255,255,255,.07);
+
+    backdrop-filter:blur(18px);
 
     display:flex;
+
     align-items:center;
     justify-content:space-around;
 
-    padding:
-        7px 8px
-        calc(7px + env(safe-area-inset-bottom));
-
-    background:
-        rgba(10,13,19,.96);
-
-    border-top:1px solid
-        rgba(255,255,255,.08);
-
-    backdrop-filter:blur(22px);
-
     z-index:100;
+
+    padding:0 4px;
 }
 
-/* normal nav */
+
+/* ALL 5 ITEMS */
 
 .nav-item{
-    width:20%;
-    height:58px;
+    flex:1;
+
+    max-width:80px;
+
+    height:60px;
 
     display:flex;
+
     align-items:center;
     justify-content:center;
 
-    border-radius:17px;
-
-    color:#7f8898;
+    color:#ffffff;
 
     cursor:pointer;
 
+    user-select:none;
+
     position:relative;
 
-    transition:.18s;
+    transition:.15s;
 }
 
 .nav-item:active{
-    transform:scale(.90);
+    transform:scale(.92);
 }
 
-.nav-item.active{
-    color:#3296ff;
-}
+
+/* SIMPLE ICON */
 
 .nav-icon{
-    font-size:24px;
+    width:25px;
+    height:25px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    font-size:22px;
+
     line-height:1;
 }
 
+
+/* =========================================================
+   OUTLINE HOME / REEL / PROFILE / NOTIFICATION
+========================================================= */
+
+.nav-svg{
+    width:24px;
+    height:24px;
+
+    fill:none;
+
+    stroke:#ffffff;
+
+    stroke-width:1.8;
+
+    stroke-linecap:round;
+    stroke-linejoin:round;
+}
+
+
 /* PLUS */
 
-.plus-nav{
-    width:20%;
-    height:62px;
+.plus-svg{
+    width:27px;
+    height:27px;
 
-    display:flex;
-    align-items:center;
-    justify-content:center;
+    stroke:#ffffff;
 
-    cursor:pointer;
-
-    position:relative;
-
-    transition:.18s;
+    stroke-width:1.8;
 }
 
-.plus-nav:active{
-    transform:scale(.90);
-}
 
-.plus-button{
-    width:53px;
-    height:53px;
-
-    border-radius:18px;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    background:
-        linear-gradient(
-            145deg,
-            #3296ff,
-            #0758cb
-        );
-
-    color:#fff;
-
-    font-size:31px;
-    font-weight:400;
-
-    box-shadow:
-        0 8px 25px
-        rgba(18,105,232,.42);
-
-    border:1px solid
-        rgba(255,255,255,.13);
-}
-
-/* ================= NOTIFICATION BADGE ================= */
+/* =========================================================
+   NOTIFICATION BADGE
+========================================================= */
 
 .notification-badge{
     position:absolute;
 
     top:7px;
-    right:18px;
+    right:14px;
 
-    min-width:17px;
-    height:17px;
+    min-width:16px;
+    height:16px;
 
     padding:0 4px;
 
-    border-radius:10px;
+    border-radius:20px;
 
-    background:#ff3b5c;
-
-    border:2px solid #0a0d13;
+    background:#247fff;
 
     color:#fff;
 
@@ -593,19 +754,144 @@ body{
     display:flex;
     align-items:center;
     justify-content:center;
+
+    border:
+        2px solid
+        #0a0d12;
 }
 
 .notification-badge.hidden{
     display:none;
 }
 
-/* ================= TOAST ================= */
+
+/* =========================================================
+   MENU OVERLAY
+========================================================= */
+
+.menu-overlay{
+    position:fixed;
+
+    inset:0;
+
+    background:
+        rgba(0,0,0,.58);
+
+    opacity:0;
+
+    pointer-events:none;
+
+    transition:.2s;
+
+    z-index:500;
+}
+
+.menu-overlay.show{
+    opacity:1;
+
+    pointer-events:auto;
+}
+
+.menu-panel{
+    position:absolute;
+
+    top:70px;
+    right:14px;
+
+    width:205px;
+
+    padding:8px;
+
+    border-radius:19px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #1a1f29,
+            #0e1219
+        );
+
+    border:
+        1px solid
+        rgba(255,255,255,.08);
+
+    box-shadow:
+        0 20px 50px
+        rgba(0,0,0,.5);
+
+    transform:
+        translateY(-8px)
+        scale(.97);
+
+    transition:.2s;
+}
+
+.menu-overlay.show .menu-panel{
+    transform:
+        translateY(0)
+        scale(1);
+}
+
+.menu-user{
+    padding:12px;
+
+    border-bottom:
+        1px solid
+        rgba(255,255,255,.06);
+
+    margin-bottom:5px;
+}
+
+.menu-user-name{
+    font-size:14px;
+    font-weight:700;
+}
+
+.menu-user-id{
+    margin-top:4px;
+
+    font-size:10px;
+
+    color:#7f8898;
+}
+
+.menu-option{
+    height:43px;
+
+    padding:0 12px;
+
+    border-radius:12px;
+
+    display:flex;
+    align-items:center;
+
+    gap:11px;
+
+    color:#d8deea;
+
+    font-size:12px;
+
+    cursor:pointer;
+}
+
+.menu-option:active{
+    background:#202631;
+}
+
+.menu-option.logout{
+    color:#ff9292;
+}
+
+
+/* =========================================================
+   TOAST
+========================================================= */
 
 .status-popup{
     position:fixed;
 
     left:50%;
-    bottom:94px;
+    bottom:88px;
 
     transform:
         translateX(-50%)
@@ -623,7 +909,8 @@ body{
     background:
         rgba(24,28,37,.97);
 
-    border:1px solid
+    border:
+        1px solid
         rgba(255,255,255,.09);
 
     box-shadow:
@@ -653,198 +940,261 @@ body{
         translateY(0);
 }
 
-/* ================= LOADING ================= */
 
-.loading{
-    text-align:center;
+/* =========================================================
+   RESPONSIVE
+========================================================= */
 
-    padding:35px 0;
-
-    color:#727b8b;
-
-    font-size:13px;
-}
-
-/* ================= RESPONSIVE ================= */
-
-@media(max-width:360px){
+@media(max-width:390px){
 
     .header{
-        padding:0 12px;
-        gap:8px;
-    }
-
-    .logo-name{
-        font-size:18px;
+        padding:0 9px;
+        gap:7px;
     }
 
     .logo-mark{
-        width:40px;
-        height:40px;
+        width:38px;
+        height:38px;
+
+        border-radius:12px;
     }
 
-    .content{
-        padding-left:13px;
-        padding-right:13px;
+    .logo-u{
+        font-size:22px;
+    }
+
+    .logo-name{
+        font-size:15px;
+    }
+
+    .search-box{
+        height:40px;
+        padding:0 10px;
+    }
+
+    .search-icon{
+        font-size:18px;
+        margin-right:5px;
     }
 
     .user-card{
         padding:10px;
     }
 
+    .user-dp{
+        width:47px;
+        height:47px;
+    }
+
     .connected-btn{
-        min-width:78px;
+        min-width:76px;
         padding:0 9px;
     }
+
+    .notification-badge{
+        right:10px;
+    }
 }
+
 </style>
 </head>
+
 
 <body>
 
 <div class="app">
 
-    <!-- ================= HEADER ================= -->
 
-    <header class="header">
+<!-- =======================================================
+     HEADER
+======================================================= -->
 
-        <div class="logo-mark">
-            <span class="logo-u">U</span>
-            <span class="logo-shine"></span>
+<header class="header">
+
+    <div class="logo-mark">
+
+        <div class="logo-u">
+            U
         </div>
 
-        <div class="logo-name">
-            Usanex
-        </div>
+        <div class="logo-shine"></div>
 
-        <!-- SEARCH BOX -->
-        <div
-            class="search-box"
-            id="searchBox"
-            role="button"
-            tabindex="0"
+    </div>
+
+
+    <div class="logo-name">
+        Usanex
+    </div>
+
+
+    <!-- SEARCH -->
+
+    <div
+        class="search-box"
+        id="searchBox">
+
+        <span class="search-icon">
+            🔍
+        </span>
+
+        <input
+            id="searchInput"
+            type="text"
+            placeholder="Search people..."
+            autocomplete="off"
+            readonly
         >
-            <span class="search-icon">⌕</span>
 
-            <span class="search-placeholder">
-                Search people...
-            </span>
+    </div>
+
+
+    <!-- MENU -->
+
+    <button
+        class="header-btn"
+        id="menuBtn"
+        aria-label="Menu">
+
+        <div class="menu-icon">
+
+            <span></span>
+            <span></span>
+            <span></span>
+
         </div>
 
-    </header>
+    </button>
+
+</header>
 
 
-    <!-- ================= CONTENT ================= -->
 
-    <main class="content">
+<!-- =======================================================
+     STATUS
+======================================================= -->
 
-        <!-- STATUS -->
+<section class="status-wrapper">
 
-        <section class="status-section">
+    <div
+        class="status-scroll"
+        id="statusScroll">
 
-            <div class="section-title">
-                Status
-            </div>
+        <div
+            class="status-item add-status"
+            id="yourStatus">
 
-            <div class="status-row">
-
-                <div
-                    class="status-item"
-                    id="yourStatus"
-                >
-
-                    <div class="status-circle">
-
-                        <span id="yourStatusInitial">
-                            U
-                        </span>
-
-                        <img
-                            id="yourStatusImage"
-                            style="display:none;"
-                            alt=""
-                        >
-
-                        <span class="status-plus">
-                            +
-                        </span>
-
-                    </div>
-
-                    <div class="status-name">
-                        You
-                    </div>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- CONNECTED PEOPLE -->
-
-        <section class="connected-section">
-
-            <div class="section-title">
-                Connected People
-            </div>
-
-            <div
-                class="connected-list"
-                id="connectedList"
-            >
+            <div class="status-circle">
 
                 <div
-                    class="loading"
-                    id="loading"
-                >
-                    Loading...
+                    class="status-inner"
+                    id="yourStatusAvatar">
+
+                    U
+
                 </div>
 
             </div>
 
-            <div
-                class="empty-state"
-                id="emptyState"
-            >
 
-                <div class="empty-icon">
-                    👥
-                </div>
-
-                <div class="empty-title">
-                    No connections yet
-                </div>
-
-                <div class="empty-text">
-                    Your connected people will appear here.
-                </div>
-
+            <div class="plus">
+                +
             </div>
 
-        </section>
 
-    </main>
+            <div class="status-name">
+                You
+            </div>
 
-</div>
+        </div>
+
+    </div>
+
+</section>
 
 
-<!-- ================= BOTTOM NAV ================= -->
+
+<!-- =======================================================
+     MAIN
+======================================================= -->
+
+<main class="content">
+
+    <section
+        class="people-section"
+        id="peopleSection">
+
+        <div class="people-title">
+            Connected People
+        </div>
+
+        <div class="people-subtitle">
+            People connected with you
+        </div>
+
+        <div
+            class="people-list"
+            id="peopleList">
+        </div>
+
+    </section>
+
+
+    <section
+        class="no-connected"
+        id="noConnected"
+        style="display:none;">
+
+        <div class="no-connected-icon">
+            👥
+        </div>
+
+        <div class="no-connected-title">
+            No connected people
+        </div>
+
+        <div class="no-connected-text">
+            Search people above and connect with them
+            to see them here.
+        </div>
+
+    </section>
+
+</main>
+
+
+
+<!-- =======================================================
+     BOTTOM NAV
+======================================================= -->
 
 <nav class="bottom-nav">
+
 
     <!-- HOME -->
 
     <div
         class="nav-item active"
         id="homeNav"
-        title="Home"
-    >
-        <div class="nav-icon">
-            🏠
-        </div>
+        aria-label="Home"
+        title="Home">
+
+        <svg
+            class="nav-svg"
+            viewBox="0 0 24 24">
+
+            <path
+                d="M3 10.5L12 3l9 7.5"/>
+
+            <path
+                d="M5.5 9.5V21h13V9.5"/>
+
+            <path
+                d="M9.5 21v-7h5v7"/>
+
+        </svg>
+
     </div>
+
 
 
     <!-- REEL -->
@@ -852,25 +1202,57 @@ body{
     <div
         class="nav-item"
         id="reelNav"
-        title="Reel"
-    >
-        <div class="nav-icon">
-            ▶
-        </div>
+        aria-label="Reel"
+        title="Reel">
+
+        <svg
+            class="nav-svg"
+            viewBox="0 0 24 24">
+
+            <rect
+                x="3"
+                y="4"
+                width="18"
+                height="16"
+                rx="3"/>
+
+            <path
+                d="M8 4l3 5"/>
+
+            <path
+                d="M13 4l3 5"/>
+
+            <path
+                d="M10 10l5 3-5 3z"/>
+
+        </svg>
+
     </div>
+
 
 
     <!-- PLUS -->
 
     <div
-        class="plus-nav"
+        class="nav-item"
         id="plusNav"
-        title="Create"
-    >
-        <div class="plus-button">
-            +
-        </div>
+        aria-label="Create"
+        title="Create">
+
+        <svg
+            class="nav-svg plus-svg"
+            viewBox="0 0 24 24">
+
+            <path
+                d="M12 5v14"/>
+
+            <path
+                d="M5 12h14"/>
+
+        </svg>
+
     </div>
+
 
 
     <!-- NOTIFICATION -->
@@ -878,21 +1260,32 @@ body{
     <div
         class="nav-item"
         id="notificationNav"
-        title="Notifications"
-    >
+        aria-label="Notifications"
+        title="Notifications">
 
-        <div class="nav-icon">
-            🔔
-        </div>
+        <svg
+            class="nav-svg"
+            viewBox="0 0 24 24">
+
+            <path
+                d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/>
+
+            <path
+                d="M10 21h4"/>
+
+        </svg>
+
 
         <span
             class="notification-badge hidden"
-            id="notificationBadge"
-        >
+            id="notificationBadge">
+
             0
+
         </span>
 
     </div>
+
 
 
     <!-- PROFILE -->
@@ -900,160 +1293,286 @@ body{
     <div
         class="nav-item"
         id="profileNav"
-        title="Profile"
-    >
-        <div class="nav-icon">
-            👤
-        </div>
+        aria-label="Profile"
+        title="Profile">
+
+        <svg
+            class="nav-svg"
+            viewBox="0 0 24 24">
+
+            <circle
+                cx="12"
+                cy="8"
+                r="4"/>
+
+            <path
+                d="M4 21c0-4.2 3.6-7 8-7s8 2.8 8 7"/>
+
+        </svg>
+
     </div>
 
 </nav>
 
 
-<!-- ================= TOAST ================= -->
+</div>
+
+
+
+<!-- =======================================================
+     MENU
+======================================================= -->
+
+<div
+    class="menu-overlay"
+    id="menuOverlay">
+
+    <div
+        class="menu-panel"
+        id="menuPanel">
+
+        <div class="menu-user">
+
+            <div
+                class="menu-user-name"
+                id="menuUserName">
+
+                Usanex User
+
+            </div>
+
+            <div
+                class="menu-user-id"
+                id="menuUserId">
+
+                User ID
+
+            </div>
+
+        </div>
+
+
+        <div
+            class="menu-option"
+            id="menuProfile">
+
+            <span>👤</span>
+
+            <span>
+                Profile
+            </span>
+
+        </div>
+
+
+        <div
+            class="menu-option logout"
+            id="logoutBtn">
+
+            <span>↪</span>
+
+            <span>
+                Logout
+            </span>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =======================================================
+     TOAST
+======================================================= -->
 
 <div
     class="status-popup"
-    id="statusPopup"
-></div>
+    id="statusPopup">
+</div>
+
 
 
 <script>
 
-/* ============================================================
-   USANEX HOME
-============================================================ */
+/* =========================================================
+   USANEX HOME JAVASCRIPT
+========================================================= */
 
 let currentUser = null;
 
 
-/* ================= BASIC HELPERS ================= */
+/* =========================================================
+   TOAST
+========================================================= */
 
 function showToast(message){
 
     const popup =
-        document.getElementById("statusPopup");
+        document.getElementById(
+            "statusPopup"
+        );
 
-    popup.textContent = message;
+    popup.textContent =
+        message;
 
-    popup.classList.add("show");
+    popup.classList.add(
+        "show"
+    );
 
-    setTimeout(function(){
+    clearTimeout(
+        window.__toastTimer
+    );
 
-        popup.classList.remove("show");
+    window.__toastTimer =
+        setTimeout(
+            function(){
 
-    },2200);
+                popup.classList.remove(
+                    "show"
+                );
+
+            },
+            2200
+        );
 }
 
 
-/* ================= CURRENT USER ================= */
+/* =========================================================
+   LOAD CURRENT USER
+========================================================= */
 
-async function loadCurrentUser(){
+function loadCurrentUser(){
 
     try{
 
         const saved =
-            localStorage.getItem("usanex_user");
+            localStorage.getItem(
+                "usanex_user"
+            );
 
         if(saved){
 
-            try{
-
-                currentUser =
-                    JSON.parse(saved);
-
-            }catch(e){
-
-                currentUser = null;
-
-            }
+            currentUser =
+                JSON.parse(saved);
 
         }
-
-        /*
-         * If your backend already exposes
-         * /api/me, it can be loaded here.
-         */
-
-        if(
-            !currentUser ||
-            !currentUser.user_id
-        ){
-
-            const params =
-                new URLSearchParams(
-                    window.location.search
-                );
-
-            const userId =
-                params.get("user_id");
-
-            if(userId){
-
-                currentUser = {
-                    user_id:userId
-                };
-
-            }
-
-        }
-
-        updateYourStatus();
-
-        await loadConnections();
-
-        await loadNotificationCount();
 
     }catch(error){
 
         console.error(
-            "User loading error:",
+            "User data error:",
             error
         );
 
-        await loadConnections();
+        currentUser =
+            null;
 
     }
+
+
+    if(
+        !currentUser ||
+        !currentUser.user_id
+    ){
+
+        const params =
+            new URLSearchParams(
+                window.location.search
+            );
+
+        const userId =
+            params.get(
+                "user_id"
+            );
+
+        if(userId){
+
+            currentUser = {
+                user_id:userId
+            };
+
+        }
+
+    }
+
+
+    updateUserUI();
+
+    loadConnections();
+
+    loadNotificationCount();
 
 }
 
 
-/* ================= STATUS ================= */
+/* =========================================================
+   USER UI
+========================================================= */
 
-function updateYourStatus(){
+function updateUserUI(){
 
-    const initial =
+    const avatar =
         document.getElementById(
-            "yourStatusInitial"
+            "yourStatusAvatar"
         );
 
-    const image =
+    const menuName =
         document.getElementById(
-            "yourStatusImage"
+            "menuUserName"
         );
+
+    const menuId =
+        document.getElementById(
+            "menuUserId"
+        );
+
 
     if(!currentUser){
 
-        initial.textContent = "U";
+        avatar.textContent =
+            "U";
 
-        image.style.display = "none";
+        menuName.textContent =
+            "Usanex User";
 
-        initial.style.display = "block";
+        menuId.textContent =
+            "User ID";
 
         return;
 
     }
 
+
     const name =
         currentUser.name ||
+        currentUser.display_name ||
         currentUser.username ||
-        "U";
+        "User";
 
-    initial.textContent =
+
+    const userId =
+        currentUser.user_id ||
+        currentUser.username ||
+        "";
+
+
+    avatar.textContent =
         name
             .trim()
             .charAt(0)
-            .toUpperCase() || "U";
+            .toUpperCase() ||
+        "U";
+
+
+    menuName.textContent =
+        name;
+
+
+    menuId.textContent =
+        userId;
+
 
     const photo =
         currentUser.profile_photo ||
@@ -1063,65 +1582,76 @@ function updateYourStatus(){
         currentUser.profile_image ||
         "";
 
+
     if(photo){
 
-        image.src = photo;
+        avatar.innerHTML =
+            "";
 
-        image.style.display = "block";
+        const img =
+            document.createElement(
+                "img"
+            );
 
-        initial.style.display = "none";
+        img.src =
+            photo;
 
-    }else{
+        img.alt =
+            "";
 
-        image.style.display = "none";
+        img.onerror =
+            function(){
 
-        initial.style.display = "block";
+                avatar.innerHTML =
+                    "";
+
+                avatar.textContent =
+                    name
+                        .trim()
+                        .charAt(0)
+                        .toUpperCase() ||
+                    "U";
+
+            };
+
+        avatar.appendChild(
+            img
+        );
 
     }
 
 }
 
 
-/* ================= CONNECTIONS ================= */
+/* =========================================================
+   CONNECTIONS
+========================================================= */
 
 async function loadConnections(){
 
     const list =
         document.getElementById(
-            "connectedList"
+            "peopleList"
         );
 
     const empty =
         document.getElementById(
-            "emptyState"
-        );
-
-    const loading =
-        document.getElementById(
-            "loading"
+            "noConnected"
         );
 
     if(!currentUser ||
        !currentUser.user_id){
 
-        if(loading){
-
-            loading.style.display =
-                "none";
-
-        }
-
-        /*
-         * Keep UI usable even when
-         * current user is not available.
-         */
+        list.innerHTML =
+            "";
 
         empty.style.display =
-            "block";
+            "flex";
 
         return;
 
     }
+
 
     try{
 
@@ -1137,45 +1667,51 @@ async function loadConnections(){
                 }
             );
 
+
         if(!response.ok){
 
             throw new Error(
-                "Connections API returned " +
+                "Connections API error: " +
                 response.status
             );
 
         }
 
+
         const data =
             await response.json();
 
-        console.log(
-            "Connections:",
-            data
-        );
 
         let people = [];
 
+
         if(Array.isArray(data)){
 
-            people = data;
+            people =
+                data;
 
         }else if(
-            Array.isArray(data.connections)
+            Array.isArray(
+                data.connections
+            )
         ){
 
             people =
                 data.connections;
 
         }else if(
-            Array.isArray(data.users)
+            Array.isArray(
+                data.users
+            )
         ){
 
             people =
                 data.users;
 
         }else if(
-            Array.isArray(data.data)
+            Array.isArray(
+                data.data
+            )
         ){
 
             people =
@@ -1183,86 +1719,89 @@ async function loadConnections(){
 
         }
 
-        list.innerHTML = "";
 
-        if(
-            !people.length
-        ){
+        list.innerHTML =
+            "";
+
+
+        if(!people.length){
 
             empty.style.display =
-                "block";
+                "flex";
 
             return;
 
         }
 
+
         empty.style.display =
             "none";
+
 
         people.forEach(
             function(person){
 
-                renderConnectedPerson(
+                createConnectedCard(
                     person
                 );
 
             }
         );
 
+
     }catch(error){
 
         console.error(
-            "Connection loading failed:",
+            "Connection loading error:",
             error
         );
 
-        list.innerHTML = "";
+
+        list.innerHTML =
+            "";
+
 
         /*
-         * Do not show Follow here.
-         * Connected people stay connected.
+         * Connected section remains
+         * Follow-free.
          */
 
         empty.style.display =
-            "block";
+            "flex";
 
     }
 
 }
 
 
-/* ================= RENDER PERSON ================= */
+/* =========================================================
+   CONNECTED CARD
+========================================================= */
 
-function renderConnectedPerson(person){
+function createConnectedCard(person){
 
     const list =
         document.getElementById(
-            "connectedList"
+            "peopleList"
         );
 
+
     const card =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
 
     card.className =
         "user-card";
 
 
-    /* ---------- PHOTO ---------- */
-
     const dp =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
 
     dp.className =
         "user-dp";
-
-
-    const photo =
-        person.profile_photo ||
-        person.profile_picture ||
-        person.avatar ||
-        person.photo ||
-        person.profile_image ||
-        "";
 
 
     const name =
@@ -1279,14 +1818,27 @@ function renderConnectedPerson(person){
         "";
 
 
+    const photo =
+        person.profile_photo ||
+        person.profile_picture ||
+        person.avatar ||
+        person.photo ||
+        person.profile_image ||
+        "";
+
+
     if(photo){
 
         const img =
-            document.createElement("img");
+            document.createElement(
+                "img"
+            );
 
-        img.src = photo;
+        img.src =
+            photo;
 
-        img.alt = name;
+        img.alt =
+            "";
 
         img.onerror =
             function(){
@@ -1302,7 +1854,9 @@ function renderConnectedPerson(person){
 
             };
 
-        dp.appendChild(img);
+        dp.appendChild(
+            img
+        );
 
     }else{
 
@@ -1316,86 +1870,233 @@ function renderConnectedPerson(person){
     }
 
 
-    /* ---------- INFO ---------- */
-
     const info =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
 
     info.className =
         "user-info";
 
 
-    const nameEl =
-        document.createElement("div");
+    const nameElement =
+        document.createElement(
+            "div"
+        );
 
-    nameEl.className =
+    nameElement.className =
         "user-name";
 
-    nameEl.textContent =
+    nameElement.textContent =
         name;
 
 
-    const idEl =
-        document.createElement("div");
+    const idElement =
+        document.createElement(
+            "div"
+        );
 
-    idEl.className =
+    idElement.className =
         "user-id";
 
-    idEl.textContent =
+    idElement.textContent =
         userId;
 
 
-    info.appendChild(nameEl);
+    info.appendChild(
+        nameElement
+    );
 
-    info.appendChild(idEl);
+    info.appendChild(
+        idElement
+    );
 
 
-    /* ---------- CONNECTED ---------- */
+    const connected =
+        document.createElement(
+            "button"
+        );
 
-    const button =
-        document.createElement("button");
-
-    button.className =
-        "connected-btn";
-
-    button.type =
+    connected.type =
         "button";
 
-    button.textContent =
+    connected.className =
+        "connected-btn";
+
+    connected.textContent =
         "Connected";
 
-    button.disabled =
+    connected.disabled =
         true;
 
-    button.tabIndex =
+    connected.tabIndex =
         -1;
 
 
     /*
      * IMPORTANT:
      *
-     * There is intentionally
-     * NO card click event.
+     * No click event.
+     * No Follow.
+     * No Unfollow.
      *
-     * There is intentionally
-     * NO Follow button logic.
-     *
-     * Connected means connected.
+     * Connected stays Connected.
      */
 
 
-    card.appendChild(dp);
+    card.appendChild(
+        dp
+    );
 
-    card.appendChild(info);
+    card.appendChild(
+        info
+    );
 
-    card.appendChild(button);
+    card.appendChild(
+        connected
+    );
 
-    list.appendChild(card);
+
+    list.appendChild(
+        card
+    );
 
 }
 
 
-/* ================= NOTIFICATIONS ================= */
+/* =========================================================
+   SEARCH BOX
+========================================================= */
+
+document
+    .getElementById(
+        "searchBox"
+    )
+    .addEventListener(
+        "click",
+        function(){
+
+            window.location.href =
+                "/search";
+
+        }
+    );
+
+
+/* =========================================================
+   HOME
+========================================================= */
+
+document
+    .getElementById(
+        "homeNav"
+    )
+    .addEventListener(
+        "click",
+        function(){
+
+            window.location.href =
+                "/home";
+
+        }
+    );
+
+
+/* =========================================================
+   REEL
+========================================================= */
+
+document
+    .getElementById(
+        "reelNav"
+    )
+    .addEventListener(
+        "click",
+        function(){
+
+            window.location.href =
+                "/reels";
+
+        }
+    );
+
+
+/* =========================================================
+   PLUS
+========================================================= */
+
+document
+    .getElementById(
+        "plusNav"
+    )
+    .addEventListener(
+        "click",
+        function(){
+
+            showToast(
+                "Create feature coming soon"
+            );
+
+        }
+    );
+
+
+/* =========================================================
+   NOTIFICATION
+========================================================= */
+
+document
+    .getElementById(
+        "notificationNav"
+    )
+    .addEventListener(
+        "click",
+        function(){
+
+            window.location.href =
+                "/notifications";
+
+        }
+    );
+
+
+/* =========================================================
+   PROFILE
+========================================================= */
+
+document
+    .getElementById(
+        "profileNav"
+    )
+    .addEventListener(
+        "click",
+        function(){
+
+            if(
+                currentUser &&
+                currentUser.user_id
+            ){
+
+                window.location.href =
+                    "/search?user_id=" +
+                    encodeURIComponent(
+                        currentUser.user_id
+                    );
+
+            }else{
+
+                window.location.href =
+                    "/search";
+
+            }
+
+        }
+    );
+
+
+/* =========================================================
+   NOTIFICATION COUNT
+========================================================= */
 
 async function loadNotificationCount(){
 
@@ -1403,6 +2104,7 @@ async function loadNotificationCount(){
         document.getElementById(
             "notificationBadge"
         );
+
 
     if(
         !currentUser ||
@@ -1416,6 +2118,7 @@ async function loadNotificationCount(){
         return;
 
     }
+
 
     try{
 
@@ -1431,19 +2134,22 @@ async function loadNotificationCount(){
                 }
             );
 
+
         if(!response.ok){
 
             throw new Error(
-                "Notification API " +
-                response.status
+                "Notification API error"
             );
 
         }
 
+
         const data =
             await response.json();
 
+
         let count = 0;
+
 
         if(
             typeof data.unread_count ===
@@ -1479,23 +2185,8 @@ async function loadNotificationCount(){
                     }
                 ).length;
 
-        }else if(
-            Array.isArray(data)
-        ){
-
-            count =
-                data.filter(
-                    function(item){
-
-                        return (
-                            item.is_read === false ||
-                            item.read === false
-                        );
-
-                    }
-                ).length;
-
         }
+
 
         if(count > 0){
 
@@ -1516,6 +2207,7 @@ async function loadNotificationCount(){
 
         }
 
+
     }catch(error){
 
         console.log(
@@ -1531,123 +2223,92 @@ async function loadNotificationCount(){
 }
 
 
-/* ================= SEARCH ================= */
+/* =========================================================
+   STATUS
+========================================================= */
 
 document
-    .getElementById("searchBox")
-    .addEventListener(
-        "click",
-        function(){
-
-            window.location.href =
-                "/search";
-
-        }
-    );
-
-
-document
-    .getElementById("searchBox")
-    .addEventListener(
-        "keydown",
-        function(event){
-
-            if(
-                event.key === "Enter" ||
-                event.key === " "
-            ){
-
-                event.preventDefault();
-
-                window.location.href =
-                    "/search";
-
-            }
-
-        }
-    );
-
-
-/* ================= HOME ================= */
-
-document
-    .getElementById("homeNav")
-    .addEventListener(
-        "click",
-        function(){
-
-            window.location.href =
-                "/home";
-
-        }
-    );
-
-
-/* ================= REEL ================= */
-
-document
-    .getElementById("reelNav")
-    .addEventListener(
-        "click",
-        function(){
-
-            window.location.href =
-                "/reels";
-
-        }
-    );
-
-
-/* ================= PLUS ================= */
-
-document
-    .getElementById("plusNav")
+    .getElementById(
+        "yourStatus"
+    )
     .addEventListener(
         "click",
         function(){
 
             showToast(
-                "Create feature coming soon"
+                "Status feature coming soon"
             );
 
         }
     );
 
 
-/* ================= NOTIFICATION ================= */
+/* =========================================================
+   MENU
+========================================================= */
 
-document
-    .getElementById("notificationNav")
-    .addEventListener(
-        "click",
-        async function(){
+const menuBtn =
+    document.getElementById(
+        "menuBtn"
+    );
 
-            if(
-                !currentUser ||
-                !currentUser.user_id
-            ){
-
-                window.location.href =
-                    "/notifications";
-
-                return;
-
-            }
-
-            window.location.href =
-                "/notifications";
-
-        }
+const menuOverlay =
+    document.getElementById(
+        "menuOverlay"
     );
 
 
-/* ================= PROFILE ================= */
+menuBtn.addEventListener(
+    "click",
+    function(event){
+
+        event.stopPropagation();
+
+        menuOverlay.classList.add(
+            "show"
+        );
+
+    }
+);
+
+
+/* CLOSE MENU */
+
+menuOverlay.addEventListener(
+    "click",
+    function(event){
+
+        if(
+            event.target ===
+            menuOverlay
+        ){
+
+            menuOverlay.classList.remove(
+                "show"
+            );
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   MENU PROFILE
+========================================================= */
 
 document
-    .getElementById("profileNav")
+    .getElementById(
+        "menuProfile"
+    )
     .addEventListener(
         "click",
         function(){
+
+            menuOverlay.classList.remove(
+                "show"
+            );
+
 
             if(
                 currentUser &&
@@ -1671,23 +2332,47 @@ document
     );
 
 
-/* ================= STATUS ================= */
+/* =========================================================
+   LOGOUT
+========================================================= */
 
 document
-    .getElementById("yourStatus")
+    .getElementById(
+        "logoutBtn"
+    )
     .addEventListener(
         "click",
         function(){
 
-            showToast(
-                "Status feature coming soon"
-            );
+            try{
+
+                localStorage.removeItem(
+                    "usanex_user"
+                );
+
+                localStorage.removeItem(
+                    "user"
+                );
+
+            }catch(error){
+
+                console.log(
+                    "Logout storage error"
+                );
+
+            }
+
+
+            window.location.href =
+                "/";
 
         }
     );
 
 
-/* ================= PERIODIC REFRESH ================= */
+/* =========================================================
+   AUTO REFRESH NOTIFICATIONS
+========================================================= */
 
 setInterval(
     function(){
@@ -1699,7 +2384,9 @@ setInterval(
 );
 
 
-/* ================= START ================= */
+/* =========================================================
+   PAGE START
+========================================================= */
 
 document.addEventListener(
     "DOMContentLoaded",
