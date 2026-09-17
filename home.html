@@ -1,22 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
 <meta charset="UTF-8">
-
 <meta name="viewport"
-      content="width=device-width, initial-scale=1.0">
+      content="width=device-width, initial-scale=1.0,
+               maximum-scale=1.0, user-scalable=no">
 
 <title>Usanex</title>
 
-
 <style>
-
-/* =========================================================
-   RESET
-========================================================= */
-
 *{
     box-sizing:border-box;
     margin:0;
@@ -38,20 +30,9 @@ body{
     overflow-x:hidden;
 }
 
-button,
-input{
-    font-family:inherit;
-}
-
-
-/* =========================================================
-   APP
-========================================================= */
-
 .app{
     min-height:100vh;
-    padding-bottom:82px;
-
+    padding-bottom:95px;
     background:
         radial-gradient(
             circle at 50% -10%,
@@ -61,49 +42,33 @@ input{
         #07090d;
 }
 
-
-/* =========================================================
-   HEADER
-========================================================= */
+/* ================= HEADER ================= */
 
 .header{
-    height:72px;
-
-    padding:0 15px;
-
+    height:82px;
+    padding:0 18px;
     display:flex;
     align-items:center;
+    gap:12px;
 
-    gap:10px;
-
-    background:
-        rgba(7,9,13,.88);
-
-    border-bottom:
-        1px solid
-        rgba(255,255,255,.07);
+    background:rgba(7,9,13,.90);
+    border-bottom:1px solid rgba(255,255,255,.07);
 
     position:sticky;
-
     top:0;
-
     z-index:30;
 
     backdrop-filter:blur(18px);
 }
 
-
-/* =========================================================
-   LOGO
-========================================================= */
+/* LOGO */
 
 .logo-mark{
-    width:42px;
-    height:42px;
-
+    width:43px;
+    height:43px;
     flex-shrink:0;
 
-    border-radius:13px;
+    border-radius:14px;
 
     display:flex;
     align-items:center;
@@ -124,7 +89,7 @@ input{
 }
 
 .logo-u{
-    font-size:24px;
+    font-size:25px;
     font-weight:900;
     color:#fff;
     z-index:2;
@@ -132,12 +97,9 @@ input{
 
 .logo-shine{
     position:absolute;
-
-    width:7px;
-    height:7px;
-
+    width:8px;
+    height:8px;
     border-radius:50%;
-
     background:#fff;
 
     right:7px;
@@ -159,389 +121,182 @@ input{
     background:
         rgba(255,255,255,.25);
 
-    left:10px;
+    left:11px;
     bottom:6px;
 }
 
 .logo-name{
-    font-size:18px;
-
+    font-size:21px;
     font-weight:800;
-
     letter-spacing:-.5px;
-
-    white-space:nowrap;
 }
 
-
-/* =========================================================
-   SEARCH BOX
-========================================================= */
+/* ================= SEARCH ================= */
 
 .search-box{
     flex:1;
-
     min-width:0;
 
-    height:42px;
+    height:46px;
 
     display:flex;
-
     align-items:center;
 
-    padding:0 13px;
+    padding:0 15px;
 
-    border-radius:23px;
+    border-radius:24px;
 
     background:#151820;
 
-    border:
-        1px solid
+    border:1px solid
         rgba(255,255,255,.08);
 
     cursor:pointer;
 
-    transition:
-        border-color .2s,
-        transform .15s;
+    transition:.18s;
 }
 
 .search-box:active{
-    transform:scale(.985);
-
-    border-color:
-        rgba(50,150,255,.35);
+    transform:scale(.98);
 }
 
 .search-icon{
     font-size:20px;
-
     color:#8993a5;
-
-    margin-right:7px;
-
-    flex-shrink:0;
+    margin-right:9px;
 }
 
-.search-box input{
-    width:100%;
-
-    border:0;
-    outline:0;
-
-    background:transparent;
-
-    color:#fff;
-
-    font-size:13px;
-
-    cursor:pointer;
-}
-
-.search-box input::placeholder{
+.search-placeholder{
     color:#747d8d;
+    font-size:14px;
+
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
 }
 
+/* ================= CONTENT ================= */
 
-/* =========================================================
-   HEADER BUTTON
-========================================================= */
-
-.header-btn{
-    width:40px;
-    height:40px;
-
-    flex-shrink:0;
-
-    border:0;
-
-    border-radius:13px;
-
-    background:#151820;
-
-    color:#fff;
-
-    border:
-        1px solid
-        rgba(255,255,255,.07);
-
-    display:flex;
-
-    align-items:center;
-    justify-content:center;
-
-    cursor:pointer;
-
-    position:relative;
+.content{
+    padding:20px 18px 30px;
 }
 
-.header-btn:active{
-    transform:scale(.95);
+/* ================= STATUS ================= */
+
+.status-section{
+    margin-bottom:25px;
 }
 
-.bell-icon{
-    font-size:20px;
-}
-
-
-/* =========================================================
-   NOTIFICATION BADGE
-========================================================= */
-
-.notification-badge{
-    position:absolute;
-
-    min-width:17px;
-    height:17px;
-
-    padding:0 4px;
-
-    border-radius:20px;
-
-    background:#247fff;
-
-    color:#fff;
-
-    font-size:10px;
-
+.section-title{
+    font-size:18px;
     font-weight:800;
+    margin-bottom:14px;
+}
 
+.status-row{
     display:flex;
-
-    align-items:center;
-    justify-content:center;
-
-    top:-3px;
-    right:-3px;
-
-    border:
-        2px solid
-        #07090d;
-}
-
-.notification-badge.hidden{
-    display:none;
-}
-
-
-/* =========================================================
-   MENU ICON
-========================================================= */
-
-.menu-icon{
-    display:flex;
-
-    flex-direction:column;
-
-    gap:4px;
-}
-
-.menu-icon span{
-    width:17px;
-    height:2px;
-
-    border-radius:5px;
-
-    background:#fff;
-}
-
-
-/* =========================================================
-   STATUS
-========================================================= */
-
-.status-wrapper{
-    padding:16px 15px 12px;
-
-    border-bottom:
-        1px solid
-        rgba(255,255,255,.05);
-}
-
-.status-scroll{
-    display:flex;
-
     gap:15px;
 
     overflow-x:auto;
 
+    padding:3px 2px 8px;
+
     scrollbar-width:none;
 }
 
-.status-scroll::-webkit-scrollbar{
+.status-row::-webkit-scrollbar{
     display:none;
 }
 
 .status-item{
-    width:58px;
-
-    flex-shrink:0;
-
+    min-width:66px;
     text-align:center;
+    cursor:pointer;
 }
 
 .status-circle{
-    width:53px;
-    height:53px;
+    width:58px;
+    height:58px;
 
     margin:auto;
 
     border-radius:50%;
 
-    padding:2px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    position:relative;
 
     background:
         linear-gradient(
             145deg,
-            #3196ff,
-            #0758cb
+            #2d91ff,
+            #0756c9
         );
 
-    display:flex;
+    border:2px solid
+        rgba(255,255,255,.10);
 
-    align-items:center;
-    justify-content:center;
-}
-
-.status-inner{
-    width:100%;
-    height:100%;
-
-    border-radius:50%;
-
-    background:#151820;
-
-    display:flex;
-
-    align-items:center;
-    justify-content:center;
-
-    font-size:17px;
-
-    font-weight:800;
+    box-shadow:
+        0 5px 18px
+        rgba(15,105,235,.25);
 
     overflow:hidden;
 }
 
-.status-inner img{
+.status-circle img{
     width:100%;
     height:100%;
-
     object-fit:cover;
-
     border-radius:50%;
 }
 
-.status-name{
-    margin-top:6px;
-
-    font-size:10px;
-
-    color:#8b94a5;
-
-    white-space:nowrap;
-
-    overflow:hidden;
-
-    text-overflow:ellipsis;
-}
-
-
-/* =========================================================
-   YOU PLUS
-========================================================= */
-
-.add-status{
-    position:relative;
-}
-
-.add-status .plus{
+.status-plus{
     position:absolute;
 
-    right:0;
+    right:-1px;
+    bottom:-1px;
 
-    bottom:17px;
-
-    width:20px;
-    height:20px;
+    width:21px;
+    height:21px;
 
     border-radius:50%;
 
-    background:#2788ff;
+    background:#1681ff;
 
-    border:
-        2px solid
-        #07090d;
+    border:2px solid #07090d;
 
     display:flex;
-
     align-items:center;
     justify-content:center;
 
     font-size:14px;
-
     font-weight:900;
 }
 
-
-/* =========================================================
-   MAIN CONTENT
-========================================================= */
-
-.content{
-    padding:22px 15px 30px;
-}
-
-
-/* =========================================================
-   CONNECTED SECTION
-========================================================= */
-
-.people-section{
-    width:100%;
-}
-
-.people-title{
-    font-size:21px;
-
-    font-weight:800;
-
-    margin-bottom:5px;
-}
-
-.people-subtitle{
+.status-name{
+    margin-top:7px;
     font-size:11px;
-
-    color:#7f8898;
-
-    margin-bottom:18px;
+    color:#9ba4b3;
 }
 
+/* ================= CONNECTED ================= */
 
-/* =========================================================
-   PEOPLE LIST
-========================================================= */
+.connected-section{
+    margin-top:5px;
+}
 
-.people-list{
+.connected-list{
     display:flex;
-
     flex-direction:column;
-
-    gap:10px;
+    gap:11px;
 }
-
-
-/* =========================================================
-   PERSON CARD
-========================================================= */
 
 .user-card{
-    width:100%;
-
-    min-height:76px;
+    min-height:78px;
 
     display:flex;
-
     align-items:center;
 
     padding:12px 13px;
@@ -555,25 +310,15 @@ input{
             rgba(14,17,23,.95)
         );
 
-    border:
-        1px solid
+    border:1px solid
         rgba(255,255,255,.065);
 
     box-shadow:
         0 8px 25px
         rgba(0,0,0,.16);
-
-    cursor:default;
-
-    transition:
-        opacity .25s,
-        border-color .2s;
 }
 
-
-/* =========================================================
-   PROFILE PHOTO
-========================================================= */
+/* AVATAR */
 
 .user-dp{
     width:52px;
@@ -586,14 +331,12 @@ input{
     overflow:hidden;
 
     display:flex;
-
     align-items:center;
     justify-content:center;
 
     position:relative;
 
     font-size:20px;
-
     font-weight:800;
 
     color:#fff;
@@ -605,15 +348,12 @@ input{
             #0757c8
         );
 
-    border:
-        2px solid
+    border:2px solid
         rgba(255,255,255,.08);
 
     box-shadow:
         0 5px 16px
         rgba(15,105,235,.25);
-
-    user-select:none;
 }
 
 .user-dp img{
@@ -627,30 +367,19 @@ input{
     border-radius:50%;
 }
 
-
-/* =========================================================
-   USER INFO
-========================================================= */
-
 .user-info{
     flex:1;
-
     min-width:0;
 
     margin-left:12px;
-
-    overflow:hidden;
 }
 
 .user-name{
     font-size:15px;
-
     font-weight:700;
 
     white-space:nowrap;
-
     overflow:hidden;
-
     text-overflow:ellipsis;
 }
 
@@ -662,333 +391,221 @@ input{
     color:#818a9a;
 
     white-space:nowrap;
-
     overflow:hidden;
-
     text-overflow:ellipsis;
 }
 
+/* CONNECTED BUTTON */
 
-/* =========================================================
-   CONNECTED BUTTON
-========================================================= */
-
-.follow-btn{
-    min-width:84px;
-
+.connected-btn{
+    min-width:86px;
     height:36px;
 
     padding:0 13px;
 
     border:0;
-
     border-radius:12px;
 
-    font-size:12px;
-
-    font-weight:700;
-
-    flex-shrink:0;
-}
-
-.follow-btn.connected{
     background:#252b36;
 
     color:#75e0a2;
 
-    cursor:default;
-}
+    font-size:12px;
+    font-weight:700;
 
-.follow-btn:disabled{
+    cursor:default;
+
     opacity:1;
 }
 
+.connected-btn:disabled{
+    opacity:1;
+}
 
-/* =========================================================
-   EMPTY CONNECTED STATE
-========================================================= */
+/* ================= EMPTY ================= */
 
-.no-connected{
-    min-height:300px;
-
-    display:flex;
-
-    flex-direction:column;
-
-    align-items:center;
-
-    justify-content:center;
+.empty-state{
+    display:none;
 
     text-align:center;
 
-    padding:30px 20px;
-}
-
-.no-connected-icon{
-    width:70px;
-    height:70px;
-
-    border-radius:22px;
-
-    display:flex;
-
-    align-items:center;
-    justify-content:center;
-
-    margin-bottom:16px;
-
-    background:
-        linear-gradient(
-            145deg,
-            #2d91ff,
-            #0756c9
-        );
-
-    box-shadow:
-        0 10px 30px
-        rgba(20,105,232,.25);
-
-    font-size:30px;
-}
-
-.no-connected-title{
-    font-size:17px;
-
-    font-weight:800;
-
-    margin-bottom:7px;
-}
-
-.no-connected-text{
-    max-width:270px;
+    padding:45px 20px;
 
     color:#7f8898;
+}
 
+.empty-icon{
+    font-size:45px;
+    margin-bottom:12px;
+}
+
+.empty-title{
+    font-size:16px;
+    font-weight:700;
+    color:#cbd1db;
+    margin-bottom:6px;
+}
+
+.empty-text{
     font-size:12px;
-
     line-height:1.5;
 }
 
-
-/* =========================================================
-   BOTTOM NAV
-========================================================= */
+/* ================= BOTTOM NAV ================= */
 
 .bottom-nav{
     position:fixed;
 
     left:0;
     right:0;
-
     bottom:0;
 
-    height:70px;
-
-    background:
-        rgba(10,13,18,.97);
-
-    border-top:
-        1px solid
-        rgba(255,255,255,.07);
-
-    backdrop-filter:blur(18px);
+    height:76px;
 
     display:flex;
-
     align-items:center;
-
     justify-content:space-around;
 
-    z-index:100;
+    padding:
+        7px 8px
+        calc(7px + env(safe-area-inset-bottom));
 
-    padding:0 4px;
+    background:
+        rgba(10,13,19,.96);
+
+    border-top:1px solid
+        rgba(255,255,255,.08);
+
+    backdrop-filter:blur(22px);
+
+    z-index:100;
 }
 
-.nav-item{
-    flex:1;
+/* normal nav */
 
-    min-width:0;
+.nav-item{
+    width:20%;
+    height:58px;
 
     display:flex;
-
-    flex-direction:column;
-
     align-items:center;
-
     justify-content:center;
 
-    gap:5px;
+    border-radius:17px;
 
-    color:#697384;
-
-    font-size:10px;
+    color:#7f8898;
 
     cursor:pointer;
 
-    transition:
-        color .15s,
-        transform .15s;
+    position:relative;
+
+    transition:.18s;
 }
 
-.nav-icon{
-    font-size:21px;
-
-    line-height:1;
-
-    height:23px;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
+.nav-item:active{
+    transform:scale(.90);
 }
 
 .nav-item.active{
     color:#3296ff;
 }
 
-.nav-item:active{
-    transform:scale(.94);
+.nav-icon{
+    font-size:24px;
+    line-height:1;
 }
 
+/* PLUS */
 
-/* =========================================================
-   MENU OVERLAY
-========================================================= */
+.plus-nav{
+    width:20%;
+    height:62px;
 
-.menu-overlay{
-    position:fixed;
+    display:flex;
+    align-items:center;
+    justify-content:center;
 
-    inset:0;
+    cursor:pointer;
 
-    background:
-        rgba(0,0,0,.58);
+    position:relative;
 
-    opacity:0;
-
-    pointer-events:none;
-
-    transition:.2s;
-
-    z-index:500;
+    transition:.18s;
 }
 
-.menu-overlay.show{
-    opacity:1;
-
-    pointer-events:auto;
+.plus-nav:active{
+    transform:scale(.90);
 }
 
+.plus-button{
+    width:53px;
+    height:53px;
 
-/* =========================================================
-   MENU PANEL
-========================================================= */
+    border-radius:18px;
 
-.menu-panel{
-    position:absolute;
-
-    top:70px;
-
-    right:14px;
-
-    width:205px;
-
-    padding:8px;
-
-    border-radius:19px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
 
     background:
         linear-gradient(
             145deg,
-            #1a1f29,
-            #0e1219
+            #3296ff,
+            #0758cb
         );
 
-    border:
-        1px solid
-        rgba(255,255,255,.08);
+    color:#fff;
+
+    font-size:31px;
+    font-weight:400;
 
     box-shadow:
-        0 20px 50px
-        rgba(0,0,0,.5);
+        0 8px 25px
+        rgba(18,105,232,.42);
 
-    transform:
-        translateY(-8px)
-        scale(.97);
-
-    transition:.2s;
+    border:1px solid
+        rgba(255,255,255,.13);
 }
 
-.menu-overlay.show .menu-panel{
-    transform:
-        translateY(0)
-        scale(1);
-}
+/* ================= NOTIFICATION BADGE ================= */
 
-.menu-user{
-    padding:12px;
+.notification-badge{
+    position:absolute;
 
-    border-bottom:
-        1px solid
-        rgba(255,255,255,.06);
+    top:7px;
+    right:18px;
 
-    margin-bottom:5px;
-}
+    min-width:17px;
+    height:17px;
 
-.menu-user-name{
-    font-size:14px;
+    padding:0 4px;
 
-    font-weight:700;
-}
+    border-radius:10px;
 
-.menu-user-id{
-    margin-top:4px;
+    background:#ff3b5c;
 
-    font-size:10px;
+    border:2px solid #0a0d13;
 
-    color:#7f8898;
-}
+    color:#fff;
 
-.menu-option{
-    height:43px;
-
-    padding:0 12px;
-
-    border-radius:12px;
+    font-size:9px;
+    font-weight:800;
 
     display:flex;
-
     align-items:center;
-
-    gap:11px;
-
-    color:#d8deea;
-
-    font-size:12px;
-
-    cursor:pointer;
+    justify-content:center;
 }
 
-.menu-option:active{
-    background:#202631;
+.notification-badge.hidden{
+    display:none;
 }
 
-.menu-option.logout{
-    color:#ff9292;
-}
-
-
-/* =========================================================
-   TOAST
-========================================================= */
+/* ================= TOAST ================= */
 
 .status-popup{
     position:fixed;
 
     left:50%;
-
-    bottom:88px;
+    bottom:94px;
 
     transform:
         translateX(-50%)
@@ -1006,8 +623,7 @@ input{
     background:
         rgba(24,28,37,.97);
 
-    border:
-        1px solid
+    border:1px solid
         rgba(255,255,255,.09);
 
     box-shadow:
@@ -1037,51 +653,34 @@ input{
         translateY(0);
 }
 
+/* ================= LOADING ================= */
 
-/* =========================================================
-   RESPONSIVE
-========================================================= */
+.loading{
+    text-align:center;
 
-@media(max-width:390px){
+    padding:35px 0;
+
+    color:#727b8b;
+
+    font-size:13px;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media(max-width:360px){
 
     .header{
-        padding:0 9px;
-
-        gap:7px;
-    }
-
-    .logo-mark{
-        width:38px;
-        height:38px;
-
-        border-radius:12px;
-    }
-
-    .logo-u{
-        font-size:22px;
+        padding:0 12px;
+        gap:8px;
     }
 
     .logo-name{
-        font-size:15px;
-    }
-
-    .search-box{
-        height:39px;
-
-        padding:0 10px;
-    }
-
-    .search-icon{
         font-size:18px;
-
-        margin-right:5px;
     }
 
-    .header-btn{
-        width:36px;
-        height:36px;
-
-        border-radius:11px;
+    .logo-mark{
+        width:40px;
+        height:40px;
     }
 
     .content{
@@ -1093,261 +692,158 @@ input{
         padding:10px;
     }
 
-    .user-dp{
-        width:47px;
-        height:47px;
-    }
-
-    .follow-btn{
-        min-width:76px;
-
+    .connected-btn{
+        min-width:78px;
         padding:0 9px;
     }
-
-    .nav-item{
-        font-size:9px;
-    }
-
-    .nav-icon{
-        font-size:20px;
-    }
-
 }
-
 </style>
-
 </head>
-
 
 <body>
 
-
 <div class="app">
 
+    <!-- ================= HEADER ================= -->
 
-<!-- =======================================================
-     HEADER
-======================================================= -->
+    <header class="header">
 
-<header class="header">
-
-
-    <!-- LOGO -->
-
-    <div class="logo-mark">
-
-        <div class="logo-u">
-            U
+        <div class="logo-mark">
+            <span class="logo-u">U</span>
+            <span class="logo-shine"></span>
         </div>
 
-        <div class="logo-shine"></div>
-
-    </div>
-
-
-    <div class="logo-name">
-        Usanex
-    </div>
-
-
-    <!-- SEARCH -->
-
-    <div
-        class="search-box"
-        id="searchBox">
-
-        <span class="search-icon">
-            🔍
-        </span>
-
-        <input
-            id="searchInput"
-            type="text"
-            placeholder="Search people..."
-            autocomplete="off"
-            readonly
-        >
-
-    </div>
-
-
-    <!-- NOTIFICATION -->
-
-    <button
-        class="header-btn"
-        id="notificationBtn"
-        aria-label="Notifications">
-
-        <span class="bell-icon">
-            🔔
-        </span>
-
-        <span
-            class="notification-badge hidden"
-            id="notificationBadge">
-            0
-        </span>
-
-    </button>
-
-
-    <!-- MENU -->
-
-    <button
-        class="header-btn"
-        id="menuBtn"
-        aria-label="Menu">
-
-        <div class="menu-icon">
-
-            <span></span>
-            <span></span>
-            <span></span>
-
+        <div class="logo-name">
+            Usanex
         </div>
 
-    </button>
-
-</header>
-
-
-
-<!-- =======================================================
-     STATUS
-======================================================= -->
-
-<section class="status-wrapper">
-
-
-    <div
-        class="status-scroll"
-        id="statusScroll">
-
-
-        <!-- YOUR STATUS -->
-
+        <!-- SEARCH BOX -->
         <div
-            class="status-item add-status"
-            id="yourStatus">
+            class="search-box"
+            id="searchBox"
+            role="button"
+            tabindex="0"
+        >
+            <span class="search-icon">⌕</span>
+
+            <span class="search-placeholder">
+                Search people...
+            </span>
+        </div>
+
+    </header>
 
 
-            <div class="status-circle">
+    <!-- ================= CONTENT ================= -->
+
+    <main class="content">
+
+        <!-- STATUS -->
+
+        <section class="status-section">
+
+            <div class="section-title">
+                Status
+            </div>
+
+            <div class="status-row">
 
                 <div
-                    class="status-inner"
-                    id="yourStatusAvatar">
+                    class="status-item"
+                    id="yourStatus"
+                >
 
-                    U
+                    <div class="status-circle">
+
+                        <span id="yourStatusInitial">
+                            U
+                        </span>
+
+                        <img
+                            id="yourStatusImage"
+                            style="display:none;"
+                            alt=""
+                        >
+
+                        <span class="status-plus">
+                            +
+                        </span>
+
+                    </div>
+
+                    <div class="status-name">
+                        You
+                    </div>
 
                 </div>
 
             </div>
 
+        </section>
 
-            <div class="plus">
-                +
+
+        <!-- CONNECTED PEOPLE -->
+
+        <section class="connected-section">
+
+            <div class="section-title">
+                Connected People
             </div>
 
+            <div
+                class="connected-list"
+                id="connectedList"
+            >
 
-            <div class="status-name">
-                You
+                <div
+                    class="loading"
+                    id="loading"
+                >
+                    Loading...
+                </div>
+
             </div>
 
+            <div
+                class="empty-state"
+                id="emptyState"
+            >
 
-        </div>
+                <div class="empty-icon">
+                    👥
+                </div>
 
+                <div class="empty-title">
+                    No connections yet
+                </div>
 
-    </div>
+                <div class="empty-text">
+                    Your connected people will appear here.
+                </div>
 
-</section>
+            </div>
 
+        </section>
 
+    </main>
 
-<!-- =======================================================
-     MAIN
-======================================================= -->
-
-<main class="content">
-
-
-    <section
-        class="people-section"
-        id="peopleSection">
-
-
-        <div class="people-title">
-            Connected People
-        </div>
-
-
-        <div class="people-subtitle">
-            People connected with you
-        </div>
+</div>
 
 
-        <div
-            class="people-list"
-            id="peopleList">
-        </div>
-
-
-    </section>
-
-
-    <!-- EMPTY STATE -->
-
-    <section
-        class="no-connected"
-        id="noConnected"
-        style="display:none;">
-
-
-        <div class="no-connected-icon">
-            👥
-        </div>
-
-
-        <div class="no-connected-title">
-            No connected people
-        </div>
-
-
-        <div class="no-connected-text">
-
-            Search people above and connect with them
-            to see them here.
-
-        </div>
-
-
-    </section>
-
-
-</main>
-
-
-
-<!-- =======================================================
-     BOTTOM NAV
-======================================================= -->
+<!-- ================= BOTTOM NAV ================= -->
 
 <nav class="bottom-nav">
-
 
     <!-- HOME -->
 
     <div
         class="nav-item active"
-        id="homeNav">
-
+        id="homeNav"
+        title="Home"
+    >
         <div class="nav-icon">
             🏠
         </div>
-
-        <div>
-            Home
-        </div>
-
     </div>
 
 
@@ -1355,49 +851,46 @@ input{
 
     <div
         class="nav-item"
-        id="reelNav">
-
+        id="reelNav"
+        title="Reel"
+    >
         <div class="nav-icon">
             ▶
         </div>
-
-        <div>
-            Reel
-        </div>
-
     </div>
 
 
-    <!-- CAMERA -->
+    <!-- PLUS -->
 
     <div
-        class="nav-item"
-        id="cameraNav">
-
-        <div class="nav-icon">
-            📷
+        class="plus-nav"
+        id="plusNav"
+        title="Create"
+    >
+        <div class="plus-button">
+            +
         </div>
-
-        <div>
-            Camera
-        </div>
-
     </div>
 
 
-    <!-- USERS -->
+    <!-- NOTIFICATION -->
 
     <div
         class="nav-item"
-        id="usersNav">
+        id="notificationNav"
+        title="Notifications"
+    >
 
         <div class="nav-icon">
-            👥
+            🔔
         </div>
 
-        <div>
-            Users
-        </div>
+        <span
+            class="notification-badge hidden"
+            id="notificationBadge"
+        >
+            0
+        </span>
 
     </div>
 
@@ -1406,782 +899,361 @@ input{
 
     <div
         class="nav-item"
-        id="profileNav">
-
+        id="profileNav"
+        title="Profile"
+    >
         <div class="nav-icon">
             👤
         </div>
-
-        <div>
-            Profile
-        </div>
-
     </div>
-
 
 </nav>
 
 
-</div>
-
-
-
-<!-- =======================================================
-     MENU
-======================================================= -->
-
-<div
-    class="menu-overlay"
-    id="menuOverlay">
-
-
-    <div
-        class="menu-panel"
-        id="menuPanel">
-
-
-        <div class="menu-user">
-
-
-            <div
-                class="menu-user-name"
-                id="menuUserName">
-
-                User
-
-            </div>
-
-
-            <div
-                class="menu-user-id"
-                id="menuUserId">
-
-                @user
-
-            </div>
-
-
-        </div>
-
-
-        <div
-            class="menu-option"
-            id="menuProfile">
-
-            👤
-
-            <span>
-                Profile
-            </span>
-
-        </div>
-
-
-        <div
-            class="menu-option logout"
-            id="menuLogout">
-
-            🚪
-
-            <span>
-                Logout
-            </span>
-
-        </div>
-
-
-    </div>
-
-</div>
-
-
-
-<!-- =======================================================
-     TOAST
-======================================================= -->
+<!-- ================= TOAST ================= -->
 
 <div
     class="status-popup"
-    id="statusPopup">
-</div>
-
+    id="statusPopup"
+></div>
 
 
 <script>
 
-
-/* =========================================================
-   CURRENT USER
-========================================================= */
+/* ============================================================
+   USANEX HOME
+============================================================ */
 
 let currentUser = null;
 
 
-function getCurrentUser(){
-
-    try{
-
-        const saved =
-            localStorage.getItem(
-                "usanex_user"
-            );
-
-        if(saved){
-
-            return JSON.parse(saved);
-
-        }
-
-    }catch(error){
-
-        console.log(
-            "usanex_user error:",
-            error
-        );
-
-    }
-
-
-    try{
-
-        const saved =
-            localStorage.getItem(
-                "user"
-            );
-
-        if(saved){
-
-            return JSON.parse(saved);
-
-        }
-
-    }catch(error){
-
-        console.log(
-            "user error:",
-            error
-        );
-
-    }
-
-
-    return null;
-
-}
-
-
-/* =========================================================
-   ESCAPE HTML
-========================================================= */
-
-function escapeHTML(value){
-
-    return String(
-        value ?? ""
-    )
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
-
-}
-
-
-/* =========================================================
-   TOAST
-========================================================= */
-
-let toastTimer = null;
-
+/* ================= BASIC HELPERS ================= */
 
 function showToast(message){
 
     const popup =
-        document.getElementById(
-            "statusPopup"
-        );
+        document.getElementById("statusPopup");
+
+    popup.textContent = message;
+
+    popup.classList.add("show");
+
+    setTimeout(function(){
+
+        popup.classList.remove("show");
+
+    },2200);
+}
 
 
-    popup.textContent =
-        message;
+/* ================= CURRENT USER ================= */
 
+async function loadCurrentUser(){
 
-    popup.classList.add(
-        "show"
-    );
+    try{
 
+        const saved =
+            localStorage.getItem("usanex_user");
 
-    clearTimeout(
-        toastTimer
-    );
+        if(saved){
 
+            try{
 
-    toastTimer =
-        setTimeout(
-            function(){
+                currentUser =
+                    JSON.parse(saved);
 
-                popup.classList.remove(
-                    "show"
+            }catch(e){
+
+                currentUser = null;
+
+            }
+
+        }
+
+        /*
+         * If your backend already exposes
+         * /api/me, it can be loaded here.
+         */
+
+        if(
+            !currentUser ||
+            !currentUser.user_id
+        ){
+
+            const params =
+                new URLSearchParams(
+                    window.location.search
                 );
 
-            },
-            2200
+            const userId =
+                params.get("user_id");
+
+            if(userId){
+
+                currentUser = {
+                    user_id:userId
+                };
+
+            }
+
+        }
+
+        updateYourStatus();
+
+        await loadConnections();
+
+        await loadNotificationCount();
+
+    }catch(error){
+
+        console.error(
+            "User loading error:",
+            error
         );
+
+        await loadConnections();
+
+    }
 
 }
 
 
-/* =========================================================
-   USER UI
-========================================================= */
+/* ================= STATUS ================= */
 
-function updateUserUI(){
+function updateYourStatus(){
+
+    const initial =
+        document.getElementById(
+            "yourStatusInitial"
+        );
+
+    const image =
+        document.getElementById(
+            "yourStatusImage"
+        );
 
     if(!currentUser){
+
+        initial.textContent = "U";
+
+        image.style.display = "none";
+
+        initial.style.display = "block";
 
         return;
 
     }
 
-
     const name =
         currentUser.name ||
-        currentUser.display_name ||
         currentUser.username ||
-        "User";
+        "U";
 
-
-    const userId =
-        currentUser.user_id ||
-        currentUser.username ||
-        "";
-
-
-    document.getElementById(
-        "menuUserName"
-    ).textContent =
-        name;
-
-
-    document.getElementById(
-        "menuUserId"
-    ).textContent =
-        userId
-            ? "@" + userId
-            : "";
-
-
-    const avatar =
-        document.getElementById(
-            "yourStatusAvatar"
-        );
-
+    initial.textContent =
+        name
+            .trim()
+            .charAt(0)
+            .toUpperCase() || "U";
 
     const photo =
         currentUser.profile_photo ||
         currentUser.profile_picture ||
         currentUser.avatar ||
         currentUser.photo ||
+        currentUser.profile_image ||
         "";
-
 
     if(photo){
 
-        avatar.innerHTML =
-            `<img src="${escapeHTML(photo)}" alt="">`;
+        image.src = photo;
+
+        image.style.display = "block";
+
+        initial.style.display = "none";
 
     }else{
 
-        avatar.textContent =
-            name
-                .charAt(0)
-                .toUpperCase();
+        image.style.display = "none";
+
+        initial.style.display = "block";
 
     }
 
 }
 
 
-/* =========================================================
-   NOTIFICATION COUNT
-========================================================= */
+/* ================= CONNECTIONS ================= */
 
-async function loadNotificationCount(){
+async function loadConnections(){
 
-    if(
-        !currentUser ||
-        !currentUser.user_id
-    ){
+    const list =
+        document.getElementById(
+            "connectedList"
+        );
 
-        hideNotificationBadge();
+    const empty =
+        document.getElementById(
+            "emptyState"
+        );
+
+    const loading =
+        document.getElementById(
+            "loading"
+        );
+
+    if(!currentUser ||
+       !currentUser.user_id){
+
+        if(loading){
+
+            loading.style.display =
+                "none";
+
+        }
+
+        /*
+         * Keep UI usable even when
+         * current user is not available.
+         */
+
+        empty.style.display =
+            "block";
 
         return;
 
     }
 
-
     try{
 
         const response =
             await fetch(
-                "/api/notifications?user_id=" +
+                "/api/connections?user_id=" +
                 encodeURIComponent(
                     currentUser.user_id
-                ) +
-                "&_=" +
-                Date.now(),
+                ),
                 {
+                    method:"GET",
                     cache:"no-store"
                 }
             );
 
-
         if(!response.ok){
 
             throw new Error(
-                "Notification request failed"
+                "Connections API returned " +
+                response.status
             );
 
         }
-
 
         const data =
             await response.json();
 
+        console.log(
+            "Connections:",
+            data
+        );
 
-        const notifications =
-            Array.isArray(data)
-                ? data
-                : (
-                    Array.isArray(
-                        data.notifications
-                    )
-                        ? data.notifications
-                        : []
-                );
+        let people = [];
 
+        if(Array.isArray(data)){
 
-        const unreadCount =
-            notifications.filter(
-                function(n){
+            people = data;
 
-                    return n &&
-                    (
-                        n.is_read === false ||
-                        n.is_read === 0
-                    );
+        }else if(
+            Array.isArray(data.connections)
+        ){
 
-                }
-            ).length;
+            people =
+                data.connections;
 
+        }else if(
+            Array.isArray(data.users)
+        ){
 
-        if(unreadCount > 0){
+            people =
+                data.users;
 
-            showNotificationBadge(
-                unreadCount
-            );
+        }else if(
+            Array.isArray(data.data)
+        ){
 
-        }else{
-
-            hideNotificationBadge();
+            people =
+                data.data;
 
         }
 
-    }catch(error){
-
-        console.log(
-            "Notification count error:",
-            error
-        );
-
-        hideNotificationBadge();
-
-    }
-
-}
-
-
-function showNotificationBadge(count){
-
-    const badge =
-        document.getElementById(
-            "notificationBadge"
-        );
-
-
-    badge.textContent =
-        count > 99
-            ? "99+"
-            : String(count);
-
-
-    badge.classList.remove(
-        "hidden"
-    );
-
-}
-
-
-function hideNotificationBadge(){
-
-    const badge =
-        document.getElementById(
-            "notificationBadge"
-        );
-
-
-    badge.textContent =
-        "0";
-
-
-    badge.classList.add(
-        "hidden"
-    );
-
-}
-
-
-/* =========================================================
-   SEARCH BOX
-   TAP -> NEW SEARCH PAGE
-========================================================= */
-
-const searchBox =
-    document.getElementById(
-        "searchBox"
-    );
-
-
-const searchInput =
-    document.getElementById(
-        "searchInput"
-    );
-
-
-searchBox.addEventListener(
-    "click",
-    function(){
-
-        window.location.href =
-            "/search";
-
-    }
-);
-
-
-/* =========================================================
-   SEARCH ENTER
-========================================================= */
-
-searchInput.addEventListener(
-    "keydown",
-    function(event){
+        list.innerHTML = "";
 
         if(
-            event.key !==
-            "Enter"
+            !people.length
         ){
+
+            empty.style.display =
+                "block";
 
             return;
 
         }
 
+        empty.style.display =
+            "none";
 
-        window.location.href =
-            "/search";
+        people.forEach(
+            function(person){
 
-    }
-);
-
-
-/* =========================================================
-   NOTIFICATIONS
-========================================================= */
-
-document.getElementById(
-    "notificationBtn"
-).addEventListener(
-    "click",
-    function(){
-
-        window.location.href =
-            "/notifications";
-
-    }
-);
-
-
-/* =========================================================
-   MENU
-========================================================= */
-
-const menuBtn =
-    document.getElementById(
-        "menuBtn"
-    );
-
-
-const menuOverlay =
-    document.getElementById(
-        "menuOverlay"
-    );
-
-
-menuBtn.addEventListener(
-    "click",
-    function(event){
-
-        event.stopPropagation();
-
-        menuOverlay.classList.add(
-            "show"
-        );
-
-    }
-);
-
-
-menuOverlay.addEventListener(
-    "click",
-    function(event){
-
-        if(
-            event.target ===
-            menuOverlay
-        ){
-
-            menuOverlay.classList.remove(
-                "show"
-            );
-
-        }
-
-    }
-);
-
-
-/* =========================================================
-   MENU PROFILE
-========================================================= */
-
-document.getElementById(
-    "menuProfile"
-).addEventListener(
-    "click",
-    function(){
-
-        menuOverlay.classList.remove(
-            "show"
-        );
-
-
-        if(
-            currentUser &&
-            currentUser.user_id
-        ){
-
-            window.location.href =
-                "/search?user_id=" +
-                encodeURIComponent(
-                    currentUser.user_id
+                renderConnectedPerson(
+                    person
                 );
 
-        }else{
-
-            window.location.href =
-                "/search";
-
-        }
-
-    }
-);
-
-
-/* =========================================================
-   LOGOUT
-========================================================= */
-
-document.getElementById(
-    "menuLogout"
-).addEventListener(
-    "click",
-    function(){
-
-        localStorage.removeItem(
-            "usanex_token"
+            }
         );
 
-        localStorage.removeItem(
-            "usanex_user"
+    }catch(error){
+
+        console.error(
+            "Connection loading failed:",
+            error
         );
 
-        localStorage.removeItem(
-            "user"
+        list.innerHTML = "";
+
+        /*
+         * Do not show Follow here.
+         * Connected people stay connected.
+         */
+
+        empty.style.display =
+            "block";
+
+    }
+
+}
+
+
+/* ================= RENDER PERSON ================= */
+
+function renderConnectedPerson(person){
+
+    const list =
+        document.getElementById(
+            "connectedList"
         );
 
-        window.location.href =
-            "/login";
+    const card =
+        document.createElement("div");
 
-    }
-);
-
-
-/* =========================================================
-   BOTTOM NAV
-========================================================= */
+    card.className =
+        "user-card";
 
 
-/* HOME */
+    /* ---------- PHOTO ---------- */
 
-document.getElementById(
-    "homeNav"
-).addEventListener(
-    "click",
-    function(){
+    const dp =
+        document.createElement("div");
 
-        window.location.href =
-            "/home";
-
-    }
-);
-
-
-/* REEL */
-
-document.getElementById(
-    "reelNav"
-).addEventListener(
-    "click",
-    function(){
-
-        window.location.href =
-            "/reels";
-
-    }
-);
-
-
-/* CAMERA */
-
-document.getElementById(
-    "cameraNav"
-).addEventListener(
-    "click",
-    function(){
-
-        showToast(
-            "Camera feature coming soon"
-        );
-
-    }
-);
-
-
-/* USERS -> SEARCH */
-
-document.getElementById(
-    "usersNav"
-).addEventListener(
-    "click",
-    function(){
-
-        window.location.href =
-            "/search";
-
-    }
-);
-
-
-/* PROFILE */
-
-document.getElementById(
-    "profileNav"
-).addEventListener(
-    "click",
-    function(){
-
-        if(
-            currentUser &&
-            currentUser.user_id
-        ){
-
-            window.location.href =
-                "/search?user_id=" +
-                encodeURIComponent(
-                    currentUser.user_id
-                );
-
-        }else{
-
-            window.location.href =
-                "/search";
-
-        }
-
-    }
-);
-
-
-/* =========================================================
-   YOUR STATUS
-========================================================= */
-
-document.getElementById(
-    "yourStatus"
-).addEventListener(
-    "click",
-    function(){
-
-        showToast(
-            "Status feature coming soon"
-        );
-
-    }
-);
-
-
-/* =========================================================
-   CONNECTION DATA
-========================================================= */
-
-function normalizePerson(item){
-
-    if(!item){
-
-        return null;
-
-    }
-
-
-    const person =
-        item.user ||
-        item.person ||
-        item.profile ||
-        item.connected_user ||
-        item;
-
-
-    if(!person){
-
-        return null;
-
-    }
-
-
-    const userId =
-        person.user_id ||
-        person.username ||
-        person.id ||
-        "";
-
-
-    const name =
-        person.name ||
-        person.display_name ||
-        person.full_name ||
-        person.username ||
-        "User";
+    dp.className =
+        "user-dp";
 
 
     const photo =
@@ -2193,562 +1265,265 @@ function normalizePerson(item){
         "";
 
 
-    return {
-
-        user_id:String(
-            userId
-        ),
-
-        name:String(
-            name
-        ),
-
-        photo:String(
-            photo
-        )
-
-    };
-
-}
+    const name =
+        person.name ||
+        person.display_name ||
+        person.username ||
+        "User";
 
 
-/* =========================================================
-   LOAD CONNECTED PEOPLE
-========================================================= */
-
-async function loadConnections(){
-
-    const list =
-        document.getElementById(
-            "peopleList"
-        );
-
-
-    const empty =
-        document.getElementById(
-            "noConnected"
-        );
-
-
-    if(
-        !currentUser ||
-        !currentUser.user_id
-    ){
-
-        list.innerHTML =
-            "";
-
-        empty.style.display =
-            "flex";
-
-        return;
-
-    }
-
-
-    try{
-
-        const response =
-            await fetch(
-                "/api/connections?user_id=" +
-                encodeURIComponent(
-                    currentUser.user_id
-                ) +
-                "&_=" +
-                Date.now(),
-                {
-                    cache:"no-store"
-                }
-            );
-
-
-        if(!response.ok){
-
-            throw new Error(
-                "Connection request failed"
-            );
-
-        }
-
-
-        const data =
-            await response.json();
-
-
-        let people = [];
-
-
-        if(
-            Array.isArray(data)
-        ){
-
-            people =
-                data;
-
-        }
-        else if(
-            Array.isArray(
-                data.connections
-            )
-        ){
-
-            people =
-                data.connections;
-
-        }
-        else if(
-            Array.isArray(
-                data.users
-            )
-        ){
-
-            people =
-                data.users;
-
-        }
-        else if(
-            Array.isArray(
-                data.data
-            )
-        ){
-
-            people =
-                data.data;
-
-        }
-
-
-        const normalized =
-            people
-                .map(
-                    normalizePerson
-                )
-                .filter(
-                    function(person){
-
-                        return (
-                            person &&
-                            person.user_id &&
-                            person.user_id !==
-                            String(
-                                currentUser.user_id
-                            )
-                        );
-
-                    }
-                );
-
-
-        renderPeople(
-            normalized
-        );
-
-
-    }catch(error){
-
-        console.log(
-            "Connections error:",
-            error
-        );
-
-
-        list.innerHTML =
-            "";
-
-
-        empty.style.display =
-            "flex";
-
-    }
-
-}
-
-
-/* =========================================================
-   RENDER PEOPLE
-========================================================= */
-
-function renderPeople(people){
-
-    const list =
-        document.getElementById(
-            "peopleList"
-        );
-
-
-    const empty =
-        document.getElementById(
-            "noConnected"
-        );
-
-
-    list.innerHTML =
+    const userId =
+        person.user_id ||
+        person.username ||
+        person.id ||
         "";
 
 
-    if(
-        !Array.isArray(people) ||
-        people.length === 0
-    ){
-
-        empty.style.display =
-            "flex";
-
-        return;
-
-    }
-
-
-    empty.style.display =
-        "none";
-
-
-    people.forEach(
-        function(person){
-
-            const card =
-                createPersonCard(
-                    person
-                );
-
-
-            list.appendChild(
-                card
-            );
-
-        }
-    );
-
-}
-
-
-/* =========================================================
-   CREATE CONNECTED PERSON CARD
-   NO FOLLOW
-   NO CLICK
-========================================================= */
-
-function createPersonCard(person){
-
-    const card =
-        document.createElement(
-            "div"
-        );
-
-
-    card.className =
-        "user-card";
-
-
-    card.dataset.userId =
-        person.user_id;
-
-
-    /* =====================================================
-       PROFILE PHOTO
-    ===================================================== */
-
-    const dp =
-        document.createElement(
-            "div"
-        );
-
-
-    dp.className =
-        "user-dp";
-
-
-    if(person.photo){
+    if(photo){
 
         const img =
-            document.createElement(
-                "img"
-            );
+            document.createElement("img");
 
+        img.src = photo;
 
-        img.src =
-            person.photo;
-
-
-        img.alt =
-            "";
-
+        img.alt = name;
 
         img.onerror =
             function(){
 
-                this.remove();
-
+                img.remove();
 
                 dp.textContent =
-                    person.name
+                    name
+                        .trim()
                         .charAt(0)
-                        .toUpperCase();
+                        .toUpperCase() ||
+                    "U";
 
             };
 
-
-        dp.appendChild(
-            img
-        );
+        dp.appendChild(img);
 
     }else{
 
         dp.textContent =
-            person.name
+            name
+                .trim()
                 .charAt(0)
-                .toUpperCase();
+                .toUpperCase() ||
+            "U";
 
     }
 
 
-    /* =====================================================
-       USER INFO
-    ===================================================== */
+    /* ---------- INFO ---------- */
 
     const info =
-        document.createElement(
-            "div"
-        );
-
+        document.createElement("div");
 
     info.className =
         "user-info";
 
 
-    const name =
-        document.createElement(
-            "div"
-        );
+    const nameEl =
+        document.createElement("div");
 
-
-    name.className =
+    nameEl.className =
         "user-name";
 
-
-    name.textContent =
-        person.name;
-
-
-    const userId =
-        document.createElement(
-            "div"
-        );
+    nameEl.textContent =
+        name;
 
 
-    userId.className =
+    const idEl =
+        document.createElement("div");
+
+    idEl.className =
         "user-id";
 
-
-    userId.textContent =
-        "@" +
-        person.user_id;
+    idEl.textContent =
+        userId;
 
 
-    info.appendChild(
-        name
-    );
+    info.appendChild(nameEl);
+
+    info.appendChild(idEl);
 
 
-    info.appendChild(
-        userId
-    );
-
-
-    /* =====================================================
-       CONNECTED BUTTON
-    ===================================================== */
+    /* ---------- CONNECTED ---------- */
 
     const button =
-        document.createElement(
-            "button"
-        );
-
+        document.createElement("button");
 
     button.className =
-        "follow-btn connected";
-
-
-    button.textContent =
-        "Connected";
-
+        "connected-btn";
 
     button.type =
         "button";
 
+    button.textContent =
+        "Connected";
 
     button.disabled =
         true;
 
+    button.tabIndex =
+        -1;
+
 
     /*
-       IMPORTANT:
-
-       No card click event.
-
-       No button click event.
-
-       Connected can NEVER become Follow.
-    */
-
-
-    card.appendChild(
-        dp
-    );
+     * IMPORTANT:
+     *
+     * There is intentionally
+     * NO card click event.
+     *
+     * There is intentionally
+     * NO Follow button logic.
+     *
+     * Connected means connected.
+     */
 
 
-    card.appendChild(
-        info
-    );
+    card.appendChild(dp);
 
+    card.appendChild(info);
 
-    card.appendChild(
-        button
-    );
+    card.appendChild(button);
 
-
-    return card;
+    list.appendChild(card);
 
 }
 
 
-/* =========================================================
-   WEBSOCKET
-========================================================= */
+/* ================= NOTIFICATIONS ================= */
 
-let socket = null;
+async function loadNotificationCount(){
 
-
-function connectSocket(){
+    const badge =
+        document.getElementById(
+            "notificationBadge"
+        );
 
     if(
         !currentUser ||
         !currentUser.user_id
     ){
 
+        badge.classList.add(
+            "hidden"
+        );
+
         return;
 
     }
 
-
     try{
 
-        const protocol =
-            location.protocol ===
-            "https:"
-                ? "wss:"
-                : "ws:";
-
-
-        socket =
-            new WebSocket(
-                protocol +
-                "//" +
-                location.host +
-                "/ws/" +
+        const response =
+            await fetch(
+                "/api/notifications?user_id=" +
                 encodeURIComponent(
                     currentUser.user_id
-                )
+                ),
+                {
+                    method:"GET",
+                    cache:"no-store"
+                }
             );
 
+        if(!response.ok){
 
-        socket.onopen =
-            function(){
+            throw new Error(
+                "Notification API " +
+                response.status
+            );
 
-                console.log(
-                    "Usanex socket connected"
-                );
+        }
 
-            };
+        const data =
+            await response.json();
 
+        let count = 0;
 
-        socket.onmessage =
-            function(event){
+        if(
+            typeof data.unread_count ===
+            "number"
+        ){
 
-                try{
+            count =
+                data.unread_count;
 
-                    const message =
-                        JSON.parse(
-                            event.data
+        }else if(
+            typeof data.count ===
+            "number"
+        ){
+
+            count =
+                data.count;
+
+        }else if(
+            Array.isArray(
+                data.notifications
+            )
+        ){
+
+            count =
+                data.notifications.filter(
+                    function(item){
+
+                        return (
+                            item.is_read === false ||
+                            item.read === false
                         );
 
+                    }
+                ).length;
 
-                    if(
-                        message &&
-                        (
-                            message.type ===
-                            "notification" ||
+        }else if(
+            Array.isArray(data)
+        ){
 
-                            message.type ===
-                            "new_notification"
-                        )
-                    ){
+            count =
+                data.filter(
+                    function(item){
 
-                        loadNotificationCount();
+                        return (
+                            item.is_read === false ||
+                            item.read === false
+                        );
 
                     }
+                ).length;
 
+        }
 
-                    if(
-                        message &&
-                        (
-                            message.type ===
-                            "connection" ||
+        if(count > 0){
 
-                            message.type ===
-                            "connection_accepted" ||
+            badge.textContent =
+                count > 99
+                    ? "99+"
+                    : String(count);
 
-                            message.type ===
-                            "connection_verified"
-                        )
-                    ){
+            badge.classList.remove(
+                "hidden"
+            );
 
-                        loadConnections();
+        }else{
 
-                    }
+            badge.classList.add(
+                "hidden"
+            );
 
-                }catch(error){
-
-                    console.log(
-                        "Socket message error:",
-                        error
-                    );
-
-
-                    loadNotificationCount();
-
-                    loadConnections();
-
-                }
-
-            };
-
-
-        socket.onclose =
-            function(){
-
-                console.log(
-                    "Usanex socket disconnected"
-                );
-
-            };
-
-
-        socket.onerror =
-            function(error){
-
-                console.log(
-                    "Socket error:",
-                    error
-                );
-
-            };
+        }
 
     }catch(error){
 
         console.log(
-            "Socket connection error:",
-            error
+            "Notification count unavailable"
+        );
+
+        badge.classList.add(
+            "hidden"
         );
 
     }
@@ -2756,132 +1531,186 @@ function connectSocket(){
 }
 
 
-/* =========================================================
-   PAGE SHOW
-========================================================= */
+/* ================= SEARCH ================= */
 
-window.addEventListener(
-    "pageshow",
-    function(){
-
-        currentUser =
-            getCurrentUser();
-
-
-        if(!currentUser){
+document
+    .getElementById("searchBox")
+    .addEventListener(
+        "click",
+        function(){
 
             window.location.href =
-                "/login";
-
-            return;
+                "/search";
 
         }
+    );
 
 
-        updateUserUI();
+document
+    .getElementById("searchBox")
+    .addEventListener(
+        "keydown",
+        function(event){
 
-        loadNotificationCount();
+            if(
+                event.key === "Enter" ||
+                event.key === " "
+            ){
 
-        loadConnections();
-
-    }
-);
-
-
-/* =========================================================
-   VISIBILITY CHANGE
-========================================================= */
-
-document.addEventListener(
-    "visibilitychange",
-    function(){
-
-        if(
-            document.visibilityState ===
-            "visible"
-        ){
-
-            currentUser =
-                getCurrentUser();
-
-
-            if(!currentUser){
+                event.preventDefault();
 
                 window.location.href =
-                    "/login";
+                    "/search";
+
+            }
+
+        }
+    );
+
+
+/* ================= HOME ================= */
+
+document
+    .getElementById("homeNav")
+    .addEventListener(
+        "click",
+        function(){
+
+            window.location.href =
+                "/home";
+
+        }
+    );
+
+
+/* ================= REEL ================= */
+
+document
+    .getElementById("reelNav")
+    .addEventListener(
+        "click",
+        function(){
+
+            window.location.href =
+                "/reels";
+
+        }
+    );
+
+
+/* ================= PLUS ================= */
+
+document
+    .getElementById("plusNav")
+    .addEventListener(
+        "click",
+        function(){
+
+            showToast(
+                "Create feature coming soon"
+            );
+
+        }
+    );
+
+
+/* ================= NOTIFICATION ================= */
+
+document
+    .getElementById("notificationNav")
+    .addEventListener(
+        "click",
+        async function(){
+
+            if(
+                !currentUser ||
+                !currentUser.user_id
+            ){
+
+                window.location.href =
+                    "/notifications";
 
                 return;
 
             }
 
-
-            updateUserUI();
-
-            loadNotificationCount();
-
-            loadConnections();
+            window.location.href =
+                "/notifications";
 
         }
-
-    }
-);
+    );
 
 
-/* =========================================================
-   PERIODIC REFRESH
-========================================================= */
+/* ================= PROFILE ================= */
+
+document
+    .getElementById("profileNav")
+    .addEventListener(
+        "click",
+        function(){
+
+            if(
+                currentUser &&
+                currentUser.user_id
+            ){
+
+                window.location.href =
+                    "/search?user_id=" +
+                    encodeURIComponent(
+                        currentUser.user_id
+                    );
+
+            }else{
+
+                window.location.href =
+                    "/search";
+
+            }
+
+        }
+    );
+
+
+/* ================= STATUS ================= */
+
+document
+    .getElementById("yourStatus")
+    .addEventListener(
+        "click",
+        function(){
+
+            showToast(
+                "Status feature coming soon"
+            );
+
+        }
+    );
+
+
+/* ================= PERIODIC REFRESH ================= */
 
 setInterval(
     function(){
 
-        if(
-            document.visibilityState ===
-            "visible"
-        ){
-
-            loadNotificationCount();
-
-            loadConnections();
-
-        }
+        loadNotificationCount();
 
     },
     30000
 );
 
 
-/* =========================================================
-   START
-========================================================= */
+/* ================= START ================= */
 
-(function(){
+document.addEventListener(
+    "DOMContentLoaded",
+    function(){
 
-    currentUser =
-        getCurrentUser();
-
-
-    if(!currentUser){
-
-        window.location.href =
-            "/login";
-
-        return;
+        loadCurrentUser();
 
     }
-
-
-    updateUserUI();
-
-    loadNotificationCount();
-
-    loadConnections();
-
-    connectSocket();
-
-})();
+);
 
 </script>
-
 
 </body>
 </html>
