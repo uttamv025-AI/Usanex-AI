@@ -1,17 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 
 <meta charset="UTF-8">
 
 <meta name="viewport"
-content="width=device-width,
-initial-scale=1.0,
-maximum-scale=1.0,
-user-scalable=no">
+      content="width=device-width, initial-scale=1.0,
+      maximum-scale=1.0, user-scalable=no">
 
-<title>Notifications • Usanex</title>
+<title>Usanex - Notifications</title>
 
 <style>
 
@@ -19,190 +16,316 @@ user-scalable=no">
     box-sizing:border-box;
     margin:0;
     padding:0;
-    -webkit-tap-highlight-color:transparent;
 }
 
 html,
 body{
     width:100%;
     min-height:100%;
-    font-family:Arial,sans-serif;
-    background:#07090d;
+
+    background:#090b10;
     color:#fff;
+
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
 }
 
 body{
-    min-height:100vh;
     overflow-x:hidden;
 }
 
-.app{
-    min-height:100vh;
-    padding-bottom:100px;
 
-    background:
-        radial-gradient(
-            circle at 50% -10%,
-            rgba(24,105,232,.18),
-            transparent 38%
-        ),
-        #07090d;
+/* =========================================================
+   APP
+========================================================= */
+
+.app{
+    width:100%;
+    max-width:600px;
+    min-height:100vh;
+
+    margin:auto;
+
+    background:#090b10;
+
+    position:relative;
+
+    padding-bottom:90px;
 }
 
 
-/* ================= HEADER ================= */
+/* =========================================================
+   HEADER
+========================================================= */
 
 .header{
 
-    height:78px;
-    padding:0 18px;
+    width:100%;
+    height:72px;
 
     display:flex;
     align-items:center;
-    gap:13px;
 
-    background:rgba(7,9,13,.90);
+    padding:0 16px;
+
+    background:
+        rgba(9,11,16,.96);
 
     border-bottom:
         1px solid
         rgba(255,255,255,.07);
 
+    backdrop-filter:blur(18px);
+
     position:sticky;
     top:0;
-    z-index:30;
 
-    backdrop-filter:blur(18px);
+    z-index:100;
 }
+
+
+/* BACK BUTTON */
 
 .back-btn{
 
-    width:42px;
-    height:42px;
+    width:40px;
+    height:40px;
 
-    flex-shrink:0;
+    border:none;
+    outline:none;
 
-    border:1px solid
-        rgba(255,255,255,.08);
-
-    border-radius:14px;
-
-    background:#151820;
-
-    color:#fff;
+    border-radius:50%;
 
     display:flex;
     align-items:center;
     justify-content:center;
 
-    font-size:24px;
+    background:#151820;
 
-    transition:
-        transform .15s ease,
-        background .2s ease;
+    color:#fff;
+
+    font-size:28px;
+
+    cursor:pointer;
+
+    margin-right:12px;
+
+    flex-shrink:0;
 }
 
 .back-btn:active{
-    transform:scale(.92);
+    transform:scale(.93);
 }
 
-.header-title{
+
+/* HEADER INFO */
+
+.header-info{
     flex:1;
     min-width:0;
 }
 
-.header-title h1{
+.header-title{
 
     font-size:20px;
+
     font-weight:800;
+
+    letter-spacing:-.4px;
 }
 
-.header-title p{
+.header-subtitle{
 
     margin-top:3px;
 
     font-size:11px;
 
-    color:#737d8e;
-}
-
-.read-btn{
-
-    border:0;
-    background:transparent;
-
-    color:#6faeff;
-
-    font-size:12px;
-    font-weight:700;
+    color:#7f8899;
 }
 
 
-/* ================= CONTENT ================= */
+/* =========================================================
+   CONTENT
+========================================================= */
 
 .content{
-    padding:18px 15px 25px;
+
+    width:100%;
+
+    padding:
+        16px
+        14px
+        20px;
 }
 
-.notifications{
+
+/* =========================================================
+   EMPTY
+========================================================= */
+
+.empty{
+
+    min-height:55vh;
 
     display:flex;
+
     flex-direction:column;
-    gap:10px;
+
+    align-items:center;
+    justify-content:center;
+
+    text-align:center;
+
+    color:#727b8c;
+}
+
+.empty-icon{
+
+    width:72px;
+    height:72px;
+
+    border-radius:24px;
+
+    background:#151820;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    font-size:32px;
+
+    margin-bottom:15px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.05);
+}
+
+.empty-title{
+
+    color:#fff;
+
+    font-size:17px;
+
+    font-weight:750;
+
+    margin-bottom:7px;
+}
+
+.empty-text{
+
+    font-size:13px;
+
+    color:#727b8c;
+
+    max-width:260px;
+
+    line-height:1.5;
 }
 
 
-/* ================= CARD ================= */
+/* =========================================================
+   NOTIFICATION CARD
+========================================================= */
 
-.notification{
+.notification-card{
 
-    position:relative;
-
-    display:flex;
-    align-items:flex-start;
-
-    gap:12px;
-
-    padding:14px;
-
-    border-radius:19px;
+    width:100%;
 
     background:
         linear-gradient(
-            135deg,
-            rgba(25,29,38,.96),
-            rgba(14,17,23,.96)
+            145deg,
+            #141820,
+            #101319
         );
 
     border:
         1px solid
         rgba(255,255,255,.065);
 
+    border-radius:18px;
+
+    padding:14px;
+
+    margin-bottom:11px;
+
     box-shadow:
         0 8px 25px
-        rgba(0,0,0,.18);
+        rgba(0,0,0,.16);
 
-    transition:
-        transform .2s ease,
-        border-color .2s ease;
+    position:relative;
+
+    transition:.2s ease;
 }
 
-.notification.unread{
+
+/* UNREAD */
+
+.notification-card.unread{
 
     border-color:
-        rgba(45,145,255,.22);
+        rgba(58,145,255,.20);
 
     background:
         linear-gradient(
-            135deg,
-            rgba(28,35,48,.98),
-            rgba(14,17,23,.98)
+            145deg,
+            #151b25,
+            #11151c
         );
 }
 
+.notification-card:active{
 
-/* ================= AVATAR ================= */
+    transform:scale(.985);
+}
 
-.notification-avatar{
+
+/* UNREAD DOT */
+
+.unread-dot{
+
+    position:absolute;
+
+    top:14px;
+    right:14px;
+
+    width:7px;
+    height:7px;
+
+    border-radius:50%;
+
+    background:#328cff;
+
+    box-shadow:
+        0 0 10px
+        rgba(50,140,255,.65);
+}
+
+
+/* =========================================================
+   MAIN ROW
+========================================================= */
+
+.notification-main{
+
+    display:flex;
+
+    align-items:flex-start;
+
+    gap:12px;
+}
+
+
+/* =========================================================
+   AVATAR
+========================================================= */
+
+.avatar{
 
     width:48px;
     height:48px;
@@ -211,472 +334,392 @@ body{
 
     border-radius:50%;
 
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    font-size:18px;
-    font-weight:800;
+    overflow:hidden;
 
     background:
         linear-gradient(
             145deg,
-            #2b8cff,
-            #0757c8
+            #237cf1,
+            #084db5
         );
 
-    overflow:hidden;
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    color:#fff;
+
+    font-size:18px;
+
+    font-weight:800;
+
+    border:
+        1px solid
+        rgba(255,255,255,.08);
 }
 
-.notification-avatar img{
+.avatar img{
 
     width:100%;
     height:100%;
 
     object-fit:cover;
+
+    display:block;
 }
 
 
-/* ================= BODY ================= */
+/* =========================================================
+   BODY
+========================================================= */
 
 .notification-body{
 
     flex:1;
+
     min-width:0;
 }
 
 .notification-title{
 
     font-size:14px;
+
     font-weight:750;
 
     line-height:1.35;
+
+    color:#fff;
+
+    padding-right:10px;
 }
 
 .notification-message{
 
     margin-top:5px;
 
-    color:#9aa3b2;
+    color:#8c95a5;
 
     font-size:12px;
+
     line-height:1.5;
+
+    word-break:break-word;
 }
 
 .notification-time{
 
-    margin-top:7px;
+    margin-top:8px;
 
-    color:#687181;
+    color:#596273;
 
     font-size:10px;
 }
 
 
-/* ================= ACTION ================= */
+/* =========================================================
+   FOLLOW ACTIONS
+========================================================= */
 
-.notification-actions{
+.action-row{
 
     display:flex;
+
     gap:8px;
 
-    margin-top:11px;
+    margin-top:13px;
 }
 
 .action-btn{
 
-    position:relative;
+    flex:1;
 
-    height:36px;
+    height:38px;
 
-    min-width:82px;
-
-    padding:0 17px;
-
-    border:0;
     border-radius:11px;
 
-    font-size:11px;
+    border:
+        1px solid
+        rgba(255,255,255,.08);
+
+    font-size:12px;
+
     font-weight:750;
 
     cursor:pointer;
 
-    overflow:hidden;
-
-    transition:
-        transform .15s ease,
-        opacity .2s ease,
-        filter .2s ease,
-        background .25s ease,
-        box-shadow .25s ease;
+    transition:.2s ease;
 }
-
-.action-btn:active{
-    transform:scale(.93);
-}
-
-.action-btn:disabled{
-    cursor:default;
-}
-
-
-/* ACCEPT */
 
 .accept-btn{
 
+    background:#247df1;
+
     color:#fff;
-
-    background:
-        linear-gradient(
-            145deg,
-            #3296ff,
-            #0758cb
-        );
-
-    box-shadow:
-        0 5px 15px
-        rgba(18,105,232,.25);
 }
-
-
-/* REJECT */
 
 .reject-btn{
 
-    color:#cbd1db;
+    background:#191d25;
 
-    background:#252b36;
-
-    border:1px solid
-        rgba(255,255,255,.08);
+    color:#c3cad6;
 }
 
-
-/* PROCESSING */
-
-.action-btn.processing{
-
-    opacity:.78;
+.action-btn:active{
 
     transform:scale(.97);
+}
 
-    pointer-events:none;
+.action-btn:disabled{
 
-    padding-right:30px;
+    opacity:.5;
 }
 
 
-/* SPINNER */
-
-.action-btn.processing::after{
-
-    content:"";
-
-    position:absolute;
-
-    width:13px;
-    height:13px;
-
-    right:9px;
-    top:50%;
-
-    margin-top:-7px;
-
-    border:
-        2px solid
-        rgba(255,255,255,.30);
-
-    border-top-color:#fff;
-
-    border-radius:50%;
-
-    animation:
-        buttonSpin .7s linear infinite;
-}
-
-@keyframes buttonSpin{
-
-    to{
-        transform:rotate(360deg);
-    }
-
-}
-
-
-/* ACCEPTED */
-
-.action-btn.success{
-
-    color:#fff;
-
-    background:
-        linear-gradient(
-            145deg,
-            #22c982,
-            #078654
-        );
-
-    box-shadow:
-        0 6px 20px
-        rgba(32,201,130,.28);
-
-    animation:
-        successPop .28s ease;
-}
-
-
-/* REJECTED */
-
-.action-btn.rejected{
-
-    color:#fff;
-
-    background:
-        linear-gradient(
-            145deg,
-            #9a343d,
-            #681f27
-        );
-
-    border-color:
-        rgba(255,255,255,.10);
-
-    box-shadow:
-        0 5px 16px
-        rgba(130,35,45,.25);
-
-    animation:
-        successPop .28s ease;
-}
-
-
-@keyframes successPop{
-
-    0%{
-        transform:scale(.90);
-    }
-
-    65%{
-        transform:scale(1.04);
-    }
-
-    100%{
-        transform:scale(1);
-    }
-
-}
-
-
-/* ================= CODE ================= */
+/* =========================================================
+   VERIFICATION CODE
+========================================================= */
 
 .code-box{
 
-    margin-top:12px;
+    margin-top:13px;
 
-    padding:13px;
+    padding:12px;
 
     border-radius:14px;
 
-    background:
-        rgba(6,10,17,.72);
+    background:#0c1017;
 
     border:
         1px solid
-        rgba(45,145,255,.18);
-
-    text-align:center;
+        rgba(65,143,255,.16);
 }
 
 .code-label{
 
-    color:#7e8797;
-
     font-size:10px;
+
+    color:#687487;
 
     text-transform:uppercase;
 
-    letter-spacing:1px;
+    letter-spacing:.7px;
+
+    margin-bottom:7px;
 }
 
-.code{
+.code-row{
 
-    margin-top:5px;
+    display:flex;
 
-    font-size:25px;
-    font-weight:900;
+    align-items:center;
 
-    letter-spacing:5px;
+    gap:9px;
 }
 
-.copy-code-btn{
+.code-value{
 
-    margin-top:10px;
+    flex:1;
 
-    width:100%;
+    min-width:0;
 
-    height:36px;
+    height:40px;
 
-    border:0;
-    border-radius:11px;
+    border-radius:10px;
+
+    background:#151a23;
+
+    display:flex;
+
+    align-items:center;
+
+    padding:0 12px;
+
+    font-size:18px;
+
+    font-weight:850;
+
+    letter-spacing:3px;
+
+    color:#fff;
+
+    overflow:hidden;
+}
+
+.copy-btn{
+
+    height:40px;
+
+    padding:0 14px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#247df1;
 
     color:#fff;
 
     font-size:11px;
+
     font-weight:800;
 
+    cursor:pointer;
+}
+
+.copy-btn:active{
+
+    transform:scale(.95);
+}
+
+
+/* =========================================================
+   BOTTOM NAV
+========================================================= */
+
+.bottom-nav{
+
+    position:fixed;
+
+    left:50%;
+
+    transform:translateX(-50%);
+
+    bottom:0;
+
+    width:100%;
+
+    max-width:600px;
+
+    height:72px;
+
     background:
-        linear-gradient(
-            145deg,
-            #3296ff,
-            #0758cb
-        );
+        rgba(13,16,22,.96);
 
-    transition:
-        transform .15s ease,
-        filter .2s ease;
+    backdrop-filter:blur(20px);
+
+    border-top:
+        1px solid
+        rgba(255,255,255,.07);
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-around;
+
+    z-index:200;
 }
 
-.copy-code-btn:active{
+.nav-item{
 
-    transform:scale(.96);
+    flex:1;
 
-}
-
-
-/* ================= UNREAD ================= */
-
-.unread-dot{
-
-    position:absolute;
-
-    right:12px;
-    top:13px;
-
-    width:7px;
-    height:7px;
-
-    border-radius:50%;
-
-    background:#3296ff;
-
-    box-shadow:
-        0 0 9px
-        rgba(50,150,255,.7);
-}
-
-
-/* ================= EMPTY ================= */
-
-.empty{
-
-    min-height:
-        calc(100vh - 190px);
+    height:100%;
 
     display:flex;
 
     flex-direction:column;
 
     align-items:center;
+
     justify-content:center;
 
-    text-align:center;
+    gap:5px;
 
-    padding:30px;
+    color:#697283;
+
+    font-size:10px;
+
+    font-weight:650;
+
+    cursor:pointer;
 }
 
-.empty-circle{
+.nav-icon{
 
-    width:105px;
-    height:105px;
+    font-size:21px;
 
-    border-radius:50%;
+    line-height:1;
+}
+
+.create-btn{
+
+    width:44px;
+    height:44px;
+
+    border-radius:15px;
 
     display:flex;
+
     align-items:center;
     justify-content:center;
 
     background:
-        radial-gradient(
-            circle,
-            rgba(35,133,245,.20),
-            rgba(35,133,245,.04)
+        linear-gradient(
+            145deg,
+            #328eff,
+            #0758ca
         );
 
-    border:
-        1px solid
-        rgba(50,140,255,.16);
+    color:#fff;
 
-    margin-bottom:20px;
-}
+    font-size:27px;
 
-.empty-icon{
-    font-size:43px;
-}
+    box-shadow:
+        0 7px 22px
+        rgba(30,120,255,.30);
 
-.empty-title{
-
-    font-size:21px;
-    font-weight:800;
-
-    margin-bottom:8px;
-}
-
-.empty-text{
-
-    max-width:300px;
-
-    color:#7e8797;
-
-    font-size:13px;
-    line-height:1.6;
+    margin-top:-17px;
 }
 
 
-/* ================= TOAST ================= */
+/* =========================================================
+   TOAST
+========================================================= */
 
 .toast{
 
     position:fixed;
 
     left:50%;
-    bottom:96px;
+
+    bottom:88px;
 
     transform:
-        translate(-50%,20px);
+        translateX(-50%)
+        translateY(20px);
 
-    min-width:220px;
-
-    max-width:
-        calc(100vw - 35px);
-
-    padding:12px 17px;
-
-    border-radius:14px;
-
-    background:
-        rgba(26,31,41,.97);
-
-    border:
-        1px solid
-        rgba(255,255,255,.09);
-
-    box-shadow:
-        0 12px 35px
-        rgba(0,0,0,.45);
+    background:#191e27;
 
     color:#fff;
 
+    padding:11px 16px;
+
+    border-radius:12px;
+
     font-size:12px;
 
-    text-align:center;
+    border:
+        1px solid
+        rgba(255,255,255,.08);
+
+    box-shadow:
+        0 10px 30px
+        rgba(0,0,0,.3);
 
     opacity:0;
 
     pointer-events:none;
 
-    transition:.25s;
+    transition:.25s ease;
 
-    z-index:100;
+    z-index:500;
+
+    max-width:
+        calc(100% - 30px);
+
+    text-align:center;
 }
 
 .toast.show{
@@ -684,129 +727,20 @@ body{
     opacity:1;
 
     transform:
-        translate(-50%,0);
+        translateX(-50%)
+        translateY(0);
 }
 
 
-/* ================= BOTTOM NAV ================= */
-
-.bottom-nav{
-
-    position:fixed;
-
-    left:10px;
-    right:10px;
-    bottom:10px;
-
-    height:76px;
-
-    border-radius:25px;
-
-    display:grid;
-
-    grid-template-columns:
-        1fr 1fr 1fr 1fr 1fr;
-
-    align-items:center;
-
-    background:
-        rgba(19,22,29,.94);
-
-    border:
-        1px solid
-        rgba(255,255,255,.09);
-
-    box-shadow:
-        0 15px 45px
-        rgba(0,0,0,.50);
-
-    backdrop-filter:blur(20px);
-
-    z-index:50;
-}
-
-.nav-item{
-
-    height:70px;
-
-    display:flex;
-
-    flex-direction:column;
-
-    align-items:center;
-    justify-content:center;
-
-    gap:5px;
-
-    color:#737c8d;
-}
-
-.nav-icon{
-    font-size:21px;
-}
-
-.nav-label{
-
-    font-size:10px;
-    font-weight:600;
-}
-
-.nav-item.active{
-    color:#fff;
-}
-
-.nav-center{
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-}
-
-.plus-btn{
-
-    width:55px;
-    height:55px;
-
-    border-radius:18px;
-    border:0;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    background:
-        linear-gradient(
-            145deg,
-            #3296ff,
-            #0758cb
-        );
-
-    color:#fff;
-
-    font-size:34px;
-
-    box-shadow:
-        0 9px 25px
-        rgba(18,105,232,.40);
-
-    transition:
-        transform .15s ease;
-}
-
-.plus-btn:active{
-    transform:scale(.92);
-}
-
-
-/* ================= MOBILE ================= */
+/* =========================================================
+   MOBILE
+========================================================= */
 
 @media(max-width:390px){
 
     .header{
 
-        height:72px;
         padding:0 10px;
-        gap:9px;
     }
 
     .back-btn{
@@ -814,39 +748,51 @@ body{
         width:37px;
         height:37px;
 
-        border-radius:12px;
+        font-size:24px;
 
-        font-size:21px;
+        margin-right:9px;
     }
 
-    .header-title h1{
+    .header-title{
+
         font-size:18px;
+    }
+
+    .header-subtitle{
+
+        font-size:10px;
     }
 
     .content{
 
-        padding-left:10px;
-        padding-right:10px;
+        padding:
+            13px
+            10px
+            18px;
     }
 
-    .notification{
+    .notification-card{
+
+        border-radius:16px;
 
         padding:12px;
-        gap:10px;
     }
 
-    .notification-avatar{
+    .avatar{
 
         width:44px;
         height:44px;
     }
 
-    .bottom-nav{
+    .notification-title{
 
-        left:7px;
-        right:7px;
+        font-size:13px;
     }
 
+    .notification-message{
+
+        font-size:11px;
+    }
 }
 
 </style>
@@ -856,148 +802,134 @@ body{
 
 <body>
 
+
 <div class="app">
 
 
-<header class="header">
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
 
-    <button
-        class="back-btn"
-        onclick="goBack()">
+    <header class="header">
 
-        ‹
+        <button
+            class="back-btn"
+            onclick="goHome()">
 
-    </button>
+            ‹
 
-
-    <div class="header-title">
-
-        <h1>
-            Notifications
-        </h1>
-
-        <p id="notificationSubtitle">
-            Stay updated
-        </p>
-
-    </div>
+        </button>
 
 
-    <button
-        class="read-btn"
-        onclick="markAllRead()">
+        <div class="header-info">
 
-        Mark all read
+            <div class="header-title">
+                Notifications
+            </div>
 
-    </button>
+            <div
+                class="header-subtitle"
+                id="notificationSubtitle">
 
-</header>
+                Stay updated
 
-
-<main class="content">
-
-    <div
-        id="notifications"
-        class="notifications">
-    </div>
-
-
-    <div
-        id="emptyState"
-        class="empty">
-
-        <div class="empty-circle">
-
-            <div class="empty-icon">
-                🔔
             </div>
 
         </div>
 
-        <div class="empty-title">
-            No notifications
-        </div>
-
-        <div class="empty-text">
-            New follow requests, connection updates
-            and verification codes will appear here.
-        </div>
-
-    </div>
-
-</main>
+    </header>
 
 
-<div
-    id="toast"
-    class="toast">
+    <!-- =====================================================
+         CONTENT
+    ====================================================== -->
+
+    <main class="content">
+
+        <div id="notificationList"></div>
+
+    </main>
+
 </div>
 
+
+
+<!-- =========================================================
+     BOTTOM NAV
+========================================================= -->
 
 <nav class="bottom-nav">
 
 
     <div
-        class="nav-item active"
+        class="nav-item"
         onclick="goHome()">
 
         <div class="nav-icon">
             ⌂
         </div>
 
-        <div class="nav-label">
+        <div>
             Home
         </div>
 
     </div>
 
 
-    <div class="nav-item">
+
+    <div
+        class="nav-item"
+        onclick="showToast('Reels coming soon')">
 
         <div class="nav-icon">
             ▶
         </div>
 
-        <div class="nav-label">
+        <div>
             Reels
         </div>
 
     </div>
 
 
-    <div class="nav-center">
 
-        <button
-            class="plus-btn"
-            onclick="openCreate()">
+    <div
+        class="nav-item"
+        onclick="openCreate()">
 
+        <div class="create-btn">
             +
-
-        </button>
+        </div>
 
     </div>
 
 
-    <div class="nav-item">
+
+    <div
+        class="nav-item"
+        onclick="showToast('Coll coming soon')">
 
         <div class="nav-icon">
-            ▣
+            ◎
         </div>
 
-        <div class="nav-label">
+        <div>
             Coll
         </div>
 
     </div>
 
 
-    <div class="nav-item">
+
+    <div
+        class="nav-item"
+        onclick="showToast('Profile coming soon')">
 
         <div class="nav-icon">
-            ♙
+            ◯
         </div>
 
-        <div class="nav-label">
+        <div>
             Profile
         </div>
 
@@ -1007,113 +939,97 @@ body{
 </nav>
 
 
+
+<!-- =========================================================
+     TOAST
+========================================================= -->
+
+<div
+    id="toast"
+    class="toast">
 </div>
+
 
 
 <script>
 
-
 /* =========================================================
-   USER
+   GLOBAL
 ========================================================= */
 
 let currentUser = null;
 
-try{
-
-    currentUser =
-        JSON.parse(
-            localStorage.getItem("user")
-        );
-
-}
-catch(error){
-
-    currentUser = null;
-
-}
-
-
 let notificationList = [];
 
-let socket = null;
-
-let reconnectTimer = null;
+let notificationSocket = null;
 
 let toastTimer = null;
 
 
 /* =========================================================
-   TOAST
+   GET CURRENT USER
 ========================================================= */
 
-function showToast(message){
+function getCurrentUser(){
 
-    const toast =
-        document.getElementById("toast");
+    try{
 
-    toast.textContent =
-        message;
+        const raw =
+            localStorage.getItem("user");
 
-    toast.classList.add("show");
+        if(!raw){
 
-    clearTimeout(toastTimer);
+            return null;
+        }
 
-    toastTimer =
-        setTimeout(
-            function(){
+        return JSON.parse(raw);
 
-                toast.classList.remove("show");
+    }catch(error){
 
-            },
-            2500
+        console.error(
+            "User parse error:",
+            error
         );
 
+        return null;
+    }
 }
 
 
 /* =========================================================
-   USER CHECK
+   REQUIRE USER
 ========================================================= */
 
 function requireUser(){
+
+    currentUser =
+        getCurrentUser();
 
     if(
         !currentUser ||
         !currentUser.user_id
     ){
 
-        showToast(
-            "Please login first."
-        );
-
-        setTimeout(
-            function(){
-
-                window.location.href = "/";
-
-            },
-            900
-        );
+        window.location.href = "/";
 
         return false;
-
     }
 
     return true;
-
 }
 
 
 /* =========================================================
-   LOAD
+   LOAD NOTIFICATIONS
 ========================================================= */
 
 async function loadNotifications(){
 
     if(!requireUser()){
+
         return;
     }
+
 
     try{
 
@@ -1122,16 +1038,20 @@ async function loadNotifications(){
                 "/api/notifications?user_id=" +
                 encodeURIComponent(
                     currentUser.user_id
-                )
+                ) +
+                "&_=" +
+                Date.now(),
+                {
+                    cache:"no-store"
+                }
             );
 
 
         if(!response.ok){
 
             throw new Error(
-                "Notification API failed"
+                "Notification request failed"
             );
-
         }
 
 
@@ -1140,52 +1060,126 @@ async function loadNotifications(){
 
 
         notificationList =
-            Array.isArray(
-                data.notifications
-            )
-            ? data.notifications
+            Array.isArray(data)
+            ? data
             : (
-                Array.isArray(data)
-                ? data
+                Array.isArray(
+                    data.notifications
+                )
+                ? data.notifications
                 : []
             );
 
 
         renderNotifications();
 
-    }
-    catch(error){
 
-        console.error(error);
+        /*
+         * IMPORTANT
+         *
+         * Page open hote hi database me
+         * saare notifications READ kar do.
+         */
 
-        notificationList = [];
+        await markAllReadOnServer();
 
-        renderNotifications();
 
-        showToast(
-            "Unable to load notifications."
+    }catch(error){
+
+        console.error(
+            "Load notifications error:",
+            error
         );
 
+        renderError();
     }
-
 }
 
 
 /* =========================================================
-   RENDER
+   RENDER NOTIFICATIONS
 ========================================================= */
 
 function renderNotifications(){
 
     const container =
         document.getElementById(
-            "notifications"
+            "notificationList"
         );
 
-    const empty =
-        document.getElementById(
-            "emptyState"
-        );
+
+    if(!container){
+
+        return;
+    }
+
+
+    if(
+        !Array.isArray(notificationList) ||
+        notificationList.length === 0
+    ){
+
+        container.innerHTML = `
+
+            <div class="empty">
+
+                <div class="empty-icon">
+                    ♡
+                </div>
+
+                <div class="empty-title">
+                    No notifications
+                </div>
+
+                <div class="empty-text">
+                    New follow requests,
+                    connection codes and updates
+                    will appear here.
+                </div>
+
+            </div>
+
+        `;
+
+
+        updateSubtitle(0);
+
+        return;
+    }
+
+
+    const unreadCount =
+        notificationList.filter(
+            item =>
+                item &&
+                item.is_read === false
+        ).length;
+
+
+    updateSubtitle(
+        unreadCount
+    );
+
+
+    container.innerHTML =
+        notificationList
+        .map(
+            notification =>
+                createNotificationCard(
+                    notification
+                )
+        )
+        .join("");
+}
+
+
+/* =========================================================
+   UPDATE SUBTITLE
+========================================================= */
+
+function updateSubtitle(
+    unreadCount
+){
 
     const subtitle =
         document.getElementById(
@@ -1193,201 +1187,137 @@ function renderNotifications(){
         );
 
 
-    container.innerHTML = "";
-
-
-    if(
-        !notificationList ||
-        notificationList.length === 0
-    ){
-
-        empty.style.display = "flex";
-
-        subtitle.textContent =
-            "You're all caught up";
+    if(!subtitle){
 
         return;
-
     }
 
 
-    empty.style.display = "none";
+    if(unreadCount > 0){
 
-
-    const unreadCount =
-        notificationList.filter(
-            function(item){
-
-                return !item.is_read;
-
-            }
-        ).length;
-
-
-    subtitle.textContent =
-        unreadCount > 0
-        ? unreadCount +
-          " unread notification" +
-          (
-              unreadCount > 1
-              ? "s"
-              : ""
-          )
-        : "You're all caught up";
-
-
-    notificationList.forEach(
-        function(notification){
-
-            container.appendChild(
-                createNotificationCard(
-                    notification
-                )
+        subtitle.textContent =
+            unreadCount +
+            (
+                unreadCount === 1
+                ? " unread notification"
+                : " unread notifications"
             );
 
-        }
-    );
+    }else{
 
+        subtitle.textContent =
+            "All caught up";
+    }
 }
 
 
 /* =========================================================
-   CARD
+   CREATE NOTIFICATION CARD
 ========================================================= */
 
 function createNotificationCard(
     notification
 ){
 
-    const card =
-        document.createElement("div");
+    if(!notification){
+
+        return "";
+    }
 
 
-    card.className =
-        "notification" +
-        (
-            !notification.is_read
-            ? " unread"
-            : ""
-        );
+    const type =
+        notification.type ||
+        notification.notification_type ||
+        "";
+
+
+    /*
+     * Backend:
+     *
+     * sender:{
+     *   user_id,
+     *   name,
+     *   profile_photo
+     * }
+     */
+
+    const sender =
+        notification.sender || {};
 
 
     const senderName =
+        sender.name ||
         notification.sender_name ||
         notification.name ||
+        sender.user_id ||
         notification.sender_user_id ||
         "Someone";
 
 
+    const senderUserId =
+        sender.user_id ||
+        notification.sender_user_id ||
+        null;
+
+
     const senderPhoto =
+        sender.profile_photo ||
         notification.sender_profile_photo ||
         notification.profile_photo ||
         null;
 
 
-    let avatarHtml = "";
-
-
-    if(senderPhoto){
-
-        avatarHtml = `
-            <img
-                src="${escapeHtml(senderPhoto)}"
-                alt="">
-        `;
-
-    }
-    else{
-
-        avatarHtml =
-            escapeHtml(
-                senderName
-                    .charAt(0)
-                    .toUpperCase()
-            );
-
-    }
-
-
-    const type =
-        String(
-            notification.type ||
-            notification.notification_type ||
-            ""
-        ).toLowerCase();
-
-
-    let title =
+    const title =
         notification.title ||
-        "Notification";
+        getDefaultTitle(
+            type
+        );
 
 
-    let message =
+    const message =
         notification.message ||
         "";
 
 
-    if(type === "follow_request"){
-
-        title =
-            notification.title ||
-            "New Follow Request";
-
-        message =
-            notification.message ||
-            (
-                senderName +
-                " wants to connect with you."
-            );
-
-    }
+    const time =
+        formatTime(
+            notification.created_at
+        );
 
 
-    if(type === "connection_code"){
-
-        title =
-            notification.title ||
-            "Verification Code";
-
-        message =
-            notification.message ||
-            "Copy the code and verify the connection.";
-
-    }
+    const isUnread =
+        notification.is_read === false;
 
 
-    if(type === "follow_rejected"){
-
-        title =
-            notification.title ||
-            "Follow Request Rejected";
-
-    }
+    const avatar =
+        createAvatar(
+            senderName,
+            senderPhoto
+        );
 
 
-    if(type === "connection_verified"){
-
-        title =
-            notification.title ||
-            "Connection Verified";
-
-    }
+    let extraHTML = "";
 
 
-    let actions = "";
+    /* =====================================================
+       FOLLOW REQUEST
+    ====================================================== */
 
+    if(
+        type === "follow_request"
+    ){
 
-    /* FOLLOW REQUEST */
+        extraHTML = `
 
-    if(type === "follow_request"){
-
-        actions = `
-
-            <div class="notification-actions">
+            <div class="action-row">
 
                 <button
                     class="action-btn accept-btn"
-                    data-action="accept">
+                    onclick="acceptFollow(
+                        ${Number(
+                            notification.id
+                        )}
+                    )">
 
                     Accept
 
@@ -1396,7 +1326,11 @@ function createNotificationCard(
 
                 <button
                     class="action-btn reject-btn"
-                    data-action="reject">
+                    onclick="rejectFollow(
+                        ${Number(
+                            notification.id
+                        )}
+                    )">
 
                     Reject
 
@@ -1405,259 +1339,256 @@ function createNotificationCard(
             </div>
 
         `;
-
     }
 
 
-    /* CONNECTION CODE */
+    /* =====================================================
+       CONNECTION CODE
+    ====================================================== */
 
     if(
-        type === "connection_code" &&
-        notification.verification_code
+        type === "connection_code"
     ){
 
-        const safeCode =
-            escapeHtml(
-                notification.verification_code
+        const code =
+            notification.verification_code ||
+            extractCodeFromMessage(
+                message
             );
 
 
-        actions = `
+        if(code){
 
-            <div class="code-box">
+            extraHTML = `
 
-                <div class="code-label">
-                    Verification Code
+                <div class="code-box">
+
+                    <div class="code-label">
+                        Verification code
+                    </div>
+
+                    <div class="code-row">
+
+                        <div class="code-value">
+                            ${escapeHTML(code)}
+                        </div>
+
+                        <button
+                            class="copy-btn"
+                            onclick="copyVerificationCode(
+                                '${escapeJS(code)}',
+                                '${escapeJS(
+                                    senderUserId || ""
+                                )}'
+                            )">
+
+                            Copy
+
+                        </button>
+
+                    </div>
+
                 </div>
 
-                <div class="code">
-                    ${safeCode}
-                </div>
-
-                <button
-                    class="copy-code-btn"
-                    data-action="copy-code">
-
-                    Copy Code
-
-                </button>
-
-            </div>
-
-        `;
-
+            `;
+        }
     }
 
 
-    card.innerHTML = `
+    /* =====================================================
+       CARD
+    ====================================================== */
 
-        <div class="notification-avatar">
+    return `
 
-            ${avatarHtml}
+        <article
+            class="notification-card
+            ${isUnread ? "unread" : ""}"
+            data-notification-id="${Number(
+                notification.id
+            )}">
 
-        </div>
+            ${
+                isUnread
+                ? `<div class="unread-dot"></div>`
+                : ""
+            }
 
 
-        <div class="notification-body">
+            <div class="notification-main">
 
-            <div class="notification-title">
+                ${avatar}
 
-                ${escapeHtml(title)}
+
+                <div class="notification-body">
+
+                    <div class="notification-title">
+
+                        ${escapeHTML(
+                            title
+                        )}
+
+                    </div>
+
+
+                    <div class="notification-message">
+
+                        ${escapeHTML(
+                            message
+                        )}
+
+                    </div>
+
+
+                    <div class="notification-time">
+
+                        ${escapeHTML(
+                            time
+                        )}
+
+                    </div>
+
+
+                    ${extraHTML}
+
+                </div>
 
             </div>
 
-
-            <div class="notification-message">
-
-                ${escapeHtml(message)}
-
-            </div>
-
-
-            <div class="notification-time">
-
-                ${formatTime(
-                    notification.created_at
-                )}
-
-            </div>
-
-
-            ${actions}
-
-        </div>
-
-
-        ${
-            !notification.is_read
-            ? `
-                <div class="unread-dot"></div>
-              `
-            : ""
-        }
+        </article>
 
     `;
-
-
-    const acceptButton =
-        card.querySelector(
-            '[data-action="accept"]'
-        );
-
-
-    const rejectButton =
-        card.querySelector(
-            '[data-action="reject"]'
-        );
-
-
-    const copyButton =
-        card.querySelector(
-            '[data-action="copy-code"]'
-        );
-
-
-    if(acceptButton){
-
-        acceptButton.onclick =
-            function(event){
-
-                event.stopPropagation();
-
-                handleFollowRequest(
-                    notification,
-                    "accept",
-                    acceptButton,
-                    rejectButton
-                );
-
-            };
-
-    }
-
-
-    if(rejectButton){
-
-        rejectButton.onclick =
-            function(event){
-
-                event.stopPropagation();
-
-                handleFollowRequest(
-                    notification,
-                    "reject",
-                    rejectButton,
-                    acceptButton
-                );
-
-            };
-
-    }
-
-
-    if(copyButton){
-
-        copyButton.onclick =
-            function(event){
-
-                event.stopPropagation();
-
-                copyVerificationCode(
-                    notification
-                );
-
-            };
-
-    }
-
-
-    return card;
-
 }
 
 
 /* =========================================================
-   ACCEPT / REJECT
+   DEFAULT TITLE
 ========================================================= */
 
-async function handleFollowRequest(
-    notification,
-    action,
-    clickedButton,
-    otherButton
+function getDefaultTitle(
+    type
+){
+
+    switch(type){
+
+        case "follow_request":
+
+            return "New follow request";
+
+
+        case "connection_code":
+
+            return "Connection accepted";
+
+
+        case "follow_rejected":
+
+            return "Follow request rejected";
+
+
+        case "connection_verified":
+
+            return "Connection verified";
+
+
+        default:
+
+            return "New notification";
+    }
+}
+
+
+/* =========================================================
+   CREATE AVATAR
+========================================================= */
+
+function createAvatar(
+    name,
+    photo
+){
+
+    if(photo){
+
+        return `
+
+            <div class="avatar">
+
+                <img
+                    src="${escapeAttr(
+                        photo
+                    )}"
+                    alt=""
+                    onerror="
+                        this.style.display='none';
+                        this.parentElement.textContent='${escapeJS(
+                            getInitial(name)
+                        )}';
+                    "
+                >
+
+            </div>
+
+        `;
+    }
+
+
+    return `
+
+        <div class="avatar">
+
+            ${escapeHTML(
+                getInitial(name)
+            )}
+
+        </div>
+
+    `;
+}
+
+
+/* =========================================================
+   INITIAL
+========================================================= */
+
+function getInitial(
+    name
+){
+
+    if(
+        !name ||
+        typeof name !== "string"
+    ){
+
+        return "U";
+    }
+
+
+    return name
+        .trim()
+        .charAt(0)
+        .toUpperCase() || "U";
+}
+
+
+/* =========================================================
+   ACCEPT FOLLOW
+========================================================= */
+
+async function acceptFollow(
+    notificationId
 ){
 
     if(!requireUser()){
-        return;
-    }
-
-
-    const notificationId =
-        notification.id ||
-        notification.notification_id;
-
-
-    if(!notificationId){
-
-        showToast(
-            "Notification information missing."
-        );
 
         return;
-
     }
-
-
-    /*
-       Double click protection
-    */
-
-    if(
-        clickedButton &&
-        clickedButton.disabled
-    ){
-
-        return;
-
-    }
-
-
-    /*
-       PROCESSING UI
-    */
-
-    if(clickedButton){
-
-        clickedButton.disabled = true;
-
-        clickedButton.classList.add(
-            "processing"
-        );
-
-        clickedButton.textContent =
-            action === "accept"
-            ? "Accepting..."
-            : "Rejecting...";
-    }
-
-
-    if(otherButton){
-
-        otherButton.disabled = true;
-    }
-
-
-    const endpoint =
-        action === "accept"
-        ? "/api/follow/accept"
-        : "/api/follow/reject";
 
 
     try{
 
         const response =
             await fetch(
-                endpoint,
+                "/api/follow/accept",
                 {
                     method:"POST",
 
@@ -1669,162 +1600,201 @@ async function handleFollowRequest(
                     body:JSON.stringify({
 
                         notification_id:
-                            notificationId,
+                            Number(
+                                notificationId
+                            ),
 
                         user_id:
                             currentUser.user_id
-
                     })
-
                 }
             );
 
 
-        let data = {};
-
-        try{
-
-            data =
-                await response.json();
-
-        }
-        catch(error){
-
-            data = {};
-
-        }
+        const data =
+            await response.json();
 
 
         if(!response.ok){
 
             throw new Error(
-                data.detail ||
                 data.message ||
-                "Request failed"
+                "Accept failed"
             );
-
-        }
-
-
-        /*
-           SUCCESS STATE
-        */
-
-        if(clickedButton){
-
-            clickedButton.classList.remove(
-                "processing"
-            );
-
-
-            if(action === "accept"){
-
-                clickedButton.classList.add(
-                    "success"
-                );
-
-                clickedButton.textContent =
-                    "Accepted ✓";
-
-            }
-            else{
-
-                clickedButton.classList.add(
-                    "rejected"
-                );
-
-                clickedButton.textContent =
-                    "Rejected ✕";
-
-            }
-
-            clickedButton.disabled = true;
-
-        }
-
-
-        /*
-           Other button stays disabled
-        */
-
-        if(otherButton){
-
-            otherButton.disabled = true;
-        }
-
-
-        if(action === "accept"){
-
-            showToast(
-                "Accepted. Verification code sent."
-            );
-
-        }
-        else{
-
-            showToast(
-                "Follow request rejected."
-            );
-
-        }
-
-
-        /*
-           Notification list ko immediately
-           reload nahi karenge.
-           
-           Pehle user ko success effect
-           clearly dikhega.
-        */
-
-        setTimeout(
-            async function(){
-
-                await loadNotifications();
-
-            },
-            1400
-        );
-
-    }
-    catch(error){
-
-        console.error(error);
-
-
-        /*
-           ERROR STATE
-        */
-
-        if(clickedButton){
-
-            clickedButton.disabled = false;
-
-            clickedButton.classList.remove(
-                "processing"
-            );
-
-            clickedButton.textContent =
-                action === "accept"
-                ? "Accept"
-                : "Reject";
-
-        }
-
-
-        if(otherButton){
-
-            otherButton.disabled = false;
         }
 
 
         showToast(
-            error.message ||
-            "Something went wrong."
+            data.message ||
+            "Request accepted"
         );
 
+
+        await loadNotifications();
+
+
+    }catch(error){
+
+        console.error(
+            "Accept error:",
+            error
+        );
+
+        showToast(
+            error.message ||
+            "Unable to accept request"
+        );
+    }
+}
+
+
+/* =========================================================
+   REJECT FOLLOW
+========================================================= */
+
+async function rejectFollow(
+    notificationId
+){
+
+    if(!requireUser()){
+
+        return;
     }
 
+
+    try{
+
+        const response =
+            await fetch(
+                "/api/follow/reject",
+                {
+                    method:"POST",
+
+                    headers:{
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:JSON.stringify({
+
+                        notification_id:
+                            Number(
+                                notificationId
+                            ),
+
+                        user_id:
+                            currentUser.user_id
+                    })
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if(!response.ok){
+
+            throw new Error(
+                data.message ||
+                "Reject failed"
+            );
+        }
+
+
+        showToast(
+            data.message ||
+            "Request rejected"
+        );
+
+
+        await loadNotifications();
+
+
+    }catch(error){
+
+        console.error(
+            "Reject error:",
+            error
+        );
+
+        showToast(
+            error.message ||
+            "Unable to reject request"
+        );
+    }
+}
+
+
+/* =========================================================
+   MARK ALL READ - SERVER ONLY
+========================================================= */
+
+async function markAllReadOnServer(){
+
+    if(!requireUser()){
+
+        return false;
+    }
+
+
+    try{
+
+        const response =
+            await fetch(
+                "/api/notifications/read-all?user_id=" +
+                encodeURIComponent(
+                    currentUser.user_id
+                ),
+                {
+                    method:"POST",
+
+                    headers:{
+                        "Content-Type":
+                            "application/json"
+                    }
+                }
+            );
+
+
+        if(!response.ok){
+
+            console.warn(
+                "read-all endpoint unavailable"
+            );
+
+            return false;
+        }
+
+
+        /*
+         * Database successfully updated.
+         */
+
+        notificationList =
+            notificationList.map(
+                item => ({
+                    ...item,
+                    is_read:true
+                })
+            );
+
+
+        renderNotifications();
+
+
+        return true;
+
+
+    }catch(error){
+
+        console.error(
+            "Mark all read error:",
+            error
+        );
+
+        return false;
+    }
 }
 
 
@@ -1833,24 +1803,17 @@ async function handleFollowRequest(
 ========================================================= */
 
 async function copyVerificationCode(
-    notification
+    code,
+    targetUserId
 ){
-
-    const code =
-        String(
-            notification.verification_code ||
-            ""
-        ).trim();
-
 
     if(!code){
 
         showToast(
-            "Verification code not found."
+            "Verification code missing"
         );
 
         return;
-
     }
 
 
@@ -1860,42 +1823,42 @@ async function copyVerificationCode(
             code
         );
 
+    }catch(error){
+
+        const textarea =
+            document.createElement(
+                "textarea"
+            );
+
+        textarea.value =
+            code;
+
+        document.body.appendChild(
+            textarea
+        );
+
+        textarea.select();
+
+        document.execCommand(
+            "copy"
+        );
+
+        textarea.remove();
     }
-    catch(error){
-
-        const input =
-            document.createElement("textarea");
-
-        input.value = code;
-
-        input.style.position = "fixed";
-        input.style.opacity = "0";
-
-        document.body.appendChild(input);
-
-        input.focus();
-        input.select();
-
-        document.execCommand("copy");
-
-        input.remove();
-
-    }
 
 
-    const targetUserId =
-        notification.sender_user_id ||
-        notification.requester_user_id;
-
+    /*
+     * Connection code notification me
+     * sender = target user.
+     */
 
     if(!targetUserId){
 
         showToast(
-            "User ID missing."
+            "Code copied, but User ID missing"
         );
 
         return;
-
     }
 
 
@@ -1934,71 +1897,75 @@ async function copyVerificationCode(
                 );
 
         },
-        650
+        500
     );
-
 }
 
 
 /* =========================================================
-   REALTIME
+   WEBSOCKET
 ========================================================= */
 
-function connectRealtime(){
+function connectNotificationSocket(){
 
-    if(!requireUser()){
+    if(
+        !currentUser ||
+        !currentUser.user_id
+    ){
+
         return;
     }
 
 
     try{
 
-        if(socket){
+        if(notificationSocket){
 
             try{
-                socket.close();
-            }
-            catch(error){}
 
+                notificationSocket.close();
+
+            }catch(error){}
         }
 
 
         const protocol =
-            location.protocol === "https:"
+            window.location.protocol === "https:"
             ? "wss:"
             : "ws:";
 
 
-        const wsUrl =
+        const socketUrl =
             protocol +
             "//" +
-            location.host +
+            window.location.host +
             "/ws/" +
             encodeURIComponent(
                 currentUser.user_id
             );
 
 
-        socket =
-            new WebSocket(wsUrl);
+        notificationSocket =
+            new WebSocket(
+                socketUrl
+            );
 
 
-        socket.onopen =
+        notificationSocket.onopen =
             function(){
 
                 console.log(
-                    "Usanex realtime connected."
+                    "Usanex notification socket connected"
                 );
-
             };
 
 
-        socket.onmessage =
+        notificationSocket.onmessage =
             function(event){
 
                 try{
 
-                    let payload =
+                    const payload =
                         JSON.parse(
                             event.data
                         );
@@ -2008,395 +1975,494 @@ function connectRealtime(){
                         payload
                     );
 
-                }
-                catch(error){
+
+                }catch(error){
 
                     console.error(
                         "Realtime parse error:",
                         error
                     );
-
                 }
-
             };
 
 
-        socket.onclose =
+        notificationSocket.onerror =
+            function(error){
+
+                console.warn(
+                    "Notification socket error",
+                    error
+                );
+            };
+
+
+        notificationSocket.onclose =
             function(){
 
                 console.log(
-                    "Realtime disconnected."
+                    "Notification socket closed"
                 );
 
-                scheduleReconnect();
 
+                setTimeout(
+                    function(){
+
+                        if(
+                            document.visibilityState !==
+                            "hidden"
+                        ){
+
+                            connectNotificationSocket();
+                        }
+
+                    },
+                    4000
+                );
             };
 
 
-        socket.onerror =
-            function(error){
+    }catch(error){
 
-                console.error(
-                    "Realtime error:",
-                    error
-                );
-
-            };
-
+        console.error(
+            "WebSocket error:",
+            error
+        );
     }
-    catch(error){
-
-        console.error(error);
-
-        scheduleReconnect();
-
-    }
-
 }
 
 
 /* =========================================================
-   REALTIME MESSAGE
+   REALTIME NOTIFICATION
 ========================================================= */
 
 function handleRealtimeNotification(
     payload
 ){
 
+    if(!payload){
+
+        return;
+    }
+
+
+    const notification =
+        payload.notification ||
+        payload;
+
+
     if(
-        !payload ||
-        typeof payload !== "object"
+        payload.type !== "notification" &&
+        !notification.type &&
+        !notification.notification_type
     ){
 
         return;
-
     }
 
 
-    /*
-       Backend notification wrapper
-    */
-
-    if(
-        payload.type === "notification" &&
-        payload.notification
-    ){
-
-        payload =
-            payload.notification;
-
-    }
+    const type =
+        notification.type ||
+        notification.notification_type ||
+        "";
 
 
     /*
-       Connection verified
-    */
+     * Connection verified
+     */
 
     if(
-        payload.type ===
-        "connection_verified"
+        type === "connection_verified"
     ){
-
-        showToast(
-            payload.title ||
-            "Connection verified."
-        );
 
         loadNotifications();
 
         return;
-
     }
 
 
-    const incoming = {
+    /*
+     * Duplicate check
+     */
 
-        ...payload,
-
-        is_read:false,
-
-        created_at:
-            payload.created_at ||
-            new Date().toISOString()
-
-    };
-
-
-    const notificationId =
-        payload.id ||
-        payload.notification_id;
-
-
-    if(notificationId){
-
-        const exists =
-            notificationList.some(
-                function(item){
-
-                    return String(
-                        item.id ||
-                        item.notification_id ||
-                        ""
-                    ) ===
-                    String(
-                        notificationId
-                    );
-
-                }
-            );
-
-
-        if(exists){
-
-            return;
-
-        }
-
-    }
-
-
-    notificationList.unshift(
-        incoming
-    );
-
-
-    renderNotifications();
-
-
-    showToast(
-        payload.title ||
-        "New notification"
-    );
-
-}
-
-
-/* =========================================================
-   RECONNECT
-========================================================= */
-
-function scheduleReconnect(){
-
-    clearTimeout(
-        reconnectTimer
-    );
-
-
-    reconnectTimer =
-        setTimeout(
-            function(){
-
-                connectRealtime();
-
-            },
-            3000
+    const existing =
+        notificationList.find(
+            item =>
+                Number(item.id) ===
+                Number(notification.id)
         );
 
-}
 
+    if(existing){
 
-/* =========================================================
-   MARK ALL READ
-========================================================= */
-
-async function markAllRead(){
-
-    if(!requireUser()){
         return;
     }
 
 
-    notificationList =
-        notificationList.map(
-            function(item){
+    /*
+     * New notification.
+     */
 
-                return {
+    notificationList.unshift({
 
-                    ...item,
+        ...notification,
 
-                    is_read:true
+        is_read:false
 
-                };
-
-            }
-        );
+    });
 
 
     renderNotifications();
 
 
     showToast(
-        "Notifications marked as read."
+        notification.title ||
+        "New notification"
     );
-
 }
 
 
 /* =========================================================
-   TIME
+   FORMAT TIME
 ========================================================= */
 
-function formatTime(value){
+function formatTime(
+    value
+){
 
     if(!value){
-        return "Just now";
+
+        return "";
     }
 
 
-    const date =
-        new Date(value);
+    try{
+
+        const date =
+            new Date(value);
 
 
-    if(
-        Number.isNaN(
-            date.getTime()
-        )
-    ){
+        if(
+            Number.isNaN(
+                date.getTime()
+            )
+        ){
 
-        return "Just now";
-
-    }
-
-
-    const now =
-        new Date();
+            return "";
+        }
 
 
-    const diff =
-        Math.max(
-            0,
-            now.getTime() -
-            date.getTime()
+        const now =
+            new Date();
+
+
+        const diff =
+            Math.floor(
+                (
+                    now.getTime() -
+                    date.getTime()
+                ) / 1000
+            );
+
+
+        if(diff < 10){
+
+            return "Just now";
+        }
+
+
+        if(diff < 60){
+
+            return diff + "s ago";
+        }
+
+
+        if(diff < 3600){
+
+            return Math.floor(
+                diff / 60
+            ) + "m ago";
+        }
+
+
+        if(diff < 86400){
+
+            return Math.floor(
+                diff / 3600
+            ) + "h ago";
+        }
+
+
+        if(diff < 604800){
+
+            return Math.floor(
+                diff / 86400
+            ) + "d ago";
+        }
+
+
+        return date.toLocaleDateString(
+            "en-IN",
+            {
+                day:"numeric",
+                month:"short"
+            }
         );
 
 
-    const seconds =
-        Math.floor(
-            diff / 1000
-        );
+    }catch(error){
 
-
-    if(seconds < 60){
-        return "Just now";
+        return "";
     }
-
-
-    const minutes =
-        Math.floor(
-            seconds / 60
-        );
-
-
-    if(minutes < 60){
-
-        return minutes +
-            " min ago";
-
-    }
-
-
-    const hours =
-        Math.floor(
-            minutes / 60
-        );
-
-
-    if(hours < 24){
-
-        return hours +
-            " hr ago";
-
-    }
-
-
-    const days =
-        Math.floor(
-            hours / 24
-        );
-
-
-    if(days < 7){
-
-        return days +
-            " day" +
-            (
-                days > 1
-                ? "s"
-                : ""
-            ) +
-            " ago";
-
-    }
-
-
-    return date.toLocaleDateString();
-
 }
 
 
 /* =========================================================
-   ESCAPE
+   EXTRACT CODE
 ========================================================= */
 
-function escapeHtml(value){
+function extractCodeFromMessage(
+    message
+){
 
-    return String(value)
+    if(!message){
 
-        .replace(
-            /&/g,
-            "&amp;"
-        )
+        return "";
+    }
 
-        .replace(
-            /</g,
-            "&lt;"
-        )
 
-        .replace(
-            />/g,
-            "&gt;"
-        )
-
-        .replace(
-            /"/g,
-            "&quot;"
-        )
-
-        .replace(
-            /'/g,
-            "&#039;"
+    const match =
+        String(message).match(
+            /\b\d{4,8}\b/
         );
 
+
+    return match
+        ? match[0]
+        : "";
 }
 
 
 /* =========================================================
-   NAVIGATION
+   ESCAPE HTML
 ========================================================= */
 
-function goBack(){
+function escapeHTML(
+    value
+){
 
-    window.location.href =
-        "/home";
-
+    return String(
+        value ?? ""
+    )
+    .replace(
+        /&/g,
+        "&amp;"
+    )
+    .replace(
+        /</g,
+        "&lt;"
+    )
+    .replace(
+        />/g,
+        "&gt;"
+    )
+    .replace(
+        /"/g,
+        "&quot;"
+    )
+    .replace(
+        /'/g,
+        "&#039;"
+    );
 }
 
+
+/* =========================================================
+   ESCAPE ATTRIBUTE
+========================================================= */
+
+function escapeAttr(
+    value
+){
+
+    return escapeHTML(
+        value
+    );
+}
+
+
+/* =========================================================
+   ESCAPE JS
+========================================================= */
+
+function escapeJS(
+    value
+){
+
+    return String(
+        value ?? ""
+    )
+    .replace(
+        /\\/g,
+        "\\\\"
+    )
+    .replace(
+        /'/g,
+        "\\'"
+    )
+    .replace(
+        /"/g,
+        '\\"'
+    )
+    .replace(
+        /\n/g,
+        "\\n"
+    )
+    .replace(
+        /\r/g,
+        "\\r"
+    );
+}
+
+
+/* =========================================================
+   ERROR
+========================================================= */
+
+function renderError(){
+
+    const container =
+        document.getElementById(
+            "notificationList"
+        );
+
+
+    if(!container){
+
+        return;
+    }
+
+
+    container.innerHTML = `
+
+        <div class="empty">
+
+            <div class="empty-icon">
+                !
+            </div>
+
+            <div class="empty-title">
+                Something went wrong
+            </div>
+
+            <div class="empty-text">
+                Notifications could not be loaded.
+                Please try again.
+            </div>
+
+        </div>
+
+    `;
+}
+
+
+/* =========================================================
+   HOME
+========================================================= */
 
 function goHome(){
 
     window.location.href =
         "/home";
-
 }
 
+
+/* =========================================================
+   CREATE
+========================================================= */
 
 function openCreate(){
 
     showToast(
-        "Create option will be available here."
+        "Create feature coming soon"
+    );
+}
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+function showToast(
+    message
+){
+
+    const toast =
+        document.getElementById(
+            "toast"
+        );
+
+
+    if(!toast){
+
+        return;
+    }
+
+
+    toast.textContent =
+        message || "";
+
+
+    toast.classList.add(
+        "show"
     );
 
+
+    clearTimeout(
+        toastTimer
+    );
+
+
+    toastTimer =
+        setTimeout(
+            function(){
+
+                toast.classList.remove(
+                    "show"
+                );
+
+            },
+            2200
+        );
 }
+
+
+/* =========================================================
+   START
+========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function(){
+
+        if(!requireUser()){
+
+            return;
+        }
+
+
+        /*
+         * Page open:
+         * 1. Load notifications
+         * 2. Automatically mark all as read
+         * 3. Connect realtime
+         */
+
+        loadNotifications();
+
+        connectNotificationSocket();
+
+    }
+);
 
 
 /* =========================================================
@@ -2407,38 +2473,18 @@ window.addEventListener(
     "beforeunload",
     function(){
 
-        clearTimeout(
-            reconnectTimer
-        );
-
-
-        if(socket){
+        if(notificationSocket){
 
             try{
-                socket.close();
-            }
-            catch(error){}
 
+                notificationSocket.close();
+
+            }catch(error){}
         }
-
     }
 );
-
-
-/* =========================================================
-   START
-========================================================= */
-
-if(requireUser()){
-
-    loadNotifications();
-
-    connectRealtime();
-
-}
 
 </script>
 
 </body>
-
 </html>
