@@ -351,7 +351,7 @@ input{
 }
 
 
-/* PLUS ON STATUS */
+/* PLUS */
 
 .add-status{
     position:relative;
@@ -528,7 +528,7 @@ input{
 }
 
 
-/* CONNECTED BUTTON */
+/* CONNECTED */
 
 .connected-btn{
     min-width:84px;
@@ -648,9 +648,6 @@ input{
     padding:0 4px;
 }
 
-
-/* ALL 5 ITEMS */
-
 .nav-item{
     flex:1;
 
@@ -679,26 +676,7 @@ input{
 }
 
 
-/* SIMPLE ICON */
-
-.nav-icon{
-    width:25px;
-    height:25px;
-
-    display:flex;
-
-    align-items:center;
-    justify-content:center;
-
-    font-size:22px;
-
-    line-height:1;
-}
-
-
-/* =========================================================
-   OUTLINE HOME / REEL / PROFILE / NOTIFICATION
-========================================================= */
+/* SIMPLE OUTLINE ICON */
 
 .nav-svg{
     width:24px;
@@ -766,7 +744,7 @@ input{
 
 
 /* =========================================================
-   MENU OVERLAY
+   MENU
 ========================================================= */
 
 .menu-overlay{
@@ -788,7 +766,6 @@ input{
 
 .menu-overlay.show{
     opacity:1;
-
     pointer-events:auto;
 }
 
@@ -955,7 +932,6 @@ input{
     .logo-mark{
         width:38px;
         height:38px;
-
         border-radius:12px;
     }
 
@@ -1397,7 +1373,7 @@ input{
 <script>
 
 /* =========================================================
-   USANEX HOME JAVASCRIPT
+   CURRENT USER
 ========================================================= */
 
 let currentUser = null;
@@ -1472,6 +1448,11 @@ function loadCurrentUser(){
     }
 
 
+    /*
+     * Fallback:
+     * read user_id from URL if needed.
+     */
+
     if(
         !currentUser ||
         !currentUser.user_id
@@ -1508,7 +1489,7 @@ function loadCurrentUser(){
 
 
 /* =========================================================
-   USER UI
+   UPDATE USER UI
 ========================================================= */
 
 function updateUserUI(){
@@ -1624,7 +1605,7 @@ function updateUserUI(){
 
 
 /* =========================================================
-   CONNECTIONS
+   LOAD CONNECTED USERS
 ========================================================= */
 
 async function loadConnections(){
@@ -1638,6 +1619,7 @@ async function loadConnections(){
         document.getElementById(
             "noConnected"
         );
+
 
     if(!currentUser ||
        !currentUser.user_id){
@@ -1655,12 +1637,31 @@ async function loadConnections(){
 
     try{
 
+        /*
+         * IMPORTANT:
+         *
+         * Home connections API
+         *
+         * NOT /api/connections
+         *
+         */
+
+        const url =
+            "/api/home/connections?user_id=" +
+            encodeURIComponent(
+                currentUser.user_id
+            );
+
+
+        console.log(
+            "Loading connections:",
+            url
+        );
+
+
         const response =
             await fetch(
-                "/api/connections?user_id=" +
-                encodeURIComponent(
-                    currentUser.user_id
-                ),
+                url,
                 {
                     method:"GET",
                     cache:"no-store"
@@ -1671,7 +1672,7 @@ async function loadConnections(){
         if(!response.ok){
 
             throw new Error(
-                "Connections API error: " +
+                "HTTP " +
                 response.status
             );
 
@@ -1682,24 +1683,31 @@ async function loadConnections(){
             await response.json();
 
 
+        console.log(
+            "Home connections response:",
+            data
+        );
+
+
         let people = [];
 
+
+        /*
+         * Supports:
+         *
+         * {users:[...]}
+         * {connections:[...]}
+         * {data:[...]}
+         * [...]
+         */
 
         if(Array.isArray(data)){
 
             people =
                 data;
 
-        }else if(
-            Array.isArray(
-                data.connections
-            )
-        ){
-
-            people =
-                data.connections;
-
-        }else if(
+        }
+        else if(
             Array.isArray(
                 data.users
             )
@@ -1708,7 +1716,18 @@ async function loadConnections(){
             people =
                 data.users;
 
-        }else if(
+        }
+        else if(
+            Array.isArray(
+                data.connections
+            )
+        ){
+
+            people =
+                data.connections;
+
+        }
+        else if(
             Array.isArray(
                 data.data
             )
@@ -1761,11 +1780,6 @@ async function loadConnections(){
             "";
 
 
-        /*
-         * Connected section remains
-         * Follow-free.
-         */
-
         empty.style.display =
             "flex";
 
@@ -1775,7 +1789,7 @@ async function loadConnections(){
 
 
 /* =========================================================
-   CONNECTED CARD
+   CREATE CONNECTED USER CARD
 ========================================================= */
 
 function createConnectedCard(person){
@@ -1794,6 +1808,8 @@ function createConnectedCard(person){
     card.className =
         "user-card";
 
+
+    /* ---------- AVATAR ---------- */
 
     const dp =
         document.createElement(
@@ -1840,6 +1856,7 @@ function createConnectedCard(person){
         img.alt =
             "";
 
+
         img.onerror =
             function(){
 
@@ -1853,6 +1870,7 @@ function createConnectedCard(person){
                     "U";
 
             };
+
 
         dp.appendChild(
             img
@@ -1869,6 +1887,8 @@ function createConnectedCard(person){
 
     }
 
+
+    /* ---------- USER INFO ---------- */
 
     const info =
         document.createElement(
@@ -1912,6 +1932,8 @@ function createConnectedCard(person){
     );
 
 
+    /* ---------- CONNECTED ---------- */
+
     const connected =
         document.createElement(
             "button"
@@ -1934,13 +1956,11 @@ function createConnectedCard(person){
 
 
     /*
-     * IMPORTANT:
+     * NO CLICK
      *
-     * No click event.
-     * No Follow.
-     * No Unfollow.
+     * NO FOLLOW
      *
-     * Connected stays Connected.
+     * NO UNFOLLOW
      */
 
 
@@ -1965,7 +1985,7 @@ function createConnectedCard(person){
 
 
 /* =========================================================
-   SEARCH BOX
+   SEARCH
 ========================================================= */
 
 document
@@ -1984,7 +2004,7 @@ document
 
 
 /* =========================================================
-   HOME
+   HOME NAV
 ========================================================= */
 
 document
@@ -2003,7 +2023,7 @@ document
 
 
 /* =========================================================
-   REEL
+   REEL NAV
 ========================================================= */
 
 document
@@ -2138,7 +2158,8 @@ async function loadNotificationCount(){
         if(!response.ok){
 
             throw new Error(
-                "Notification API error"
+                "Notification API " +
+                response.status
             );
 
         }
@@ -2159,7 +2180,8 @@ async function loadNotificationCount(){
             count =
                 data.unread_count;
 
-        }else if(
+        }
+        else if(
             typeof data.count ===
             "number"
         ){
@@ -2167,7 +2189,8 @@ async function loadNotificationCount(){
             count =
                 data.count;
 
-        }else if(
+        }
+        else if(
             Array.isArray(
                 data.notifications
             )
@@ -2272,7 +2295,9 @@ menuBtn.addEventListener(
 );
 
 
-/* CLOSE MENU */
+/* =========================================================
+   CLOSE MENU
+========================================================= */
 
 menuOverlay.addEventListener(
     "click",
@@ -2371,11 +2396,13 @@ document
 
 
 /* =========================================================
-   AUTO REFRESH NOTIFICATIONS
+   AUTO REFRESH
 ========================================================= */
 
 setInterval(
     function(){
+
+        loadConnections();
 
         loadNotificationCount();
 
@@ -2385,7 +2412,7 @@ setInterval(
 
 
 /* =========================================================
-   PAGE START
+   START
 ========================================================= */
 
 document.addEventListener(
