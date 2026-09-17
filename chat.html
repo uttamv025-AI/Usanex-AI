@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Usanex Chat</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    -webkit-tap-highlight-color:transparent;
+}
+
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:#050b18;
+    color:#fff;
+    height:100vh;
+    overflow:hidden;
+}
+
+/* =========================
+   MAIN
+========================= */
+
+.chat-app{
+    width:100%;
+    max-width:600px;
+    height:100vh;
+    margin:auto;
+    background:
+        radial-gradient(circle at 50% 20%,rgba(0,100,255,.08),transparent 35%),
+        #050b18;
+    display:flex;
+    flex-direction:column;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.chat-header{
+    height:70px;
+    min-height:70px;
+
+    display:flex;
+    align-items:center;
+
+    padding:10px 14px;
+
+    background:rgba(5,11,24,.92);
+    border-bottom:1px solid rgba(255,255,255,.07);
+
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
+}
+
+.back-btn{
+    width:40px;
+    height:40px;
+
+    border:0;
+    background:transparent;
+    color:#fff;
+
+    font-size:27px;
+    cursor:pointer;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.profile{
+    display:flex;
+    align-items:center;
+    gap:11px;
+    flex:1;
+    min-width:0;
+}
+
+.profile-photo{
+    width:43px;
+    height:43px;
+    min-width:43px;
+
+    border-radius:50%;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:linear-gradient(145deg,#2185ff,#0049b5);
+
+    border:2px solid rgba(33,133,255,.7);
+
+    font-size:19px;
+    font-weight:800;
+
+    box-shadow:
+        0 0 0 3px rgba(33,133,255,.08),
+        0 4px 16px rgba(0,100,255,.25);
+}
+
+.profile-info{
+    min-width:0;
+}
+
+.profile-name{
+    font-size:16px;
+    font-weight:700;
+
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.online{
+    margin-top:3px;
+
+    font-size:12px;
+    color:#65a9ff;
+
+    display:flex;
+    align-items:center;
+    gap:5px;
+}
+
+.online-dot{
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:#3d91ff;
+    box-shadow:0 0 8px rgba(61,145,255,.8);
+}
+
+.header-action{
+    width:38px;
+    height:38px;
+
+    border:0;
+    border-radius:12px;
+
+    background:rgba(255,255,255,.05);
+    color:#fff;
+
+    font-size:21px;
+
+    cursor:pointer;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+/* =========================
+   CHAT AREA
+========================= */
+
+.chat-area{
+    flex:1;
+    overflow-y:auto;
+
+    padding:18px 15px 20px;
+
+    scrollbar-width:none;
+}
+
+.chat-area::-webkit-scrollbar{
+    display:none;
+}
+
+/* =========================
+   DATE
+========================= */
+
+.date-divider{
+    text-align:center;
+    margin:8px 0 20px;
+}
+
+.date-divider span{
+    display:inline-block;
+
+    padding:6px 12px;
+
+    border-radius:20px;
+
+    background:rgba(255,255,255,.055);
+    border:1px solid rgba(255,255,255,.06);
+
+    color:#8491a7;
+
+    font-size:11px;
+}
+
+/* =========================
+   MESSAGE
+========================= */
+
+.message-row{
+    display:flex;
+    margin-bottom:13px;
+}
+
+.message-row.received{
+    justify-content:flex-start;
+}
+
+.message-row.sent{
+    justify-content:flex-end;
+}
+
+.message{
+    max-width:76%;
+    padding:11px 13px 8px;
+
+    border-radius:16px;
+
+    position:relative;
+
+    font-size:14px;
+    line-height:1.45;
+}
+
+.received .message{
+    background:#111b2d;
+
+    border:1px solid rgba(255,255,255,.055);
+
+    border-bottom-left-radius:5px;
+
+    box-shadow:
+        0 5px 18px rgba(0,0,0,.15);
+}
+
+.sent .message{
+    background:
+        linear-gradient(
+            135deg,
+            #1677ff,
+            #0755c9
+        );
+
+    border-bottom-right-radius:5px;
+
+    box-shadow:
+        0 5px 20px rgba(0,100,255,.20);
+}
+
+.message-time{
+    display:flex;
+    justify-content:flex-end;
+    align-items:center;
+    gap:4px;
+
+    margin-top:4px;
+
+    font-size:9px;
+
+    color:rgba(255,255,255,.48);
+}
+
+.sent .message-time{
+    color:rgba(255,255,255,.68);
+}
+
+.read{
+    font-size:11px;
+    color:#b9ddff;
+}
+
+/* =========================
+   TYPING
+========================= */
+
+.typing{
+    display:none;
+
+    align-items:center;
+    gap:5px;
+
+    width:max-content;
+
+    padding:10px 13px;
+
+    border-radius:15px;
+    border-bottom-left-radius:5px;
+
+    background:#111b2d;
+    border:1px solid rgba(255,255,255,.05);
+}
+
+.typing span{
+    width:5px;
+    height:5px;
+
+    border-radius:50%;
+
+    background:#71809a;
+
+    animation:typing 1.2s infinite;
+}
+
+.typing span:nth-child(2){
+    animation-delay:.15s;
+}
+
+.typing span:nth-child(3){
+    animation-delay:.3s;
+}
+
+@keyframes typing{
+    0%,60%,100%{
+        transform:translateY(0);
+        opacity:.5;
+    }
+    30%{
+        transform:translateY(-4px);
+        opacity:1;
+    }
+}
+
+/* =========================
+   COMPOSER
+========================= */
+
+.composer-area{
+    padding:10px 12px 14px;
+
+    background:
+        linear-gradient(
+            to top,
+            #050b18 70%,
+            rgba(5,11,24,.85)
+        );
+}
+
+.composer{
+    min-height:52px;
+
+    display:flex;
+    align-items:center;
+    gap:7px;
+
+    padding:6px 7px 6px 9px;
+
+    background:#0d1729;
+
+    border:1px solid rgba(255,255,255,.07);
+
+    border-radius:18px;
+
+    box-shadow:
+        0 8px 25px rgba(0,0,0,.22);
+}
+
+.composer-btn{
+    width:38px;
+    height:38px;
+    min-width:38px;
+
+    border:0;
+    border-radius:12px;
+
+    background:transparent;
+    color:#9eabc0;
+
+    font-size:20px;
+
+    cursor:pointer;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.composer-btn:active{
+    transform:scale(.92);
+}
+
+.message-input{
+    flex:1;
+
+    border:0;
+    outline:0;
+
+    background:transparent;
+
+    color:#fff;
+
+    font-size:14px;
+
+    min-width:0;
+}
+
+.message-input::placeholder{
+    color:#66748b;
+}
+
+.send-btn{
+    width:40px;
+    height:40px;
+    min-width:40px;
+
+    border:0;
+    border-radius:14px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #2185ff,
+            #0052c9
+        );
+
+    color:#fff;
+
+    font-size:19px;
+
+    cursor:pointer;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    box-shadow:
+        0 5px 16px rgba(0,100,255,.28);
+}
+
+.send-btn:active{
+    transform:scale(.92);
+}
+
+/* =========================
+   ATTACHMENT MENU
+========================= */
+
+.attach-menu{
+    display:none;
+
+    position:absolute;
+
+    bottom:78px;
+    left:12px;
+
+    padding:9px;
+
+    border-radius:16px;
+
+    background:#101c30;
+
+    border:1px solid rgba(255,255,255,.08);
+
+    box-shadow:0 12px 35px rgba(0,0,0,.35);
+
+    gap:7px;
+}
+
+.attach-menu.show{
+    display:flex;
+}
+
+.attach-item{
+    width:42px;
+    height:42px;
+
+    border:0;
+    border-radius:12px;
+
+    background:rgba(255,255,255,.06);
+
+    color:#fff;
+
+    font-size:19px;
+
+    cursor:pointer;
+}
+
+/* =========================
+   EMOJI PANEL
+========================= */
+
+.emoji-panel{
+    display:none;
+
+    position:absolute;
+
+    bottom:77px;
+    left:12px;
+    right:12px;
+
+    padding:12px;
+
+    border-radius:17px;
+
+    background:#0f1a2d;
+
+    border:1px solid rgba(255,255,255,.07);
+
+    box-shadow:0 12px 35px rgba(0,0,0,.3);
+
+    grid-template-columns:repeat(8,1fr);
+
+    gap:8px;
+}
+
+.emoji-panel.show{
+    display:grid;
+}
+
+.emoji{
+    border:0;
+    background:transparent;
+
+    font-size:22px;
+
+    cursor:pointer;
+}
+
+/* =========================
+   TOAST
+========================= */
+
+.toast{
+    position:fixed;
+
+    left:50%;
+    bottom:85px;
+
+    transform:translateX(-50%) translateY(15px);
+
+    padding:9px 15px;
+
+    border-radius:12px;
+
+    background:#14233a;
+
+    border:1px solid rgba(255,255,255,.08);
+
+    color:#dbe7f7;
+
+    font-size:12px;
+
+    opacity:0;
+    pointer-events:none;
+
+    transition:.25s;
+
+    z-index:100;
+}
+
+.toast.show{
+    opacity:1;
+    transform:translateX(-50%) translateY(0);
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:500px){
+
+    .chat-header{
+        height:66px;
+        min-height:66px;
+        padding:9px 10px;
+    }
+
+    .back-btn{
+        width:37px;
+        height:37px;
+    }
+
+    .profile-photo{
+        width:41px;
+        height:41px;
+        min-width:41px;
+    }
+
+    .profile-name{
+        font-size:15px;
+    }
+
+    .chat-area{
+        padding-left:12px;
+        padding-right:12px;
+    }
+
+    .message{
+        max-width:82%;
+        font-size:14px;
+    }
+
+    .composer-area{
+        padding:8px 9px 12px;
+    }
+
+    .composer{
+        min-height:51px;
+        border-radius:17px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="chat-app">
+
+    <!-- HEADER -->
+    <header class="chat-header">
+
+        <button class="back-btn" onclick="goBack()">‹</button>
+
+        <div class="profile">
+
+            <div class="profile-photo">
+                U
+            </div>
+
+            <div class="profile-info">
+
+                <div class="profile-name" id="chatName">
+                    Shivannaya
+                </div>
+
+                <div class="online">
+                    <span class="online-dot"></span>
+                    Online
+                </div>
+
+            </div>
+
+        </div>
+
+        <button class="header-action" onclick="showToast('Coming soon')">
+            ⋮
+        </button>
+
+    </header>
+
+
+    <!-- CHAT -->
+    <main class="chat-area" id="chatArea">
+
+        <div class="date-divider">
+            <span>Today</span>
+        </div>
+
+
+        <!-- RECEIVED -->
+        <div class="message-row received">
+
+            <div class="message">
+
+                Hi 👋
+
+                <div class="message-time">
+                    10:32 AM
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- SENT -->
+        <div class="message-row sent">
+
+            <div class="message">
+
+                Hello 😊
+
+                <div class="message-time">
+                    10:33 AM
+                    <span class="read">✓✓</span>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- RECEIVED -->
+        <div class="message-row received">
+
+            <div class="message">
+
+                Kya kar rahe ho?
+
+                <div class="message-time">
+                    10:34 AM
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- SENT -->
+        <div class="message-row sent">
+
+            <div class="message">
+
+                Bas tumse baat kar raha hoon 😄
+
+                <div class="message-time">
+                    10:35 AM
+                    <span class="read">✓✓</span>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- TYPING -->
+        <div class="message-row received" id="typingRow">
+
+            <div class="typing">
+
+                <span></span>
+                <span></span>
+                <span></span>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <!-- COMPOSER -->
+    <div class="composer-area">
+
+        <!-- Attachment -->
+        <div class="attach-menu" id="attachMenu">
+
+            <button class="attach-item"
+                    onclick="showToast('Gallery coming soon')">
+                🖼️
+            </button>
+
+            <button class="attach-item"
+                    onclick="showToast('Camera coming soon')">
+                📷
+            </button>
+
+            <button class="attach-item"
+                    onclick="showToast('File sharing coming soon')">
+                📄
+            </button>
+
+        </div>
+
+
+        <!-- Emoji -->
+        <div class="emoji-panel" id="emojiPanel">
+
+            <button class="emoji" onclick="addEmoji('😀')">😀</button>
+            <button class="emoji" onclick="addEmoji('😂')">😂</button>
+            <button class="emoji" onclick="addEmoji('😊')">😊</button>
+            <button class="emoji" onclick="addEmoji('😍')">😍</button>
+            <button class="emoji" onclick="addEmoji('🥰')">🥰</button>
+            <button class="emoji" onclick="addEmoji('😎')">😎</button>
+            <button class="emoji" onclick="addEmoji('❤️')">❤️</button>
+            <button class="emoji" onclick="addEmoji('🔥')">🔥</button>
+
+            <button class="emoji" onclick="addEmoji('👍')">👍</button>
+            <button class="emoji" onclick="addEmoji('👏')">👏</button>
+            <button class="emoji" onclick="addEmoji('🙌')">🙌</button>
+            <button class="emoji" onclick="addEmoji('🤝')">🤝</button>
+            <button class="emoji" onclick="addEmoji('✨')">✨</button>
+            <button class="emoji" onclick="addEmoji('💙')">💙</button>
+            <button class="emoji" onclick="addEmoji('😁')">😁</button>
+            <button class="emoji" onclick="addEmoji('🤣')">🤣</button>
+
+        </div>
+
+
+        <div class="composer">
+
+            <button
+                class="composer-btn"
+                onclick="toggleEmoji()">
+                ☺
+            </button>
+
+
+            <input
+                id="messageInput"
+                class="message-input"
+                type="text"
+                placeholder="Message..."
+                autocomplete="off"
+                onkeydown="handleKey(event)"
+            >
+
+
+            <button
+                class="composer-btn"
+                onclick="toggleAttach()">
+                ＋
+            </button>
+
+
+            <button
+                class="send-btn"
+                onclick="sendMessage()">
+                ➤
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<div class="toast" id="toast"></div>
+
+
+<script>
+
+/* =========================
+   ELEMENTS
+========================= */
+
+const input = document.getElementById("messageInput");
+const chatArea = document.getElementById("chatArea");
+const emojiPanel = document.getElementById("emojiPanel");
+const attachMenu = document.getElementById("attachMenu");
+
+
+/* =========================
+   BACK
+========================= */
+
+function goBack(){
+
+    if(document.referrer){
+        history.back();
+    }else{
+        window.location.href="/home";
+    }
+
+}
+
+
+/* =========================
+   SEND MESSAGE
+========================= */
+
+function sendMessage(){
+
+    const text = input.value.trim();
+
+    if(!text){
+        return;
+    }
+
+    addMessage(text,"sent");
+
+    input.value="";
+
+    emojiPanel.classList.remove("show");
+    attachMenu.classList.remove("show");
+
+    scrollBottom();
+
+}
+
+
+/* =========================
+   ADD MESSAGE
+========================= */
+
+function addMessage(text,type){
+
+    const row = document.createElement("div");
+
+    row.className =
+        "message-row " + type;
+
+    const message =
+        document.createElement("div");
+
+    message.className="message";
+
+    message.innerHTML =
+        escapeHTML(text) +
+        `
+        <div class="message-time">
+            ${getTime()}
+            ${
+                type==="sent"
+                ? '<span class="read">✓✓</span>'
+                : ''
+            }
+        </div>
+        `;
+
+    message.querySelectorAll("script").forEach(el=>{
+        el.remove();
+    });
+
+    row.appendChild(message);
+
+    chatArea.appendChild(row);
+
+}
+
+
+/* =========================
+   ESCAPE HTML
+========================= */
+
+function escapeHTML(text){
+
+    const div=document.createElement("div");
+
+    div.textContent=text;
+
+    return div.innerHTML;
+
+}
+
+
+/* =========================
+   TIME
+========================= */
+
+function getTime(){
+
+    const now=new Date();
+
+    return now.toLocaleTimeString(
+        [],
+        {
+            hour:"numeric",
+            minute:"2-digit"
+        }
+    );
+
+}
+
+
+/* =========================
+   ENTER
+========================= */
+
+function handleKey(event){
+
+    if(event.key==="Enter"){
+
+        event.preventDefault();
+
+        sendMessage();
+
+    }
+
+}
+
+
+/* =========================
+   EMOJI
+========================= */
+
+function toggleEmoji(){
+
+    emojiPanel.classList.toggle("show");
+
+    attachMenu.classList.remove("show");
+
+}
+
+
+function addEmoji(emoji){
+
+    input.value += emoji;
+
+    input.focus();
+
+}
+
+
+/* =========================
+   ATTACHMENT
+========================= */
+
+function toggleAttach(){
+
+    attachMenu.classList.toggle("show");
+
+    emojiPanel.classList.remove("show");
+
+}
+
+
+/* =========================
+   SCROLL
+========================= */
+
+function scrollBottom(){
+
+    setTimeout(()=>{
+
+        chatArea.scrollTop =
+            chatArea.scrollHeight;
+
+    },50);
+
+}
+
+
+/* =========================
+   TOAST
+========================= */
+
+let toastTimer;
+
+function showToast(text){
+
+    const toast =
+        document.getElementById("toast");
+
+    toast.textContent=text;
+
+    toast.classList.add("show");
+
+    clearTimeout(toastTimer);
+
+    toastTimer=setTimeout(()=>{
+
+        toast.classList.remove("show");
+
+    },1800);
+
+}
+
+
+/* =========================
+   CLOSE MENUS
+========================= */
+
+document.addEventListener("click",function(e){
+
+    if(
+        !e.target.closest(".composer") &&
+        !e.target.closest(".emoji-panel")
+    ){
+        emojiPanel.classList.remove("show");
+    }
+
+    if(
+        !e.target.closest(".composer") &&
+        !e.target.closest(".attach-menu")
+    ){
+        attachMenu.classList.remove("show");
+    }
+
+});
+
+
+/* =========================
+   INITIAL
+========================= */
+
+window.addEventListener("load",()=>{
+
+    scrollBottom();
+
+    input.focus();
+
+});
+
+</script>
+
+</body>
+</html>
