@@ -10,7 +10,10 @@ from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 from argon2 import PasswordHasher
-from argon2.exceptions import VerifyMismatchError, VerificationError
+from argon2.exceptions import (
+    VerifyMismatchError,
+    VerificationError
+)
 
 from datetime import datetime, timedelta
 import secrets
@@ -38,6 +41,15 @@ from database import (
 app = FastAPI(title="Usanex")
 
 password_hasher = PasswordHasher()
+
+
+# ============================================================
+# BASE DIRECTORY
+# ============================================================
+
+BASE_DIR = os.path.dirname(
+    os.path.abspath(__file__)
+)
 
 
 # ============================================================
@@ -102,7 +114,9 @@ class ChatMessageRequest(BaseModel):
 # ============================================================
 
 def generate_otp():
-    return str(secrets.randbelow(900000) + 100000)
+    return str(
+        secrets.randbelow(900000) + 100000
+    )
 
 
 def save_otp(
@@ -128,7 +142,8 @@ def save_otp(
         identifier=identifier,
         otp=otp,
         purpose=purpose,
-        expires_at=datetime.utcnow() + timedelta(minutes=2),
+        expires_at=datetime.utcnow()
+        + timedelta(minutes=2),
         verified=False
     )
 
@@ -139,7 +154,7 @@ def save_otp(
 
 
 # ============================================================
-# LOGIN
+# LOGIN API
 # ============================================================
 
 @app.post("/login")
@@ -154,7 +169,8 @@ async def login(
     if not identifier or not password:
         return {
             "ok": False,
-            "message": "Username/mobile and password are required"
+            "message":
+                "Username/mobile and password are required"
         }
 
     user = (
@@ -170,10 +186,12 @@ async def login(
     if not user:
         return {
             "ok": False,
-            "message": "Invalid username/mobile or password"
+            "message":
+                "Invalid username/mobile or password"
         }
 
     try:
+
         password_hasher.verify(
             user.password_hash,
             password
@@ -183,9 +201,11 @@ async def login(
         VerifyMismatchError,
         VerificationError
     ):
+
         return {
             "ok": False,
-            "message": "Invalid username/mobile or password"
+            "message":
+                "Invalid username/mobile or password"
         }
 
     token = secrets.token_urlsafe(32)
@@ -203,6 +223,64 @@ async def login(
 
 
 # ============================================================
+# LOGIN PAGE
+# ============================================================
+
+@app.get("/")
+async def root_page():
+
+    login_file = os.path.join(
+        BASE_DIR,
+        "login.html"
+    )
+
+    if not os.path.isfile(login_file):
+
+        raise HTTPException(
+            status_code=404,
+            detail="login.html file not found"
+        )
+
+    return FileResponse(login_file)
+
+
+@app.get("/login")
+async def login_page():
+
+    login_file = os.path.join(
+        BASE_DIR,
+        "login.html"
+    )
+
+    if not os.path.isfile(login_file):
+
+        raise HTTPException(
+            status_code=404,
+            detail="login.html file not found"
+        )
+
+    return FileResponse(login_file)
+
+
+@app.get("/login.html")
+async def login_html():
+
+    login_file = os.path.join(
+        BASE_DIR,
+        "login.html"
+    )
+
+    if not os.path.isfile(login_file):
+
+        raise HTTPException(
+            status_code=404,
+            detail="login.html file not found"
+        )
+
+    return FileResponse(login_file)
+
+
+# ============================================================
 # REGISTER - REQUEST OTP
 # ============================================================
 
@@ -217,33 +295,45 @@ async def register_request_otp(
     password = request.password
 
     if not name or not mobile or not password:
+
         return {
             "ok": False,
             "message": "Please fill all fields"
         }
 
-    if not mobile.isdigit() or len(mobile) != 10:
+    if (
+        not mobile.isdigit()
+        or len(mobile) != 10
+    ):
+
         return {
             "ok": False,
-            "message": "Enter a valid 10-digit mobile number"
+            "message":
+                "Enter a valid 10-digit mobile number"
         }
 
     if len(password) < 6:
+
         return {
             "ok": False,
-            "message": "Password must be at least 6 characters"
+            "message":
+                "Password must be at least 6 characters"
         }
 
     existing_user = (
         db.query(User)
-        .filter(User.mobile == mobile)
+        .filter(
+            User.mobile == mobile
+        )
         .first()
     )
 
     if existing_user:
+
         return {
             "ok": False,
-            "message": "Mobile number already registered"
+            "message":
+                "Mobile number already registered"
         }
 
     otp = save_otp(
@@ -288,9 +378,11 @@ async def register_verify_otp(
     )
 
     if not verification:
+
         return {
             "ok": False,
-            "message": "OTP not found. Please request a new OTP"
+            "message":
+                "OTP not found. Please request a new OTP"
         }
 
     if datetime.utcnow() > verification.expires_at:
@@ -300,10 +392,12 @@ async def register_verify_otp(
 
         return {
             "ok": False,
-            "message": "OTP expired. Please request a new OTP"
+            "message":
+                "OTP expired. Please request a new OTP"
         }
 
     if verification.otp != otp:
+
         return {
             "ok": False,
             "message": "Invalid OTP"
@@ -311,14 +405,18 @@ async def register_verify_otp(
 
     existing_user = (
         db.query(User)
-        .filter(User.mobile == mobile)
+        .filter(
+            User.mobile == mobile
+        )
         .first()
     )
 
     if existing_user:
+
         return {
             "ok": False,
-            "message": "Mobile number already registered"
+            "message":
+                "Mobile number already registered"
         }
 
     user_id = (
@@ -327,8 +425,10 @@ async def register_verify_otp(
         uuid.uuid4().hex[:10]
     )
 
-    password_hash = password_hasher.hash(
-        request.password
+    password_hash = (
+        password_hasher.hash(
+            request.password
+        )
     )
 
     new_user = User(
@@ -354,16 +454,58 @@ async def register_verify_otp(
 
         return {
             "ok": False,
-            "message": "Registration failed. Please try again"
+            "message":
+                "Registration failed. Please try again"
         }
 
     return {
         "ok": True,
-        "message": "Registration successful",
+        "message":
+            "Registration successful",
         "user_id": new_user.user_id,
         "name": new_user.name,
         "mobile": new_user.mobile
     }
+
+
+# ============================================================
+# REGISTER PAGE
+# ============================================================
+
+@app.get("/register")
+async def register_page():
+
+    register_file = os.path.join(
+        BASE_DIR,
+        "register.html"
+    )
+
+    if not os.path.isfile(register_file):
+
+        raise HTTPException(
+            status_code=404,
+            detail="register.html file not found"
+        )
+
+    return FileResponse(register_file)
+
+
+@app.get("/register.html")
+async def register_html():
+
+    register_file = os.path.join(
+        BASE_DIR,
+        "register.html"
+    )
+
+    if not os.path.isfile(register_file):
+
+        raise HTTPException(
+            status_code=404,
+            detail="register.html file not found"
+        )
+
+    return FileResponse(register_file)
 
 
 # ============================================================
@@ -389,9 +531,11 @@ async def forgot_password_request_otp(
     )
 
     if not user:
+
         return {
             "ok": False,
-            "message": "User ID or mobile number not found"
+            "message":
+                "User ID or mobile number not found"
         }
 
     otp = save_otp(
@@ -432,6 +576,7 @@ async def forgot_password_verify_otp(
     )
 
     if not user:
+
         return {
             "ok": False,
             "message": "User not found"
@@ -440,9 +585,12 @@ async def forgot_password_verify_otp(
     verification = (
         db.query(OTPVerification)
         .filter(
-            OTPVerification.identifier == user.mobile,
-            OTPVerification.purpose == "forgot_password",
-            OTPVerification.verified == False
+            OTPVerification.identifier
+                == user.mobile,
+            OTPVerification.purpose
+                == "forgot_password",
+            OTPVerification.verified
+                == False
         )
         .order_by(
             OTPVerification.id.desc()
@@ -451,9 +599,11 @@ async def forgot_password_verify_otp(
     )
 
     if not verification:
+
         return {
             "ok": False,
-            "message": "OTP not found. Please request a new OTP"
+            "message":
+                "OTP not found. Please request a new OTP"
         }
 
     if datetime.utcnow() > verification.expires_at:
@@ -463,10 +613,12 @@ async def forgot_password_verify_otp(
 
         return {
             "ok": False,
-            "message": "OTP expired. Please request a new OTP"
+            "message":
+                "OTP expired. Please request a new OTP"
         }
 
     if verification.otp != otp:
+
         return {
             "ok": False,
             "message": "Invalid OTP"
@@ -495,9 +647,11 @@ async def reset_password(
     identifier = request.identifier.strip()
 
     if len(request.new_password) < 6:
+
         return {
             "ok": False,
-            "message": "Password must be at least 6 characters"
+            "message":
+                "Password must be at least 6 characters"
         }
 
     if (
@@ -505,9 +659,11 @@ async def reset_password(
         !=
         request.confirm_password
     ):
+
         return {
             "ok": False,
-            "message": "Passwords do not match"
+            "message":
+                "Passwords do not match"
         }
 
     user = (
@@ -521,6 +677,7 @@ async def reset_password(
     )
 
     if not user:
+
         return {
             "ok": False,
             "message": "User not found"
@@ -529,9 +686,12 @@ async def reset_password(
     verification = (
         db.query(OTPVerification)
         .filter(
-            OTPVerification.identifier == user.mobile,
-            OTPVerification.purpose == "forgot_password",
-            OTPVerification.verified == True
+            OTPVerification.identifier
+                == user.mobile,
+            OTPVerification.purpose
+                == "forgot_password",
+            OTPVerification.verified
+                == True
         )
         .order_by(
             OTPVerification.id.desc()
@@ -540,9 +700,11 @@ async def reset_password(
     )
 
     if not verification:
+
         return {
             "ok": False,
-            "message": "OTP verification required"
+            "message":
+                "OTP verification required"
         }
 
     if datetime.utcnow() > verification.expires_at:
@@ -553,11 +715,14 @@ async def reset_password(
 
         return {
             "ok": False,
-            "message": "OTP verification expired"
+            "message":
+                "OTP verification expired"
         }
 
-    user.password_hash = password_hasher.hash(
-        request.new_password
+    user.password_hash = (
+        password_hasher.hash(
+            request.new_password
+        )
     )
 
     verification.verified = False
@@ -566,7 +731,8 @@ async def reset_password(
 
     return {
         "ok": True,
-        "message": "Password changed successfully"
+        "message":
+            "Password changed successfully"
     }
 
 
@@ -584,9 +750,11 @@ def are_users_connected(
     user_b_id = user_b_id.strip()
 
     if not user_a_id or not user_b_id:
+
         return False
 
     if user_a_id == user_b_id:
+
         return False
 
     connection = (
@@ -623,6 +791,7 @@ async def home_connections(
     user_id = user_id.strip()
 
     if not user_id:
+
         return {
             "ok": True,
             "users": []
@@ -647,8 +816,11 @@ async def home_connections(
     for connection in connections:
 
         if connection.user_a_id == user_id:
+
             other_id = connection.user_b_id
+
         else:
+
             other_id = connection.user_a_id
 
         if other_id in seen:
@@ -658,7 +830,9 @@ async def home_connections(
 
         user = (
             db.query(User)
-            .filter(User.user_id == other_id)
+            .filter(
+                User.user_id == other_id
+            )
             .first()
         )
 
@@ -685,7 +859,7 @@ async def home_connections(
 
 
 # ============================================================
-# COMPATIBILITY CONNECTION ROUTE
+# CONNECTIONS API
 # ============================================================
 
 @app.get("/api/connections")
@@ -697,6 +871,7 @@ async def connections_api(
     user_id = user_id.strip()
 
     if not user_id:
+
         return {
             "ok": True,
             "connections": []
@@ -721,8 +896,11 @@ async def connections_api(
     for connection in connections:
 
         if connection.user_a_id == user_id:
+
             other_id = connection.user_b_id
+
         else:
+
             other_id = connection.user_a_id
 
         if other_id in seen:
@@ -732,7 +910,9 @@ async def connections_api(
 
         user = (
             db.query(User)
-            .filter(User.user_id == other_id)
+            .filter(
+                User.user_id == other_id
+            )
             .first()
         )
 
@@ -781,7 +961,10 @@ class ConnectionManager:
 
         async with self.lock:
 
-            if user_id not in self.active_connections:
+            if (
+                user_id
+                not in self.active_connections
+            ):
 
                 self.active_connections[user_id] = set()
 
@@ -798,7 +981,11 @@ class ConnectionManager:
 
         async with self.lock:
 
-            if user_id not in self.active_connections:
+            if (
+                user_id
+                not in self.active_connections
+            ):
+
                 return
 
             self.active_connections[user_id].discard(
@@ -895,7 +1082,8 @@ async def chat_history(
         return {
             "ok": False,
             "connected": False,
-            "message": "Chat is available only for connected users"
+            "message":
+                "Chat is available only for connected users"
         }
 
     messages = (
@@ -904,13 +1092,22 @@ async def chat_history(
             (
                 (ChatMessage.sender_user_id == user_id)
                 &
-                (ChatMessage.receiver_user_id == other_user_id)
+                (
+                    ChatMessage.receiver_user_id
+                    == other_user_id
+                )
             )
             |
             (
-                (ChatMessage.sender_user_id == other_user_id)
+                (
+                    ChatMessage.sender_user_id
+                    == other_user_id
+                )
                 &
-                (ChatMessage.receiver_user_id == user_id)
+                (
+                    ChatMessage.receiver_user_id
+                    == user_id
+                )
             )
         )
         .order_by(
@@ -926,12 +1123,18 @@ async def chat_history(
         "messages": [
             {
                 "id": message.id,
-                "sender_user_id": message.sender_user_id,
-                "receiver_user_id": message.receiver_user_id,
-                "message": message.message,
-                "message_type": message.message_type,
-                "is_read": message.is_read,
-                "created_at": message.created_at.isoformat()
+                "sender_user_id":
+                    message.sender_user_id,
+                "receiver_user_id":
+                    message.receiver_user_id,
+                "message":
+                    message.message,
+                "message_type":
+                    message.message_type,
+                "is_read":
+                    message.is_read,
+                "created_at":
+                    message.created_at.isoformat()
             }
 
             for message in messages
@@ -949,8 +1152,14 @@ async def send_chat_message(
     db: Session = Depends(get_db)
 ):
 
-    sender_id = request.sender_user_id.strip()
-    receiver_id = request.receiver_user_id.strip()
+    sender_id = (
+        request.sender_user_id.strip()
+    )
+
+    receiver_id = (
+        request.receiver_user_id.strip()
+    )
+
     text = request.message.strip()
 
     if not sender_id or not receiver_id:
@@ -964,21 +1173,24 @@ async def send_chat_message(
 
         return {
             "ok": False,
-            "message": "You cannot chat with yourself"
+            "message":
+                "You cannot chat with yourself"
         }
 
     if not text:
 
         return {
             "ok": False,
-            "message": "Message cannot be empty"
+            "message":
+                "Message cannot be empty"
         }
 
     if len(text) > 5000:
 
         return {
             "ok": False,
-            "message": "Message is too long"
+            "message":
+                "Message is too long"
         }
 
     sender = (
@@ -1001,14 +1213,16 @@ async def send_chat_message(
 
         return {
             "ok": False,
-            "message": "Sender account not found"
+            "message":
+                "Sender account not found"
         }
 
     if not receiver:
 
         return {
             "ok": False,
-            "message": "Receiver account not found"
+            "message":
+                "Receiver account not found"
         }
 
     if not are_users_connected(
@@ -1020,7 +1234,8 @@ async def send_chat_message(
         return {
             "ok": False,
             "connected": False,
-            "message": "You can chat only with connected users"
+            "message":
+                "You can chat only with connected users"
         }
 
     new_message = ChatMessage(
@@ -1044,7 +1259,8 @@ async def send_chat_message(
         "message": new_message.message,
         "message_type": new_message.message_type,
         "is_read": False,
-        "created_at": new_message.created_at.isoformat()
+        "created_at":
+            new_message.created_at.isoformat()
     }
 
     realtime_data = {
@@ -1121,29 +1337,38 @@ async def websocket_endpoint(
     try:
 
         await websocket.send_json({
-            "type": "websocket_connected",
-            "message": "Real-time connection active",
-            "user_id": user_id
+            "type":
+                "websocket_connected",
+            "message":
+                "Real-time connection active",
+            "user_id":
+                user_id
         })
 
         while True:
 
             try:
 
-                raw_data = await websocket.receive_text()
+                raw_data = (
+                    await websocket.receive_text()
+                )
 
                 if raw_data == "ping":
 
                     await websocket.send_json({
                         "type": "pong",
-                        "timestamp": datetime.utcnow().isoformat()
+                        "timestamp":
+                            datetime.utcnow()
+                            .isoformat()
                     })
 
                     continue
 
                 try:
 
-                    data = json.loads(raw_data)
+                    data = json.loads(
+                        raw_data
+                    )
 
                 except json.JSONDecodeError:
 
@@ -1188,8 +1413,10 @@ async def websocket_endpoint(
                     if sender_id != user_id:
 
                         await websocket.send_json({
-                            "type": "chat_error",
-                            "message": "Sender identity mismatch"
+                            "type":
+                                "chat_error",
+                            "message":
+                                "Sender identity mismatch"
                         })
 
                         continue
@@ -1197,8 +1424,10 @@ async def websocket_endpoint(
                     if not receiver_id:
 
                         await websocket.send_json({
-                            "type": "chat_error",
-                            "message": "Receiver user ID is required"
+                            "type":
+                                "chat_error",
+                            "message":
+                                "Receiver user ID is required"
                         })
 
                         continue
@@ -1206,8 +1435,10 @@ async def websocket_endpoint(
                     if sender_id == receiver_id:
 
                         await websocket.send_json({
-                            "type": "chat_error",
-                            "message": "You cannot chat with yourself"
+                            "type":
+                                "chat_error",
+                            "message":
+                                "You cannot chat with yourself"
                         })
 
                         continue
@@ -1215,8 +1446,10 @@ async def websocket_endpoint(
                     if not text:
 
                         await websocket.send_json({
-                            "type": "chat_error",
-                            "message": "Message cannot be empty"
+                            "type":
+                                "chat_error",
+                            "message":
+                                "Message cannot be empty"
                         })
 
                         continue
@@ -1224,8 +1457,10 @@ async def websocket_endpoint(
                     if len(text) > 5000:
 
                         await websocket.send_json({
-                            "type": "chat_error",
-                            "message": "Message is too long"
+                            "type":
+                                "chat_error",
+                            "message":
+                                "Message is too long"
                         })
 
                         continue
@@ -1237,7 +1472,8 @@ async def websocket_endpoint(
                         sender = (
                             chat_db.query(User)
                             .filter(
-                                User.user_id == sender_id
+                                User.user_id
+                                == sender_id
                             )
                             .first()
                         )
@@ -1245,7 +1481,8 @@ async def websocket_endpoint(
                         receiver = (
                             chat_db.query(User)
                             .filter(
-                                User.user_id == receiver_id
+                                User.user_id
+                                == receiver_id
                             )
                             .first()
                         )
@@ -1253,8 +1490,10 @@ async def websocket_endpoint(
                         if not sender:
 
                             await websocket.send_json({
-                                "type": "chat_error",
-                                "message": "Sender account not found"
+                                "type":
+                                    "chat_error",
+                                "message":
+                                    "Sender account not found"
                             })
 
                             continue
@@ -1262,8 +1501,10 @@ async def websocket_endpoint(
                         if not receiver:
 
                             await websocket.send_json({
-                                "type": "chat_error",
-                                "message": "Receiver account not found"
+                                "type":
+                                    "chat_error",
+                                "message":
+                                    "Receiver account not found"
                             })
 
                             continue
@@ -1279,18 +1520,24 @@ async def websocket_endpoint(
                         ):
 
                             await websocket.send_json({
-                                "type": "chat_error",
-                                "connected": False,
-                                "message": "You can chat only with connected users"
+                                "type":
+                                    "chat_error",
+                                "connected":
+                                    False,
+                                "message":
+                                    "You can chat only with connected users"
                             })
 
                             continue
 
                         new_message = ChatMessage(
-                            sender_user_id=sender_id,
-                            receiver_user_id=receiver_id,
+                            sender_user_id=
+                                sender_id,
+                            receiver_user_id=
+                                receiver_id,
                             message=text,
-                            message_type="text",
+                            message_type=
+                                "text",
                             is_read=False
                         )
 
@@ -1305,13 +1552,21 @@ async def websocket_endpoint(
                         )
 
                         message_data = {
-                            "id": new_message.id,
-                            "sender_user_id": sender_id,
-                            "receiver_user_id": receiver_id,
-                            "message": new_message.message,
-                            "message_type": new_message.message_type,
-                            "is_read": False,
-                            "created_at": new_message.created_at.isoformat()
+                            "id":
+                                new_message.id,
+                            "sender_user_id":
+                                sender_id,
+                            "receiver_user_id":
+                                receiver_id,
+                            "message":
+                                new_message.message,
+                            "message_type":
+                                new_message.message_type,
+                            "is_read":
+                                False,
+                            "created_at":
+                                new_message.created_at
+                                .isoformat()
                         }
 
                     except Exception:
@@ -1319,8 +1574,10 @@ async def websocket_endpoint(
                         chat_db.rollback()
 
                         await websocket.send_json({
-                            "type": "chat_error",
-                            "message": "Message could not be saved"
+                            "type":
+                                "chat_error",
+                            "message":
+                                "Message could not be saved"
                         })
 
                         continue
@@ -1330,8 +1587,10 @@ async def websocket_endpoint(
                         chat_db.close()
 
                     realtime_data = {
-                        "type": "chat_message",
-                        "message": message_data
+                        "type":
+                            "chat_message",
+                        "message":
+                            message_data
                     }
 
                     # Send to receiver
@@ -1372,7 +1631,7 @@ async def websocket_endpoint(
 async def chat_page():
 
     chat_file = os.path.join(
-        os.path.dirname(os.path.abspath(__file__)),
+        BASE_DIR,
         "chat.html"
     )
 
@@ -1392,7 +1651,7 @@ async def chat_page():
 async def chat_html():
 
     chat_file = os.path.join(
-        os.path.dirname(os.path.abspath(__file__)),
+        BASE_DIR,
         "chat.html"
     )
 
@@ -1409,26 +1668,140 @@ async def chat_html():
 
 
 # ============================================================
-# HOME
+# HOME PAGE
 # ============================================================
 
-@app.get("/")
-async def home():
+@app.get("/home")
+async def home_page():
 
-    index_file = os.path.join(
-        os.path.dirname(os.path.abspath(__file__)),
-        "index.html"
+    home_file = os.path.join(
+        BASE_DIR,
+        "home.html"
     )
 
-    if not os.path.isfile(index_file):
+    if not os.path.isfile(home_file):
 
         raise HTTPException(
             status_code=404,
-            detail="index.html file not found"
+            detail="home.html file not found"
         )
 
     return FileResponse(
-        index_file
+        home_file
+    )
+
+
+@app.get("/home.html")
+async def home_html():
+
+    home_file = os.path.join(
+        BASE_DIR,
+        "home.html"
+    )
+
+    if not os.path.isfile(home_file):
+
+        raise HTTPException(
+            status_code=404,
+            detail="home.html file not found"
+        )
+
+    return FileResponse(
+        home_file
+    )
+
+
+# ============================================================
+# SEARCH PAGE
+# ============================================================
+
+@app.get("/search")
+async def search_page():
+
+    search_file = os.path.join(
+        BASE_DIR,
+        "search.html"
+    )
+
+    if not os.path.isfile(search_file):
+
+        raise HTTPException(
+            status_code=404,
+            detail="search.html file not found"
+        )
+
+    return FileResponse(
+        search_file
+    )
+
+
+@app.get("/search.html")
+async def search_html():
+
+    search_file = os.path.join(
+        BASE_DIR,
+        "search.html"
+    )
+
+    if not os.path.isfile(search_file):
+
+        raise HTTPException(
+            status_code=404,
+            detail="search.html file not found"
+        )
+
+    return FileResponse(
+        search_file
+    )
+
+
+# ============================================================
+# NOTIFICATIONS PAGE
+# ============================================================
+
+@app.get("/notifications")
+async def notifications_page():
+
+    notifications_file = os.path.join(
+        BASE_DIR,
+        "notifications.html"
+    )
+
+    if not os.path.isfile(
+        notifications_file
+    ):
+
+        raise HTTPException(
+            status_code=404,
+            detail=
+                "notifications.html file not found"
+        )
+
+    return FileResponse(
+        notifications_file
+    )
+
+
+@app.get("/notifications.html")
+async def notifications_html():
+
+    notifications_file = os.path.join(
+        BASE_DIR,
+        "notifications.html"
+    )
+
+    if not os.path.isfile(
+        notifications_file
+    ):
+
+        raise HTTPException(
+            status_code=404,
+            detail=
+                "notifications.html file not found"
+        )
+
+    return FileResponse(
+        notifications_file
     )
 
 
