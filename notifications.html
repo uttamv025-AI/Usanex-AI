@@ -1,1088 +1,421 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
 <meta charset="UTF-8">
-
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0,
-      maximum-scale=1.0, user-scalable=no">
-
-<title>Usanex - Notifications</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notifications - Usanex</title>
 
 <style>
-
 *{
     box-sizing:border-box;
     margin:0;
     padding:0;
 }
 
-html,
 body{
-    width:100%;
-    min-height:100%;
-
-    background:#090b10;
-    color:#fff;
-
-    font-family:
-        Inter,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        sans-serif;
-}
-
-body{
-    overflow-x:hidden;
-}
-
-
-/* =========================================================
-   APP
-========================================================= */
-
-.app{
-    width:100%;
-    max-width:600px;
+    font-family:Arial,Helvetica,sans-serif;
+    background:#f5f8ff;
+    color:#172033;
     min-height:100vh;
-
-    margin:auto;
-
-    background:#090b10;
-
-    position:relative;
-
-    padding-bottom:90px;
 }
 
-
-/* =========================================================
-   HEADER
-========================================================= */
-
-.header{
-
-    width:100%;
-    height:72px;
-
+.topbar{
+    height:64px;
+    background:white;
     display:flex;
     align-items:center;
-
     padding:0 16px;
-
-    background:
-        rgba(9,11,16,.96);
-
-    border-bottom:
-        1px solid
-        rgba(255,255,255,.07);
-
-    backdrop-filter:blur(18px);
-
+    border-bottom:1px solid #e5e9f2;
     position:sticky;
     top:0;
-
-    z-index:100;
+    z-index:10;
 }
 
-
-/* BACK BUTTON */
-
-.back-btn{
-
+.back{
     width:40px;
     height:40px;
-
-    border:none;
-    outline:none;
-
+    border:0;
+    background:#f0f4ff;
     border-radius:50%;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    background:#151820;
-
-    color:#fff;
-
-    font-size:28px;
-
+    font-size:22px;
     cursor:pointer;
-
-    margin-right:12px;
-
-    flex-shrink:0;
 }
 
-.back-btn:active{
-    transform:scale(.93);
-}
-
-
-/* HEADER INFO */
-
-.header-info{
-    flex:1;
-    min-width:0;
-}
-
-.header-title{
-
+.title{
+    margin-left:12px;
     font-size:20px;
-
-    font-weight:800;
-
-    letter-spacing:-.4px;
+    font-weight:700;
 }
 
-.header-subtitle{
-
-    margin-top:3px;
-
-    font-size:11px;
-
-    color:#7f8899;
+.container{
+    max-width:650px;
+    margin:0 auto;
+    padding:15px;
 }
 
-
-/* =========================================================
-   CONTENT
-========================================================= */
-
-.content{
-
-    width:100%;
-
-    padding:
-        16px
-        14px
-        20px;
-}
-
-
-/* =========================================================
-   EMPTY
-========================================================= */
-
-.empty{
-
-    min-height:55vh;
-
-    display:flex;
-
-    flex-direction:column;
-
-    align-items:center;
-    justify-content:center;
-
-    text-align:center;
-
-    color:#727b8c;
-}
-
-.empty-icon{
-
-    width:72px;
-    height:72px;
-
-    border-radius:24px;
-
-    background:#151820;
-
-    display:flex;
-
-    align-items:center;
-    justify-content:center;
-
-    font-size:32px;
-
-    margin-bottom:15px;
-
-    border:
-        1px solid
-        rgba(255,255,255,.05);
-}
-
-.empty-title{
-
-    color:#fff;
-
-    font-size:17px;
-
-    font-weight:750;
-
-    margin-bottom:7px;
-}
-
-.empty-text{
-
-    font-size:13px;
-
-    color:#727b8c;
-
-    max-width:260px;
-
-    line-height:1.5;
-}
-
-
-/* =========================================================
-   NOTIFICATION CARD
-========================================================= */
-
-.notification-card{
-
-    width:100%;
-
-    background:
-        linear-gradient(
-            145deg,
-            #141820,
-            #101319
-        );
-
-    border:
-        1px solid
-        rgba(255,255,255,.065);
-
-    border-radius:18px;
-
+.notification{
+    background:white;
+    border-radius:16px;
     padding:14px;
-
-    margin-bottom:11px;
-
-    box-shadow:
-        0 8px 25px
-        rgba(0,0,0,.16);
-
-    position:relative;
-
-    transition:.2s ease;
-}
-
-
-/* UNREAD */
-
-.notification-card.unread{
-
-    border-color:
-        rgba(58,145,255,.20);
-
-    background:
-        linear-gradient(
-            145deg,
-            #151b25,
-            #11151c
-        );
-}
-
-.notification-card:active{
-
-    transform:scale(.985);
-}
-
-
-/* UNREAD DOT */
-
-.unread-dot{
-
-    position:absolute;
-
-    top:14px;
-    right:14px;
-
-    width:7px;
-    height:7px;
-
-    border-radius:50%;
-
-    background:#328cff;
-
-    box-shadow:
-        0 0 10px
-        rgba(50,140,255,.65);
-}
-
-
-/* =========================================================
-   MAIN ROW
-========================================================= */
-
-.notification-main{
-
+    margin-bottom:12px;
     display:flex;
-
-    align-items:flex-start;
-
     gap:12px;
+    box-shadow:0 3px 12px rgba(30,60,120,.06);
+    border:1px solid #edf0f7;
 }
 
-
-/* =========================================================
-   AVATAR
-========================================================= */
+.notification.unread{
+    border-left:4px solid #2563eb;
+}
 
 .avatar{
-
     width:48px;
     height:48px;
-
-    flex-shrink:0;
-
+    min-width:48px;
     border-radius:50%;
-
-    overflow:hidden;
-
-    background:
-        linear-gradient(
-            145deg,
-            #237cf1,
-            #084db5
-        );
-
+    background:linear-gradient(135deg,#2563eb,#60a5fa);
+    color:white;
     display:flex;
-
     align-items:center;
     justify-content:center;
-
-    color:#fff;
-
-    font-size:18px;
-
-    font-weight:800;
-
-    border:
-        1px solid
-        rgba(255,255,255,.08);
+    font-size:19px;
+    font-weight:700;
 }
 
-.avatar img{
-
-    width:100%;
-    height:100%;
-
-    object-fit:cover;
-
-    display:block;
-}
-
-
-/* =========================================================
-   BODY
-========================================================= */
-
-.notification-body{
-
+.content{
     flex:1;
-
-    min-width:0;
 }
 
-.notification-title{
-
-    font-size:14px;
-
-    font-weight:750;
-
-    line-height:1.35;
-
-    color:#fff;
-
-    padding-right:10px;
+.message{
+    font-size:15px;
+    line-height:1.45;
 }
 
-.notification-message{
-
+.time{
+    color:#8a94a8;
+    font-size:12px;
     margin-top:5px;
-
-    color:#8c95a5;
-
-    font-size:12px;
-
-    line-height:1.5;
-
-    word-break:break-word;
 }
 
-.notification-time{
-
-    margin-top:8px;
-
-    color:#596273;
-
-    font-size:10px;
-}
-
-
-/* =========================================================
-   FOLLOW ACTIONS
-========================================================= */
-
-.action-row{
-
+.actions{
     display:flex;
-
     gap:8px;
-
-    margin-top:13px;
+    margin-top:10px;
 }
 
-.action-btn{
-
-    flex:1;
-
-    height:38px;
-
-    border-radius:11px;
-
-    border:
-        1px solid
-        rgba(255,255,255,.08);
-
-    font-size:12px;
-
-    font-weight:750;
-
+.btn{
+    border:0;
+    padding:8px 13px;
+    border-radius:9px;
     cursor:pointer;
-
-    transition:.2s ease;
+    font-weight:600;
 }
 
-.accept-btn{
-
-    background:#247df1;
-
-    color:#fff;
+.accept{
+    background:#2563eb;
+    color:white;
 }
 
-.reject-btn{
-
-    background:#191d25;
-
-    color:#c3cad6;
+.reject{
+    background:#edf1f7;
+    color:#344054;
 }
-
-.action-btn:active{
-
-    transform:scale(.97);
-}
-
-.action-btn:disabled{
-
-    opacity:.5;
-}
-
-
-/* =========================================================
-   VERIFICATION CODE
-========================================================= */
 
 .code-box{
-
-    margin-top:13px;
-
-    padding:12px;
-
-    border-radius:14px;
-
-    background:#0c1017;
-
-    border:
-        1px solid
-        rgba(65,143,255,.16);
-}
-
-.code-label{
-
-    font-size:10px;
-
-    color:#687487;
-
-    text-transform:uppercase;
-
-    letter-spacing:.7px;
-
-    margin-bottom:7px;
-}
-
-.code-row{
-
-    display:flex;
-
-    align-items:center;
-
-    gap:9px;
-}
-
-.code-value{
-
-    flex:1;
-
-    min-width:0;
-
-    height:40px;
-
+    margin-top:10px;
+    padding:10px;
+    background:#f1f5ff;
     border-radius:10px;
-
-    background:#151a23;
-
-    display:flex;
-
-    align-items:center;
-
-    padding:0 12px;
-
-    font-size:18px;
-
-    font-weight:850;
-
-    letter-spacing:3px;
-
-    color:#fff;
-
-    overflow:hidden;
+    font-weight:700;
+    color:#1d4ed8;
+    word-break:break-all;
 }
 
 .copy-btn{
-
-    height:40px;
-
-    padding:0 14px;
-
-    border:none;
-
-    border-radius:10px;
-
-    background:#247df1;
-
-    color:#fff;
-
-    font-size:11px;
-
-    font-weight:800;
-
-    cursor:pointer;
+    margin-top:8px;
+    background:#2563eb;
+    color:white;
 }
 
-.copy-btn:active{
-
-    transform:scale(.95);
+.empty{
+    text-align:center;
+    padding:70px 20px;
+    color:#8b95a7;
 }
 
-
-/* =========================================================
-   BOTTOM NAV
-========================================================= */
-
-.bottom-nav{
-
-    position:fixed;
-
-    left:50%;
-
-    transform:translateX(-50%);
-
-    bottom:0;
-
-    width:100%;
-
-    max-width:600px;
-
-    height:72px;
-
-    background:
-        rgba(13,16,22,.96);
-
-    backdrop-filter:blur(20px);
-
-    border-top:
-        1px solid
-        rgba(255,255,255,.07);
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:space-around;
-
-    z-index:200;
+.empty-icon{
+    font-size:48px;
+    margin-bottom:12px;
 }
 
-.nav-item{
-
-    flex:1;
-
-    height:100%;
-
-    display:flex;
-
-    flex-direction:column;
-
-    align-items:center;
-
-    justify-content:center;
-
-    gap:5px;
-
-    color:#697283;
-
-    font-size:10px;
-
-    font-weight:650;
-
-    cursor:pointer;
+.loading{
+    text-align:center;
+    padding:50px;
+    color:#7b8495;
 }
-
-.nav-icon{
-
-    font-size:21px;
-
-    line-height:1;
-}
-
-.create-btn{
-
-    width:44px;
-    height:44px;
-
-    border-radius:15px;
-
-    display:flex;
-
-    align-items:center;
-    justify-content:center;
-
-    background:
-        linear-gradient(
-            145deg,
-            #328eff,
-            #0758ca
-        );
-
-    color:#fff;
-
-    font-size:27px;
-
-    box-shadow:
-        0 7px 22px
-        rgba(30,120,255,.30);
-
-    margin-top:-17px;
-}
-
-
-/* =========================================================
-   TOAST
-========================================================= */
 
 .toast{
-
     position:fixed;
-
     left:50%;
-
-    bottom:88px;
-
-    transform:
-        translateX(-50%)
-        translateY(20px);
-
-    background:#191e27;
-
-    color:#fff;
-
-    padding:11px 16px;
-
-    border-radius:12px;
-
-    font-size:12px;
-
-    border:
-        1px solid
-        rgba(255,255,255,.08);
-
-    box-shadow:
-        0 10px 30px
-        rgba(0,0,0,.3);
-
-    opacity:0;
-
-    pointer-events:none;
-
-    transition:.25s ease;
-
-    z-index:500;
-
-    max-width:
-        calc(100% - 30px);
-
-    text-align:center;
+    bottom:25px;
+    transform:translateX(-50%);
+    background:#172033;
+    color:white;
+    padding:11px 18px;
+    border-radius:10px;
+    display:none;
+    z-index:100;
+    font-size:14px;
 }
-
-.toast.show{
-
-    opacity:1;
-
-    transform:
-        translateX(-50%)
-        translateY(0);
-}
-
-
-/* =========================================================
-   MOBILE
-========================================================= */
-
-@media(max-width:390px){
-
-    .header{
-
-        padding:0 10px;
-    }
-
-    .back-btn{
-
-        width:37px;
-        height:37px;
-
-        font-size:24px;
-
-        margin-right:9px;
-    }
-
-    .header-title{
-
-        font-size:18px;
-    }
-
-    .header-subtitle{
-
-        font-size:10px;
-    }
-
-    .content{
-
-        padding:
-            13px
-            10px
-            18px;
-    }
-
-    .notification-card{
-
-        border-radius:16px;
-
-        padding:12px;
-    }
-
-    .avatar{
-
-        width:44px;
-        height:44px;
-    }
-
-    .notification-title{
-
-        font-size:13px;
-    }
-
-    .notification-message{
-
-        font-size:11px;
-    }
-}
-
 </style>
-
 </head>
-
 
 <body>
 
-
-<div class="app">
-
-
-    <!-- =====================================================
-         HEADER
-    ====================================================== -->
-
-    <header class="header">
-
-        <button
-            class="back-btn"
-            onclick="goHome()">
-
-            ‹
-
-        </button>
-
-
-        <div class="header-info">
-
-            <div class="header-title">
-                Notifications
-            </div>
-
-            <div
-                class="header-subtitle"
-                id="notificationSubtitle">
-
-                Stay updated
-
-            </div>
-
-        </div>
-
-    </header>
-
-
-    <!-- =====================================================
-         CONTENT
-    ====================================================== -->
-
-    <main class="content">
-
-        <div id="notificationList"></div>
-
-    </main>
-
+<div class="topbar">
+    <button class="back" onclick="goBack()">‹</button>
+    <div class="title">Notifications</div>
 </div>
 
-
-
-<!-- =========================================================
-     BOTTOM NAV
-========================================================= -->
-
-<nav class="bottom-nav">
-
-
-    <div
-        class="nav-item"
-        onclick="goHome()">
-
-        <div class="nav-icon">
-            ⌂
-        </div>
-
-        <div>
-            Home
-        </div>
-
+<div class="container">
+    <div id="notificationList">
+        <div class="loading">Loading notifications...</div>
     </div>
-
-
-
-    <div
-        class="nav-item"
-        onclick="showToast('Reels coming soon')">
-
-        <div class="nav-icon">
-            ▶
-        </div>
-
-        <div>
-            Reels
-        </div>
-
-    </div>
-
-
-
-    <div
-        class="nav-item"
-        onclick="openCreate()">
-
-        <div class="create-btn">
-            +
-        </div>
-
-    </div>
-
-
-
-    <div
-        class="nav-item"
-        onclick="showToast('Coll coming soon')">
-
-        <div class="nav-icon">
-            ◎
-        </div>
-
-        <div>
-            Coll
-        </div>
-
-    </div>
-
-
-
-    <div
-        class="nav-item"
-        onclick="showToast('Profile coming soon')">
-
-        <div class="nav-icon">
-            ◯
-        </div>
-
-        <div>
-            Profile
-        </div>
-
-    </div>
-
-
-</nav>
-
-
-
-<!-- =========================================================
-     TOAST
-========================================================= -->
-
-<div
-    id="toast"
-    class="toast">
 </div>
 
-
+<div id="toast" class="toast"></div>
 
 <script>
-
-/* =========================================================
-   GLOBAL
-========================================================= */
-
 let currentUser = null;
-
 let notificationList = [];
+let socket = null;
 
-let notificationSocket = null;
-
-let toastTimer = null;
-
-
-/* =========================================================
-   GET CURRENT USER
-========================================================= */
+/* =========================
+   USER
+========================= */
 
 function getCurrentUser(){
-
     try{
+        const raw = localStorage.getItem("user");
+        if(!raw) return null;
 
-        const raw =
-            localStorage.getItem("user");
+        const user = JSON.parse(raw);
 
-        if(!raw){
-
+        if(!user || !user.user_id){
             return null;
         }
 
-        return JSON.parse(raw);
-
+        return user;
     }catch(error){
-
-        console.error(
-            "User parse error:",
-            error
-        );
-
+        console.error("User parse error:",error);
         return null;
     }
 }
 
+currentUser = getCurrentUser();
 
-/* =========================================================
+/* =========================
    REQUIRE USER
-========================================================= */
+========================= */
 
 function requireUser(){
-
-    currentUser =
-        getCurrentUser();
-
-    if(
-        !currentUser ||
-        !currentUser.user_id
-    ){
-
-        window.location.href = "/";
-
+    if(!currentUser){
+        window.location.href="/login";
         return false;
     }
 
     return true;
 }
 
+/* =========================
+   TOAST
+========================= */
 
-/* =========================================================
+function showToast(message){
+    const toast = document.getElementById("toast");
+
+    toast.textContent = message;
+    toast.style.display = "block";
+
+    clearTimeout(window.toastTimer);
+
+    window.toastTimer = setTimeout(()=>{
+        toast.style.display = "none";
+    },2200);
+}
+
+/* =========================
+   BACK
+========================= */
+
+function goBack(){
+    window.location.href="/home";
+}
+
+/* =========================
+   MARK ONE NOTIFICATION READ
+========================= */
+
+async function markNotificationReadOnServer(notificationId){
+
+    if(!currentUser || !currentUser.user_id || !notificationId){
+        return false;
+    }
+
+    try{
+
+        const response = await fetch("/api/notifications/read",{
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json"
+            },
+            body:JSON.stringify({
+                notification_id:Number(notificationId),
+                user_id:currentUser.user_id
+            })
+        });
+
+        if(!response.ok){
+            console.error(
+                "Read notification failed:",
+                response.status
+            );
+
+            return false;
+        }
+
+        return true;
+
+    }catch(error){
+
+        console.error(
+            "Mark notification read error:",
+            error
+        );
+
+        return false;
+    }
+}
+
+/* =========================
+   MARK ALL CURRENT UNREAD
+========================= */
+
+async function markUnreadNotificationsOnServer(){
+
+    if(!currentUser || !currentUser.user_id){
+        return;
+    }
+
+    const unread = notificationList.filter(
+        notification =>
+            notification &&
+            notification.is_read === false
+    );
+
+    if(unread.length === 0){
+        return;
+    }
+
+    const successfulIds = new Set();
+
+    await Promise.all(
+        unread.map(async notification => {
+
+            const ok =
+                await markNotificationReadOnServer(
+                    notification.id
+                );
+
+            if(ok){
+                successfulIds.add(
+                    Number(notification.id)
+                );
+            }
+        })
+    );
+
+    if(successfulIds.size > 0){
+
+        notificationList =
+            notificationList.map(notification => {
+
+                if(
+                    successfulIds.has(
+                        Number(notification.id)
+                    )
+                ){
+                    return {
+                        ...notification,
+                        is_read:true
+                    };
+                }
+
+                return notification;
+            });
+
+        renderNotifications();
+    }
+}
+
+/* =========================
    LOAD NOTIFICATIONS
-========================================================= */
+========================= */
 
 async function loadNotifications(){
 
     if(!requireUser()){
-
         return;
     }
 
+    const list =
+        document.getElementById(
+            "notificationList"
+        );
+
+    list.innerHTML =
+        '<div class="loading">Loading notifications...</div>';
 
     try{
 
-        const response =
-            await fetch(
-                "/api/notifications?user_id=" +
-                encodeURIComponent(
-                    currentUser.user_id
-                ) +
-                "&_=" +
-                Date.now(),
-                {
-                    cache:"no-store"
-                }
-            );
-
+        const response = await fetch(
+            "/api/notifications?user_id=" +
+            encodeURIComponent(
+                currentUser.user_id
+            ) +
+            "&_=" +
+            Date.now()
+        );
 
         if(!response.ok){
-
             throw new Error(
-                "Notification request failed"
+                "HTTP " + response.status
             );
         }
 
+        const data = await response.json();
 
-        const data =
-            await response.json();
-
+        if(!data.ok){
+            throw new Error(
+                data.message ||
+                "Unable to load notifications"
+            );
+        }
 
         notificationList =
-            Array.isArray(data)
-            ? data
-            : (
-                Array.isArray(
-                    data.notifications
-                )
+            Array.isArray(data.notifications)
                 ? data.notifications
-                : []
-            );
-
+                : [];
 
         renderNotifications();
 
-
         /*
-         * IMPORTANT
-         *
-         * Page open hote hi database me
-         * saare notifications READ kar do.
-         */
-
-        await markAllReadOnServer();
-
+          IMPORTANT:
+          Notifications page open होते ही
+          सभी current unread notifications
+          database में READ होंगी.
+        */
+        await markUnreadNotificationsOnServer();
 
     }catch(error){
 
@@ -1091,877 +424,439 @@ async function loadNotifications(){
             error
         );
 
-        renderError();
+        list.innerHTML = `
+            <div class="empty">
+                <div class="empty-icon">⚠️</div>
+                <div>Unable to load notifications</div>
+            </div>
+        `;
     }
 }
 
-
-/* =========================================================
-   RENDER NOTIFICATIONS
-========================================================= */
+/* =========================
+   RENDER
+========================= */
 
 function renderNotifications(){
 
-    const container =
+    const list =
         document.getElementById(
             "notificationList"
         );
 
+    if(!notificationList.length){
 
-    if(!container){
-
-        return;
-    }
-
-
-    if(
-        !Array.isArray(notificationList) ||
-        notificationList.length === 0
-    ){
-
-        container.innerHTML = `
-
+        list.innerHTML = `
             <div class="empty">
-
-                <div class="empty-icon">
-                    ♡
-                </div>
-
-                <div class="empty-title">
-                    No notifications
-                </div>
-
-                <div class="empty-text">
-                    New follow requests,
-                    connection codes and updates
-                    will appear here.
-                </div>
-
+                <div class="empty-icon">🔔</div>
+                <div>No notifications yet</div>
             </div>
-
         `;
 
-
-        updateSubtitle(0);
-
         return;
     }
 
-
-    const unreadCount =
-        notificationList.filter(
-            item =>
-                item &&
-                item.is_read === false
-        ).length;
-
-
-    updateSubtitle(
-        unreadCount
-    );
-
-
-    container.innerHTML =
-        notificationList
-        .map(
+    list.innerHTML =
+        notificationList.map(
             notification =>
-                createNotificationCard(
+                createNotificationHTML(
                     notification
                 )
-        )
-        .join("");
+        ).join("");
 }
 
+/* =========================
+   NOTIFICATION HTML
+========================= */
 
-/* =========================================================
-   UPDATE SUBTITLE
-========================================================= */
-
-function updateSubtitle(
-    unreadCount
-){
-
-    const subtitle =
-        document.getElementById(
-            "notificationSubtitle"
-        );
-
-
-    if(!subtitle){
-
-        return;
-    }
-
-
-    if(unreadCount > 0){
-
-        subtitle.textContent =
-            unreadCount +
-            (
-                unreadCount === 1
-                ? " unread notification"
-                : " unread notifications"
-            );
-
-    }else{
-
-        subtitle.textContent =
-            "All caught up";
-    }
-}
-
-
-/* =========================================================
-   CREATE NOTIFICATION CARD
-========================================================= */
-
-function createNotificationCard(
-    notification
-){
-
-    if(!notification){
-
-        return "";
-    }
-
-
-    const type =
-        notification.type ||
-        notification.notification_type ||
-        "";
-
-
-    /*
-     * Backend:
-     *
-     * sender:{
-     *   user_id,
-     *   name,
-     *   profile_photo
-     * }
-     */
+function createNotificationHTML(notification){
 
     const sender =
         notification.sender || {};
 
-
     const senderName =
         sender.name ||
+        sender.username ||
         notification.sender_name ||
-        notification.name ||
-        sender.user_id ||
-        notification.sender_user_id ||
-        "Someone";
-
+        "User";
 
     const senderUserId =
         sender.user_id ||
         notification.sender_user_id ||
-        null;
+        "";
 
-
-    const senderPhoto =
-        sender.profile_photo ||
-        notification.sender_profile_photo ||
-        notification.profile_photo ||
-        null;
-
-
-    const title =
-        notification.title ||
-        getDefaultTitle(
-            type
-        );
-
+    const firstLetter =
+        senderName
+            .charAt(0)
+            .toUpperCase();
 
     const message =
         notification.message ||
-        "";
-
+        notification.type ||
+        "You have a new notification.";
 
     const time =
-        formatTime(
-            notification.created_at
-        );
+        notification.created_at ||
+        notification.time ||
+        "";
 
+    const unreadClass =
+        notification.is_read === false
+            ? "unread"
+            : "";
 
-    const isUnread =
-        notification.is_read === false;
+    let actions = "";
 
-
-    const avatar =
-        createAvatar(
-            senderName,
-            senderPhoto
-        );
-
-
-    let extraHTML = "";
-
-
-    /* =====================================================
-       FOLLOW REQUEST
-    ====================================================== */
+    /* FOLLOW REQUEST */
 
     if(
-        type === "follow_request"
+        notification.type === "follow_request"
     ){
 
-        extraHTML = `
-
-            <div class="action-row">
+        actions = `
+            <div class="actions">
 
                 <button
-                    class="action-btn accept-btn"
+                    class="btn accept"
                     onclick="acceptFollow(
-                        ${Number(
-                            notification.id
-                        )}
-                    )">
-
+                        ${Number(notification.id)}
+                    )"
+                >
                     Accept
-
                 </button>
 
-
                 <button
-                    class="action-btn reject-btn"
+                    class="btn reject"
                     onclick="rejectFollow(
-                        ${Number(
-                            notification.id
-                        )}
-                    )">
-
+                        ${Number(notification.id)}
+                    )"
+                >
                     Reject
-
                 </button>
 
             </div>
-
         `;
     }
 
-
-    /* =====================================================
-       CONNECTION CODE
-    ====================================================== */
+    /* CONNECTION CODE */
 
     if(
-        type === "connection_code"
+        notification.type === "connection_code" ||
+        notification.type === "connection_verified"
     ){
 
         const code =
-            notification.verification_code ||
-            extractCodeFromMessage(
-                message
-            );
-
+            notification.code ||
+            notification.connection_code ||
+            "";
 
         if(code){
 
-            extraHTML = `
-
+            actions += `
                 <div class="code-box">
+                    Connection Code:
+                    <br>
+                    ${escapeHTML(code)}
 
-                    <div class="code-label">
-                        Verification code
-                    </div>
+                    <br>
 
-                    <div class="code-row">
-
-                        <div class="code-value">
-                            ${escapeHTML(code)}
-                        </div>
-
-                        <button
-                            class="copy-btn"
-                            onclick="copyVerificationCode(
-                                '${escapeJS(code)}',
-                                '${escapeJS(
-                                    senderUserId || ""
-                                )}'
-                            )">
-
-                            Copy
-
-                        </button>
-
-                    </div>
-
+                    <button
+                        class="btn copy-btn"
+                        onclick="copyCode(
+                            '${escapeJS(code)}'
+                        )"
+                    >
+                        Copy Code
+                    </button>
                 </div>
-
             `;
         }
     }
 
+    /* USER ID CLICK */
 
-    /* =====================================================
-       CARD
-    ====================================================== */
+    if(senderUserId){
 
-    return `
+        actions += `
+            <div class="actions">
 
-        <article
-            class="notification-card
-            ${isUnread ? "unread" : ""}"
-            data-notification-id="${Number(
-                notification.id
-            )}">
-
-            ${
-                isUnread
-                ? `<div class="unread-dot"></div>`
-                : ""
-            }
-
-
-            <div class="notification-main">
-
-                ${avatar}
-
-
-                <div class="notification-body">
-
-                    <div class="notification-title">
-
-                        ${escapeHTML(
-                            title
-                        )}
-
-                    </div>
-
-
-                    <div class="notification-message">
-
-                        ${escapeHTML(
-                            message
-                        )}
-
-                    </div>
-
-
-                    <div class="notification-time">
-
-                        ${escapeHTML(
-                            time
-                        )}
-
-                    </div>
-
-
-                    ${extraHTML}
-
-                </div>
-
-            </div>
-
-        </article>
-
-    `;
-}
-
-
-/* =========================================================
-   DEFAULT TITLE
-========================================================= */
-
-function getDefaultTitle(
-    type
-){
-
-    switch(type){
-
-        case "follow_request":
-
-            return "New follow request";
-
-
-        case "connection_code":
-
-            return "Connection accepted";
-
-
-        case "follow_rejected":
-
-            return "Follow request rejected";
-
-
-        case "connection_verified":
-
-            return "Connection verified";
-
-
-        default:
-
-            return "New notification";
-    }
-}
-
-
-/* =========================================================
-   CREATE AVATAR
-========================================================= */
-
-function createAvatar(
-    name,
-    photo
-){
-
-    if(photo){
-
-        return `
-
-            <div class="avatar">
-
-                <img
-                    src="${escapeAttr(
-                        photo
-                    )}"
-                    alt=""
-                    onerror="
-                        this.style.display='none';
-                        this.parentElement.textContent='${escapeJS(
-                            getInitial(name)
-                        )}';
-                    "
+                <button
+                    class="btn reject"
+                    onclick="openUserProfile(
+                        '${escapeJS(senderUserId)}'
+                    )"
                 >
+                    View Profile
+                </button>
 
             </div>
-
         `;
     }
 
-
     return `
+        <div
+            class="notification ${unreadClass}"
+            data-id="${Number(notification.id)}"
+        >
 
-        <div class="avatar">
+            <div class="avatar">
+                ${escapeHTML(firstLetter)}
+            </div>
 
-            ${escapeHTML(
-                getInitial(name)
-            )}
+            <div class="content">
+
+                <div class="message">
+                    <strong>
+                        ${escapeHTML(senderName)}
+                    </strong>
+                    ${escapeHTML(message)}
+                </div>
+
+                ${
+                    time
+                    ? `
+                        <div class="time">
+                            ${escapeHTML(String(time))}
+                        </div>
+                      `
+                    : ""
+                }
+
+                ${actions}
+
+            </div>
 
         </div>
-
     `;
 }
 
-
-/* =========================================================
-   INITIAL
-========================================================= */
-
-function getInitial(
-    name
-){
-
-    if(
-        !name ||
-        typeof name !== "string"
-    ){
-
-        return "U";
-    }
-
-
-    return name
-        .trim()
-        .charAt(0)
-        .toUpperCase() || "U";
-}
-
-
-/* =========================================================
+/* =========================
    ACCEPT FOLLOW
-========================================================= */
+========================= */
 
-async function acceptFollow(
-    notificationId
-){
+async function acceptFollow(notificationId){
 
     if(!requireUser()){
-
         return;
     }
 
-
     try{
 
-        const response =
-            await fetch(
-                "/api/follow/accept",
-                {
-                    method:"POST",
+        const response = await fetch(
+            "/api/follow/accept",
+            {
+                method:"POST",
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body:JSON.stringify({
+                    notification_id:
+                        Number(notificationId),
 
-                    headers:{
-                        "Content-Type":
-                            "application/json"
-                    },
-
-                    body:JSON.stringify({
-
-                        notification_id:
-                            Number(
-                                notificationId
-                            ),
-
-                        user_id:
-                            currentUser.user_id
-                    })
-                }
-            );
-
-
-        const data =
-            await response.json();
-
-
-        if(!response.ok){
-
-            throw new Error(
-                data.message ||
-                "Accept failed"
-            );
-        }
-
-
-        showToast(
-            data.message ||
-            "Request accepted"
-        );
-
-
-        await loadNotifications();
-
-
-    }catch(error){
-
-        console.error(
-            "Accept error:",
-            error
-        );
-
-        showToast(
-            error.message ||
-            "Unable to accept request"
-        );
-    }
-}
-
-
-/* =========================================================
-   REJECT FOLLOW
-========================================================= */
-
-async function rejectFollow(
-    notificationId
-){
-
-    if(!requireUser()){
-
-        return;
-    }
-
-
-    try{
-
-        const response =
-            await fetch(
-                "/api/follow/reject",
-                {
-                    method:"POST",
-
-                    headers:{
-                        "Content-Type":
-                            "application/json"
-                    },
-
-                    body:JSON.stringify({
-
-                        notification_id:
-                            Number(
-                                notificationId
-                            ),
-
-                        user_id:
-                            currentUser.user_id
-                    })
-                }
-            );
-
-
-        const data =
-            await response.json();
-
-
-        if(!response.ok){
-
-            throw new Error(
-                data.message ||
-                "Reject failed"
-            );
-        }
-
-
-        showToast(
-            data.message ||
-            "Request rejected"
-        );
-
-
-        await loadNotifications();
-
-
-    }catch(error){
-
-        console.error(
-            "Reject error:",
-            error
-        );
-
-        showToast(
-            error.message ||
-            "Unable to reject request"
-        );
-    }
-}
-
-
-/* =========================================================
-   MARK ALL READ - SERVER ONLY
-========================================================= */
-
-async function markAllReadOnServer(){
-
-    if(!requireUser()){
-
-        return false;
-    }
-
-
-    try{
-
-        const response =
-            await fetch(
-                "/api/notifications/read-all?user_id=" +
-                encodeURIComponent(
-                    currentUser.user_id
-                ),
-                {
-                    method:"POST",
-
-                    headers:{
-                        "Content-Type":
-                            "application/json"
-                    }
-                }
-            );
-
-
-        if(!response.ok){
-
-            console.warn(
-                "read-all endpoint unavailable"
-            );
-
-            return false;
-        }
-
-
-        /*
-         * Database successfully updated.
-         */
-
-        notificationList =
-            notificationList.map(
-                item => ({
-                    ...item,
-                    is_read:true
+                    user_id:
+                        currentUser.user_id
                 })
+            }
+        );
+
+        const data =
+            await response.json();
+
+        if(!response.ok || data.ok === false){
+
+            showToast(
+                data.message ||
+                "Unable to accept request"
             );
 
+            return;
+        }
 
-        renderNotifications();
+        showToast(
+            "Follow request accepted"
+        );
 
-
-        return true;
-
+        await loadNotifications();
 
     }catch(error){
 
         console.error(
-            "Mark all read error:",
+            "Accept follow error:",
             error
         );
 
-        return false;
+        showToast(
+            "Something went wrong"
+        );
     }
 }
 
+/* =========================
+   REJECT FOLLOW
+========================= */
 
-/* =========================================================
-   COPY VERIFICATION CODE
-========================================================= */
+async function rejectFollow(notificationId){
 
-async function copyVerificationCode(
-    code,
-    targetUserId
-){
-
-    if(!code){
-
-        showToast(
-            "Verification code missing"
-        );
-
+    if(!requireUser()){
         return;
     }
 
+    try{
+
+        const response = await fetch(
+            "/api/follow/reject",
+            {
+                method:"POST",
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body:JSON.stringify({
+                    notification_id:
+                        Number(notificationId),
+
+                    user_id:
+                        currentUser.user_id
+                })
+            }
+        );
+
+        const data =
+            await response.json();
+
+        if(!response.ok || data.ok === false){
+
+            showToast(
+                data.message ||
+                "Unable to reject request"
+            );
+
+            return;
+        }
+
+        showToast(
+            "Follow request rejected"
+        );
+
+        await loadNotifications();
+
+    }catch(error){
+
+        console.error(
+            "Reject follow error:",
+            error
+        );
+
+        showToast(
+            "Something went wrong"
+        );
+    }
+}
+
+/* =========================
+   COPY CODE
+========================= */
+
+async function copyCode(code){
 
     try{
 
-        await navigator.clipboard.writeText(
-            code
+        await navigator.clipboard.writeText(code);
+
+        showToast(
+            "Code copied"
         );
 
     }catch(error){
 
-        const textarea =
-            document.createElement(
-                "textarea"
-            );
-
-        textarea.value =
-            code;
-
-        document.body.appendChild(
-            textarea
+        console.error(
+            "Copy error:",
+            error
         );
-
-        textarea.select();
-
-        document.execCommand(
-            "copy"
-        );
-
-        textarea.remove();
-    }
-
-
-    /*
-     * Connection code notification me
-     * sender = target user.
-     */
-
-    if(!targetUserId){
 
         showToast(
-            "Code copied, but User ID missing"
+            "Unable to copy"
         );
+    }
+}
 
+/* =========================
+   OPEN PROFILE / SEARCH
+========================= */
+
+function openUserProfile(userId){
+
+    if(!userId){
         return;
     }
 
-
-    localStorage.setItem(
-        "usanex_pending_verification",
-        JSON.stringify({
-
-            user_id:
-                targetUserId,
-
-            code:
-                code,
-
-            from_notification:
-                true,
-
-            created_at:
-                new Date().toISOString()
-
-        })
-    );
-
-
-    showToast(
-        "Code copied. Opening search..."
-    );
-
-
-    setTimeout(
-        function(){
-
-            window.location.href =
-                "/search?verify_user_id=" +
-                encodeURIComponent(
-                    targetUserId
-                );
-
-        },
-        500
-    );
+    window.location.href =
+        "/search?user_id=" +
+        encodeURIComponent(userId);
 }
 
+/* =========================
+   ESCAPE
+========================= */
 
-/* =========================================================
-   WEBSOCKET
-========================================================= */
+function escapeHTML(value){
 
-function connectNotificationSocket(){
+    return String(value ?? "")
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+}
+
+function escapeJS(value){
+
+    return String(value ?? "")
+        .replace(/\\/g,"\\\\")
+        .replace(/'/g,"\\'")
+        .replace(/\n/g,"\\n")
+        .replace(/\r/g,"\\r");
+}
+
+/* =========================
+   REALTIME WEBSOCKET
+========================= */
+
+function connectWebSocket(){
 
     if(
         !currentUser ||
         !currentUser.user_id
     ){
-
         return;
     }
 
-
     try{
 
-        if(notificationSocket){
-
-            try{
-
-                notificationSocket.close();
-
-            }catch(error){}
-        }
-
-
         const protocol =
-            window.location.protocol === "https:"
-            ? "wss:"
-            : "ws:";
+            location.protocol === "https:"
+                ? "wss:"
+                : "ws:";
 
-
-        const socketUrl =
-            protocol +
-            "//" +
-            window.location.host +
-            "/ws/" +
-            encodeURIComponent(
-                currentUser.user_id
-            );
-
-
-        notificationSocket =
+        socket =
             new WebSocket(
-                socketUrl
+                protocol +
+                "//" +
+                location.host +
+                "/ws/" +
+                encodeURIComponent(
+                    currentUser.user_id
+                )
             );
 
+        socket.onopen = function(){
 
-        notificationSocket.onopen =
-            function(){
+            console.log(
+                "Notification WebSocket connected"
+            );
+        };
 
-                console.log(
-                    "Usanex notification socket connected"
-                );
-            };
-
-
-        notificationSocket.onmessage =
-            function(event){
+        socket.onmessage =
+            async function(event){
 
                 try{
 
@@ -1970,520 +865,130 @@ function connectNotificationSocket(){
                             event.data
                         );
 
-
-                    handleRealtimeNotification(
+                    await handleRealtimeNotification(
                         payload
                     );
-
 
                 }catch(error){
 
                     console.error(
-                        "Realtime parse error:",
+                        "Realtime notification error:",
                         error
                     );
                 }
             };
 
+        socket.onclose = function(){
 
-        notificationSocket.onerror =
-            function(error){
+            console.log(
+                "Notification WebSocket closed"
+            );
 
-                console.warn(
-                    "Notification socket error",
-                    error
-                );
-            };
+            setTimeout(
+                connectWebSocket,
+                3000
+            );
+        };
 
+        socket.onerror = function(error){
 
-        notificationSocket.onclose =
-            function(){
-
-                console.log(
-                    "Notification socket closed"
-                );
-
-
-                setTimeout(
-                    function(){
-
-                        if(
-                            document.visibilityState !==
-                            "hidden"
-                        ){
-
-                            connectNotificationSocket();
-                        }
-
-                    },
-                    4000
-                );
-            };
-
+            console.error(
+                "WebSocket error:",
+                error
+            );
+        };
 
     }catch(error){
 
         console.error(
-            "WebSocket error:",
+            "WebSocket connection error:",
             error
         );
     }
 }
 
-
-/* =========================================================
+/* =========================
    REALTIME NOTIFICATION
-========================================================= */
+========================= */
 
-function handleRealtimeNotification(
+async function handleRealtimeNotification(
     payload
 ){
 
     if(!payload){
-
         return;
     }
 
-
-    const notification =
+    let notification =
         payload.notification ||
         payload;
 
-
     if(
-        payload.type !== "notification" &&
-        !notification.type &&
-        !notification.notification_type
+        !notification ||
+        typeof notification !== "object"
     ){
-
         return;
     }
 
-
-    const type =
-        notification.type ||
-        notification.notification_type ||
-        "";
-
-
     /*
-     * Connection verified
-     */
+      अगर notification में ID नहीं है,
+      तो refresh कर देंगे.
+    */
+    if(!notification.id){
 
-    if(
-        type === "connection_verified"
-    ){
-
-        loadNotifications();
-
+        await loadNotifications();
         return;
     }
 
-
     /*
-     * Duplicate check
-     */
-
-    const existing =
-        notificationList.find(
-            item =>
-                Number(item.id) ===
-                Number(notification.id)
+      Notifications page already open है,
+      इसलिए नया notification भी तुरंत READ
+      कर दो.
+    */
+    const readOk =
+        await markNotificationReadOnServer(
+            notification.id
         );
 
-
-    if(existing){
-
-        return;
-    }
-
-
-    /*
-     * New notification.
-     */
-
     notificationList.unshift({
-
         ...notification,
-
-        is_read:false
-
+        is_read: readOk
     });
-
 
     renderNotifications();
 
-
     showToast(
-        notification.title ||
+        notification.message ||
         "New notification"
     );
 }
 
-
-/* =========================================================
-   FORMAT TIME
-========================================================= */
-
-function formatTime(
-    value
-){
-
-    if(!value){
-
-        return "";
-    }
-
-
-    try{
-
-        const date =
-            new Date(value);
-
-
-        if(
-            Number.isNaN(
-                date.getTime()
-            )
-        ){
-
-            return "";
-        }
-
-
-        const now =
-            new Date();
-
-
-        const diff =
-            Math.floor(
-                (
-                    now.getTime() -
-                    date.getTime()
-                ) / 1000
-            );
-
-
-        if(diff < 10){
-
-            return "Just now";
-        }
-
-
-        if(diff < 60){
-
-            return diff + "s ago";
-        }
-
-
-        if(diff < 3600){
-
-            return Math.floor(
-                diff / 60
-            ) + "m ago";
-        }
-
-
-        if(diff < 86400){
-
-            return Math.floor(
-                diff / 3600
-            ) + "h ago";
-        }
-
-
-        if(diff < 604800){
-
-            return Math.floor(
-                diff / 86400
-            ) + "d ago";
-        }
-
-
-        return date.toLocaleDateString(
-            "en-IN",
-            {
-                day:"numeric",
-                month:"short"
-            }
-        );
-
-
-    }catch(error){
-
-        return "";
-    }
-}
-
-
-/* =========================================================
-   EXTRACT CODE
-========================================================= */
-
-function extractCodeFromMessage(
-    message
-){
-
-    if(!message){
-
-        return "";
-    }
-
-
-    const match =
-        String(message).match(
-            /\b\d{4,8}\b/
-        );
-
-
-    return match
-        ? match[0]
-        : "";
-}
-
-
-/* =========================================================
-   ESCAPE HTML
-========================================================= */
-
-function escapeHTML(
-    value
-){
-
-    return String(
-        value ?? ""
-    )
-    .replace(
-        /&/g,
-        "&amp;"
-    )
-    .replace(
-        /</g,
-        "&lt;"
-    )
-    .replace(
-        />/g,
-        "&gt;"
-    )
-    .replace(
-        /"/g,
-        "&quot;"
-    )
-    .replace(
-        /'/g,
-        "&#039;"
-    );
-}
-
-
-/* =========================================================
-   ESCAPE ATTRIBUTE
-========================================================= */
-
-function escapeAttr(
-    value
-){
-
-    return escapeHTML(
-        value
-    );
-}
-
-
-/* =========================================================
-   ESCAPE JS
-========================================================= */
-
-function escapeJS(
-    value
-){
-
-    return String(
-        value ?? ""
-    )
-    .replace(
-        /\\/g,
-        "\\\\"
-    )
-    .replace(
-        /'/g,
-        "\\'"
-    )
-    .replace(
-        /"/g,
-        '\\"'
-    )
-    .replace(
-        /\n/g,
-        "\\n"
-    )
-    .replace(
-        /\r/g,
-        "\\r"
-    );
-}
-
-
-/* =========================================================
-   ERROR
-========================================================= */
-
-function renderError(){
-
-    const container =
-        document.getElementById(
-            "notificationList"
-        );
-
-
-    if(!container){
-
-        return;
-    }
-
-
-    container.innerHTML = `
-
-        <div class="empty">
-
-            <div class="empty-icon">
-                !
-            </div>
-
-            <div class="empty-title">
-                Something went wrong
-            </div>
-
-            <div class="empty-text">
-                Notifications could not be loaded.
-                Please try again.
-            </div>
-
-        </div>
-
-    `;
-}
-
-
-/* =========================================================
-   HOME
-========================================================= */
-
-function goHome(){
-
-    window.location.href =
-        "/home";
-}
-
-
-/* =========================================================
-   CREATE
-========================================================= */
-
-function openCreate(){
-
-    showToast(
-        "Create feature coming soon"
-    );
-}
-
-
-/* =========================================================
-   TOAST
-========================================================= */
-
-function showToast(
-    message
-){
-
-    const toast =
-        document.getElementById(
-            "toast"
-        );
-
-
-    if(!toast){
-
-        return;
-    }
-
-
-    toast.textContent =
-        message || "";
-
-
-    toast.classList.add(
-        "show"
-    );
-
-
-    clearTimeout(
-        toastTimer
-    );
-
-
-    toastTimer =
-        setTimeout(
-            function(){
-
-                toast.classList.remove(
-                    "show"
-                );
-
-            },
-            2200
-        );
-}
-
-
-/* =========================================================
+/* =========================
    START
-========================================================= */
+========================= */
 
-document.addEventListener(
-    "DOMContentLoaded",
-    function(){
+if(requireUser()){
 
-        if(!requireUser()){
+    loadNotifications();
 
-            return;
-        }
+    connectWebSocket();
+}
 
-
-        /*
-         * Page open:
-         * 1. Load notifications
-         * 2. Automatically mark all as read
-         * 3. Connect realtime
-         */
-
-        loadNotifications();
-
-        connectNotificationSocket();
-
-    }
-);
-
-
-/* =========================================================
-   CLEANUP
-========================================================= */
+/* =========================
+   PAGE SHOW
+========================= */
 
 window.addEventListener(
-    "beforeunload",
+    "pageshow",
     function(){
 
-        if(notificationSocket){
+        if(currentUser){
 
-            try{
+            loadNotifications();
 
-                notificationSocket.close();
-
-            }catch(error){}
         }
     }
 );
-
 </script>
 
 </body>
