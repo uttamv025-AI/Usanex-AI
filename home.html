@@ -1911,25 +1911,13 @@ function logoutUser(){
 
     try{
 
-        localStorage.removeItem(
-            "usanex_user"
-        );
+        localStorage.removeItem("usanex_user");
+        localStorage.removeItem("user");
+        localStorage.removeItem("currentUser");
+        localStorage.removeItem("logged_in_user");
+        localStorage.removeItem("usanex_user_id");
 
-        localStorage.removeItem(
-            "user"
-        );
-
-        localStorage.removeItem(
-            "currentUser"
-        );
-
-        localStorage.removeItem(
-            "logged_in_user"
-        );
-
-        localStorage.removeItem(
-            "usanex_user_id"
-        );
+        window.location.href = "/login";
 
     }catch(error){
 
@@ -1938,14 +1926,9 @@ function logoutUser(){
             error
         );
 
+        window.location.href = "/login";
     }
-
-
-    window.location.href =
-        "/login";
-
 }
-
 
 /* =========================================================
    INITIAL LOAD
