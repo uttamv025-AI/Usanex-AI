@@ -50,6 +50,7 @@ from database import (
     ConnectionCode,
     Notification,
     Connection,
+    ChatMessage
 )
 
 
@@ -2493,7 +2494,291 @@ async def health():
 # ============================================================
 # LOCAL RUN
 # ============================================================
+@app.get("/chat")
+async def chat_page():
+    chat_file = os.path.join(BASE_DIR, "chat.html")
 
+    if not os.path.isfile(chat_file):
+        raise HTTPException(
+            status_code=404,
+            detail="chat.html file not found"
+        )
+
+    return FileResponse(chat_file)
+
+
+@app.get("/chat.html")
+async def chat_html():
+    chat_file = os.path.join(BASE_DIR, "chat.html")
+
+    if not os.path.isfile(chat_file):
+        raise HTTPException(
+            status_code=404,
+            detail="chat.html file not found"
+        )
+
+    return FileResponse(chat_file)
+
+
+def are_connected(
+    db: Session,
+    user_a: str,
+    user_b: str
+):
+    return (
+        db.query(Connection)
+        .filter(
+            (
+                (Connection.user_a_id == user_a)
+                &
+                (Connection.user_b_id == user_b)
+            )
+            |
+            (
+                (Connection.user_a_id == user_b)
+                &
+                (Connection.user_b_id == user_a)
+            )
+        )
+        .first()
+        is not None
+    )
+
+
+@app.get("/api/chat/messages")
+async def get_chat_messages(
+    user_id: str,
+    other_user_id: str,
+    db: Session = Depends(get_db),
+):
+    user_id = user_id.strip()
+    other_user_id = other_user_id.strip()
+
+    if not user_id or not other_user_id:
+        raise HTTPException(
+            status_code=400,
+            detail="User IDs are required"
+        )
+
+    if user_id == other_user_id:
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid chat"
+        )
+
+    if not are_connected(
+        db,
+        user_id,
+        other_user_id
+    ):
+        raise HTTPException(
+            status_code=403,
+            detail="You can chat only with connected users"
+        )
+
+    other = (
+        db.query(User)
+        .filter(
+            User.user_id == other_user_id
+        )
+        .first()
+    )
+
+    if not other:
+        raise HTTPException(
+            status_code=404,
+            detail="User not found"
+        )
+
+    messages = (
+        db.query(ChatMessage)
+        .filter(
+            (
+                (ChatMessage.sender_user_id == user_id)
+                &
+                (ChatMessage.receiver_user_id == other_user_id)
+            )
+            |
+            (
+                (ChatMessage.sender_user_id == other_user_id)
+                &
+                (ChatMessage.receiver_user_id == user_id)
+            )
+        )
+        .order_by(
+            ChatMessage.id.asc()
+        )
+        .limit(200)
+        .all()
+    )
+
+    return {
+        "ok": True,
+        "other_user": {
+            "user_id": other.user_id,
+            "name": other.name,
+            "profile_photo": other.profile_photo,
+        },
+        "messages": [
+            {
+                "id": message.id,
+                "sender_user_id": message.sender_user_id,
+                "receiver_user_id": message.receiver_user_id,
+                "message": message.message,
+                "message_type": message.message_type,
+                "is_read": message.is_read,
+                "created_at": message.created_at.isoformat(),
+            }
+            for message in messages
+        ]
+    }
+
+
+class SendMessageRequest(BaseModel):
+    sender_user_id: str
+    receiver_user_id: str
+    message: str
+
+
+@app.post("/api/chat/send")
+async def send_chat_message(
+    request: SendMessageRequest,
+    db: Session = Depends(get_db),
+):
+    sender_id = request.sender_user_id.strip()
+    receiver_id = request.receiver_user_id.strip()
+    text = request.message.strip()
+
+    if not sender_id or not receiver_id:
+        raise HTTPException(
+            status_code=400,
+            detail="User IDs are required"
+        )
+
+    if not text:
+        raise HTTPException(
+            status_code=400,
+            detail="Message cannot be empty"
+        )
+
+    if len(text) > 5000:
+        raise HTTPException(
+            status_code=400,
+            detail="Message is too long"
+        )
+
+    if sender_id == receiver_id:
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid chat"
+        )
+
+    sender = (
+        db.query(User)
+        .filter(
+            User.user_id == sender_id
+        )
+        .first()
+    )
+
+    receiver = (
+        db.query(User)
+        .filter(
+            User.user_id == receiver_id
+        )
+        .first()
+    )
+
+    if not sender or not receiver:
+        raise HTTPException(
+            status_code=404,
+            detail="User not found"
+        )
+
+    if not are_connected(
+        db,
+        sender_id,
+        receiver_id
+    ):
+        raise HTTPException(
+            status_code=403,
+            detail="You can chat only with connected users"
+        )
+
+    new_message = ChatMessage(
+        sender_user_id=sender_id,
+        receiver_user_id=receiver_id,
+        message=text,
+        message_type="text",
+        is_read=False,
+    )
+
+    db.add(new_message)
+    db.commit()
+    db.refresh(new_message)
+
+    message_data = {
+        "type": "chat_message",
+        "message": {
+            "id": new_message.id,
+            "sender_user_id": sender_id,
+            "receiver_user_id": receiver_id,
+            "message": new_message.message,
+            "message_type": new_message.message_type,
+            "is_read": new_message.is_read,
+            "created_at": new_message.created_at.isoformat(),
+        }
+    }
+
+    await manager.send_to_user(
+        receiver_id,
+        message_data
+    )
+
+    return {
+        "ok": True,
+        **message_data
+    }
+
+
+@app.post("/api/chat/read")
+async def mark_chat_read(
+    user_id: str,
+    other_user_id: str,
+    db: Session = Depends(get_db),
+):
+    user_id = user_id.strip()
+    other_user_id = other_user_id.strip()
+
+    if not are_connected(
+        db,
+        user_id,
+        other_user_id
+    ):
+        raise HTTPException(
+            status_code=403,
+            detail="Not connected"
+        )
+
+    messages = (
+        db.query(ChatMessage)
+        .filter(
+            ChatMessage.sender_user_id == other_user_id,
+            ChatMessage.receiver_user_id == user_id,
+            ChatMessage.is_read == False,
+        )
+        .all()
+    )
+
+    for message in messages:
+        message.is_read = True
+
+    db.commit()
+
+    return {
+        "ok": True,
+        "count": len(messages)
+            }
 if __name__ == "__main__":
 
     import uvicorn
