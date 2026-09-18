@@ -21,10 +21,6 @@ body{
     overflow:hidden;
 }
 
-/* =========================
-   MAIN
-========================= */
-
 .chat-app{
     width:100%;
     max-width:600px;
@@ -36,10 +32,6 @@ body{
     display:flex;
     flex-direction:column;
 }
-
-/* =========================
-   HEADER
-========================= */
 
 .chat-header{
     height:70px;
@@ -102,6 +94,15 @@ body{
     box-shadow:
         0 0 0 3px rgba(33,133,255,.08),
         0 4px 16px rgba(0,100,255,.25);
+
+    overflow:hidden;
+}
+
+.profile-photo img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
 }
 
 .profile-info{
@@ -155,10 +156,6 @@ body{
     justify-content:center;
 }
 
-/* =========================
-   CHAT AREA
-========================= */
-
 .chat-area{
     flex:1;
     overflow-y:auto;
@@ -171,10 +168,6 @@ body{
 .chat-area::-webkit-scrollbar{
     display:none;
 }
-
-/* =========================
-   DATE
-========================= */
 
 .date-divider{
     text-align:center;
@@ -195,10 +188,6 @@ body{
 
     font-size:11px;
 }
-
-/* =========================
-   MESSAGE
-========================= */
 
 .message-row{
     display:flex;
@@ -223,6 +212,9 @@ body{
 
     font-size:14px;
     line-height:1.45;
+
+    word-break:break-word;
+    white-space:pre-wrap;
 }
 
 .received .message{
@@ -272,10 +264,6 @@ body{
     color:#b9ddff;
 }
 
-/* =========================
-   TYPING
-========================= */
-
 .typing{
     display:none;
 
@@ -291,6 +279,10 @@ body{
 
     background:#111b2d;
     border:1px solid rgba(255,255,255,.05);
+}
+
+.typing.show{
+    display:flex;
 }
 
 .typing span{
@@ -317,17 +309,16 @@ body{
         transform:translateY(0);
         opacity:.5;
     }
+
     30%{
         transform:translateY(-4px);
         opacity:1;
     }
 }
 
-/* =========================
-   COMPOSER
-========================= */
-
 .composer-area{
+    position:relative;
+
     padding:10px 12px 14px;
 
     background:
@@ -433,10 +424,6 @@ body{
     transform:scale(.92);
 }
 
-/* =========================
-   ATTACHMENT MENU
-========================= */
-
 .attach-menu{
     display:none;
 
@@ -456,6 +443,8 @@ body{
     box-shadow:0 12px 35px rgba(0,0,0,.35);
 
     gap:7px;
+
+    z-index:20;
 }
 
 .attach-menu.show{
@@ -477,10 +466,6 @@ body{
 
     cursor:pointer;
 }
-
-/* =========================
-   EMOJI PANEL
-========================= */
 
 .emoji-panel{
     display:none;
@@ -504,6 +489,8 @@ body{
     grid-template-columns:repeat(8,1fr);
 
     gap:8px;
+
+    z-index:20;
 }
 
 .emoji-panel.show{
@@ -518,10 +505,6 @@ body{
 
     cursor:pointer;
 }
-
-/* =========================
-   TOAST
-========================= */
 
 .toast{
     position:fixed;
@@ -555,10 +538,6 @@ body{
     opacity:1;
     transform:translateX(-50%) translateY(0);
 }
-
-/* =========================
-   MOBILE
-========================= */
 
 @media(max-width:500px){
 
@@ -612,30 +591,48 @@ body{
     <!-- HEADER -->
     <header class="chat-header">
 
-        <button class="back-btn" onclick="goBack()">‹</button>
+        <button
+            class="back-btn"
+            onclick="goBack()"
+            aria-label="Back">
+            ‹
+        </button>
 
         <div class="profile">
 
-            <div class="profile-photo">
+            <div
+                class="profile-photo"
+                id="profilePhoto">
                 U
             </div>
 
             <div class="profile-info">
 
-                <div class="profile-name" id="chatName">
-                    Shivannaya
+                <div
+                    class="profile-name"
+                    id="chatName">
+                    Loading...
                 </div>
 
-                <div class="online">
+                <div
+                    class="online"
+                    id="onlineStatus">
+
                     <span class="online-dot"></span>
-                    Online
+
+                    <span id="onlineText">
+                        Connecting...
+                    </span>
+
                 </div>
 
             </div>
 
         </div>
 
-        <button class="header-action" onclick="showToast('Coming soon')">
+        <button
+            class="header-action"
+            onclick="showToast('Coming soon')">
             ⋮
         </button>
 
@@ -643,81 +640,19 @@ body{
 
 
     <!-- CHAT -->
-    <main class="chat-area" id="chatArea">
+    <main
+        class="chat-area"
+        id="chatArea">
 
         <div class="date-divider">
             <span>Today</span>
         </div>
 
+        <!-- REAL MESSAGES INSERT HERE -->
 
-        <!-- RECEIVED -->
-        <div class="message-row received">
-
-            <div class="message">
-
-                Hi 👋
-
-                <div class="message-time">
-                    10:32 AM
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- SENT -->
-        <div class="message-row sent">
-
-            <div class="message">
-
-                Hello 😊
-
-                <div class="message-time">
-                    10:33 AM
-                    <span class="read">✓✓</span>
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- RECEIVED -->
-        <div class="message-row received">
-
-            <div class="message">
-
-                Kya kar rahe ho?
-
-                <div class="message-time">
-                    10:34 AM
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- SENT -->
-        <div class="message-row sent">
-
-            <div class="message">
-
-                Bas tumse baat kar raha hoon 😄
-
-                <div class="message-time">
-                    10:35 AM
-                    <span class="read">✓✓</span>
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- TYPING -->
-        <div class="message-row received" id="typingRow">
+        <div
+            class="message-row received"
+            id="typingRow">
 
             <div class="typing">
 
@@ -736,20 +671,25 @@ body{
     <div class="composer-area">
 
         <!-- Attachment -->
-        <div class="attach-menu" id="attachMenu">
+        <div
+            class="attach-menu"
+            id="attachMenu">
 
-            <button class="attach-item"
-                    onclick="showToast('Gallery coming soon')">
+            <button
+                class="attach-item"
+                onclick="showToast('Gallery coming soon')">
                 🖼️
             </button>
 
-            <button class="attach-item"
-                    onclick="showToast('Camera coming soon')">
+            <button
+                class="attach-item"
+                onclick="showToast('Camera coming soon')">
                 📷
             </button>
 
-            <button class="attach-item"
-                    onclick="showToast('File sharing coming soon')">
+            <button
+                class="attach-item"
+                onclick="showToast('File sharing coming soon')">
                 📄
             </button>
 
@@ -757,7 +697,9 @@ body{
 
 
         <!-- Emoji -->
-        <div class="emoji-panel" id="emojiPanel">
+        <div
+            class="emoji-panel"
+            id="emojiPanel">
 
             <button class="emoji" onclick="addEmoji('😀')">😀</button>
             <button class="emoji" onclick="addEmoji('😂')">😂</button>
@@ -808,6 +750,7 @@ body{
 
             <button
                 class="send-btn"
+                id="sendButton"
                 onclick="sendMessage()">
                 ➤
             </button>
@@ -819,141 +762,586 @@ body{
 </div>
 
 
-<div class="toast" id="toast"></div>
+<div
+    class="toast"
+    id="toast">
+</div>
 
 
 <script>
 
-/* =========================
+/* =========================================================
    ELEMENTS
-========================= */
+========================================================= */
 
-const input = document.getElementById("messageInput");
-const chatArea = document.getElementById("chatArea");
-const emojiPanel = document.getElementById("emojiPanel");
-const attachMenu = document.getElementById("attachMenu");
+const input =
+    document.getElementById("messageInput");
+
+const chatArea =
+    document.getElementById("chatArea");
+
+const emojiPanel =
+    document.getElementById("emojiPanel");
+
+const attachMenu =
+    document.getElementById("attachMenu");
+
+const chatName =
+    document.getElementById("chatName");
+
+const profilePhoto =
+    document.getElementById("profilePhoto");
+
+const onlineText =
+    document.getElementById("onlineText");
+
+const typingRow =
+    document.getElementById("typingRow");
+
+const sendButton =
+    document.getElementById("sendButton");
 
 
-/* =========================
+/* =========================================================
+   USER IDS
+========================================================= */
+
+const params =
+    new URLSearchParams(window.location.search);
+
+const otherUserId =
+    (params.get("user_id") || "").trim();
+
+
+function getCurrentUserId(){
+
+    const keys = [
+        "usanex_user",
+        "user",
+        "currentUser",
+        "logged_in_user"
+    ];
+
+    for(const key of keys){
+
+        try{
+
+            const value =
+                localStorage.getItem(key);
+
+            if(!value){
+                continue;
+            }
+
+            try{
+
+                const parsed =
+                    JSON.parse(value);
+
+                if(typeof parsed === "string"){
+                    return parsed.trim();
+                }
+
+                if(parsed && parsed.user_id){
+                    return String(parsed.user_id).trim();
+                }
+
+                if(parsed && parsed.id){
+                    return String(parsed.id).trim();
+                }
+
+            }catch(error){
+
+                if(value.trim()){
+                    return value.trim();
+                }
+
+            }
+
+        }catch(error){
+            console.log(error);
+        }
+
+    }
+
+    return (
+        localStorage.getItem("usanex_user_id") || ""
+    ).trim();
+}
+
+
+const currentUserId =
+    getCurrentUserId();
+
+
+/* =========================================================
+   VALIDATION
+========================================================= */
+
+if(!currentUserId){
+
+    showToast("Please login first");
+
+    setTimeout(()=>{
+        window.location.href="/";
+    },1200);
+
+}
+
+else if(!otherUserId){
+
+    showToast("Invalid chat user");
+
+    setTimeout(()=>{
+        window.location.href="/home";
+    },1200);
+
+}
+
+
+/* =========================================================
    BACK
-========================= */
+========================================================= */
 
 function goBack(){
 
     if(document.referrer){
+
         history.back();
+
     }else{
+
         window.location.href="/home";
+
     }
 
 }
 
 
-/* =========================
-   SEND MESSAGE
-========================= */
+/* =========================================================
+   PROFILE
+========================================================= */
 
-function sendMessage(){
+function setProfile(name, photo){
 
-    const text = input.value.trim();
+    chatName.textContent =
+        name || "User";
 
-    if(!text){
+    profilePhoto.innerHTML = "";
+
+    if(photo){
+
+        const img =
+            document.createElement("img");
+
+        img.src = photo;
+
+        img.alt = "";
+
+        img.onerror = function(){
+
+            profilePhoto.innerHTML =
+                getInitial(name);
+
+        };
+
+        profilePhoto.appendChild(img);
+
+    }else{
+
+        profilePhoto.textContent =
+            getInitial(name);
+
+    }
+
+}
+
+
+function getInitial(name){
+
+    if(!name){
+        return "U";
+    }
+
+    return String(name)
+        .trim()
+        .charAt(0)
+        .toUpperCase() || "U";
+
+}
+
+
+/* =========================================================
+   LOAD USER INFO + CHAT
+========================================================= */
+
+async function loadChat(){
+
+    if(!currentUserId || !otherUserId){
         return;
     }
 
-    addMessage(text,"sent");
+    try{
 
-    input.value="";
+        const response =
+            await fetch(
+                "/api/chat/messages?user_id=" +
+                encodeURIComponent(currentUserId) +
+                "&other_user_id=" +
+                encodeURIComponent(otherUserId),
+                {
+                    method:"GET",
+                    cache:"no-store"
+                }
+            );
 
-    emojiPanel.classList.remove("show");
-    attachMenu.classList.remove("show");
+        const data =
+            await response.json();
 
-    scrollBottom();
+        if(!response.ok){
+
+            throw new Error(
+                data.detail ||
+                "Unable to load chat"
+            );
+
+        }
+
+
+        if(data.other_user){
+
+            setProfile(
+                data.other_user.name,
+                data.other_user.profile_photo
+            );
+
+        }
+
+
+        clearMessages();
+
+
+        if(Array.isArray(data.messages)){
+
+            data.messages.forEach(message => {
+
+                addMessageFromServer(message);
+
+            });
+
+        }
+
+
+        scrollBottom();
+
+
+        markMessagesRead();
+
+    }catch(error){
+
+        console.error(
+            "Chat load error:",
+            error
+        );
+
+        showToast(
+            error.message ||
+            "Unable to load chat"
+        );
+
+    }
 
 }
 
 
-/* =========================
-   ADD MESSAGE
-========================= */
+/* =========================================================
+   CLEAR OLD MESSAGES
+========================================================= */
 
-function addMessage(text,type){
+function clearMessages(){
 
-    const row = document.createElement("div");
+    const rows =
+        chatArea.querySelectorAll(
+            ".message-row:not(#typingRow)"
+        );
+
+    rows.forEach(row => {
+        row.remove();
+    });
+
+}
+
+
+/* =========================================================
+   SERVER MESSAGE
+========================================================= */
+
+function addMessageFromServer(message){
+
+    if(!message){
+        return;
+    }
+
+    const sender =
+        String(
+            message.sender_user_id || ""
+        ).trim();
+
+    const text =
+        String(
+            message.message || ""
+        );
+
+    if(!sender || !text){
+        return;
+    }
+
+    const type =
+        sender === currentUserId
+        ? "sent"
+        : "received";
+
+
+    const row =
+        document.createElement("div");
 
     row.className =
         "message-row " + type;
 
-    const message =
+    if(message.id){
+
+        row.dataset.messageId =
+            String(message.id);
+
+    }
+
+
+    const bubble =
         document.createElement("div");
 
-    message.className="message";
-
-    message.innerHTML =
-        escapeHTML(text) +
-        `
-        <div class="message-time">
-            ${getTime()}
-            ${
-                type==="sent"
-                ? '<span class="read">✓✓</span>'
-                : ''
-            }
-        </div>
-        `;
-
-    message.querySelectorAll("script").forEach(el=>{
-        el.remove();
-    });
-
-    row.appendChild(message);
-
-    chatArea.appendChild(row);
-
-}
+    bubble.className =
+        "message";
 
 
-/* =========================
-   ESCAPE HTML
-========================= */
+    const textNode =
+        document.createElement("div");
 
-function escapeHTML(text){
-
-    const div=document.createElement("div");
-
-    div.textContent=text;
-
-    return div.innerHTML;
-
-}
+    textNode.textContent =
+        text;
 
 
-/* =========================
-   TIME
-========================= */
+    const time =
+        document.createElement("div");
 
-function getTime(){
+    time.className =
+        "message-time";
 
-    const now=new Date();
+    time.textContent =
+        formatTime(
+            message.created_at
+        );
 
-    return now.toLocaleTimeString(
-        [],
-        {
-            hour:"numeric",
-            minute:"2-digit"
-        }
+
+    if(type === "sent"){
+
+        const read =
+            document.createElement("span");
+
+        read.className =
+            "read";
+
+        read.textContent =
+            message.is_read
+            ? "✓✓"
+            : "✓";
+
+        time.appendChild(read);
+
+    }
+
+
+    bubble.appendChild(textNode);
+    bubble.appendChild(time);
+
+    row.appendChild(bubble);
+
+    chatArea.insertBefore(
+        row,
+        typingRow
     );
 
 }
 
 
-/* =========================
+/* =========================================================
+   SEND MESSAGE
+========================================================= */
+
+let sending = false;
+
+
+async function sendMessage(){
+
+    if(sending){
+        return;
+    }
+
+    const text =
+        input.value.trim();
+
+    if(!text){
+        return;
+    }
+
+    if(!currentUserId || !otherUserId){
+
+        showToast("Invalid chat");
+
+        return;
+
+    }
+
+
+    sending = true;
+
+    sendButton.style.opacity = ".55";
+
+
+    try{
+
+        const response =
+            await fetch(
+                "/api/chat/send",
+                {
+                    method:"POST",
+
+                    headers:{
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:JSON.stringify({
+
+                        sender_user_id:
+                            currentUserId,
+
+                        receiver_user_id:
+                            otherUserId,
+
+                        message:text
+
+                    })
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if(!response.ok){
+
+            throw new Error(
+                data.detail ||
+                "Message could not be sent"
+            );
+
+        }
+
+
+        /*
+         * Server response already contains
+         * the saved message.
+         *
+         * Add it immediately.
+         */
+
+        if(data.message){
+
+            addMessageFromServer(
+                data.message
+            );
+
+        }
+
+
+        input.value = "";
+
+        emojiPanel.classList.remove("show");
+
+        attachMenu.classList.remove("show");
+
+        scrollBottom();
+
+
+    }catch(error){
+
+        console.error(
+            "Send message error:",
+            error
+        );
+
+        showToast(
+            error.message ||
+            "Message could not be sent"
+        );
+
+    }finally{
+
+        sending = false;
+
+        sendButton.style.opacity = "1";
+
+        input.focus();
+
+    }
+
+}
+
+
+/* =========================================================
+   TIME
+========================================================= */
+
+function formatTime(value){
+
+    if(!value){
+        return "";
+    }
+
+    try{
+
+        const date =
+            new Date(value);
+
+        if(isNaN(date.getTime())){
+            return "";
+        }
+
+        return date.toLocaleTimeString(
+            [],
+            {
+                hour:"numeric",
+                minute:"2-digit"
+            }
+        );
+
+    }catch(error){
+
+        return "";
+
+    }
+
+}
+
+
+/* =========================================================
    ENTER
-========================= */
+========================================================= */
 
 function handleKey(event){
 
-    if(event.key==="Enter"){
+    if(event.key === "Enter"){
 
         event.preventDefault();
 
@@ -964,9 +1352,9 @@ function handleKey(event){
 }
 
 
-/* =========================
+/* =========================================================
    EMOJI
-========================= */
+========================================================= */
 
 function toggleEmoji(){
 
@@ -986,9 +1374,9 @@ function addEmoji(emoji){
 }
 
 
-/* =========================
+/* =========================================================
    ATTACHMENT
-========================= */
+========================================================= */
 
 function toggleAttach(){
 
@@ -999,9 +1387,9 @@ function toggleAttach(){
 }
 
 
-/* =========================
+/* =========================================================
    SCROLL
-========================= */
+========================================================= */
 
 function scrollBottom(){
 
@@ -1015,66 +1403,440 @@ function scrollBottom(){
 }
 
 
-/* =========================
+/* =========================================================
    TOAST
-========================= */
+========================================================= */
 
 let toastTimer;
+
 
 function showToast(text){
 
     const toast =
         document.getElementById("toast");
 
-    toast.textContent=text;
+    toast.textContent =
+        text;
 
     toast.classList.add("show");
 
     clearTimeout(toastTimer);
 
-    toastTimer=setTimeout(()=>{
+    toastTimer =
+        setTimeout(()=>{
 
-        toast.classList.remove("show");
+            toast.classList.remove("show");
 
-    },1800);
+        },1800);
 
 }
 
 
-/* =========================
+/* =========================================================
+   MARK READ
+========================================================= */
+
+async function markMessagesRead(){
+
+    if(!currentUserId || !otherUserId){
+        return;
+    }
+
+    try{
+
+        await fetch(
+            "/api/chat/read?user_id=" +
+            encodeURIComponent(currentUserId) +
+            "&other_user_id=" +
+            encodeURIComponent(otherUserId),
+            {
+                method:"POST"
+            }
+        );
+
+    }catch(error){
+
+        console.log(
+            "Read status error:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   WEBSOCKET
+========================================================= */
+
+let socket = null;
+
+let reconnectTimer = null;
+
+let manuallyClosed = false;
+
+
+function getWebSocketURL(){
+
+    const protocol =
+        window.location.protocol === "https:"
+        ? "wss:"
+        : "ws:";
+
+    return (
+        protocol +
+        "//" +
+        window.location.host +
+        "/ws/" +
+        encodeURIComponent(
+            currentUserId
+        )
+    );
+
+}
+
+
+function connectWebSocket(){
+
+    if(!currentUserId){
+        return;
+    }
+
+    if(socket){
+
+        try{
+            socket.close();
+        }catch(error){}
+
+        socket = null;
+
+    }
+
+
+    manuallyClosed = false;
+
+
+    try{
+
+        socket =
+            new WebSocket(
+                getWebSocketURL()
+            );
+
+
+        socket.onopen =
+            function(){
+
+                onlineText.textContent =
+                    "Online";
+
+                clearTimeout(
+                    reconnectTimer
+                );
+
+            };
+
+
+        socket.onmessage =
+            function(event){
+
+                try{
+
+                    const data =
+                        JSON.parse(
+                            event.data
+                        );
+
+
+                    handleWebSocketMessage(
+                        data
+                    );
+
+                }catch(error){
+
+                    console.log(
+                        "WebSocket data error:",
+                        error
+                    );
+
+                }
+
+            };
+
+
+        socket.onerror =
+            function(error){
+
+                console.log(
+                    "WebSocket error:",
+                    error
+                );
+
+            };
+
+
+        socket.onclose =
+            function(){
+
+                onlineText.textContent =
+                    "Offline";
+
+
+                if(!manuallyClosed){
+
+                    clearTimeout(
+                        reconnectTimer
+                    );
+
+
+                    reconnectTimer =
+                        setTimeout(
+                            connectWebSocket,
+                            3000
+                        );
+
+                }
+
+            };
+
+
+    }catch(error){
+
+        console.error(
+            "WebSocket connection error:",
+            error
+        );
+
+        onlineText.textContent =
+            "Offline";
+
+        reconnectTimer =
+            setTimeout(
+                connectWebSocket,
+                3000
+            );
+
+    }
+
+}
+
+
+/* =========================================================
+   WEBSOCKET MESSAGE HANDLER
+========================================================= */
+
+function handleWebSocketMessage(data){
+
+    if(!data){
+        return;
+    }
+
+
+    if(
+        data.type ===
+        "websocket_connected"
+    ){
+
+        onlineText.textContent =
+            "Online";
+
+        return;
+
+    }
+
+
+    if(
+        data.type ===
+        "chat_message"
+    ){
+
+        const message =
+            data.message;
+
+        if(!message){
+            return;
+        }
+
+
+        const sender =
+            String(
+                message.sender_user_id || ""
+            ).trim();
+
+
+        const receiver =
+            String(
+                message.receiver_user_id || ""
+            ).trim();
+
+
+        /*
+         * Only show messages belonging
+         * to this exact conversation.
+         */
+
+        const belongsToChat =
+            (
+                sender === currentUserId &&
+                receiver === otherUserId
+            )
+            ||
+            (
+                sender === otherUserId &&
+                receiver === currentUserId
+            );
+
+
+        if(!belongsToChat){
+            return;
+        }
+
+
+        /*
+         * Avoid duplicate messages.
+         */
+
+        if(
+            message.id &&
+            document.querySelector(
+                '[data-message-id="' +
+                CSS.escape(
+                    String(message.id)
+                ) +
+                '"]'
+            )
+        ){
+
+            return;
+
+        }
+
+
+        addMessageFromServer(
+            message
+        );
+
+        scrollBottom();
+
+
+        if(sender === otherUserId){
+
+            markMessagesRead();
+
+        }
+
+    }
+
+}
+
+
+/* =========================================================
    CLOSE MENUS
-========================= */
+========================================================= */
 
-document.addEventListener("click",function(e){
+document.addEventListener(
+    "click",
+    function(e){
 
-    if(
-        !e.target.closest(".composer") &&
-        !e.target.closest(".emoji-panel")
-    ){
-        emojiPanel.classList.remove("show");
+        if(
+            !e.target.closest(".composer") &&
+            !e.target.closest(".emoji-panel")
+        ){
+
+            emojiPanel.classList.remove(
+                "show"
+            );
+
+        }
+
+
+        if(
+            !e.target.closest(".composer") &&
+            !e.target.closest(".attach-menu")
+        ){
+
+            attachMenu.classList.remove(
+                "show"
+            );
+
+        }
+
     }
+);
 
-    if(
-        !e.target.closest(".composer") &&
-        !e.target.closest(".attach-menu")
-    ){
-        attachMenu.classList.remove("show");
+
+/* =========================================================
+   PAGE VISIBILITY
+========================================================= */
+
+document.addEventListener(
+    "visibilitychange",
+    function(){
+
+        if(
+            document.visibilityState ===
+            "visible"
+        ){
+
+            markMessagesRead();
+
+        }
+
     }
+);
 
-});
 
-
-/* =========================
+/* =========================================================
    INITIAL
-========================= */
+========================================================= */
 
-window.addEventListener("load",()=>{
+window.addEventListener(
+    "load",
+    async function(){
 
-    scrollBottom();
+        if(
+            !currentUserId ||
+            !otherUserId
+        ){
+            return;
+        }
 
-    input.focus();
 
-});
+        await loadChat();
+
+        connectWebSocket();
+
+        input.focus();
+
+    }
+);
+
+
+/* =========================================================
+   BEFORE CLOSE
+========================================================= */
+
+window.addEventListener(
+    "beforeunload",
+    function(){
+
+        manuallyClosed = true;
+
+        clearTimeout(
+            reconnectTimer
+        );
+
+        if(socket){
+
+            try{
+                socket.close();
+            }catch(error){}
+
+        }
+
+    }
+);
 
 </script>
 
