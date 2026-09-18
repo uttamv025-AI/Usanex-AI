@@ -1962,22 +1962,34 @@ async function resetPassword(){
 
 function logout(){
 
-    /* Remove saved login */
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
 
-    localStorage.removeItem(
-        "user"
-    );
+    sessionStorage.removeItem("usanex_register");
+    sessionStorage.removeItem("usanex_forgot_identifier");
 
-    localStorage.removeItem(
-        "token"
-    );
-
-
-    /* Return to login */
-
-    showLogin();
-
+    window.location.href = "/?open=login";
 }
+
+    document.addEventListener("DOMContentLoaded", function(){
+
+    const params =
+        new URLSearchParams(
+            window.location.search
+        );
+
+    if(params.get("open") === "login"){
+
+        showLogin();
+
+        window.history.replaceState(
+            {},
+            document.title,
+            "/"
+        );
+    }
+
+});
 
 </script>
 
