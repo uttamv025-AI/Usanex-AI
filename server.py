@@ -50,7 +50,7 @@ from database import (
     ConnectionCode,
     Notification,
     Connection,
-    ChatMessage
+    ChatMessage,
 )
 
 
