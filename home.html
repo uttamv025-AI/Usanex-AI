@@ -286,6 +286,20 @@ body{
     align-items:center;
 
     padding:11px;
+
+    cursor:pointer;
+
+    transition:
+        background .15s ease,
+        transform .12s ease;
+}
+
+.user-card:active{
+    transform:scale(.985);
+}
+
+.user-card:hover{
+    background:#101d32;
 }
 
 .profile-photo{
@@ -373,6 +387,8 @@ body{
     font-weight:600;
 
     white-space:nowrap;
+
+    cursor:pointer;
 }
 
 /* ================= EMPTY ================= */
@@ -974,8 +990,6 @@ body{
 
 <nav class="bottom-nav">
 
-    <!-- HOME -->
-
     <div
         class="nav-item active"
         id="homeNav"
@@ -988,8 +1002,6 @@ body{
     </div>
 
 
-    <!-- REELS -->
-
     <div
         class="nav-item"
         onclick="goReels()">
@@ -1001,8 +1013,6 @@ body{
     </div>
 
 
-    <!-- CREATE -->
-
     <div
         class="nav-item"
         onclick="createPost()">
@@ -1013,8 +1023,6 @@ body{
 
     </div>
 
-
-    <!-- NOTIFICATION -->
 
     <div
         class="nav-item"
@@ -1034,8 +1042,6 @@ body{
 
     </div>
 
-
-    <!-- PROFILE -->
 
     <div
         class="nav-item"
@@ -1171,8 +1177,6 @@ body{
 
         </div>
 
-
-        <!-- LOGOUT -->
 
         <div
             class="menu-item logout"
@@ -1719,6 +1723,50 @@ async function loadConnections(){
                 "user-card";
 
 
+            /*
+            =================================================
+            CHAT CLICK
+            =================================================
+
+            Card par click karne par chat open hoga.
+
+            Lekin agar click DP par hua hai,
+            to chat nahi khulega.
+            DP ka apna viewer open hoga.
+            */
+
+            card.addEventListener(
+                "click",
+                function(event){
+
+                    if(
+                        event.target.closest(
+                            ".profile-photo"
+                        )
+                    ){
+
+                        return;
+
+                    }
+
+
+                    if(!userId){
+
+                        return;
+
+                    }
+
+
+                    window.location.href =
+                        "/chat?user_id=" +
+                        encodeURIComponent(
+                            String(userId).trim()
+                        );
+
+                }
+            );
+
+
             /* ================= DP ================= */
 
             const photoBox =
@@ -1731,7 +1779,6 @@ async function loadConnections(){
 
 
             /*
-                IMPORTANT:
                 DP click only opens DP.
                 It does NOT open chat.
             */
@@ -1770,6 +1817,8 @@ async function loadConnections(){
                     "click",
                     function(event){
 
+                        event.preventDefault();
+
                         event.stopPropagation();
 
                         openDPViewer(
@@ -1784,6 +1833,29 @@ async function loadConnections(){
 
                 photoBox.textContent =
                     firstLetter;
+
+
+                /*
+                   Agar DP available nahi hai,
+                   letter avatar par click karne
+                   par bhi card/chat nahi khulega.
+                */
+
+                photoBox.addEventListener(
+                    "click",
+                    function(event){
+
+                        event.preventDefault();
+
+                        event.stopPropagation();
+
+                        openDPViewer(
+                            "",
+                            name
+                        );
+
+                    }
+                );
 
             }
 
@@ -1846,6 +1918,37 @@ async function loadConnections(){
                 "Connected";
 
 
+            /*
+               Connected button par click
+               bhi chat open hoga.
+            */
+
+            button.addEventListener(
+                "click",
+                function(event){
+
+                    event.preventDefault();
+
+                    event.stopPropagation();
+
+
+                    if(!userId){
+
+                        return;
+
+                    }
+
+
+                    window.location.href =
+                        "/chat?user_id=" +
+                        encodeURIComponent(
+                            String(userId).trim()
+                        );
+
+                }
+            );
+
+
             /* ================= CARD ================= */
 
             card.appendChild(
@@ -1880,11 +1983,6 @@ function openDPViewer(
     name
 ){
 
-    if(!photo){
-        return;
-    }
-
-
     const viewer =
         document.getElementById(
             "dpViewer"
@@ -1901,22 +1999,56 @@ function openDPViewer(
         );
 
 
-    if(
-        !viewer ||
-        !image
-    ){
+    if(!viewer){
 
         return;
 
     }
 
 
-    image.src =
-        photo;
+    /*
+       Agar actual photo available hai
+       to image show karo.
+    */
 
-    image.alt =
-        name ||
-        "Profile Photo";
+    if(
+        photo &&
+        String(photo).trim()
+    ){
+
+        if(image){
+
+            image.src =
+                photo;
+
+            image.alt =
+                name ||
+                "Profile Photo";
+
+            image.style.display =
+                "block";
+
+        }
+
+    }else{
+
+        /*
+           Photo available nahi hai,
+           isliye broken image nahi dikhayenge.
+        */
+
+        if(image){
+
+            image.removeAttribute(
+                "src"
+            );
+
+            image.style.display =
+                "none";
+
+        }
+
+    }
 
 
     if(nameBox){
@@ -1960,6 +2092,11 @@ function closeDPViewer(event){
 
     }
 
+
+    /*
+       Close button ya background par click
+       karne par viewer close hoga.
+    */
 
     const viewer =
         document.getElementById(
