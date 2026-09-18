@@ -6,6 +6,7 @@
 <title>Usanex</title>
 
 <style>
+
 *{
     margin:0;
     padding:0;
@@ -54,6 +55,7 @@ body{
     display:flex;
     align-items:center;
     justify-content:center;
+
     background:
         linear-gradient(
             145deg,
@@ -61,7 +63,9 @@ body{
             #0868e8 48%,
             #0049b5 100%
         );
+
     border:1px solid rgba(255,255,255,.16);
+
     box-shadow:
         0 5px 18px rgba(0,100,255,.30),
         inset 0 1px 2px rgba(255,255,255,.20);
@@ -76,7 +80,9 @@ body{
     font-weight:900;
     letter-spacing:-2px;
     transform:translateY(-1px);
-    text-shadow:0 2px 5px rgba(0,0,0,.25);
+
+    text-shadow:
+        0 2px 5px rgba(0,0,0,.25);
 }
 
 .logo-shine{
@@ -119,8 +125,10 @@ body{
     border-radius:13px;
     background:#101a2b;
     border:1px solid rgba(255,255,255,.07);
+
     display:flex;
     align-items:center;
+
     padding:0 13px;
     cursor:pointer;
 }
@@ -183,14 +191,18 @@ body{
     width:57px;
     height:57px;
     margin:auto;
+
     border-radius:50%;
     border:2px solid #1777ff;
     background:#101a2d;
+
     display:flex;
     align-items:center;
     justify-content:center;
+
     font-size:20px;
     font-weight:bold;
+
     position:relative;
     overflow:hidden;
 }
@@ -205,6 +217,7 @@ body{
     margin-top:6px;
     font-size:11px;
     color:#aeb8c8;
+
     white-space:nowrap;
     overflow:hidden;
     text-overflow:ellipsis;
@@ -214,14 +227,18 @@ body{
     position:absolute;
     right:-1px;
     bottom:-1px;
+
     width:20px;
     height:20px;
+
     border-radius:50%;
     background:#1677ff;
     border:2px solid #050b18;
+
     display:flex;
     align-items:center;
     justify-content:center;
+
     font-size:15px;
 }
 
@@ -260,11 +277,14 @@ body{
 .user-card{
     width:100%;
     min-height:76px;
+
     border-radius:17px;
     background:#0d1728;
     border:1px solid rgba(255,255,255,.06);
+
     display:flex;
     align-items:center;
+
     padding:11px;
 }
 
@@ -272,14 +292,40 @@ body{
     width:53px;
     height:53px;
     min-width:53px;
+
     border-radius:50%;
-    background:linear-gradient(145deg,#17345f,#0c1728);
+
+    background:
+        linear-gradient(
+            145deg,
+            #17345f,
+            #0c1728
+        );
+
     display:flex;
     align-items:center;
     justify-content:center;
+
     overflow:hidden;
+
     font-size:20px;
     font-weight:bold;
+
+    cursor:pointer;
+
+    border:1px solid rgba(255,255,255,.06);
+
+    transition:
+        transform .15s ease,
+        border-color .15s ease;
+}
+
+.profile-photo:active{
+    transform:scale(.94);
+}
+
+.profile-photo:hover{
+    border-color:rgba(23,119,255,.65);
 }
 
 .profile-photo img{
@@ -297,6 +343,7 @@ body{
 .user-name{
     font-size:15px;
     font-weight:700;
+
     white-space:nowrap;
     overflow:hidden;
     text-overflow:ellipsis;
@@ -306,6 +353,7 @@ body{
     margin-top:5px;
     color:#7f8da3;
     font-size:12px;
+
     white-space:nowrap;
     overflow:hidden;
     text-overflow:ellipsis;
@@ -314,11 +362,16 @@ body{
 .connected-btn{
     border:1px solid rgba(23,119,255,.35);
     background:rgba(23,119,255,.10);
+
     color:#63a7ff;
+
     border-radius:20px;
+
     padding:8px 12px;
+
     font-size:12px;
     font-weight:600;
+
     white-space:nowrap;
 }
 
@@ -326,10 +379,15 @@ body{
 
 .empty-box{
     padding:32px 15px;
+
     text-align:center;
+
     color:#748198;
+
     background:#0d1728;
+
     border-radius:17px;
+
     border:1px solid rgba(255,255,255,.05);
 }
 
@@ -353,9 +411,13 @@ body{
 
 .error-box{
     padding:20px;
+
     text-align:center;
+
     border-radius:17px;
+
     background:#21121a;
+
     border:1px solid rgba(255,70,100,.15);
 }
 
@@ -370,40 +432,156 @@ body{
     font-size:12px;
 }
 
+/* ================= DP VIEWER ================= */
+
+.dp-viewer{
+    position:fixed;
+    inset:0;
+
+    z-index:1000;
+
+    display:none;
+
+    align-items:center;
+    justify-content:center;
+
+    padding:20px;
+
+    background:rgba(0,0,0,.95);
+
+    backdrop-filter:blur(8px);
+    -webkit-backdrop-filter:blur(8px);
+}
+
+.dp-viewer.active{
+    display:flex;
+}
+
+.dp-viewer-image{
+    display:block;
+
+    max-width:94vw;
+    max-height:82vh;
+
+    width:auto;
+    height:auto;
+
+    object-fit:contain;
+
+    border-radius:14px;
+
+    box-shadow:
+        0 20px 70px rgba(0,0,0,.75);
+
+    animation:dpZoom .18s ease-out;
+}
+
+@keyframes dpZoom{
+
+    from{
+        transform:scale(.88);
+        opacity:0;
+    }
+
+    to{
+        transform:scale(1);
+        opacity:1;
+    }
+
+}
+
+.dp-viewer-close{
+    position:absolute;
+
+    top:18px;
+    right:18px;
+
+    width:43px;
+    height:43px;
+
+    border:0;
+    border-radius:50%;
+
+    background:rgba(255,255,255,.13);
+
+    color:#fff;
+
+    font-size:27px;
+
+    cursor:pointer;
+
+    z-index:5;
+}
+
+.dp-viewer-close:active{
+    transform:scale(.92);
+}
+
+.dp-viewer-name{
+    position:absolute;
+
+    left:20px;
+    right:20px;
+    bottom:25px;
+
+    text-align:center;
+
+    color:#fff;
+
+    font-size:15px;
+    font-weight:600;
+
+    text-shadow:
+        0 2px 8px rgba(0,0,0,.8);
+}
+
 /* ================= BOTTOM NAV ================= */
 
 .bottom-nav{
     position:fixed;
+
     left:0;
     right:0;
     bottom:0;
+
     height:70px;
+
     z-index:200;
+
     display:flex;
     align-items:center;
     justify-content:space-around;
+
     background:rgba(7,14,28,.98);
+
     border-top:1px solid rgba(255,255,255,.07);
+
     padding:5px 8px;
 }
 
 .nav-item{
     width:20%;
     height:58px;
+
     display:flex;
     align-items:center;
     justify-content:center;
+
     position:relative;
+
     cursor:pointer;
 }
 
 .nav-icon{
     width:25px;
     height:25px;
+
     display:flex;
     align-items:center;
     justify-content:center;
+
     color:#9aa7b9;
+
     font-size:23px;
 }
 
@@ -414,29 +592,45 @@ body{
 .plus-nav{
     width:44px;
     height:44px;
+
     border-radius:14px;
+
     background:#1677ff;
+
     color:#fff;
+
     display:flex;
     align-items:center;
     justify-content:center;
+
     font-size:27px;
-    box-shadow:0 5px 20px rgba(22,119,255,.25);
+
+    box-shadow:
+        0 5px 20px rgba(22,119,255,.25);
 }
 
 .notification-badge{
     position:absolute;
+
     top:7px;
     right:25%;
+
     min-width:17px;
     height:17px;
+
     padding:0 4px;
+
     border-radius:10px;
+
     background:#1677ff;
+
     color:#fff;
+
     font-size:9px;
     font-weight:bold;
+
     display:none;
+
     align-items:center;
     justify-content:center;
 }
@@ -446,31 +640,48 @@ body{
 .menu-overlay{
     position:fixed;
     inset:0;
+
     background:rgba(0,0,0,.55);
+
     z-index:300;
+
     display:none;
 }
 
 .menu-panel{
     position:absolute;
+
     top:70px;
     right:12px;
+
     width:235px;
+
     border-radius:17px;
+
     background:#101b2d;
+
     border:1px solid rgba(255,255,255,.09);
-    box-shadow:0 18px 45px rgba(0,0,0,.45);
+
+    box-shadow:
+        0 18px 45px rgba(0,0,0,.45);
+
     overflow:hidden;
 }
 
 .menu-item{
     min-height:52px;
+
     display:flex;
     align-items:center;
+
     padding:0 15px;
+
     gap:12px;
+
     color:#dce3ee;
+
     font-size:14px;
+
     cursor:pointer;
 }
 
@@ -482,9 +693,11 @@ body{
     width:27px;
     min-width:27px;
     height:27px;
+
     display:flex;
     align-items:center;
     justify-content:center;
+
     font-size:17px;
 }
 
@@ -500,7 +713,9 @@ body{
 
 .menu-item.logout{
     color:#ff7388;
+
     border-top:1px solid rgba(255,255,255,.07);
+
     margin-top:4px;
 }
 
@@ -508,17 +723,28 @@ body{
 
 .toast{
     position:fixed;
+
     left:50%;
     bottom:84px;
+
     transform:translateX(-50%);
+
     background:#17243a;
+
     color:#fff;
+
     padding:11px 17px;
+
     border-radius:22px;
+
     font-size:13px;
-    z-index:500;
+
+    z-index:1100;
+
     display:none;
-    box-shadow:0 8px 30px rgba(0,0,0,.4);
+
+    box-shadow:
+        0 8px 30px rgba(0,0,0,.4);
 }
 
 /* ================= MOBILE ================= */
@@ -563,6 +789,7 @@ body{
         right:10px;
         width:230px;
     }
+
 }
 
 @media(max-width:390px){
@@ -576,6 +803,7 @@ body{
     }
 
 }
+
 </style>
 </head>
 
@@ -604,7 +832,7 @@ body{
     </div>
 
 
-    <!-- SEARCH BOX -->
+    <!-- SEARCH -->
 
     <div
         class="search-box"
@@ -621,6 +849,8 @@ body{
 
     </div>
 
+
+    <!-- MENU -->
 
     <button
         class="menu-btn"
@@ -758,7 +988,7 @@ body{
     </div>
 
 
-    <!-- REEL -->
+    <!-- REELS -->
 
     <div
         class="nav-item"
@@ -771,7 +1001,7 @@ body{
     </div>
 
 
-    <!-- PLUS -->
+    <!-- CREATE -->
 
     <div
         class="nav-item"
@@ -828,8 +1058,6 @@ body{
 
     <div class="menu-panel">
 
-        <!-- MONETIZATION -->
-
         <div
             class="menu-item"
             onclick="goMonetization()">
@@ -848,8 +1076,6 @@ body{
 
         </div>
 
-
-        <!-- BLOCKED -->
 
         <div
             class="menu-item"
@@ -870,8 +1096,6 @@ body{
         </div>
 
 
-        <!-- PRIVACY & SECURITY -->
-
         <div
             class="menu-item"
             onclick="goPrivacy()">
@@ -890,8 +1114,6 @@ body{
 
         </div>
 
-
-        <!-- SETTINGS -->
 
         <div
             class="menu-item"
@@ -912,8 +1134,6 @@ body{
         </div>
 
 
-        <!-- HELP & SUPPORT -->
-
         <div
             class="menu-item"
             onclick="goHelp()">
@@ -932,8 +1152,6 @@ body{
 
         </div>
 
-
-        <!-- ABOUT USANEX -->
 
         <div
             class="menu-item"
@@ -975,6 +1193,33 @@ body{
 </div>
 
 
+<!-- ================= DP VIEWER ================= -->
+
+<div
+    class="dp-viewer"
+    id="dpViewer"
+    onclick="closeDPViewer(event)">
+
+    <button
+        class="dp-viewer-close"
+        onclick="closeDPViewer(event)">
+        ×
+    </button>
+
+    <img
+        class="dp-viewer-image"
+        id="dpViewerImage"
+        src=""
+        alt="Profile Photo">
+
+    <div
+        class="dp-viewer-name"
+        id="dpViewerName">
+    </div>
+
+</div>
+
+
 <!-- ================= TOAST ================= -->
 
 <div
@@ -1011,7 +1256,9 @@ function resolveCurrentUser(){
             const value =
                 localStorage.getItem(key);
 
-            if(!value) continue;
+            if(!value){
+                continue;
+            }
 
             const parsed =
                 JSON.parse(value);
@@ -1060,9 +1307,7 @@ function resolveCurrentUser(){
     ){
 
         if(!user){
-
             user = {};
-
         }
 
         user.user_id =
@@ -1084,7 +1329,8 @@ function resolveCurrentUser(){
         ){
 
             user = {
-                user_id:directId.trim()
+                user_id:
+                    directId.trim()
             };
 
         }
@@ -1105,6 +1351,7 @@ function resolveCurrentUser(){
             "youLetter"
         );
 
+
     if(letter){
 
         if(
@@ -1121,7 +1368,8 @@ function resolveCurrentUser(){
 
         }else{
 
-            letter.textContent = "U";
+            letter.textContent =
+                "U";
 
         }
 
@@ -1149,7 +1397,9 @@ async function loadConnections(){
 
     if(!currentUserId){
 
-        count.textContent = "0";
+        count.textContent =
+            "0";
+
 
         list.innerHTML = `
 
@@ -1215,7 +1465,8 @@ async function loadConnections(){
         if(!response.ok){
 
             throw new Error(
-                "HTTP " + response.status
+                "HTTP " +
+                response.status
             );
 
         }
@@ -1223,7 +1474,6 @@ async function loadConnections(){
 
         data =
             await response.json();
-
 
     }catch(error){
 
@@ -1256,7 +1506,8 @@ async function loadConnections(){
             if(!response.ok){
 
                 throw new Error(
-                    "HTTP " + response.status
+                    "HTTP " +
+                    response.status
                 );
 
             }
@@ -1264,7 +1515,6 @@ async function loadConnections(){
 
             data =
                 await response.json();
-
 
         }catch(error){
 
@@ -1274,7 +1524,8 @@ async function loadConnections(){
             );
 
 
-            count.textContent = "0";
+            count.textContent =
+                "0";
 
 
             list.innerHTML = `
@@ -1313,7 +1564,8 @@ async function loadConnections(){
         Array.isArray(data.users)
     ){
 
-        users = data.users;
+        users =
+            data.users;
 
     }
     else if(
@@ -1321,7 +1573,8 @@ async function loadConnections(){
         Array.isArray(data.connections)
     ){
 
-        users = data.connections;
+        users =
+            data.connections;
 
     }
     else if(
@@ -1329,14 +1582,16 @@ async function loadConnections(){
         Array.isArray(data.data)
     ){
 
-        users = data.data;
+        users =
+            data.data;
 
     }
 
 
     const uniqueUsers = [];
 
-    const seenIds = new Set();
+    const seenIds =
+        new Set();
 
 
     for(const user of users){
@@ -1385,7 +1640,8 @@ async function loadConnections(){
     }
 
 
-    users = uniqueUsers;
+    users =
+        uniqueUsers;
 
 
     count.textContent =
@@ -1463,6 +1719,8 @@ async function loadConnections(){
                 "user-card";
 
 
+            /* ================= DP ================= */
+
             const photoBox =
                 document.createElement(
                     "div"
@@ -1472,6 +1730,12 @@ async function loadConnections(){
                 "profile-photo";
 
 
+            /*
+                IMPORTANT:
+                DP click only opens DP.
+                It does NOT open chat.
+            */
+
             if(photo){
 
                 const img =
@@ -1479,9 +1743,12 @@ async function loadConnections(){
                         "img"
                     );
 
-                img.src = photo;
+                img.src =
+                    photo;
 
-                img.alt = name;
+                img.alt =
+                    name;
+
 
                 img.onerror =
                     function(){
@@ -1498,6 +1765,21 @@ async function loadConnections(){
                     img
                 );
 
+
+                photoBox.addEventListener(
+                    "click",
+                    function(event){
+
+                        event.stopPropagation();
+
+                        openDPViewer(
+                            photo,
+                            name
+                        );
+
+                    }
+                );
+
             }else{
 
                 photoBox.textContent =
@@ -1505,6 +1787,8 @@ async function loadConnections(){
 
             }
 
+
+            /* ================= USER INFO ================= */
 
             const info =
                 document.createElement(
@@ -1548,6 +1832,8 @@ async function loadConnections(){
             );
 
 
+            /* ================= CONNECTED BUTTON ================= */
+
             const button =
                 document.createElement(
                     "div"
@@ -1559,6 +1845,8 @@ async function loadConnections(){
             button.textContent =
                 "Connected";
 
+
+            /* ================= CARD ================= */
 
             card.appendChild(
                 photoBox
@@ -1581,6 +1869,137 @@ async function loadConnections(){
     );
 
 }
+
+
+/* =========================================================
+   DP VIEWER
+========================================================= */
+
+function openDPViewer(
+    photo,
+    name
+){
+
+    if(!photo){
+        return;
+    }
+
+
+    const viewer =
+        document.getElementById(
+            "dpViewer"
+        );
+
+    const image =
+        document.getElementById(
+            "dpViewerImage"
+        );
+
+    const nameBox =
+        document.getElementById(
+            "dpViewerName"
+        );
+
+
+    if(
+        !viewer ||
+        !image
+    ){
+
+        return;
+
+    }
+
+
+    image.src =
+        photo;
+
+    image.alt =
+        name ||
+        "Profile Photo";
+
+
+    if(nameBox){
+
+        nameBox.textContent =
+            name || "";
+
+    }
+
+
+    viewer.classList.add(
+        "active"
+    );
+
+
+    document.body.style.overflow =
+        "hidden";
+
+}
+
+
+/* =========================================================
+   CLOSE DP VIEWER
+========================================================= */
+
+function closeDPViewer(event){
+
+    /*
+       Agar image par click hua hai
+       to viewer close nahi hoga.
+    */
+
+    if(
+        event &&
+        event.target &&
+        event.target.id ===
+        "dpViewerImage"
+    ){
+
+        return;
+
+    }
+
+
+    const viewer =
+        document.getElementById(
+            "dpViewer"
+        );
+
+
+    if(viewer){
+
+        viewer.classList.remove(
+            "active"
+        );
+
+    }
+
+
+    document.body.style.overflow =
+        "";
+
+}
+
+
+/* =========================================================
+   ESC KEY
+========================================================= */
+
+document.addEventListener(
+    "keydown",
+    function(event){
+
+        if(
+            event.key === "Escape"
+        ){
+
+            closeDPViewer();
+
+        }
+
+    }
+);
 
 
 /* =========================================================
@@ -1628,12 +2047,15 @@ async function loadNotificationCount(){
 
         if(Array.isArray(data)){
 
-            notifications = data;
+            notifications =
+                data;
 
         }
         else if(
             data &&
-            Array.isArray(data.notifications)
+            Array.isArray(
+                data.notifications
+            )
         ){
 
             notifications =
@@ -1642,7 +2064,9 @@ async function loadNotificationCount(){
         }
         else if(
             data &&
-            Array.isArray(data.data)
+            Array.isArray(
+                data.data
+            )
         ){
 
             notifications =
@@ -1872,35 +2296,43 @@ const menuOverlay =
     );
 
 
-menuBtn.addEventListener(
-    "click",
-    function(event){
+if(menuBtn){
 
-        event.stopPropagation();
+    menuBtn.addEventListener(
+        "click",
+        function(event){
 
-        menuOverlay.style.display =
-            "block";
-
-    }
-);
-
-
-menuOverlay.addEventListener(
-    "click",
-    function(event){
-
-        if(
-            event.target ===
-            menuOverlay
-        ){
+            event.stopPropagation();
 
             menuOverlay.style.display =
-                "none";
+                "block";
 
         }
+    );
 
-    }
-);
+}
+
+
+if(menuOverlay){
+
+    menuOverlay.addEventListener(
+        "click",
+        function(event){
+
+            if(
+                event.target ===
+                menuOverlay
+            ){
+
+                menuOverlay.style.display =
+                    "none";
+
+            }
+
+        }
+    );
+
+}
 
 
 /* =========================================================
@@ -1911,13 +2343,42 @@ function logoutUser(){
 
     try{
 
-        localStorage.removeItem("usanex_user");
-        localStorage.removeItem("user");
-        localStorage.removeItem("currentUser");
-        localStorage.removeItem("logged_in_user");
-        localStorage.removeItem("usanex_user_id");
+        localStorage.removeItem(
+            "usanex_user"
+        );
 
-        window.location.href = "/";
+        localStorage.removeItem(
+            "user"
+        );
+
+        localStorage.removeItem(
+            "currentUser"
+        );
+
+        localStorage.removeItem(
+            "logged_in_user"
+        );
+
+        localStorage.removeItem(
+            "usanex_user_id"
+        );
+
+        localStorage.removeItem(
+            "token"
+        );
+
+
+        sessionStorage.removeItem(
+            "usanex_register"
+        );
+
+        sessionStorage.removeItem(
+            "usanex_forgot_identifier"
+        );
+
+
+        window.location.href =
+            "/";
 
     }catch(error){
 
@@ -1926,9 +2387,13 @@ function logoutUser(){
             error
         );
 
-        window.location.href = "/";
+        window.location.href =
+            "/";
+
     }
+
 }
+
 
 /* =========================================================
    INITIAL LOAD
