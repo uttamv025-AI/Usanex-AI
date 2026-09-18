@@ -6,7 +6,7 @@
 
 <meta
     name="viewport"
-    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
 >
 
 <title>Usanex Chat</title>
@@ -24,41 +24,32 @@
     -webkit-tap-highlight-color:transparent;
 }
 
-
-/* =========================================================
-   BODY
-========================================================= */
-
 html,
 body{
     width:100%;
     height:100%;
-    min-height:100%;
+    margin:0;
+    padding:0;
 }
 
 body{
     font-family:Arial,Helvetica,sans-serif;
-
     background:#050b18;
-
     color:#fff;
-
     overflow:hidden;
 }
 
 
 /* =========================================================
-   MAIN CHAT APP
+   CHAT APP
 ========================================================= */
 
 .chat-app{
-
     width:100%;
-
     max-width:600px;
 
+    height:100vh;
     height:100dvh;
-    min-height:100dvh;
 
     margin:0 auto;
 
@@ -71,7 +62,6 @@ body{
         #050b18;
 
     display:flex;
-
     flex-direction:column;
 
     overflow:hidden;
@@ -85,53 +75,45 @@ body{
 ========================================================= */
 
 .chat-header{
-
     width:100%;
 
     height:70px;
-
     min-height:70px;
 
-    flex-shrink:0;
+    flex:0 0 70px;
 
     display:flex;
-
     align-items:center;
 
     padding:10px 14px;
 
-    background:rgba(5,11,24,.97);
+    background:rgba(5,11,24,.98);
 
     border-bottom:
         1px solid
         rgba(255,255,255,.07);
 
     backdrop-filter:blur(18px);
-
     -webkit-backdrop-filter:blur(18px);
 
     position:relative;
 
-    z-index:100;
+    z-index:1000;
 
     overflow:hidden;
 }
 
 
 /* =========================================================
-   BACK BUTTON
+   BACK
 ========================================================= */
 
 .back-btn{
-
     width:40px;
-
     height:40px;
-
     min-width:40px;
 
     border:0;
-
     background:transparent;
 
     color:#fff;
@@ -141,9 +123,7 @@ body{
     cursor:pointer;
 
     display:flex;
-
     align-items:center;
-
     justify-content:center;
 }
 
@@ -153,15 +133,12 @@ body{
 ========================================================= */
 
 .profile{
-
     display:flex;
-
     align-items:center;
 
     gap:11px;
 
     flex:1;
-
     min-width:0;
 
     overflow:hidden;
@@ -173,9 +150,7 @@ body{
 ========================================================= */
 
 .profile-photo{
-
     width:43px;
-
     height:43px;
 
     min-width:43px;
@@ -183,9 +158,7 @@ body{
     border-radius:50%;
 
     display:flex;
-
     align-items:center;
-
     justify-content:center;
 
     background:
@@ -200,8 +173,9 @@ body{
         rgba(33,133,255,.7);
 
     font-size:19px;
-
     font-weight:800;
+
+    overflow:hidden;
 
     box-shadow:
         0 0 0 3px
@@ -209,15 +183,10 @@ body{
 
         0 4px 16px
         rgba(0,100,255,.25);
-
-    overflow:hidden;
 }
 
-
 .profile-photo img{
-
     width:100%;
-
     height:100%;
 
     object-fit:cover;
@@ -231,23 +200,13 @@ body{
 ========================================================= */
 
 .profile-info{
-
     min-width:0;
-
     flex:1;
-
     overflow:hidden;
 }
 
-
-/* =========================================================
-   PROFILE NAME
-========================================================= */
-
 .profile-name{
-
     font-size:16px;
-
     font-weight:700;
 
     white-space:nowrap;
@@ -263,7 +222,6 @@ body{
 ========================================================= */
 
 .online{
-
     margin-top:3px;
 
     font-size:12px;
@@ -277,11 +235,8 @@ body{
     gap:5px;
 }
 
-
 .online-dot{
-
     width:7px;
-
     height:7px;
 
     min-width:7px;
@@ -301,9 +256,7 @@ body{
 ========================================================= */
 
 .header-action{
-
     width:38px;
-
     height:38px;
 
     min-width:38px;
@@ -334,12 +287,11 @@ body{
 ========================================================= */
 
 .chat-area{
+    width:100%;
 
-    flex:1;
+    flex:1 1 auto;
 
     min-height:0;
-
-    width:100%;
 
     overflow-y:auto;
 
@@ -353,11 +305,11 @@ body{
     scrollbar-width:none;
 
     overscroll-behavior:contain;
+
+    -webkit-overflow-scrolling:touch;
 }
 
-
 .chat-area::-webkit-scrollbar{
-
     display:none;
 }
 
@@ -367,7 +319,6 @@ body{
 ========================================================= */
 
 .date-divider{
-
     text-align:center;
 
     margin:
@@ -375,9 +326,7 @@ body{
         20px;
 }
 
-
 .date-divider span{
-
     display:inline-block;
 
     padding:
@@ -400,37 +349,26 @@ body{
 
 
 /* =========================================================
-   MESSAGE ROW
-========================================================= */
-
-.message-row{
-
-    display:flex;
-
-    margin-bottom:13px;
-
-    width:100%;
-}
-
-
-.message-row.received{
-
-    justify-content:flex-start;
-}
-
-
-.message-row.sent{
-
-    justify-content:flex-end;
-}
-
-
-/* =========================================================
    MESSAGE
 ========================================================= */
 
-.message{
+.message-row{
+    display:flex;
 
+    width:100%;
+
+    margin-bottom:13px;
+}
+
+.message-row.received{
+    justify-content:flex-start;
+}
+
+.message-row.sent{
+    justify-content:flex-end;
+}
+
+.message{
     max-width:76%;
 
     padding:
@@ -451,13 +389,7 @@ body{
     white-space:pre-wrap;
 }
 
-
-/* =========================================================
-   RECEIVED MESSAGE
-========================================================= */
-
 .received .message{
-
     background:#111b2d;
 
     border:
@@ -471,13 +403,7 @@ body{
         rgba(0,0,0,.15);
 }
 
-
-/* =========================================================
-   SENT MESSAGE
-========================================================= */
-
 .sent .message{
-
     background:
         linear-gradient(
             135deg,
@@ -498,7 +424,6 @@ body{
 ========================================================= */
 
 .message-time{
-
     display:flex;
 
     justify-content:flex-end;
@@ -515,16 +440,12 @@ body{
         rgba(255,255,255,.48);
 }
 
-
 .sent .message-time{
-
     color:
         rgba(255,255,255,.68);
 }
 
-
 .read{
-
     font-size:11px;
 
     color:#b9ddff;
@@ -536,7 +457,6 @@ body{
 ========================================================= */
 
 .typing{
-
     display:none;
 
     align-items:center;
@@ -560,17 +480,12 @@ body{
         rgba(255,255,255,.05);
 }
 
-
 .typing.show{
-
     display:flex;
 }
 
-
 .typing span{
-
     width:5px;
-
     height:5px;
 
     border-radius:50%;
@@ -583,25 +498,19 @@ body{
         infinite;
 }
 
-
 .typing span:nth-child(2){
-
     animation-delay:.15s;
 }
 
-
 .typing span:nth-child(3){
-
     animation-delay:.3s;
 }
-
 
 @keyframes typing{
 
     0%,
     60%,
     100%{
-
         transform:
             translateY(0);
 
@@ -609,7 +518,6 @@ body{
     }
 
     30%{
-
         transform:
             translateY(-4px);
 
@@ -623,12 +531,11 @@ body{
 ========================================================= */
 
 .composer-area{
-
-    position:relative;
-
     width:100%;
 
-    flex-shrink:0;
+    flex:0 0 auto;
+
+    position:relative;
 
     padding:
         10px
@@ -642,7 +549,7 @@ body{
             rgba(5,11,24,.85)
         );
 
-    z-index:80;
+    z-index:900;
 }
 
 
@@ -651,10 +558,9 @@ body{
 ========================================================= */
 
 .composer{
+    width:100%;
 
     min-height:52px;
-
-    width:100%;
 
     display:flex;
 
@@ -687,9 +593,7 @@ body{
 ========================================================= */
 
 .composer-btn{
-
     width:38px;
-
     height:38px;
 
     min-width:38px;
@@ -713,9 +617,7 @@ body{
     justify-content:center;
 }
 
-
 .composer-btn:active{
-
     transform:scale(.92);
 }
 
@@ -725,10 +627,11 @@ body{
 ========================================================= */
 
 .message-input{
-
     flex:1;
 
     width:100%;
+
+    min-width:0;
 
     border:0;
 
@@ -739,25 +642,19 @@ body{
     color:#fff;
 
     font-size:14px;
-
-    min-width:0;
 }
 
-
 .message-input::placeholder{
-
     color:#66748b;
 }
 
 
 /* =========================================================
-   SEND BUTTON
+   SEND
 ========================================================= */
 
 .send-btn{
-
     width:40px;
-
     height:40px;
 
     min-width:40px;
@@ -790,9 +687,7 @@ body{
         rgba(0,100,255,.28);
 }
 
-
 .send-btn:active{
-
     transform:scale(.92);
 }
 
@@ -802,7 +697,6 @@ body{
 ========================================================= */
 
 .attach-menu{
-
     display:none;
 
     position:absolute;
@@ -827,20 +721,15 @@ body{
 
     gap:7px;
 
-    z-index:200;
+    z-index:2000;
 }
 
-
 .attach-menu.show{
-
     display:flex;
 }
 
-
 .attach-item{
-
     width:42px;
-
     height:42px;
 
     border:0;
@@ -863,7 +752,6 @@ body{
 ========================================================= */
 
 .emoji-panel{
-
     display:none;
 
     position:absolute;
@@ -871,7 +759,6 @@ body{
     bottom:77px;
 
     left:12px;
-
     right:12px;
 
     padding:12px;
@@ -893,18 +780,14 @@ body{
 
     gap:8px;
 
-    z-index:200;
+    z-index:2000;
 }
 
-
 .emoji-panel.show{
-
     display:grid;
 }
 
-
 .emoji{
-
     border:0;
 
     background:transparent;
@@ -920,7 +803,6 @@ body{
 ========================================================= */
 
 .toast{
-
     position:fixed;
 
     left:50%;
@@ -953,12 +835,10 @@ body{
 
     transition:.25s;
 
-    z-index:500;
+    z-index:5000;
 }
 
-
 .toast.show{
-
     opacity:1;
 
     transform:
@@ -973,17 +853,23 @@ body{
 
 @media(max-width:500px){
 
+    .chat-app{
+        height:100vh;
+        height:100dvh;
+    }
+
     .chat-header{
 
         height:66px;
 
         min-height:66px;
 
+        flex:0 0 66px;
+
         padding:
             9px
             10px;
     }
-
 
     .back-btn{
 
@@ -994,7 +880,6 @@ body{
         min-width:37px;
     }
 
-
     .profile-photo{
 
         width:41px;
@@ -1004,22 +889,21 @@ body{
         min-width:41px;
     }
 
-
     .profile-name{
 
         font-size:15px;
     }
 
-
     .chat-area{
+
+        flex:1 1 auto;
+
+        min-height:0;
 
         padding-left:12px;
 
         padding-right:12px;
-
-        padding-bottom:20px;
     }
-
 
     .message{
 
@@ -1028,15 +912,15 @@ body{
         font-size:14px;
     }
 
-
     .composer-area{
+
+        flex:0 0 auto;
 
         padding:
             8px
             9px
             12px;
     }
-
 
     .composer{
 
@@ -1049,7 +933,72 @@ body{
 
 
 /* =========================================================
-   VERY SMALL SCREEN
+   ANDROID KEYBOARD MODE
+========================================================= */
+
+/*
+   When Android keyboard opens, body/app must NOT
+   resize the header itself.
+*/
+
+body.keyboard-open .chat-app{
+
+    height:100vh;
+
+    max-height:100vh;
+}
+
+body.keyboard-open .chat-header{
+
+    flex:0 0 66px;
+
+    height:66px;
+
+    min-height:66px;
+}
+
+body.keyboard-open .chat-area{
+
+    min-height:0;
+
+    overflow-y:auto;
+}
+
+body.keyboard-open .composer-area{
+
+    flex-shrink:0;
+}
+
+
+/* =========================================================
+   SAFE AREA
+========================================================= */
+
+@supports(padding:max(0px)){
+
+    .chat-header{
+
+        padding-top:
+            max(
+                10px,
+                env(safe-area-inset-top)
+            );
+    }
+
+    .composer-area{
+
+        padding-bottom:
+            max(
+                14px,
+                env(safe-area-inset-bottom)
+            );
+    }
+
+}
+
+
+/* =========================================================
+   SMALL DEVICES
 ========================================================= */
 
 @media(max-width:360px){
@@ -1061,24 +1010,20 @@ body{
         padding-right:6px;
     }
 
-
     .profile{
 
         gap:8px;
     }
-
 
     .profile-name{
 
         font-size:14px;
     }
 
-
     .online{
 
         font-size:11px;
     }
-
 
     .composer{
 
@@ -1089,14 +1034,12 @@ body{
         padding-right:5px;
     }
 
-
     .composer-btn{
 
         width:34px;
 
         min-width:34px;
     }
-
 
     .send-btn{
 
@@ -1192,7 +1135,7 @@ body{
 
 
     <!-- =====================================================
-         CHAT AREA
+         CHAT
     ====================================================== -->
 
     <main
@@ -1209,7 +1152,7 @@ body{
         </div>
 
 
-        <!-- REAL MESSAGES WILL COME HERE -->
+        <!-- REAL MESSAGES -->
 
 
         <div
@@ -1219,13 +1162,11 @@ body{
 
             <div class="typing">
 
-
                 <span></span>
 
                 <span></span>
 
                 <span></span>
-
 
             </div>
 
@@ -1244,7 +1185,7 @@ body{
     <div class="composer-area">
 
 
-        <!-- ATTACHMENT MENU -->
+        <!-- ATTACHMENT -->
 
         <div
             class="attach-menu"
@@ -1282,7 +1223,7 @@ body{
 
 
 
-        <!-- EMOJI PANEL -->
+        <!-- EMOJI -->
 
         <div
             class="emoji-panel"
@@ -1391,8 +1332,6 @@ body{
 
 
 
-        <!-- COMPOSER -->
-
         <div class="composer">
 
 
@@ -1411,6 +1350,7 @@ body{
                 type="text"
                 placeholder="Message..."
                 autocomplete="off"
+                enterkeyhint="send"
                 onkeydown="handleKey(event)"
             >
 
@@ -1615,14 +1555,10 @@ function getCurrentUserId(){
     }
 
 
-    const fallback =
+    return (
         localStorage.getItem(
             "usanex_user_id"
-        );
-
-
-    return (
-        fallback || ""
+        ) || ""
     ).trim();
 
 }
@@ -1699,7 +1635,7 @@ function goBack(){
 
 
 /* =========================================================
-   INITIAL
+   PROFILE INITIAL
 ========================================================= */
 
 function getInitial(name){
@@ -1711,14 +1647,12 @@ function getInitial(name){
     }
 
 
-    const first =
+    return (
         String(name)
         .trim()
         .charAt(0)
-        .toUpperCase();
-
-
-    return first || "U";
+        .toUpperCase()
+    ) || "U";
 
 }
 
@@ -1798,25 +1732,24 @@ async function loadChat(){
 
     try{
 
-        const url =
-            "/api/chat/messages?user_id=" +
-            encodeURIComponent(
-                currentUserId
-            ) +
-            "&other_user_id=" +
-            encodeURIComponent(
-                otherUserId
-            );
-
-
         const response =
             await fetch(
-                url,
+
+                "/api/chat/messages?user_id=" +
+                encodeURIComponent(
+                    currentUserId
+                ) +
+                "&other_user_id=" +
+                encodeURIComponent(
+                    otherUserId
+                ),
+
                 {
                     method:"GET",
 
                     cache:"no-store"
                 }
+
             );
 
 
@@ -1837,7 +1770,7 @@ async function loadChat(){
 
 
         /* =========================
-           USER HEADER
+           DB USER HEADER
         ========================= */
 
         if(
@@ -1856,14 +1789,14 @@ async function loadChat(){
 
 
         /* =========================
-           CLEAR MESSAGES
+           CLEAR
         ========================= */
 
         clearMessages();
 
 
         /* =========================
-           LOAD MESSAGES
+           MESSAGES
         ========================= */
 
         if(
@@ -1888,7 +1821,7 @@ async function loadChat(){
         scrollBottom();
 
 
-        await markMessagesRead();
+        markMessagesRead();
 
 
     }catch(error){
@@ -1897,10 +1830,6 @@ async function loadChat(){
             "Chat load error:",
             error
         );
-
-
-        chatName.textContent =
-            "User";
 
 
         onlineText.textContent =
@@ -1979,14 +1908,8 @@ function addMessageFromServer(
     }
 
 
-    const type =
-        sender === currentUserId
-        ? "sent"
-        : "received";
-
-
     /* =========================
-       DUPLICATE CHECK
+       DUPLICATE
     ========================= */
 
     if(
@@ -2005,9 +1928,11 @@ function addMessageFromServer(
     }
 
 
-    /* =========================
-       ROW
-    ========================= */
+    const type =
+        sender === currentUserId
+        ? "sent"
+        : "received";
+
 
     const row =
         document.createElement(
@@ -2030,10 +1955,6 @@ function addMessageFromServer(
     }
 
 
-    /* =========================
-       BUBBLE
-    ========================= */
-
     const bubble =
         document.createElement(
             "div"
@@ -2044,10 +1965,6 @@ function addMessageFromServer(
         "message";
 
 
-    /* =========================
-       TEXT
-    ========================= */
-
     const textElement =
         document.createElement(
             "div"
@@ -2057,10 +1974,6 @@ function addMessageFromServer(
     textElement.textContent =
         text;
 
-
-    /* =========================
-       TIME
-    ========================= */
 
     const time =
         document.createElement(
@@ -2077,10 +1990,6 @@ function addMessageFromServer(
             message.created_at
         );
 
-
-    /* =========================
-       READ
-    ========================= */
 
     if(
         type === "sent"
@@ -2133,7 +2042,7 @@ function addMessageFromServer(
 
 
 /* =========================================================
-   SEND MESSAGE
+   SEND
 ========================================================= */
 
 let sending =
@@ -2229,10 +2138,6 @@ async function sendMessage(){
         }
 
 
-        /*
-         * Add saved message.
-         */
-
         if(
             data.message
         ){
@@ -2292,7 +2197,7 @@ async function sendMessage(){
 
 
 /* =========================================================
-   FORMAT TIME
+   TIME
 ========================================================= */
 
 function formatTime(
@@ -2415,7 +2320,7 @@ function toggleAttach(){
 
 
 /* =========================================================
-   SCROLL BOTTOM
+   SCROLL
 ========================================================= */
 
 function scrollBottom(){
@@ -2480,7 +2385,7 @@ function showToast(
 
 
 /* =========================================================
-   MARK READ
+   READ
 ========================================================= */
 
 async function markMessagesRead(){
@@ -2533,10 +2438,8 @@ async function markMessagesRead(){
 let socket =
     null;
 
-
 let reconnectTimer =
     null;
-
 
 let manuallyClosed =
     false;
@@ -2682,7 +2585,7 @@ function connectWebSocket(){
     }catch(error){
 
         console.error(
-            "WebSocket connection error:",
+            "WebSocket error:",
             error
         );
 
@@ -2717,10 +2620,6 @@ function handleWebSocketMessage(
     }
 
 
-    /* =========================
-       CONNECTED
-    ========================= */
-
     if(
         data.type ===
         "websocket_connected"
@@ -2733,10 +2632,6 @@ function handleWebSocketMessage(
 
     }
 
-
-    /* =========================
-       CHAT MESSAGE
-    ========================= */
 
     if(
         data.type ===
@@ -2768,10 +2663,6 @@ function handleWebSocketMessage(
             ).trim();
 
 
-        /*
-         * Only exact conversation.
-         */
-
         const belongsToChat =
             (
                 sender === currentUserId &&
@@ -2790,10 +2681,6 @@ function handleWebSocketMessage(
 
         }
 
-
-        /*
-         * Don't duplicate.
-         */
 
         if(
             message.id &&
@@ -2831,6 +2718,121 @@ function handleWebSocketMessage(
     }
 
 }
+
+
+/* =========================================================
+   ANDROID KEYBOARD DETECTION
+========================================================= */
+
+let initialViewportHeight =
+    window.innerHeight;
+
+
+function updateKeyboardState(){
+
+    const viewport =
+        window.visualViewport;
+
+
+    if(!viewport){
+
+        return;
+
+    }
+
+
+    const keyboardHeight =
+        Math.max(
+            0,
+            window.innerHeight -
+            viewport.height
+        );
+
+
+    /*
+     * Around 120px+ difference usually
+     * means Android keyboard is open.
+     */
+
+    if(
+        keyboardHeight > 120
+    ){
+
+        document.body.classList.add(
+            "keyboard-open"
+        );
+
+    }else{
+
+        document.body.classList.remove(
+            "keyboard-open"
+        );
+
+    }
+
+}
+
+
+if(
+    window.visualViewport
+){
+
+    window.visualViewport.addEventListener(
+        "resize",
+        updateKeyboardState
+    );
+
+
+    window.visualViewport.addEventListener(
+        "scroll",
+        updateKeyboardState
+    );
+
+}
+
+
+window.addEventListener(
+    "resize",
+    updateKeyboardState
+);
+
+
+/* =========================================================
+   INPUT FOCUS
+========================================================= */
+
+input.addEventListener(
+    "focus",
+    function(){
+
+        setTimeout(
+            function(){
+
+                updateKeyboardState();
+
+            },
+            100
+        );
+
+    }
+);
+
+
+input.addEventListener(
+    "blur",
+    function(){
+
+        setTimeout(
+            function(){
+
+                updateKeyboardState();
+
+            },
+            250
+        );
+
+    }
+);
 
 
 /* =========================================================
@@ -2879,7 +2881,7 @@ document.addEventListener(
 
 
 /* =========================================================
-   PAGE VISIBILITY
+   VISIBILITY
 ========================================================= */
 
 document.addEventListener(
@@ -2917,24 +2919,14 @@ window.addEventListener(
         }
 
 
-        /*
-         * Load DB user + messages
-         * first.
-         */
+        updateKeyboardState();
+
 
         await loadChat();
 
 
-        /*
-         * Then connect websocket.
-         */
-
         connectWebSocket();
 
-
-        /*
-         * Focus input.
-         */
 
         input.focus();
 
