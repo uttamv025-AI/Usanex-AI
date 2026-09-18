@@ -1,11 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+>
+
 <title>Usanex Chat</title>
 
 <style>
+
+/* =========================================================
+   RESET
+========================================================= */
+
 *{
     box-sizing:border-box;
     margin:0;
@@ -13,138 +24,297 @@
     -webkit-tap-highlight-color:transparent;
 }
 
+
+/* =========================================================
+   BODY
+========================================================= */
+
+html,
+body{
+    width:100%;
+    height:100%;
+    min-height:100%;
+}
+
 body{
     font-family:Arial,Helvetica,sans-serif;
+
     background:#050b18;
+
     color:#fff;
-    height:100vh;
+
     overflow:hidden;
 }
 
+
+/* =========================================================
+   MAIN CHAT APP
+========================================================= */
+
 .chat-app{
+
     width:100%;
+
     max-width:600px;
-    height:100vh;
-    margin:auto;
+
+    height:100dvh;
+    min-height:100dvh;
+
+    margin:0 auto;
+
     background:
-        radial-gradient(circle at 50% 20%,rgba(0,100,255,.08),transparent 35%),
+        radial-gradient(
+            circle at 50% 20%,
+            rgba(0,100,255,.08),
+            transparent 35%
+        ),
         #050b18;
+
     display:flex;
+
     flex-direction:column;
+
+    overflow:hidden;
+
+    position:relative;
 }
 
+
+/* =========================================================
+   HEADER
+========================================================= */
+
 .chat-header{
+
+    width:100%;
+
     height:70px;
+
     min-height:70px;
 
+    flex-shrink:0;
+
     display:flex;
+
     align-items:center;
 
     padding:10px 14px;
 
-    background:rgba(5,11,24,.92);
-    border-bottom:1px solid rgba(255,255,255,.07);
+    background:rgba(5,11,24,.97);
+
+    border-bottom:
+        1px solid
+        rgba(255,255,255,.07);
 
     backdrop-filter:blur(18px);
+
     -webkit-backdrop-filter:blur(18px);
+
+    position:relative;
+
+    z-index:100;
+
+    overflow:hidden;
 }
 
+
+/* =========================================================
+   BACK BUTTON
+========================================================= */
+
 .back-btn{
+
     width:40px;
+
     height:40px;
 
+    min-width:40px;
+
     border:0;
+
     background:transparent;
+
     color:#fff;
 
     font-size:27px;
+
     cursor:pointer;
 
     display:flex;
+
     align-items:center;
+
     justify-content:center;
 }
 
+
+/* =========================================================
+   PROFILE
+========================================================= */
+
 .profile{
+
     display:flex;
+
     align-items:center;
+
     gap:11px;
+
     flex:1;
+
     min-width:0;
+
+    overflow:hidden;
 }
 
+
+/* =========================================================
+   PROFILE PHOTO
+========================================================= */
+
 .profile-photo{
+
     width:43px;
+
     height:43px;
+
     min-width:43px;
 
     border-radius:50%;
 
     display:flex;
+
     align-items:center;
+
     justify-content:center;
 
-    background:linear-gradient(145deg,#2185ff,#0049b5);
+    background:
+        linear-gradient(
+            145deg,
+            #2185ff,
+            #0049b5
+        );
 
-    border:2px solid rgba(33,133,255,.7);
+    border:
+        2px solid
+        rgba(33,133,255,.7);
 
     font-size:19px;
+
     font-weight:800;
 
     box-shadow:
-        0 0 0 3px rgba(33,133,255,.08),
-        0 4px 16px rgba(0,100,255,.25);
+        0 0 0 3px
+        rgba(33,133,255,.08),
+
+        0 4px 16px
+        rgba(0,100,255,.25);
 
     overflow:hidden;
 }
 
+
 .profile-photo img{
+
     width:100%;
+
     height:100%;
+
     object-fit:cover;
+
     display:block;
 }
 
+
+/* =========================================================
+   PROFILE INFO
+========================================================= */
+
 .profile-info{
+
     min-width:0;
+
+    flex:1;
+
+    overflow:hidden;
 }
 
+
+/* =========================================================
+   PROFILE NAME
+========================================================= */
+
 .profile-name{
+
     font-size:16px;
+
     font-weight:700;
 
     white-space:nowrap;
+
     overflow:hidden;
+
     text-overflow:ellipsis;
 }
 
+
+/* =========================================================
+   ONLINE
+========================================================= */
+
 .online{
+
     margin-top:3px;
 
     font-size:12px;
+
     color:#65a9ff;
 
     display:flex;
+
     align-items:center;
+
     gap:5px;
 }
 
+
 .online-dot{
+
     width:7px;
+
     height:7px;
+
+    min-width:7px;
+
     border-radius:50%;
+
     background:#3d91ff;
-    box-shadow:0 0 8px rgba(61,145,255,.8);
+
+    box-shadow:
+        0 0 8px
+        rgba(61,145,255,.8);
 }
 
+
+/* =========================================================
+   HEADER ACTION
+========================================================= */
+
 .header-action{
+
     width:38px;
+
     height:38px;
 
+    min-width:38px;
+
     border:0;
+
     border-radius:12px;
 
-    background:rgba(255,255,255,.05);
+    background:
+        rgba(255,255,255,.05);
+
     color:#fff;
 
     font-size:21px;
@@ -152,83 +322,162 @@ body{
     cursor:pointer;
 
     display:flex;
+
     align-items:center;
+
     justify-content:center;
 }
 
+
+/* =========================================================
+   CHAT AREA
+========================================================= */
+
 .chat-area{
+
     flex:1;
+
+    min-height:0;
+
+    width:100%;
+
     overflow-y:auto;
 
-    padding:18px 15px 20px;
+    overflow-x:hidden;
+
+    padding:
+        18px
+        15px
+        20px;
 
     scrollbar-width:none;
+
+    overscroll-behavior:contain;
 }
 
+
 .chat-area::-webkit-scrollbar{
+
     display:none;
 }
 
+
+/* =========================================================
+   DATE
+========================================================= */
+
 .date-divider{
+
     text-align:center;
-    margin:8px 0 20px;
+
+    margin:
+        8px 0
+        20px;
 }
 
+
 .date-divider span{
+
     display:inline-block;
 
-    padding:6px 12px;
+    padding:
+        6px
+        12px;
 
     border-radius:20px;
 
-    background:rgba(255,255,255,.055);
-    border:1px solid rgba(255,255,255,.06);
+    background:
+        rgba(255,255,255,.055);
+
+    border:
+        1px solid
+        rgba(255,255,255,.06);
 
     color:#8491a7;
 
     font-size:11px;
 }
 
+
+/* =========================================================
+   MESSAGE ROW
+========================================================= */
+
 .message-row{
+
     display:flex;
+
     margin-bottom:13px;
+
+    width:100%;
 }
 
+
 .message-row.received{
+
     justify-content:flex-start;
 }
 
+
 .message-row.sent{
+
     justify-content:flex-end;
 }
 
+
+/* =========================================================
+   MESSAGE
+========================================================= */
+
 .message{
+
     max-width:76%;
-    padding:11px 13px 8px;
+
+    padding:
+        11px
+        13px
+        8px;
 
     border-radius:16px;
 
     position:relative;
 
     font-size:14px;
+
     line-height:1.45;
 
     word-break:break-word;
+
     white-space:pre-wrap;
 }
 
+
+/* =========================================================
+   RECEIVED MESSAGE
+========================================================= */
+
 .received .message{
+
     background:#111b2d;
 
-    border:1px solid rgba(255,255,255,.055);
+    border:
+        1px solid
+        rgba(255,255,255,.055);
 
     border-bottom-left-radius:5px;
 
     box-shadow:
-        0 5px 18px rgba(0,0,0,.15);
+        0 5px 18px
+        rgba(0,0,0,.15);
 }
 
+
+/* =========================================================
+   SENT MESSAGE
+========================================================= */
+
 .sent .message{
+
     background:
         linear-gradient(
             135deg,
@@ -239,87 +488,152 @@ body{
     border-bottom-right-radius:5px;
 
     box-shadow:
-        0 5px 20px rgba(0,100,255,.20);
+        0 5px 20px
+        rgba(0,100,255,.20);
 }
 
+
+/* =========================================================
+   MESSAGE TIME
+========================================================= */
+
 .message-time{
+
     display:flex;
+
     justify-content:flex-end;
+
     align-items:center;
+
     gap:4px;
 
     margin-top:4px;
 
     font-size:9px;
 
-    color:rgba(255,255,255,.48);
+    color:
+        rgba(255,255,255,.48);
 }
+
 
 .sent .message-time{
-    color:rgba(255,255,255,.68);
+
+    color:
+        rgba(255,255,255,.68);
 }
 
+
 .read{
+
     font-size:11px;
+
     color:#b9ddff;
 }
 
+
+/* =========================================================
+   TYPING
+========================================================= */
+
 .typing{
+
     display:none;
 
     align-items:center;
+
     gap:5px;
 
     width:max-content;
 
-    padding:10px 13px;
+    padding:
+        10px
+        13px;
 
     border-radius:15px;
+
     border-bottom-left-radius:5px;
 
     background:#111b2d;
-    border:1px solid rgba(255,255,255,.05);
+
+    border:
+        1px solid
+        rgba(255,255,255,.05);
 }
 
+
 .typing.show{
+
     display:flex;
 }
 
+
 .typing span{
+
     width:5px;
+
     height:5px;
 
     border-radius:50%;
 
     background:#71809a;
 
-    animation:typing 1.2s infinite;
+    animation:
+        typing
+        1.2s
+        infinite;
 }
 
+
 .typing span:nth-child(2){
+
     animation-delay:.15s;
 }
 
+
 .typing span:nth-child(3){
+
     animation-delay:.3s;
 }
 
+
 @keyframes typing{
-    0%,60%,100%{
-        transform:translateY(0);
+
+    0%,
+    60%,
+    100%{
+
+        transform:
+            translateY(0);
+
         opacity:.5;
     }
 
     30%{
-        transform:translateY(-4px);
+
+        transform:
+            translateY(-4px);
+
         opacity:1;
     }
 }
 
+
+/* =========================================================
+   COMPOSER AREA
+========================================================= */
+
 .composer-area{
+
     position:relative;
 
-    padding:10px 12px 14px;
+    width:100%;
+
+    flex-shrink:0;
+
+    padding:
+        10px
+        12px
+        14px;
 
     background:
         linear-gradient(
@@ -327,36 +641,65 @@ body{
             #050b18 70%,
             rgba(5,11,24,.85)
         );
+
+    z-index:80;
 }
 
+
+/* =========================================================
+   COMPOSER
+========================================================= */
+
 .composer{
+
     min-height:52px;
 
+    width:100%;
+
     display:flex;
+
     align-items:center;
+
     gap:7px;
 
-    padding:6px 7px 6px 9px;
+    padding:
+        6px
+        7px
+        6px
+        9px;
 
     background:#0d1729;
 
-    border:1px solid rgba(255,255,255,.07);
+    border:
+        1px solid
+        rgba(255,255,255,.07);
 
     border-radius:18px;
 
     box-shadow:
-        0 8px 25px rgba(0,0,0,.22);
+        0 8px 25px
+        rgba(0,0,0,.22);
 }
 
+
+/* =========================================================
+   COMPOSER BUTTON
+========================================================= */
+
 .composer-btn{
+
     width:38px;
+
     height:38px;
+
     min-width:38px;
 
     border:0;
+
     border-radius:12px;
 
     background:transparent;
+
     color:#9eabc0;
 
     font-size:20px;
@@ -364,18 +707,31 @@ body{
     cursor:pointer;
 
     display:flex;
+
     align-items:center;
+
     justify-content:center;
 }
 
+
 .composer-btn:active{
+
     transform:scale(.92);
 }
 
+
+/* =========================================================
+   INPUT
+========================================================= */
+
 .message-input{
+
     flex:1;
 
+    width:100%;
+
     border:0;
+
     outline:0;
 
     background:transparent;
@@ -387,16 +743,27 @@ body{
     min-width:0;
 }
 
+
 .message-input::placeholder{
+
     color:#66748b;
 }
 
+
+/* =========================================================
+   SEND BUTTON
+========================================================= */
+
 .send-btn{
+
     width:40px;
+
     height:40px;
+
     min-width:40px;
 
     border:0;
+
     border-radius:14px;
 
     background:
@@ -413,23 +780,35 @@ body{
     cursor:pointer;
 
     display:flex;
+
     align-items:center;
+
     justify-content:center;
 
     box-shadow:
-        0 5px 16px rgba(0,100,255,.28);
+        0 5px 16px
+        rgba(0,100,255,.28);
 }
 
+
 .send-btn:active{
+
     transform:scale(.92);
 }
 
+
+/* =========================================================
+   ATTACHMENT MENU
+========================================================= */
+
 .attach-menu{
+
     display:none;
 
     position:absolute;
 
     bottom:78px;
+
     left:12px;
 
     padding:9px;
@@ -438,27 +817,38 @@ body{
 
     background:#101c30;
 
-    border:1px solid rgba(255,255,255,.08);
+    border:
+        1px solid
+        rgba(255,255,255,.08);
 
-    box-shadow:0 12px 35px rgba(0,0,0,.35);
+    box-shadow:
+        0 12px 35px
+        rgba(0,0,0,.35);
 
     gap:7px;
 
-    z-index:20;
+    z-index:200;
 }
 
+
 .attach-menu.show{
+
     display:flex;
 }
 
+
 .attach-item{
+
     width:42px;
+
     height:42px;
 
     border:0;
+
     border-radius:12px;
 
-    background:rgba(255,255,255,.06);
+    background:
+        rgba(255,255,255,.06);
 
     color:#fff;
 
@@ -467,13 +857,21 @@ body{
     cursor:pointer;
 }
 
+
+/* =========================================================
+   EMOJI PANEL
+========================================================= */
+
 .emoji-panel{
+
     display:none;
 
     position:absolute;
 
     bottom:77px;
+
     left:12px;
+
     right:12px;
 
     padding:12px;
@@ -482,23 +880,33 @@ body{
 
     background:#0f1a2d;
 
-    border:1px solid rgba(255,255,255,.07);
+    border:
+        1px solid
+        rgba(255,255,255,.07);
 
-    box-shadow:0 12px 35px rgba(0,0,0,.3);
+    box-shadow:
+        0 12px 35px
+        rgba(0,0,0,.3);
 
-    grid-template-columns:repeat(8,1fr);
+    grid-template-columns:
+        repeat(8,1fr);
 
     gap:8px;
 
-    z-index:20;
+    z-index:200;
 }
 
+
 .emoji-panel.show{
+
     display:grid;
 }
 
+
 .emoji{
+
     border:0;
+
     background:transparent;
 
     font-size:22px;
@@ -506,113 +914,250 @@ body{
     cursor:pointer;
 }
 
+
+/* =========================================================
+   TOAST
+========================================================= */
+
 .toast{
+
     position:fixed;
 
     left:50%;
+
     bottom:85px;
 
-    transform:translateX(-50%) translateY(15px);
+    transform:
+        translateX(-50%)
+        translateY(15px);
 
-    padding:9px 15px;
+    padding:
+        9px
+        15px;
 
     border-radius:12px;
 
     background:#14233a;
 
-    border:1px solid rgba(255,255,255,.08);
+    border:
+        1px solid
+        rgba(255,255,255,.08);
 
     color:#dbe7f7;
 
     font-size:12px;
 
     opacity:0;
+
     pointer-events:none;
 
     transition:.25s;
 
-    z-index:100;
+    z-index:500;
 }
 
+
 .toast.show{
+
     opacity:1;
-    transform:translateX(-50%) translateY(0);
+
+    transform:
+        translateX(-50%)
+        translateY(0);
 }
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
 
 @media(max-width:500px){
 
     .chat-header{
+
         height:66px;
+
         min-height:66px;
-        padding:9px 10px;
+
+        padding:
+            9px
+            10px;
     }
+
 
     .back-btn{
+
         width:37px;
+
         height:37px;
+
+        min-width:37px;
     }
 
+
     .profile-photo{
+
         width:41px;
+
         height:41px;
+
         min-width:41px;
     }
 
+
     .profile-name{
+
         font-size:15px;
     }
 
+
     .chat-area{
+
         padding-left:12px;
+
         padding-right:12px;
+
+        padding-bottom:20px;
     }
 
+
     .message{
+
         max-width:82%;
+
         font-size:14px;
     }
 
+
     .composer-area{
-        padding:8px 9px 12px;
+
+        padding:
+            8px
+            9px
+            12px;
     }
 
+
     .composer{
+
         min-height:51px;
+
         border-radius:17px;
     }
+
 }
+
+
+/* =========================================================
+   VERY SMALL SCREEN
+========================================================= */
+
+@media(max-width:360px){
+
+    .chat-header{
+
+        padding-left:6px;
+
+        padding-right:6px;
+    }
+
+
+    .profile{
+
+        gap:8px;
+    }
+
+
+    .profile-name{
+
+        font-size:14px;
+    }
+
+
+    .online{
+
+        font-size:11px;
+    }
+
+
+    .composer{
+
+        gap:3px;
+
+        padding-left:5px;
+
+        padding-right:5px;
+    }
+
+
+    .composer-btn{
+
+        width:34px;
+
+        min-width:34px;
+    }
+
+
+    .send-btn{
+
+        width:37px;
+
+        min-width:37px;
+    }
+
+}
+
 </style>
+
 </head>
+
 
 <body>
 
+
 <div class="chat-app">
 
-    <!-- HEADER -->
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
     <header class="chat-header">
+
 
         <button
             class="back-btn"
             onclick="goBack()"
             aria-label="Back">
+
             ‹
+
         </button>
 
+
         <div class="profile">
+
 
             <div
                 class="profile-photo"
                 id="profilePhoto">
+
                 U
+
             </div>
 
+
             <div class="profile-info">
+
 
                 <div
                     class="profile-name"
                     id="chatName">
+
                     Loading...
+
                 </div>
+
 
                 <div
                     class="online"
@@ -626,108 +1171,237 @@ body{
 
                 </div>
 
+
             </div>
 
+
         </div>
+
 
         <button
             class="header-action"
             onclick="showToast('Coming soon')">
+
             ⋮
+
         </button>
+
 
     </header>
 
 
-    <!-- CHAT -->
+
+    <!-- =====================================================
+         CHAT AREA
+    ====================================================== -->
+
     <main
         class="chat-area"
         id="chatArea">
 
+
         <div class="date-divider">
-            <span>Today</span>
+
+            <span id="dateText">
+                Today
+            </span>
+
         </div>
 
-        <!-- REAL MESSAGES INSERT HERE -->
+
+        <!-- REAL MESSAGES WILL COME HERE -->
+
 
         <div
             class="message-row received"
             id="typingRow">
 
+
             <div class="typing">
 
+
                 <span></span>
+
                 <span></span>
+
                 <span></span>
+
 
             </div>
 
+
         </div>
+
 
     </main>
 
 
-    <!-- COMPOSER -->
+
+    <!-- =====================================================
+         COMPOSER
+    ====================================================== -->
+
     <div class="composer-area">
 
-        <!-- Attachment -->
+
+        <!-- ATTACHMENT MENU -->
+
         <div
             class="attach-menu"
             id="attachMenu">
 
+
             <button
                 class="attach-item"
                 onclick="showToast('Gallery coming soon')">
+
                 🖼️
+
             </button>
+
 
             <button
                 class="attach-item"
                 onclick="showToast('Camera coming soon')">
+
                 📷
+
             </button>
+
 
             <button
                 class="attach-item"
                 onclick="showToast('File sharing coming soon')">
+
                 📄
+
             </button>
+
 
         </div>
 
 
-        <!-- Emoji -->
+
+        <!-- EMOJI PANEL -->
+
         <div
             class="emoji-panel"
             id="emojiPanel">
 
-            <button class="emoji" onclick="addEmoji('😀')">😀</button>
-            <button class="emoji" onclick="addEmoji('😂')">😂</button>
-            <button class="emoji" onclick="addEmoji('😊')">😊</button>
-            <button class="emoji" onclick="addEmoji('😍')">😍</button>
-            <button class="emoji" onclick="addEmoji('🥰')">🥰</button>
-            <button class="emoji" onclick="addEmoji('😎')">😎</button>
-            <button class="emoji" onclick="addEmoji('❤️')">❤️</button>
-            <button class="emoji" onclick="addEmoji('🔥')">🔥</button>
 
-            <button class="emoji" onclick="addEmoji('👍')">👍</button>
-            <button class="emoji" onclick="addEmoji('👏')">👏</button>
-            <button class="emoji" onclick="addEmoji('🙌')">🙌</button>
-            <button class="emoji" onclick="addEmoji('🤝')">🤝</button>
-            <button class="emoji" onclick="addEmoji('✨')">✨</button>
-            <button class="emoji" onclick="addEmoji('💙')">💙</button>
-            <button class="emoji" onclick="addEmoji('😁')">😁</button>
-            <button class="emoji" onclick="addEmoji('🤣')">🤣</button>
+            <button
+                class="emoji"
+                onclick="addEmoji('😀')">
+                😀
+            </button>
+
+            <button
+                class="emoji"
+                onclick="addEmoji('😂')">
+                😂
+            </button>
+
+            <button
+                class="emoji"
+                onclick="addEmoji('😊')">
+                😊
+            </button>
+
+            <button
+                class="emoji"
+                onclick="addEmoji('😍')">
+                😍
+            </button>
+
+            <button
+                class="emoji"
+                onclick="addEmoji('🥰')">
+                🥰
+            </button>
+
+            <button
+                class="emoji"
+                onclick="addEmoji('😎')">
+                😎
+            </button>
+
+            <button
+                class="emoji"
+                onclick="addEmoji('❤️')">
+                ❤️
+            </button>
+
+            <button
+                class="emoji"
+                onclick="addEmoji('🔥')">
+                🔥
+            </button>
+
+
+            <button
+                class="emoji"
+                onclick="addEmoji('👍')">
+                👍
+            </button>
+
+            <button
+                class="emoji"
+                onclick="addEmoji('👏')">
+                👏
+            </button>
+
+            <button
+                class="emoji"
+                onclick="addEmoji('🙌')">
+                🙌
+            </button>
+
+            <button
+                class="emoji"
+                onclick="addEmoji('🤝')">
+                🤝
+            </button>
+
+            <button
+                class="emoji"
+                onclick="addEmoji('✨')">
+                ✨
+            </button>
+
+            <button
+                class="emoji"
+                onclick="addEmoji('💙')">
+                💙
+            </button>
+
+            <button
+                class="emoji"
+                onclick="addEmoji('😁')">
+                😁
+            </button>
+
+            <button
+                class="emoji"
+                onclick="addEmoji('🤣')">
+                🤣
+            </button>
+
 
         </div>
 
 
+
+        <!-- COMPOSER -->
+
         <div class="composer">
+
 
             <button
                 class="composer-btn"
                 onclick="toggleEmoji()">
+
                 ☺
+
             </button>
 
 
@@ -744,7 +1418,9 @@ body{
             <button
                 class="composer-btn"
                 onclick="toggleAttach()">
+
                 ＋
+
             </button>
 
 
@@ -752,20 +1428,27 @@ body{
                 class="send-btn"
                 id="sendButton"
                 onclick="sendMessage()">
+
                 ➤
+
             </button>
+
 
         </div>
 
+
     </div>
 
+
 </div>
+
 
 
 <div
     class="toast"
     id="toast">
 </div>
+
 
 
 <script>
@@ -775,98 +1458,173 @@ body{
 ========================================================= */
 
 const input =
-    document.getElementById("messageInput");
+    document.getElementById(
+        "messageInput"
+    );
 
 const chatArea =
-    document.getElementById("chatArea");
+    document.getElementById(
+        "chatArea"
+    );
 
 const emojiPanel =
-    document.getElementById("emojiPanel");
+    document.getElementById(
+        "emojiPanel"
+    );
 
 const attachMenu =
-    document.getElementById("attachMenu");
+    document.getElementById(
+        "attachMenu"
+    );
 
 const chatName =
-    document.getElementById("chatName");
+    document.getElementById(
+        "chatName"
+    );
 
 const profilePhoto =
-    document.getElementById("profilePhoto");
+    document.getElementById(
+        "profilePhoto"
+    );
 
 const onlineText =
-    document.getElementById("onlineText");
+    document.getElementById(
+        "onlineText"
+    );
 
 const typingRow =
-    document.getElementById("typingRow");
+    document.getElementById(
+        "typingRow"
+    );
 
 const sendButton =
-    document.getElementById("sendButton");
+    document.getElementById(
+        "sendButton"
+    );
 
 
 /* =========================================================
-   USER IDS
+   URL
 ========================================================= */
 
 const params =
-    new URLSearchParams(window.location.search);
+    new URLSearchParams(
+        window.location.search
+    );
+
 
 const otherUserId =
-    (params.get("user_id") || "").trim();
+    (
+        params.get("user_id") || ""
+    ).trim();
 
+
+/* =========================================================
+   CURRENT USER
+========================================================= */
 
 function getCurrentUserId(){
 
     const keys = [
+
         "usanex_user",
+
         "user",
+
         "currentUser",
+
         "logged_in_user"
+
     ];
 
-    for(const key of keys){
+
+    for(
+        const key of keys
+    ){
 
         try{
 
             const value =
-                localStorage.getItem(key);
+                localStorage.getItem(
+                    key
+                );
+
 
             if(!value){
                 continue;
             }
+
 
             try{
 
                 const parsed =
                     JSON.parse(value);
 
-                if(typeof parsed === "string"){
+
+                if(
+                    typeof parsed ===
+                    "string"
+                ){
+
                     return parsed.trim();
+
                 }
 
-                if(parsed && parsed.user_id){
-                    return String(parsed.user_id).trim();
+
+                if(
+                    parsed &&
+                    parsed.user_id
+                ){
+
+                    return String(
+                        parsed.user_id
+                    ).trim();
+
                 }
 
-                if(parsed && parsed.id){
-                    return String(parsed.id).trim();
+
+                if(
+                    parsed &&
+                    parsed.id
+                ){
+
+                    return String(
+                        parsed.id
+                    ).trim();
+
                 }
 
             }catch(error){
 
-                if(value.trim()){
+                if(
+                    value.trim()
+                ){
+
                     return value.trim();
+
                 }
 
             }
 
         }catch(error){
+
             console.log(error);
+
         }
 
     }
 
+
+    const fallback =
+        localStorage.getItem(
+            "usanex_user_id"
+        );
+
+
     return (
-        localStorage.getItem("usanex_user_id") || ""
+        fallback || ""
     ).trim();
+
 }
 
 
@@ -880,21 +1638,40 @@ const currentUserId =
 
 if(!currentUserId){
 
-    showToast("Please login first");
+    showToast(
+        "Please login first"
+    );
 
-    setTimeout(()=>{
-        window.location.href="/";
-    },1200);
+
+    setTimeout(
+        function(){
+
+            window.location.href =
+                "/";
+
+        },
+        1200
+    );
 
 }
 
+
 else if(!otherUserId){
 
-    showToast("Invalid chat user");
+    showToast(
+        "Invalid chat user"
+    );
 
-    setTimeout(()=>{
-        window.location.href="/home";
-    },1200);
+
+    setTimeout(
+        function(){
+
+            window.location.href =
+                "/home";
+
+        },
+        1200
+    );
 
 }
 
@@ -905,13 +1682,16 @@ else if(!otherUserId){
 
 function goBack(){
 
-    if(document.referrer){
+    if(
+        document.referrer
+    ){
 
         history.back();
 
     }else{
 
-        window.location.href="/home";
+        window.location.href =
+            "/home";
 
     }
 
@@ -919,33 +1699,76 @@ function goBack(){
 
 
 /* =========================================================
-   PROFILE
+   INITIAL
 ========================================================= */
 
-function setProfile(name, photo){
+function getInitial(name){
+
+    if(!name){
+
+        return "U";
+
+    }
+
+
+    const first =
+        String(name)
+        .trim()
+        .charAt(0)
+        .toUpperCase();
+
+
+    return first || "U";
+
+}
+
+
+/* =========================================================
+   SET PROFILE
+========================================================= */
+
+function setProfile(
+    name,
+    photo
+){
 
     chatName.textContent =
         name || "User";
 
-    profilePhoto.innerHTML = "";
+
+    profilePhoto.innerHTML =
+        "";
+
 
     if(photo){
 
         const img =
-            document.createElement("img");
+            document.createElement(
+                "img"
+            );
 
-        img.src = photo;
 
-        img.alt = "";
+        img.src =
+            photo;
 
-        img.onerror = function(){
 
-            profilePhoto.innerHTML =
-                getInitial(name);
+        img.alt =
+            "";
 
-        };
 
-        profilePhoto.appendChild(img);
+        img.onerror =
+            function(){
+
+                profilePhoto.textContent =
+                    getInitial(name);
+
+            };
+
+
+        profilePhoto.appendChild(
+            img
+        );
+
 
     }else{
 
@@ -957,48 +1780,53 @@ function setProfile(name, photo){
 }
 
 
-function getInitial(name){
-
-    if(!name){
-        return "U";
-    }
-
-    return String(name)
-        .trim()
-        .charAt(0)
-        .toUpperCase() || "U";
-
-}
-
-
 /* =========================================================
-   LOAD USER INFO + CHAT
+   LOAD CHAT
 ========================================================= */
 
 async function loadChat(){
 
-    if(!currentUserId || !otherUserId){
+    if(
+        !currentUserId ||
+        !otherUserId
+    ){
+
         return;
+
     }
+
 
     try{
 
+        const url =
+            "/api/chat/messages?user_id=" +
+            encodeURIComponent(
+                currentUserId
+            ) +
+            "&other_user_id=" +
+            encodeURIComponent(
+                otherUserId
+            );
+
+
         const response =
             await fetch(
-                "/api/chat/messages?user_id=" +
-                encodeURIComponent(currentUserId) +
-                "&other_user_id=" +
-                encodeURIComponent(otherUserId),
+                url,
                 {
                     method:"GET",
+
                     cache:"no-store"
                 }
             );
 
+
         const data =
             await response.json();
 
-        if(!response.ok){
+
+        if(
+            !response.ok
+        ){
 
             throw new Error(
                 data.detail ||
@@ -1008,26 +1836,51 @@ async function loadChat(){
         }
 
 
-        if(data.other_user){
+        /* =========================
+           USER HEADER
+        ========================= */
+
+        if(
+            data.other_user
+        ){
 
             setProfile(
+
                 data.other_user.name,
+
                 data.other_user.profile_photo
+
             );
 
         }
 
 
+        /* =========================
+           CLEAR MESSAGES
+        ========================= */
+
         clearMessages();
 
 
-        if(Array.isArray(data.messages)){
+        /* =========================
+           LOAD MESSAGES
+        ========================= */
 
-            data.messages.forEach(message => {
+        if(
+            Array.isArray(
+                data.messages
+            )
+        ){
 
-                addMessageFromServer(message);
+            data.messages.forEach(
+                function(message){
 
-            });
+                    addMessageFromServer(
+                        message
+                    );
+
+                }
+            );
 
         }
 
@@ -1035,7 +1888,8 @@ async function loadChat(){
         scrollBottom();
 
 
-        markMessagesRead();
+        await markMessagesRead();
+
 
     }catch(error){
 
@@ -1043,6 +1897,15 @@ async function loadChat(){
             "Chat load error:",
             error
         );
+
+
+        chatName.textContent =
+            "User";
+
+
+        onlineText.textContent =
+            "Offline";
+
 
         showToast(
             error.message ||
@@ -1055,7 +1918,7 @@ async function loadChat(){
 
 
 /* =========================================================
-   CLEAR OLD MESSAGES
+   CLEAR MESSAGES
 ========================================================= */
 
 function clearMessages(){
@@ -1065,36 +1928,56 @@ function clearMessages(){
             ".message-row:not(#typingRow)"
         );
 
-    rows.forEach(row => {
-        row.remove();
-    });
+
+    rows.forEach(
+        function(row){
+
+            row.remove();
+
+        }
+    );
 
 }
 
 
 /* =========================================================
-   SERVER MESSAGE
+   ADD SERVER MESSAGE
 ========================================================= */
 
-function addMessageFromServer(message){
+function addMessageFromServer(
+    message
+){
 
     if(!message){
+
         return;
+
     }
+
 
     const sender =
         String(
-            message.sender_user_id || ""
+            message.sender_user_id ||
+            ""
         ).trim();
+
 
     const text =
         String(
-            message.message || ""
+            message.message ||
+            ""
         );
 
-    if(!sender || !text){
+
+    if(
+        !sender ||
+        !text
+    ){
+
         return;
+
     }
+
 
     const type =
         sender === currentUserId
@@ -1102,39 +1985,92 @@ function addMessageFromServer(message){
         : "received";
 
 
-    const row =
-        document.createElement("div");
+    /* =========================
+       DUPLICATE CHECK
+    ========================= */
 
-    row.className =
-        "message-row " + type;
+    if(
+        message.id &&
+        document.querySelector(
+            '[data-message-id="' +
+            CSS.escape(
+                String(message.id)
+            ) +
+            '"]'
+        )
+    ){
 
-    if(message.id){
-
-        row.dataset.messageId =
-            String(message.id);
+        return;
 
     }
 
 
+    /* =========================
+       ROW
+    ========================= */
+
+    const row =
+        document.createElement(
+            "div"
+        );
+
+
+    row.className =
+        "message-row " +
+        type;
+
+
+    if(message.id){
+
+        row.dataset.messageId =
+            String(
+                message.id
+            );
+
+    }
+
+
+    /* =========================
+       BUBBLE
+    ========================= */
+
     const bubble =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
+
 
     bubble.className =
         "message";
 
 
-    const textNode =
-        document.createElement("div");
+    /* =========================
+       TEXT
+    ========================= */
 
-    textNode.textContent =
+    const textElement =
+        document.createElement(
+            "div"
+        );
+
+
+    textElement.textContent =
         text;
 
 
+    /* =========================
+       TIME
+    ========================= */
+
     const time =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
+
 
     time.className =
         "message-time";
+
 
     time.textContent =
         formatTime(
@@ -1142,28 +2078,51 @@ function addMessageFromServer(message){
         );
 
 
-    if(type === "sent"){
+    /* =========================
+       READ
+    ========================= */
+
+    if(
+        type === "sent"
+    ){
 
         const read =
-            document.createElement("span");
+            document.createElement(
+                "span"
+            );
+
 
         read.className =
             "read";
+
 
         read.textContent =
             message.is_read
             ? "✓✓"
             : "✓";
 
-        time.appendChild(read);
+
+        time.appendChild(
+            read
+        );
 
     }
 
 
-    bubble.appendChild(textNode);
-    bubble.appendChild(time);
+    bubble.appendChild(
+        textElement
+    );
 
-    row.appendChild(bubble);
+
+    bubble.appendChild(
+        time
+    );
+
+
+    row.appendChild(
+        bubble
+    );
+
 
     chatArea.insertBefore(
         row,
@@ -1177,34 +2136,50 @@ function addMessageFromServer(message){
    SEND MESSAGE
 ========================================================= */
 
-let sending = false;
+let sending =
+    false;
 
 
 async function sendMessage(){
 
     if(sending){
+
         return;
+
     }
+
 
     const text =
         input.value.trim();
 
+
     if(!text){
-        return;
-    }
-
-    if(!currentUserId || !otherUserId){
-
-        showToast("Invalid chat");
 
         return;
 
     }
 
 
-    sending = true;
+    if(
+        !currentUserId ||
+        !otherUserId
+    ){
 
-    sendButton.style.opacity = ".55";
+        showToast(
+            "Invalid chat"
+        );
+
+        return;
+
+    }
+
+
+    sending =
+        true;
+
+
+    sendButton.style.opacity =
+        ".55";
 
 
     try{
@@ -1213,6 +2188,7 @@ async function sendMessage(){
             await fetch(
                 "/api/chat/send",
                 {
+
                     method:"POST",
 
                     headers:{
@@ -1228,9 +2204,11 @@ async function sendMessage(){
                         receiver_user_id:
                             otherUserId,
 
-                        message:text
+                        message:
+                            text
 
                     })
+
                 }
             );
 
@@ -1239,7 +2217,9 @@ async function sendMessage(){
             await response.json();
 
 
-        if(!response.ok){
+        if(
+            !response.ok
+        ){
 
             throw new Error(
                 data.detail ||
@@ -1250,13 +2230,12 @@ async function sendMessage(){
 
 
         /*
-         * Server response already contains
-         * the saved message.
-         *
-         * Add it immediately.
+         * Add saved message.
          */
 
-        if(data.message){
+        if(
+            data.message
+        ){
 
             addMessageFromServer(
                 data.message
@@ -1265,11 +2244,19 @@ async function sendMessage(){
         }
 
 
-        input.value = "";
+        input.value =
+            "";
 
-        emojiPanel.classList.remove("show");
 
-        attachMenu.classList.remove("show");
+        emojiPanel.classList.remove(
+            "show"
+        );
+
+
+        attachMenu.classList.remove(
+            "show"
+        );
+
 
         scrollBottom();
 
@@ -1281,6 +2268,7 @@ async function sendMessage(){
             error
         );
 
+
         showToast(
             error.message ||
             "Message could not be sent"
@@ -1288,9 +2276,13 @@ async function sendMessage(){
 
     }finally{
 
-        sending = false;
+        sending =
+            false;
 
-        sendButton.style.opacity = "1";
+
+        sendButton.style.opacity =
+            "1";
+
 
         input.focus();
 
@@ -1300,23 +2292,38 @@ async function sendMessage(){
 
 
 /* =========================================================
-   TIME
+   FORMAT TIME
 ========================================================= */
 
-function formatTime(value){
+function formatTime(
+    value
+){
 
     if(!value){
+
         return "";
+
     }
+
 
     try{
 
         const date =
-            new Date(value);
+            new Date(
+                value
+            );
 
-        if(isNaN(date.getTime())){
+
+        if(
+            isNaN(
+                date.getTime()
+            )
+        ){
+
             return "";
+
         }
+
 
         return date.toLocaleTimeString(
             [],
@@ -1325,6 +2332,7 @@ function formatTime(value){
                 minute:"2-digit"
             }
         );
+
 
     }catch(error){
 
@@ -1339,9 +2347,14 @@ function formatTime(value){
    ENTER
 ========================================================= */
 
-function handleKey(event){
+function handleKey(
+    event
+){
 
-    if(event.key === "Enter"){
+    if(
+        event.key ===
+        "Enter"
+    ){
 
         event.preventDefault();
 
@@ -1358,16 +2371,25 @@ function handleKey(event){
 
 function toggleEmoji(){
 
-    emojiPanel.classList.toggle("show");
+    emojiPanel.classList.toggle(
+        "show"
+    );
 
-    attachMenu.classList.remove("show");
+
+    attachMenu.classList.remove(
+        "show"
+    );
 
 }
 
 
-function addEmoji(emoji){
+function addEmoji(
+    emoji
+){
 
-    input.value += emoji;
+    input.value +=
+        emoji;
+
 
     input.focus();
 
@@ -1380,25 +2402,33 @@ function addEmoji(emoji){
 
 function toggleAttach(){
 
-    attachMenu.classList.toggle("show");
+    attachMenu.classList.toggle(
+        "show"
+    );
 
-    emojiPanel.classList.remove("show");
+
+    emojiPanel.classList.remove(
+        "show"
+    );
 
 }
 
 
 /* =========================================================
-   SCROLL
+   SCROLL BOTTOM
 ========================================================= */
 
 function scrollBottom(){
 
-    setTimeout(()=>{
+    setTimeout(
+        function(){
 
-        chatArea.scrollTop =
-            chatArea.scrollHeight;
+            chatArea.scrollTop =
+                chatArea.scrollHeight;
 
-    },50);
+        },
+        50
+    );
 
 }
 
@@ -1410,24 +2440,41 @@ function scrollBottom(){
 let toastTimer;
 
 
-function showToast(text){
+function showToast(
+    text
+){
 
     const toast =
-        document.getElementById("toast");
+        document.getElementById(
+            "toast"
+        );
+
 
     toast.textContent =
         text;
 
-    toast.classList.add("show");
 
-    clearTimeout(toastTimer);
+    toast.classList.add(
+        "show"
+    );
+
+
+    clearTimeout(
+        toastTimer
+    );
+
 
     toastTimer =
-        setTimeout(()=>{
+        setTimeout(
+            function(){
 
-            toast.classList.remove("show");
+                toast.classList.remove(
+                    "show"
+                );
 
-        },1800);
+            },
+            1800
+        );
 
 }
 
@@ -1438,20 +2485,33 @@ function showToast(text){
 
 async function markMessagesRead(){
 
-    if(!currentUserId || !otherUserId){
+    if(
+        !currentUserId ||
+        !otherUserId
+    ){
+
         return;
+
     }
+
 
     try{
 
         await fetch(
+
             "/api/chat/read?user_id=" +
-            encodeURIComponent(currentUserId) +
+            encodeURIComponent(
+                currentUserId
+            ) +
             "&other_user_id=" +
-            encodeURIComponent(otherUserId),
+            encodeURIComponent(
+                otherUserId
+            ),
+
             {
                 method:"POST"
             }
+
         );
 
     }catch(error){
@@ -1470,19 +2530,26 @@ async function markMessagesRead(){
    WEBSOCKET
 ========================================================= */
 
-let socket = null;
+let socket =
+    null;
 
-let reconnectTimer = null;
 
-let manuallyClosed = false;
+let reconnectTimer =
+    null;
+
+
+let manuallyClosed =
+    false;
 
 
 function getWebSocketURL(){
 
     const protocol =
-        window.location.protocol === "https:"
+        window.location.protocol ===
+        "https:"
         ? "wss:"
         : "ws:";
+
 
     return (
         protocol +
@@ -1500,21 +2567,28 @@ function getWebSocketURL(){
 function connectWebSocket(){
 
     if(!currentUserId){
+
         return;
+
     }
+
 
     if(socket){
 
         try{
+
             socket.close();
+
         }catch(error){}
 
-        socket = null;
+        socket =
+            null;
 
     }
 
 
-    manuallyClosed = false;
+    manuallyClosed =
+        false;
 
 
     try{
@@ -1530,6 +2604,7 @@ function connectWebSocket(){
 
                 onlineText.textContent =
                     "Online";
+
 
                 clearTimeout(
                     reconnectTimer
@@ -1552,6 +2627,7 @@ function connectWebSocket(){
                     handleWebSocketMessage(
                         data
                     );
+
 
                 }catch(error){
 
@@ -1583,7 +2659,9 @@ function connectWebSocket(){
                     "Offline";
 
 
-                if(!manuallyClosed){
+                if(
+                    !manuallyClosed
+                ){
 
                     clearTimeout(
                         reconnectTimer
@@ -1608,8 +2686,10 @@ function connectWebSocket(){
             error
         );
 
+
         onlineText.textContent =
             "Offline";
+
 
         reconnectTimer =
             setTimeout(
@@ -1623,15 +2703,23 @@ function connectWebSocket(){
 
 
 /* =========================================================
-   WEBSOCKET MESSAGE HANDLER
+   WEBSOCKET MESSAGE
 ========================================================= */
 
-function handleWebSocketMessage(data){
+function handleWebSocketMessage(
+    data
+){
 
     if(!data){
+
         return;
+
     }
 
+
+    /* =========================
+       CONNECTED
+    ========================= */
 
     if(
         data.type ===
@@ -1646,6 +2734,10 @@ function handleWebSocketMessage(data){
     }
 
 
+    /* =========================
+       CHAT MESSAGE
+    ========================= */
+
     if(
         data.type ===
         "chat_message"
@@ -1654,26 +2746,30 @@ function handleWebSocketMessage(data){
         const message =
             data.message;
 
+
         if(!message){
+
             return;
+
         }
 
 
         const sender =
             String(
-                message.sender_user_id || ""
+                message.sender_user_id ||
+                ""
             ).trim();
 
 
         const receiver =
             String(
-                message.receiver_user_id || ""
+                message.receiver_user_id ||
+                ""
             ).trim();
 
 
         /*
-         * Only show messages belonging
-         * to this exact conversation.
+         * Only exact conversation.
          */
 
         const belongsToChat =
@@ -1689,12 +2785,14 @@ function handleWebSocketMessage(data){
 
 
         if(!belongsToChat){
+
             return;
+
         }
 
 
         /*
-         * Avoid duplicate messages.
+         * Don't duplicate.
          */
 
         if(
@@ -1717,10 +2815,14 @@ function handleWebSocketMessage(data){
             message
         );
 
+
         scrollBottom();
 
 
-        if(sender === otherUserId){
+        if(
+            sender ===
+            otherUserId
+        ){
 
             markMessagesRead();
 
@@ -1737,11 +2839,16 @@ function handleWebSocketMessage(data){
 
 document.addEventListener(
     "click",
-    function(e){
+    function(event){
 
         if(
-            !e.target.closest(".composer") &&
-            !e.target.closest(".emoji-panel")
+            !event.target.closest(
+                ".composer"
+            )
+            &&
+            !event.target.closest(
+                ".emoji-panel"
+            )
         ){
 
             emojiPanel.classList.remove(
@@ -1752,8 +2859,13 @@ document.addEventListener(
 
 
         if(
-            !e.target.closest(".composer") &&
-            !e.target.closest(".attach-menu")
+            !event.target.closest(
+                ".composer"
+            )
+            &&
+            !event.target.closest(
+                ".attach-menu"
+            )
         ){
 
             attachMenu.classList.remove(
@@ -1788,7 +2900,7 @@ document.addEventListener(
 
 
 /* =========================================================
-   INITIAL
+   INITIAL LOAD
 ========================================================= */
 
 window.addEventListener(
@@ -1799,13 +2911,30 @@ window.addEventListener(
             !currentUserId ||
             !otherUserId
         ){
+
             return;
+
         }
 
 
+        /*
+         * Load DB user + messages
+         * first.
+         */
+
         await loadChat();
 
+
+        /*
+         * Then connect websocket.
+         */
+
         connectWebSocket();
+
+
+        /*
+         * Focus input.
+         */
 
         input.focus();
 
@@ -1821,16 +2950,21 @@ window.addEventListener(
     "beforeunload",
     function(){
 
-        manuallyClosed = true;
+        manuallyClosed =
+            true;
+
 
         clearTimeout(
             reconnectTimer
         );
 
+
         if(socket){
 
             try{
+
                 socket.close();
+
             }catch(error){}
 
         }
