@@ -205,6 +205,12 @@ class NotificationReadRequest(BaseModel):
     user_id: str
 
 
+class SendMessageRequest(BaseModel):
+    sender_user_id: str
+    receiver_user_id: str
+    message: str
+
+
 # ============================================================
 # OTP FUNCTIONS
 # ============================================================
@@ -267,6 +273,7 @@ async def push_notification(
     requester_user_id: str | None = None,
     target_user_id: str | None = None,
 ):
+
     await manager.send_to_user(
         user_id,
         {
@@ -297,6 +304,7 @@ async def websocket_endpoint(
     websocket: WebSocket,
     user_id: str,
 ):
+
     user_id = user_id.strip()
 
     if not user_id:
@@ -1281,7 +1289,6 @@ async def cancel_follow(
     )
 
     for notification in pending_notifications:
-
         notification.is_read = True
 
     db.commit()
@@ -1613,7 +1620,6 @@ async def accept_follow(
     if connection_request.status == "verified":
 
         notification.is_read = True
-
         db.commit()
 
         return {
@@ -1627,7 +1633,6 @@ async def accept_follow(
     if connection_request.status == "accepted":
 
         notification.is_read = True
-
         db.commit()
 
         active_code = (
@@ -1699,7 +1704,6 @@ async def accept_follow(
     )
 
     for old_code in active_codes:
-
         old_code.verified = True
 
     code = generate_otp()
@@ -1844,7 +1848,6 @@ async def reject_follow(
     if connection_request.status == "verified":
 
         notification.is_read = True
-
         db.commit()
 
         return {
@@ -2033,7 +2036,6 @@ async def verify_connection(
     if datetime.utcnow() > connection_code.expires_at:
 
         connection_code.verified = True
-
         db.commit()
 
         return {
@@ -2286,7 +2288,6 @@ async def mark_all_notifications_read(
     )
 
     for notification in notifications:
-
         notification.is_read = True
 
     db.commit()
@@ -2362,11 +2363,8 @@ async def home_connections(
     for connection in connections:
 
         if connection.user_a_id == user_id:
-
             other_id = connection.user_b_id
-
         else:
-
             other_id = connection.user_a_id
 
         if other_id in seen:
@@ -2438,11 +2436,8 @@ async def get_connections(
     for connection in connections:
 
         if connection.user_a_id == user_id:
-
             other_id = connection.user_b_id
-
         else:
-
             other_id = connection.user_a_id
 
         if other_id in seen:
@@ -2477,54 +2472,59 @@ async def get_connections(
 
 
 # ============================================================
-# HEALTH CHECK
+# CHAT PAGE
 # ============================================================
 
-@app.get("/health")
-async def health():
-
-    return {
-        "ok": True,
-        "status": "online",
-        "app": "Usanex",
-        "realtime": "websocket",
-    }
-
-
-# ============================================================
-# LOCAL RUN
-# ============================================================
 @app.get("/chat")
 async def chat_page():
-    chat_file = os.path.join(BASE_DIR, "chat.html")
+
+    chat_file = os.path.join(
+        BASE_DIR,
+        "chat.html",
+    )
 
     if not os.path.isfile(chat_file):
+
         raise HTTPException(
             status_code=404,
-            detail="chat.html file not found"
+            detail="chat.html file not found",
         )
 
-    return FileResponse(chat_file)
+    return FileResponse(
+        chat_file
+    )
 
 
 @app.get("/chat.html")
 async def chat_html():
-    chat_file = os.path.join(BASE_DIR, "chat.html")
+
+    chat_file = os.path.join(
+        BASE_DIR,
+        "chat.html",
+    )
 
     if not os.path.isfile(chat_file):
+
         raise HTTPException(
             status_code=404,
-            detail="chat.html file not found"
+            detail="chat.html file not found",
         )
 
-    return FileResponse(chat_file)
+    return FileResponse(
+        chat_file
+    )
 
+
+# ============================================================
+# CHAT CONNECTION CHECK
+# ============================================================
 
 def are_connected(
     db: Session,
     user_a: str,
-    user_b: str
+    user_b: str,
 ):
+
     return (
         db.query(Connection)
         .filter(
@@ -2545,35 +2545,43 @@ def are_connected(
     )
 
 
+# ============================================================
+# GET CHAT MESSAGES
+# ============================================================
+
 @app.get("/api/chat/messages")
 async def get_chat_messages(
     user_id: str,
     other_user_id: str,
     db: Session = Depends(get_db),
 ):
+
     user_id = user_id.strip()
     other_user_id = other_user_id.strip()
 
     if not user_id or not other_user_id:
+
         raise HTTPException(
             status_code=400,
-            detail="User IDs are required"
+            detail="User IDs are required",
         )
 
     if user_id == other_user_id:
+
         raise HTTPException(
             status_code=400,
-            detail="Invalid chat"
+            detail="Invalid chat",
         )
 
     if not are_connected(
         db,
         user_id,
-        other_user_id
+        other_user_id,
     ):
+
         raise HTTPException(
             status_code=403,
-            detail="You can chat only with connected users"
+            detail="You can chat only with connected users",
         )
 
     other = (
@@ -2585,9 +2593,10 @@ async def get_chat_messages(
     )
 
     if not other:
+
         raise HTTPException(
             status_code=404,
-            detail="User not found"
+            detail="User not found",
         )
 
     messages = (
@@ -2627,50 +2636,55 @@ async def get_chat_messages(
                 "message": message.message,
                 "message_type": message.message_type,
                 "is_read": message.is_read,
-                "created_at": message.created_at.isoformat(),
+                "created_at": (
+                    message.created_at.isoformat()
+                ),
             }
             for message in messages
-        ]
+        ],
     }
 
 
-class SendMessageRequest(BaseModel):
-    sender_user_id: str
-    receiver_user_id: str
-    message: str
-
+# ============================================================
+# SEND CHAT MESSAGE
+# ============================================================
 
 @app.post("/api/chat/send")
 async def send_chat_message(
     request: SendMessageRequest,
     db: Session = Depends(get_db),
 ):
+
     sender_id = request.sender_user_id.strip()
     receiver_id = request.receiver_user_id.strip()
     text = request.message.strip()
 
     if not sender_id or not receiver_id:
+
         raise HTTPException(
             status_code=400,
-            detail="User IDs are required"
+            detail="User IDs are required",
         )
 
     if not text:
+
         raise HTTPException(
             status_code=400,
-            detail="Message cannot be empty"
+            detail="Message cannot be empty",
         )
 
     if len(text) > 5000:
+
         raise HTTPException(
             status_code=400,
-            detail="Message is too long"
+            detail="Message is too long",
         )
 
     if sender_id == receiver_id:
+
         raise HTTPException(
             status_code=400,
-            detail="Invalid chat"
+            detail="Invalid chat",
         )
 
     sender = (
@@ -2690,19 +2704,21 @@ async def send_chat_message(
     )
 
     if not sender or not receiver:
+
         raise HTTPException(
             status_code=404,
-            detail="User not found"
+            detail="User not found",
         )
 
     if not are_connected(
         db,
         sender_id,
-        receiver_id
+        receiver_id,
     ):
+
         raise HTTPException(
             status_code=403,
-            detail="You can chat only with connected users"
+            detail="You can chat only with connected users",
         )
 
     new_message = ChatMessage(
@@ -2726,20 +2742,26 @@ async def send_chat_message(
             "message": new_message.message,
             "message_type": new_message.message_type,
             "is_read": new_message.is_read,
-            "created_at": new_message.created_at.isoformat(),
-        }
+            "created_at": (
+                new_message.created_at.isoformat()
+            ),
+        },
     }
 
     await manager.send_to_user(
         receiver_id,
-        message_data
+        message_data,
     )
 
     return {
         "ok": True,
-        **message_data
+        **message_data,
     }
 
+
+# ============================================================
+# MARK CHAT MESSAGES AS READ
+# ============================================================
 
 @app.post("/api/chat/read")
 async def mark_chat_read(
@@ -2747,17 +2769,26 @@ async def mark_chat_read(
     other_user_id: str,
     db: Session = Depends(get_db),
 ):
+
     user_id = user_id.strip()
     other_user_id = other_user_id.strip()
+
+    if not user_id or not other_user_id:
+
+        raise HTTPException(
+            status_code=400,
+            detail="User IDs are required",
+        )
 
     if not are_connected(
         db,
         user_id,
-        other_user_id
+        other_user_id,
     ):
+
         raise HTTPException(
             status_code=403,
-            detail="Not connected"
+            detail="Not connected",
         )
 
     messages = (
@@ -2777,8 +2808,29 @@ async def mark_chat_read(
 
     return {
         "ok": True,
-        "count": len(messages)
-            }
+        "count": len(messages),
+    }
+
+
+# ============================================================
+# HEALTH CHECK
+# ============================================================
+
+@app.get("/health")
+async def health():
+
+    return {
+        "ok": True,
+        "status": "online",
+        "app": "Usanex",
+        "realtime": "websocket",
+    }
+
+
+# ============================================================
+# LOCAL RUN
+# ============================================================
+
 if __name__ == "__main__":
 
     import uvicorn
