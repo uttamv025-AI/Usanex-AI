@@ -27,6 +27,7 @@ body{
     width:100%;
     display:flex;
     align-items:center;
+    justify-content:space-between;
     gap:12px;
     padding:10px 14px;
     position:sticky;
@@ -101,32 +102,6 @@ body{
     font-size:20px;
     font-weight:800;
     letter-spacing:-.5px;
-}
-
-/* ================= SEARCH ================= */
-
-.search-box{
-    flex:1;
-    height:43px;
-    border-radius:23px;
-    background:#111b2d;
-    border:1px solid rgba(255,255,255,.08);
-    display:flex;
-    align-items:center;
-    padding:0 15px;
-    cursor:pointer;
-    min-width:80px;
-}
-
-.search-icon{
-    font-size:18px;
-    opacity:.75;
-    margin-right:8px;
-}
-
-.search-text{
-    color:#8f9bad;
-    font-size:14px;
 }
 
 /* ================= MENU ================= */
@@ -522,16 +497,12 @@ body{
         margin-left:9px;
     }
 
-    .search-box{
-        height:42px;
-    }
-
     .status-section{
         padding-top:13px;
     }
 }
 
-/* ================= SEARCH LOGO MOBILE SIZE ================= */
+/* ================= MOBILE SMALL ================= */
 
 @media(max-width:390px){
 
@@ -553,16 +524,6 @@ body{
     .logo-name{
         margin-left:6px;
         font-size:16px;
-    }
-
-    .search-box{
-        height:40px;
-        padding:0 11px;
-    }
-
-    .search-icon{
-        font-size:19px;
-        margin-right:5px;
     }
 
 }
@@ -592,20 +553,6 @@ body{
         </div>
 
     </div>
-
-
-    <div class="search-box" id="searchBox">
-
-        <span class="search-icon">
-            ⌕
-        </span>
-
-        <span class="search-text">
-            Search people...
-        </span>
-
-    </div>
-
 
     <button
         class="menu-btn"
@@ -807,8 +754,6 @@ body{
 
 <!-- ================= MENU ================= -->
 
-<!-- ================= MENU ================= -->
-
 <div
     class="menu-overlay"
     id="menuOverlay">
@@ -816,6 +761,7 @@ body{
     <div class="menu-panel">
 
         <!-- MONETIZATION -->
+
         <div
             class="menu-item"
             onclick="goMonetization()">
@@ -830,6 +776,7 @@ body{
 
 
         <!-- BLOCKED -->
+
         <div
             class="menu-item"
             onclick="goBlocked()">
@@ -844,6 +791,7 @@ body{
 
 
         <!-- LOGOUT -->
+
         <div
             class="menu-item logout"
             onclick="logoutUser()">
@@ -859,6 +807,7 @@ body{
     </div>
 
 </div>
+
 
 <!-- ================= TOAST ================= -->
 
@@ -1705,6 +1654,30 @@ function goProfile(){
 
 
 /* =========================================================
+   MONETIZATION
+========================================================= */
+
+function goMonetization(){
+
+    window.location.href =
+        "/monetization";
+
+}
+
+
+/* =========================================================
+   BLOCKED
+========================================================= */
+
+function goBlocked(){
+
+    window.location.href =
+        "/blocked";
+
+}
+
+
+/* =========================================================
    CREATE
 ========================================================= */
 
@@ -1800,22 +1773,6 @@ menuOverlay.addEventListener(
 
     }
 );
-
-
-/* =========================================================
-   SEARCH BOX
-========================================================= */
-
-document
-    .getElementById("searchBox")
-    .addEventListener(
-        "click",
-        function(){
-
-            goSearch();
-
-        }
-    );
 
 
 /* =========================================================
