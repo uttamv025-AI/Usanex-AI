@@ -15,7 +15,7 @@
 
 body{
     background:#050b18;
-    color:white;
+    color:#fff;
     min-height:100vh;
     overflow-x:hidden;
 }
@@ -25,19 +25,18 @@ body{
 .header{
     height:72px;
     width:100%;
+    padding:10px 14px;
     display:flex;
     align-items:center;
-    justify-content:space-between;
-    gap:12px;
-    padding:10px 14px;
+    gap:10px;
     position:sticky;
     top:0;
     z-index:100;
-    background:rgba(5,11,24,.96);
+    background:rgba(5,11,24,.97);
     border-bottom:1px solid rgba(255,255,255,.07);
 }
 
-/* ================= USANEX LOGO ================= */
+/* ================= LOGO ================= */
 
 .brand{
     display:flex;
@@ -48,63 +47,97 @@ body{
 .logo-mark{
     width:43px;
     height:43px;
-    border-radius:14px;
-
+    min-width:43px;
+    border-radius:13px;
+    position:relative;
+    overflow:hidden;
     display:flex;
     align-items:center;
     justify-content:center;
-
-    position:relative;
-
     background:
         linear-gradient(
             145deg,
-            #2d91ff,
-            #0756c9
+            #2185ff 0%,
+            #0868e8 48%,
+            #0049b5 100%
         );
-
+    border:1px solid rgba(255,255,255,.16);
     box-shadow:
-        0 7px 22px
-        rgba(18,105,232,.38);
+        0 5px 18px rgba(0,100,255,.30),
+        inset 0 1px 2px rgba(255,255,255,.20);
 }
 
 .logo-u{
-    font-size:25px;
-    font-weight:900;
+    position:relative;
+    z-index:3;
     color:#fff;
-    z-index:2;
+    font-size:27px;
+    line-height:1;
+    font-weight:900;
+    letter-spacing:-2px;
+    transform:translateY(-1px);
+    text-shadow:0 2px 5px rgba(0,0,0,.25);
 }
 
 .logo-shine{
     position:absolute;
-    width:8px;
-    height:8px;
-    border-radius:50%;
-    background:#fff;
-    right:7px;
-    top:6px;
-    opacity:.9;
+    z-index:2;
+    width:65px;
+    height:15px;
+    top:-8px;
+    left:-24px;
+    background:rgba(255,255,255,.23);
+    transform:rotate(-38deg);
+    filter:blur(1px);
 }
 
-.logo-mark:after{
+.logo-mark::after{
     content:"";
     position:absolute;
-    width:21px;
-    height:4px;
-    border-radius:10px;
-    background:rgba(255,255,255,.25);
-    left:11px;
-    bottom:6px;
+    width:22px;
+    height:22px;
+    right:-8px;
+    bottom:-9px;
+    border-radius:50%;
+    background:rgba(255,255,255,.08);
 }
 
 .logo-name{
+    font-size:19px;
+    font-weight:700;
     margin-left:9px;
-    font-size:20px;
-    font-weight:800;
-    letter-spacing:-.5px;
+    color:#fff;
+    white-space:nowrap;
 }
 
-/* ================= MENU ================= */
+/* ================= SEARCH ================= */
+
+.search-box{
+    flex:1;
+    height:43px;
+    min-width:0;
+    border-radius:13px;
+    background:#101a2b;
+    border:1px solid rgba(255,255,255,.07);
+    display:flex;
+    align-items:center;
+    padding:0 13px;
+    cursor:pointer;
+}
+
+.search-icon{
+    color:#8794a9;
+    font-size:23px;
+    margin-right:8px;
+}
+
+.search-text{
+    color:#7f8da3;
+    font-size:13px;
+    white-space:nowrap;
+}
+
+/* ================= MENU BUTTON ================= */
 
 .menu-btn{
     width:43px;
@@ -113,8 +146,8 @@ body{
     border:0;
     border-radius:13px;
     background:#111b2d;
-    color:white;
-    font-size:24px;
+    color:#fff;
+    font-size:23px;
     cursor:pointer;
 }
 
@@ -152,12 +185,13 @@ body{
     margin:auto;
     border-radius:50%;
     border:2px solid #1777ff;
+    background:#101a2d;
     display:flex;
     align-items:center;
     justify-content:center;
-    background:#101a2d;
     font-size:20px;
     font-weight:bold;
+    position:relative;
     overflow:hidden;
 }
 
@@ -174,12 +208,6 @@ body{
     white-space:nowrap;
     overflow:hidden;
     text-overflow:ellipsis;
-}
-
-/* YOU */
-
-.you-circle{
-    position:relative;
 }
 
 .plus-small{
@@ -283,8 +311,6 @@ body{
     text-overflow:ellipsis;
 }
 
-/* CONNECTED */
-
 .connected-btn{
     border:1px solid rgba(23,119,255,.35);
     background:rgba(23,119,255,.10);
@@ -382,7 +408,7 @@ body{
 }
 
 .nav-item.active .nav-icon{
-    color:white;
+    color:#fff;
 }
 
 .plus-nav{
@@ -390,7 +416,7 @@ body{
     height:44px;
     border-radius:14px;
     background:#1677ff;
-    color:white;
+    color:#fff;
     display:flex;
     align-items:center;
     justify-content:center;
@@ -407,7 +433,7 @@ body{
     padding:0 4px;
     border-radius:10px;
     background:#1677ff;
-    color:white;
+    color:#fff;
     font-size:9px;
     font-weight:bold;
     display:none;
@@ -415,7 +441,7 @@ body{
     justify-content:center;
 }
 
-/* ================= MENU POPUP ================= */
+/* ================= MENU ================= */
 
 .menu-overlay{
     position:fixed;
@@ -429,19 +455,19 @@ body{
     position:absolute;
     top:70px;
     right:12px;
-    width:210px;
-    border-radius:16px;
+    width:235px;
+    border-radius:17px;
     background:#101b2d;
-    border:1px solid rgba(255,255,255,.08);
-    box-shadow:0 15px 40px rgba(0,0,0,.4);
+    border:1px solid rgba(255,255,255,.09);
+    box-shadow:0 18px 45px rgba(0,0,0,.45);
     overflow:hidden;
 }
 
 .menu-item{
-    height:50px;
+    min-height:52px;
     display:flex;
     align-items:center;
-    padding:0 16px;
+    padding:0 15px;
     gap:12px;
     color:#dce3ee;
     font-size:14px;
@@ -452,8 +478,30 @@ body{
     background:#17243a;
 }
 
-.logout{
+.menu-item .menu-icon{
+    width:27px;
+    min-width:27px;
+    height:27px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:17px;
+}
+
+.menu-item .menu-label{
+    flex:1;
+}
+
+.menu-arrow{
+    color:#718096;
+    font-size:23px;
+    line-height:1;
+}
+
+.menu-item.logout{
     color:#ff7388;
+    border-top:1px solid rgba(255,255,255,.07);
+    margin-top:4px;
 }
 
 /* ================= TOAST ================= */
@@ -464,7 +512,7 @@ body{
     bottom:84px;
     transform:translateX(-50%);
     background:#17243a;
-    color:white;
+    color:#fff;
     padding:11px 17px;
     border-radius:22px;
     font-size:13px;
@@ -478,52 +526,53 @@ body{
 @media(max-width:500px){
 
     .header{
-        gap:8px;
         padding:10px 11px;
+        gap:8px;
     }
 
     .logo-mark{
         width:42px;
         height:42px;
+        min-width:42px;
     }
 
     .logo-u{
-        font-size:25px;
+        font-size:27px;
     }
 
     .logo-name{
-        display:block;
         font-size:18px;
-        margin-left:9px;
+        margin-left:7px;
     }
 
-    .status-section{
-        padding-top:13px;
+    .search-box{
+        height:42px;
+    }
+
+    .search-text{
+        font-size:12px;
+    }
+
+    .menu-btn{
+        width:42px;
+        height:42px;
+        min-width:42px;
+    }
+
+    .menu-panel{
+        right:10px;
+        width:230px;
     }
 }
 
-/* ================= MOBILE SMALL ================= */
-
 @media(max-width:390px){
 
-    .header{
-        padding:0 10px;
-        gap:7px;
-    }
-
-    .logo-mark{
-        width:38px;
-        height:38px;
-        border-radius:12px;
-    }
-
-    .logo-u{
-        font-size:22px;
-    }
-
     .logo-name{
-        margin-left:6px;
-        font-size:16px;
+        display:none;
+    }
+
+    .search-box{
+        margin-left:2px;
     }
 
 }
@@ -553,6 +602,22 @@ body{
         </div>
 
     </div>
+
+
+    <div
+        class="search-box"
+        id="searchBox">
+
+        <span class="search-icon">
+            ⌕
+        </span>
+
+        <span class="search-text">
+            Search people...
+        </span>
+
+    </div>
+
 
     <button
         class="menu-btn"
@@ -766,10 +831,16 @@ body{
             class="menu-item"
             onclick="goMonetization()">
 
-            💰
+            <span class="menu-icon">
+                💰
+            </span>
 
-            <span>
+            <span class="menu-label">
                 Monetization
+            </span>
+
+            <span class="menu-arrow">
+                ›
             </span>
 
         </div>
@@ -781,10 +852,100 @@ body{
             class="menu-item"
             onclick="goBlocked()">
 
-            🚫
+            <span class="menu-icon">
+                🚫
+            </span>
 
-            <span>
+            <span class="menu-label">
                 Blocked
+            </span>
+
+            <span class="menu-arrow">
+                ›
+            </span>
+
+        </div>
+
+
+        <!-- PRIVACY & SECURITY -->
+
+        <div
+            class="menu-item"
+            onclick="goPrivacy()">
+
+            <span class="menu-icon">
+                🔒
+            </span>
+
+            <span class="menu-label">
+                Privacy &amp; Security
+            </span>
+
+            <span class="menu-arrow">
+                ›
+            </span>
+
+        </div>
+
+
+        <!-- SETTINGS -->
+
+        <div
+            class="menu-item"
+            onclick="goSettings()">
+
+            <span class="menu-icon">
+                ⚙️
+            </span>
+
+            <span class="menu-label">
+                Settings
+            </span>
+
+            <span class="menu-arrow">
+                ›
+            </span>
+
+        </div>
+
+
+        <!-- HELP & SUPPORT -->
+
+        <div
+            class="menu-item"
+            onclick="goHelp()">
+
+            <span class="menu-icon">
+                ❓
+            </span>
+
+            <span class="menu-label">
+                Help &amp; Support
+            </span>
+
+            <span class="menu-arrow">
+                ›
+            </span>
+
+        </div>
+
+
+        <!-- ABOUT USANEX -->
+
+        <div
+            class="menu-item"
+            onclick="goAbout()">
+
+            <span class="menu-icon">
+                ℹ️
+            </span>
+
+            <span class="menu-label">
+                About Usanex
+            </span>
+
+            <span class="menu-arrow">
+                ›
             </span>
 
         </div>
@@ -796,9 +957,11 @@ body{
             class="menu-item logout"
             onclick="logoutUser()">
 
-            ↪
+            <span class="menu-icon">
+                ↪
+            </span>
 
-            <span>
+            <span class="menu-label">
                 Logout
             </span>
 
@@ -819,30 +982,26 @@ body{
 
 <script>
 
-/* =========================================================
-   USER DATA
-========================================================= */
-
 let currentUser = null;
 let currentUserId = "";
 
 
 /* =========================================================
-   GET USER FROM STORAGE / URL
+   USER
 ========================================================= */
 
 function resolveCurrentUser(){
 
     let user = null;
 
-    const possibleKeys = [
+    const keys = [
         "usanex_user",
         "user",
         "currentUser",
         "logged_in_user"
     ];
 
-    for(const key of possibleKeys){
+    for(const key of keys){
 
         try{
 
@@ -862,7 +1021,6 @@ function resolveCurrentUser(){
                 user = parsed;
 
                 if(
-                    !user.user_id &&
                     user.user &&
                     typeof user.user === "object"
                 ){
@@ -872,15 +1030,12 @@ function resolveCurrentUser(){
                 }
 
                 break;
+
             }
 
         }catch(error){
 
-            console.log(
-                "Storage read error:",
-                key,
-                error
-            );
+            console.log(error);
 
         }
 
@@ -942,17 +1097,6 @@ function resolveCurrentUser(){
             : "";
 
 
-    console.log(
-        "Usanex current user:",
-        currentUser
-    );
-
-    console.log(
-        "Usanex current user id:",
-        currentUserId
-    );
-
-
     const letter =
         document.getElementById(
             "youLetter"
@@ -984,7 +1128,7 @@ function resolveCurrentUser(){
 
 
 /* =========================================================
-   LOAD CONNECTIONS
+   CONNECTIONS
 ========================================================= */
 
 async function loadConnections(){
@@ -1001,10 +1145,6 @@ async function loadConnections(){
 
 
     if(!currentUserId){
-
-        console.warn(
-            "No user_id found for Home page."
-        );
 
         count.textContent = "0";
 
@@ -1051,7 +1191,6 @@ async function loadConnections(){
 
 
     let data = null;
-    let firstError = null;
 
 
     try{
@@ -1070,12 +1209,6 @@ async function loadConnections(){
             );
 
 
-        console.log(
-            "Home connections status:",
-            response.status
-        );
-
-
         if(!response.ok){
 
             throw new Error(
@@ -1089,18 +1222,10 @@ async function loadConnections(){
             await response.json();
 
 
-        console.log(
-            "Home connections response:",
-            data
-        );
-
-
     }catch(error){
 
-        firstError = error;
-
-        console.warn(
-            "Primary connections API failed:",
+        console.log(
+            "Primary connection API error:",
             error
         );
 
@@ -1125,12 +1250,6 @@ async function loadConnections(){
                 );
 
 
-            console.log(
-                "Fallback connections status:",
-                response.status
-            );
-
-
             if(!response.ok){
 
                 throw new Error(
@@ -1144,17 +1263,10 @@ async function loadConnections(){
                 await response.json();
 
 
-            console.log(
-                "Fallback connections response:",
-                data
-            );
-
-
         }catch(error){
 
-            console.error(
-                "Both connection APIs failed:",
-                firstError,
+            console.log(
+                "Connection API error:",
                 error
             );
 
@@ -1193,7 +1305,6 @@ async function loadConnections(){
         users = data;
 
     }
-
     else if(
         data &&
         Array.isArray(data.users)
@@ -1202,7 +1313,6 @@ async function loadConnections(){
         users = data.users;
 
     }
-
     else if(
         data &&
         Array.isArray(data.connections)
@@ -1211,7 +1321,6 @@ async function loadConnections(){
         users = data.connections;
 
     }
-
     else if(
         data &&
         Array.isArray(data.data)
@@ -1220,12 +1329,6 @@ async function loadConnections(){
         users = data.data;
 
     }
-
-
-    console.log(
-        "Normalized connection users:",
-        users
-    );
 
 
     const uniqueUsers = [];
@@ -1525,7 +1628,6 @@ async function loadNotificationCount(){
             notifications = data;
 
         }
-
         else if(
             data &&
             Array.isArray(data.notifications)
@@ -1535,7 +1637,6 @@ async function loadNotificationCount(){
                 data.notifications;
 
         }
-
         else if(
             data &&
             Array.isArray(data.data)
@@ -1587,7 +1688,7 @@ async function loadNotificationCount(){
     }catch(error){
 
         console.log(
-            "Notification count error:",
+            "Notification error:",
             error
         );
 
@@ -1653,8 +1754,17 @@ function goProfile(){
 }
 
 
+function createPost(){
+
+    showToast(
+        "Create feature coming soon"
+    );
+
+}
+
+
 /* =========================================================
-   MONETIZATION
+   MENU OPTIONS
 ========================================================= */
 
 function goMonetization(){
@@ -1665,10 +1775,6 @@ function goMonetization(){
 }
 
 
-/* =========================================================
-   BLOCKED
-========================================================= */
-
 function goBlocked(){
 
     window.location.href =
@@ -1677,15 +1783,34 @@ function goBlocked(){
 }
 
 
-/* =========================================================
-   CREATE
-========================================================= */
+function goPrivacy(){
 
-function createPost(){
+    window.location.href =
+        "/privacy-security";
 
-    showToast(
-        "Create feature coming soon"
-    );
+}
+
+
+function goSettings(){
+
+    window.location.href =
+        "/settings";
+
+}
+
+
+function goHelp(){
+
+    window.location.href =
+        "/help-support";
+
+}
+
+
+function goAbout(){
+
+    window.location.href =
+        "/about";
 
 }
 
@@ -1730,7 +1855,7 @@ function showToast(message){
 
 
 /* =========================================================
-   MENU
+   MENU OPEN / CLOSE
 ========================================================= */
 
 const menuBtn =
@@ -1806,7 +1931,7 @@ function logoutUser(){
     }catch(error){
 
         console.log(
-            "Logout storage error:",
+            "Logout error:",
             error
         );
 
