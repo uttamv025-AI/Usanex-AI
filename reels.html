@@ -2,12 +2,14 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+
 <meta name="viewport"
       content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 
 <title>Usanex Reels</title>
 
 <style>
+
 *{
     margin:0;
     padding:0;
@@ -50,7 +52,7 @@ button{
     left:0;
     right:0;
 
-    height:70px;
+    height:64px;
 
     z-index:30;
 
@@ -58,14 +60,14 @@ button{
     align-items:center;
     justify-content:center;
 
-    background:rgba(0,0,0,.55);
-
-    border-bottom:1px solid rgba(255,255,255,.06);
+    background:transparent;
 }
 
 .tabs{
     display:flex;
     align-items:center;
+    justify-content:center;
+
     gap:28px;
 }
 
@@ -75,12 +77,12 @@ button{
     border:none;
     background:none;
 
-    color:#8f9db0;
+    color:#a5afbd;
 
     font-size:15px;
     font-weight:700;
 
-    padding:10px 3px;
+    padding:8px 2px;
 }
 
 .tab.active{
@@ -93,30 +95,30 @@ button{
     position:absolute;
 
     left:50%;
-    bottom:2px;
+    bottom:0;
 
     transform:translateX(-50%);
 
-    width:24px;
-    height:3px;
+    width:22px;
+    height:2px;
 
     border-radius:10px;
 
     background:#fff;
 }
 
-/* CAMERA */
+/* =====================================================
+   CAMERA ICON
+===================================================== */
 
-.top-camera{
-    width:38px;
-    height:38px;
+.camera-btn{
+    width:40px;
+    height:40px;
 
-    margin-left:4px;
+    margin-left:2px;
 
     border:none;
-    border-radius:50%;
-
-    background:rgba(255,255,255,.08);
+    background:transparent;
 
     color:#fff;
 
@@ -124,14 +126,18 @@ button{
     align-items:center;
     justify-content:center;
 
-    font-size:21px;
-
-    transition:.2s;
+    padding:5px;
 }
 
-.top-camera:active{
-    transform:scale(.92);
-    background:rgba(255,255,255,.18);
+.camera-btn:active{
+    transform:scale(.90);
+}
+
+.camera-svg{
+    width:29px;
+    height:29px;
+
+    display:block;
 }
 
 /* =====================================================
@@ -145,7 +151,7 @@ button{
     background:#000;
 }
 
-/* CENTER CREATE REEL */
+/* CENTER */
 
 .create-reel-center{
     position:absolute;
@@ -155,14 +161,7 @@ button{
 
     transform:translate(-50%,-50%);
 
-    color:#fff;
-
-    font-size:20px;
-    font-weight:800;
-
-    text-align:center;
-
-    cursor:pointer;
+    border:none;
 
     padding:15px 22px;
 
@@ -170,14 +169,18 @@ button{
 
     background:rgba(255,255,255,.06);
 
-    border:1px solid rgba(255,255,255,.14);
+    border:1px solid rgba(255,255,255,.12);
 
-    transition:.2s;
+    color:#fff;
+
+    font-size:19px;
+    font-weight:800;
+
+    white-space:nowrap;
 }
 
 .create-reel-center:active{
     transform:translate(-50%,-50%) scale(.96);
-    background:rgba(255,255,255,.12);
 }
 
 /* =====================================================
@@ -187,8 +190,8 @@ button{
 .right-actions{
     position:absolute;
 
-    right:12px;
-    bottom:135px;
+    right:11px;
+    bottom:142px;
 
     z-index:25;
 
@@ -196,7 +199,7 @@ button{
     flex-direction:column;
     align-items:center;
 
-    gap:14px;
+    gap:13px;
 }
 
 .action{
@@ -208,13 +211,13 @@ button{
 }
 
 .action-btn{
-    width:47px;
-    height:47px;
+    width:46px;
+    height:46px;
 
     border:none;
     border-radius:50%;
 
-    background:rgba(0,0,0,.48);
+    background:rgba(0,0,0,.45);
 
     color:#fff;
 
@@ -228,7 +231,7 @@ button{
 }
 
 .action-btn:active{
-    transform:scale(.92);
+    transform:scale(.90);
 }
 
 .action-count{
@@ -240,17 +243,24 @@ button{
     text-shadow:0 1px 5px #000;
 }
 
+/* MORE */
+
+.more-btn{
+    font-size:27px;
+    line-height:1;
+}
+
 /* =====================================================
-   USER INFORMATION
+   USER INFO
 ===================================================== */
 
 .user-info{
     position:absolute;
 
     left:15px;
-    right:82px;
+    right:75px;
 
-    bottom:102px;
+    bottom:103px;
 
     z-index:25;
 
@@ -265,8 +275,8 @@ button{
 }
 
 .avatar{
-    width:45px;
-    height:45px;
+    width:44px;
+    height:44px;
 
     flex-shrink:0;
 
@@ -287,7 +297,7 @@ button{
 
     color:#fff;
 
-    font-size:18px;
+    font-size:17px;
     font-weight:800;
 }
 
@@ -305,16 +315,15 @@ button{
     white-space:nowrap;
 }
 
-/* FOLLOW */
-
 .follow-btn{
     min-width:72px;
 
-    height:34px;
+    height:33px;
 
     padding:0 12px;
 
-    border:1px solid rgba(255,255,255,.8);
+    border:1px solid rgba(255,255,255,.85);
+
     border-radius:9px;
 
     background:rgba(0,0,0,.35);
@@ -327,12 +336,11 @@ button{
 
 .follow-btn.following{
     background:#fff;
-    color:#0966dc;
+    color:#0867dd;
 }
 
 /* =====================================================
    INTERESTED / NOT INTERESTED
-   USERNAME KE NICHE
 ===================================================== */
 
 .preference-row{
@@ -341,11 +349,11 @@ button{
 
     gap:8px;
 
-    margin-top:10px;
+    margin-top:9px;
 }
 
 .preference{
-    height:31px;
+    height:30px;
 
     padding:0 11px;
 
@@ -353,7 +361,7 @@ button{
 
     border-radius:17px;
 
-    background:rgba(0,0,0,.40);
+    background:rgba(0,0,0,.38);
 
     color:#fff;
 
@@ -374,7 +382,7 @@ button{
 ===================================================== */
 
 .caption{
-    margin-top:10px;
+    margin-top:9px;
 
     color:#fff;
 
@@ -384,7 +392,7 @@ button{
 }
 
 .audio{
-    margin-top:7px;
+    margin-top:6px;
 
     color:#c6d1df;
 
@@ -461,8 +469,6 @@ button{
     color:#4c9fff;
 }
 
-/* CREATE BOTTOM PLUS */
-
 .bottom-create{
     width:43px;
     height:43px;
@@ -478,7 +484,6 @@ button{
     color:#fff;
 
     font-size:29px;
-    font-weight:400;
 
     display:flex;
     align-items:center;
@@ -487,8 +492,6 @@ button{
     box-shadow:
         0 7px 22px rgba(0,90,220,.40);
 }
-
-/* PROFILE */
 
 .profile-icon{
     width:25px;
@@ -514,6 +517,203 @@ button{
 }
 
 /* =====================================================
+   BOTTOM SHEET OVERLAY
+===================================================== */
+
+.sheet-overlay{
+    position:absolute;
+
+    inset:0;
+
+    z-index:80;
+
+    background:rgba(0,0,0,.55);
+
+    opacity:0;
+
+    pointer-events:none;
+
+    transition:.25s;
+}
+
+.sheet-overlay.show{
+    opacity:1;
+
+    pointer-events:auto;
+}
+
+/* =====================================================
+   HALF PAGE SHEET
+===================================================== */
+
+.bottom-sheet{
+    position:absolute;
+
+    left:0;
+    right:0;
+    bottom:0;
+
+    height:50vh;
+
+    min-height:350px;
+
+    background:#fff;
+
+    color:#111;
+
+    border-radius:
+        22px
+        22px
+        0
+        0;
+
+    transform:translateY(100%);
+
+    transition:
+        transform .28s
+        cubic-bezier(.2,.8,.2,1);
+
+    overflow:hidden;
+
+    box-shadow:
+        0 -10px 35px
+        rgba(0,0,0,.35);
+}
+
+.sheet-overlay.show .bottom-sheet{
+    transform:translateY(0);
+}
+
+/* SHEET HANDLE */
+
+.sheet-handle{
+    width:42px;
+    height:4px;
+
+    border-radius:10px;
+
+    background:#c8c8c8;
+
+    margin:10px auto 4px;
+}
+
+/* SHEET HEADER */
+
+.sheet-header{
+    height:54px;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    padding:0 18px;
+
+    border-bottom:
+        1px solid
+        #eeeeee;
+}
+
+.sheet-title{
+    font-size:17px;
+    font-weight:800;
+}
+
+.sheet-close{
+    width:34px;
+    height:34px;
+
+    border:none;
+    border-radius:50%;
+
+    background:#f1f1f1;
+
+    color:#222;
+
+    font-size:21px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+/* SHEET CONTENT */
+
+.sheet-content{
+    padding:16px 18px 28px;
+
+    overflow-y:auto;
+
+    height:
+        calc(
+            50vh -
+            68px
+        );
+}
+
+.detail{
+    margin-bottom:17px;
+}
+
+.detail-label{
+    color:#777;
+
+    font-size:11px;
+    font-weight:700;
+
+    text-transform:uppercase;
+
+    margin-bottom:6px;
+}
+
+.detail-value{
+    color:#111;
+
+    font-size:14px;
+
+    line-height:1.45;
+
+    font-weight:500;
+}
+
+/* TAGS */
+
+.tags{
+    display:flex;
+
+    flex-wrap:wrap;
+
+    gap:7px;
+}
+
+.tag{
+    padding:7px 10px;
+
+    border-radius:15px;
+
+    background:#edf4ff;
+
+    color:#0867dd;
+
+    font-size:11px;
+    font-weight:700;
+}
+
+/* VIDEO TYPE */
+
+.video-type{
+    display:inline-flex;
+
+    padding:8px 12px;
+
+    border-radius:16px;
+
+    background:#f1f1f1;
+
+    font-size:12px;
+    font-weight:700;
+}
+
+/* =====================================================
    TOAST
 ===================================================== */
 
@@ -527,7 +727,7 @@ button{
         translateX(-50%)
         translateY(15px);
 
-    z-index:60;
+    z-index:100;
 
     padding:9px 15px;
 
@@ -563,10 +763,12 @@ button{
 
     .app{
         max-width:480px;
+
         margin:auto;
 
         box-shadow:
-            0 0 70px rgba(0,0,0,.65);
+            0 0 70px
+            rgba(0,0,0,.65);
     }
 
     body{
@@ -591,6 +793,7 @@ button{
             env(safe-area-inset-bottom);
     }
 }
+
 </style>
 </head>
 
@@ -619,12 +822,34 @@ button{
             </button>
 
             <!-- CAMERA -->
-
             <button
-                class="top-camera"
+                class="camera-btn"
                 onclick="openCreateReel()"
                 aria-label="Create Reel">
-                📷
+
+                <!-- Camera outline like your reference -->
+
+                <svg
+                    class="camera-svg"
+                    viewBox="0 0 64 64"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+
+                    <path
+                        d="M18 18H27L31 12H43C47 12 50 15 50 19V21H53C57 21 60 24 60 28V48C60 52 57 55 53 55H11C7 55 4 52 4 48V28C4 24 7 21 11 21H18V18Z"
+                        stroke="white"
+                        stroke-width="4"
+                        stroke-linejoin="round"/>
+
+                    <circle
+                        cx="32"
+                        cy="38"
+                        r="10"
+                        stroke="white"
+                        stroke-width="4"/>
+
+                </svg>
+
             </button>
 
         </div>
@@ -650,7 +875,7 @@ button{
 
 
         <!-- =================================================
-             RIGHT SIDE
+             RIGHT ACTIONS
         ================================================== -->
 
         <div class="right-actions">
@@ -722,6 +947,25 @@ button{
 
             </div>
 
+
+            <!-- MORE -->
+
+            <div class="action">
+
+                <button
+                    class="action-btn more-btn"
+                    onclick="openMoreSheet()">
+
+                    ⋮
+
+                </button>
+
+                <span class="action-count">
+                    More
+                </span>
+
+            </div>
+
         </div>
 
 
@@ -747,12 +991,12 @@ button{
                 </div>
 
 
-                <!-- FOLLOW -->
-
                 <button
                     class="follow-btn"
                     onclick="toggleFollow(this)">
+
                     Follow
+
                 </button>
 
             </div>
@@ -766,14 +1010,18 @@ button{
                     class="preference"
                     id="interestedBtn"
                     onclick="selectPreference('interested')">
+
                     👍 Interested
+
                 </button>
 
                 <button
                     class="preference"
                     id="notInterestedBtn"
                     onclick="selectPreference('not')">
+
                     × Not interested
+
                 </button>
 
             </div>
@@ -888,6 +1136,124 @@ button{
         </button>
 
     </nav>
+
+
+    <!-- =================================================
+         MORE OVERLAY + HALF PAGE
+    ================================================== -->
+
+    <div
+        class="sheet-overlay"
+        id="sheetOverlay"
+        onclick="closeMoreSheet(event)">
+
+        <section
+            class="bottom-sheet"
+            id="bottomSheet"
+            onclick="event.stopPropagation()">
+
+            <div class="sheet-handle"></div>
+
+
+            <!-- HEADER -->
+
+            <div class="sheet-header">
+
+                <div class="sheet-title">
+                    Reel Details
+                </div>
+
+                <button
+                    class="sheet-close"
+                    onclick="closeMoreSheet()">
+
+                    ×
+
+                </button>
+
+            </div>
+
+
+            <!-- CONTENT -->
+
+            <div class="sheet-content">
+
+                <!-- DESCRIPTION -->
+
+                <div class="detail">
+
+                    <div class="detail-label">
+                        Description
+                    </div>
+
+                    <div class="detail-value">
+                        Your reel description will appear here.
+                    </div>
+
+                </div>
+
+
+                <!-- TAGS -->
+
+                <div class="detail">
+
+                    <div class="detail-label">
+                        Tags
+                    </div>
+
+                    <div class="tags">
+
+                        <span class="tag">
+                            #Usanex
+                        </span>
+
+                        <span class="tag">
+                            #Reels
+                        </span>
+
+                        <span class="tag">
+                            #Trending
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- LOCATION -->
+
+                <div class="detail">
+
+                    <div class="detail-label">
+                        Location
+                    </div>
+
+                    <div class="detail-value">
+                        Location not added
+                    </div>
+
+                </div>
+
+
+                <!-- VIDEO TYPE -->
+
+                <div class="detail">
+
+                    <div class="detail-label">
+                        Type of Video
+                    </div>
+
+                    <span class="video-type">
+                        General
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </div>
 
 
     <!-- TOAST -->
@@ -1054,6 +1420,41 @@ async function shareReel(){
 
 
 /* =====================================================
+   MORE SHEET
+===================================================== */
+
+function openMoreSheet(){
+
+    const overlay =
+        document.getElementById(
+            "sheetOverlay"
+        );
+
+    overlay.classList.add("show");
+
+}
+
+
+function closeMoreSheet(event){
+
+    if(
+        event &&
+        event.target !==
+        document.getElementById(
+            "sheetOverlay"
+        )
+    ){
+        return;
+    }
+
+    document
+        .getElementById("sheetOverlay")
+        .classList.remove("show");
+
+}
+
+
+/* =====================================================
    NAVIGATION
 ===================================================== */
 
@@ -1098,7 +1499,9 @@ let toastTimer;
 function showToast(message){
 
     const toast =
-        document.getElementById("toast");
+        document.getElementById(
+            "toast"
+        );
 
     toast.textContent =
         message;
@@ -1115,6 +1518,50 @@ function showToast(message){
         },1400);
 
 }
+
+
+/* =====================================================
+   SWIPE DOWN TO CLOSE
+===================================================== */
+
+let touchStartY = 0;
+
+const sheet =
+    document.getElementById(
+        "bottomSheet"
+    );
+
+sheet.addEventListener(
+    "touchstart",
+    function(e){
+
+        touchStartY =
+            e.touches[0].clientY;
+
+    },
+    {passive:true}
+);
+
+
+sheet.addEventListener(
+    "touchend",
+    function(e){
+
+        const touchEndY =
+            e.changedTouches[0].clientY;
+
+        const difference =
+            touchEndY - touchStartY;
+
+        if(difference > 70){
+
+            closeMoreSheet();
+
+        }
+
+    },
+    {passive:true}
+);
 
 </script>
 
