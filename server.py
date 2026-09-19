@@ -1,3103 +1,2466 @@
-from fastapi import (
-    FastAPI,
-    Depends,
-    HTTPException,
-    WebSocket,
-    WebSocketDisconnect,
-)
-
-from pydantic import BaseModel
-from fastapi.responses import FileResponse
-from sqlalchemy.orm import Session
-from sqlalchemy.exc import IntegrityError
-
-from argon2 import PasswordHasher
-from argon2.exceptions import (
-    VerifyMismatchError,
-    VerificationError,
-)
-
-from datetime import datetime, timedelta
-
-import secrets
-import uuid
-import os
-import asyncio
-
-
-# ============================================================
-# APP
-# ============================================================
-
-app = FastAPI(title="Usanex")
-
-password_hasher = PasswordHasher()
-
-BASE_DIR = os.path.dirname(
-    os.path.abspath(__file__)
-)
-
-
-# ============================================================
-# DATABASE
-# ============================================================
-
-from database import (
-    SessionLocal,
-    User,
-    UserPresence,
-    OTPVerification,
-    ConnectionRequest,
-    ConnectionCode,
-    Notification,
-    Connection,
-    ChatMessage,
-)
-
-
-# ============================================================
-# DATABASE SESSION
-# ============================================================
-
-def get_db():
-    db = SessionLocal()
-
-    try:
-        yield db
-    finally:
-        db.close()
-
-
-# ============================================================
-# REAL-TIME WEBSOCKET MANAGER
-# ============================================================
-
-class ConnectionManager:
-
-    def __init__(self):
-        self.active_connections = {}
-        self.lock = asyncio.Lock()
-
-    async def connect(
-        self,
-        user_id: str,
-        websocket: WebSocket,
-    ):
-        await websocket.accept()
-
-        async with self.lock:
-
-            if user_id not in self.active_connections:
-                self.active_connections[user_id] = set()
-
-            self.active_connections[user_id].add(
-                websocket
-            )
-
-    async def disconnect(
-        self,
-        user_id: str,
-        websocket: WebSocket,
-    ):
-        async with self.lock:
-
-            if user_id not in self.active_connections:
-                return
-
-            self.active_connections[user_id].discard(
-                websocket
-            )
-
-            if not self.active_connections[user_id]:
-                del self.active_connections[user_id]
-
-    async def send_to_user(
-        self,
-        user_id: str,
-        data: dict,
-    ):
-        async with self.lock:
-
-            sockets = list(
-                self.active_connections.get(
-                    user_id,
-                    set(),
-                )
-            )
-
-        dead_connections = []
-
-        for websocket in sockets:
-
-            try:
-                await websocket.send_json(data)
-
-            except Exception:
-                dead_connections.append(
-                    websocket
-                )
-
-        for websocket in dead_connections:
-
-            await self.disconnect(
-                user_id,
-                websocket,
-            )
-
-    async def is_online(
-        self,
-        user_id: str,
-    ):
-        async with self.lock:
-
-            return bool(
-                self.active_connections.get(
-                    user_id,
-                    set(),
-                )
-            )
-
-
-manager = ConnectionManager()
-
-
-# ============================================================
-# USER PRESENCE
-# ============================================================
-
-def set_user_presence(
-    user_id: str,
-    is_online: bool,
-):
-    db = SessionLocal()
-
-    try:
-
-        now = datetime.utcnow()
-
-        presence = (
-            db.query(UserPresence)
-            .filter(
-                UserPresence.user_id == user_id
-            )
-            .first()
-        )
-
-        if not presence:
-
-            presence = UserPresence(
-                user_id=user_id,
-                is_online=is_online,
-                last_seen_at=(
-                    None
-                    if is_online
-                    else now
-                ),
-                updated_at=now,
-            )
-
-            db.add(presence)
-
-        else:
-
-            presence.is_online = is_online
-            presence.updated_at = now
-
-            if not is_online:
-                presence.last_seen_at = now
-
-        db.commit()
-
-        return presence.last_seen_at
-
-    finally:
-        db.close()
-
-
-async def broadcast_presence(
-    user_id: str,
-    is_online: bool,
-    last_seen_at=None,
-):
-    db = SessionLocal()
-
-    try:
-
-        connections = (
-            db.query(Connection)
-            .filter(
-                (Connection.user_a_id == user_id)
-                |
-                (Connection.user_b_id == user_id)
-            )
-            .all()
-        )
-
-        other_user_ids = []
-
-        for connection in connections:
-
-            if connection.user_a_id == user_id:
-                other_id = connection.user_b_id
-            else:
-                other_id = connection.user_a_id
-
-            if other_id not in other_user_ids:
-                other_user_ids.append(
-                    other_id
-                )
-
-    finally:
-        db.close()
-
-    payload = {
-        "type": "user_presence",
-        "user_id": user_id,
-        "is_online": is_online,
-        "last_seen_at": (
-            None
-            if is_online
-            else (
-                last_seen_at.isoformat()
-                if last_seen_at
-                else None
-            )
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Usanex Chat</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    -webkit-tap-highlight-color:transparent;
+}
+
+:root{
+    --header-h:70px;
+    --composer-h:76px;
+    --vvh:100dvh;
+    --vvt:0px;
+    --vvl:0px;
+    --vvw:100vw;
+}
+
+html,body{
+    width:100%;
+    height:100%;
+    margin:0;
+    padding:0;
+    background:#050b18;
+    overflow:hidden;
+}
+
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    color:#fff;
+    position:fixed;
+    inset:0;
+    overscroll-behavior:none;
+}
+
+.chat-app{
+    position:fixed;
+    left:var(--vvl);
+    top:var(--vvt);
+    width:min(var(--vvw),600px);
+    height:var(--vvh);
+    margin:0 auto;
+    background:
+        radial-gradient(
+            circle at 50% 20%,
+            rgba(0,100,255,.08),
+            transparent 35%
         ),
+        #050b18;
+    overflow:hidden;
+}
+
+/* HEADER */
+
+.chat-header{
+    position:fixed;
+    top:var(--vvt);
+    left:var(--vvl);
+    transform:none;
+    width:min(var(--vvw),600px);
+    height:var(--header-h);
+    min-height:var(--header-h);
+
+    display:flex;
+    align-items:center;
+
+    padding:10px 14px;
+
+    background:rgba(5,11,24,.99);
+
+    border-bottom:1px solid rgba(255,255,255,.07);
+
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
+
+    z-index:3000;
+    overflow:hidden;
+}
+
+.back-btn{
+    width:40px;
+    height:40px;
+    min-width:40px;
+
+    border:0;
+    background:transparent;
+    color:#fff;
+
+    font-size:27px;
+    cursor:pointer;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.profile{
+    display:flex;
+    align-items:center;
+    gap:11px;
+
+    flex:1;
+    min-width:0;
+    overflow:hidden;
+}
+
+.profile-photo{
+    width:43px;
+    height:43px;
+    min-width:43px;
+
+    border-radius:50%;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:linear-gradient(
+        145deg,
+        #2185ff,
+        #0049b5
+    );
+
+    border:2px solid rgba(33,133,255,.7);
+
+    font-size:19px;
+    font-weight:800;
+
+    overflow:hidden;
+
+    box-shadow:
+        0 0 0 3px rgba(33,133,255,.08),
+        0 4px 16px rgba(0,100,255,.25);
+}
+
+.profile-photo img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+}
+
+.profile-info{
+    min-width:0;
+    flex:1;
+    overflow:hidden;
+}
+
+.profile-name{
+    font-size:16px;
+    font-weight:700;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+/* ONLY TEXT - NO DOT */
+
+.online{
+    margin-top:3px;
+    font-size:12px;
+    color:#65a9ff;
+    display:block;
+}
+
+.header-action{
+    width:38px;
+    height:38px;
+    min-width:38px;
+
+    border:0;
+    border-radius:12px;
+
+    background:rgba(255,255,255,.05);
+    color:#fff;
+
+    font-size:21px;
+    cursor:pointer;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+/* CHAT AREA */
+
+.chat-area{
+    position:fixed;
+
+    top:calc(var(--vvt) + var(--header-h));
+    bottom:auto;
+    height:calc(var(--vvh) - var(--header-h) - var(--composer-h));
+
+    left:var(--vvl);
+    transform:none;
+
+    width:min(var(--vvw),600px);
+
+    overflow-y:auto;
+    overflow-x:hidden;
+
+    padding:18px 15px 20px;
+
+    scrollbar-width:none;
+
+    overscroll-behavior:contain;
+    -webkit-overflow-scrolling:touch;
+}
+
+.chat-area::-webkit-scrollbar{
+    display:none;
+}
+
+.date-divider{
+    text-align:center;
+    margin:8px 0 20px;
+}
+
+.date-divider span{
+    display:inline-block;
+
+    padding:6px 12px;
+
+    border-radius:20px;
+
+    background:rgba(255,255,255,.055);
+
+    border:1px solid rgba(255,255,255,.06);
+
+    color:#8491a7;
+
+    font-size:11px;
+}
+
+.message-row{
+    display:flex;
+    width:100%;
+    margin-bottom:13px;
+}
+
+.message-row.received{
+    justify-content:flex-start;
+}
+
+.message-row.sent{
+    justify-content:flex-end;
+}
+
+.message{
+    max-width:76%;
+
+    padding:11px 13px 8px;
+
+    border-radius:16px;
+
+    position:relative;
+
+    font-size:14px;
+    line-height:1.45;
+
+    word-break:break-word;
+    white-space:pre-wrap;
+}
+
+.received .message{
+    background:#111b2d;
+
+    border:1px solid rgba(255,255,255,.055);
+
+    border-bottom-left-radius:5px;
+
+    box-shadow:0 5px 18px rgba(0,0,0,.15);
+}
+
+.sent .message{
+    background:linear-gradient(
+        135deg,
+        #1677ff,
+        #0755c9
+    );
+
+    border-bottom-right-radius:5px;
+
+    box-shadow:0 5px 20px rgba(0,100,255,.20);
+}
+
+.message-time{
+    display:flex;
+    justify-content:flex-end;
+    align-items:center;
+    gap:4px;
+
+    margin-top:4px;
+
+    font-size:9px;
+    color:rgba(255,255,255,.48);
+}
+
+.sent .message-time{
+    color:rgba(255,255,255,.68);
+}
+
+.read{
+    font-size:11px;
+    color:#b9ddff;
+}
+
+/* TYPING */
+
+.typing{
+    display:none;
+
+    align-items:center;
+    gap:5px;
+
+    width:max-content;
+
+    padding:10px 13px;
+
+    border-radius:15px;
+    border-bottom-left-radius:5px;
+
+    background:#111b2d;
+
+    border:1px solid rgba(255,255,255,.05);
+}
+
+.typing.show{
+    display:flex;
+}
+
+.typing span{
+    width:5px;
+    height:5px;
+
+    border-radius:50%;
+
+    background:#71809a;
+
+    animation:typing 1.2s infinite;
+}
+
+.typing span:nth-child(2){
+    animation-delay:.15s;
+}
+
+.typing span:nth-child(3){
+    animation-delay:.3s;
+}
+
+@keyframes typing{
+    0%,60%,100%{
+        transform:translateY(0);
+        opacity:.5;
     }
 
-    for other_user_id in other_user_ids:
+    30%{
+        transform:translateY(-4px);
+        opacity:1;
+    }
+}
 
-        await manager.send_to_user(
-            other_user_id,
-            payload,
-        )
+/* COMPOSER */
 
+.composer-area{
+    position:fixed;
 
-# ============================================================
-# REQUEST MODELS
-# ============================================================
+    left:var(--vvl);
+    top:calc(var(--vvt) + var(--vvh) - var(--composer-h));
 
-class LoginRequest(BaseModel):
-    identifier: str
-    password: str
+    transform:none;
 
+    width:min(var(--vvw),600px);
 
-class RegisterOTPRequest(BaseModel):
-    name: str
-    mobile: str
-    password: str
+    height:var(--composer-h);
+    min-height:var(--composer-h);
 
+    padding:10px 12px 14px;
 
-class RegisterVerifyRequest(BaseModel):
-    name: str
-    mobile: str
-    password: str
-    otp: str
+    background:linear-gradient(
+        to top,
+        #050b18 70%,
+        rgba(5,11,24,.92)
+    );
 
+    z-index:3000;
+}
 
-class ForgotOTPRequest(BaseModel):
-    identifier: str
+.composer{
+    width:100%;
+    min-height:52px;
 
+    display:flex;
+    align-items:center;
+    gap:7px;
 
-class ForgotVerifyRequest(BaseModel):
-    identifier: str
-    otp: str
+    padding:6px 7px 6px 9px;
 
+    background:#0d1729;
 
-class ResetPasswordRequest(BaseModel):
-    identifier: str
-    new_password: str
-    confirm_password: str
+    border:1px solid rgba(255,255,255,.07);
 
+    border-radius:18px;
 
-class FollowRequest(BaseModel):
-    requester_user_id: str
-    target_user_id: str
+    box-shadow:0 8px 25px rgba(0,0,0,.22);
+}
 
+.composer-btn{
+    width:38px;
+    height:38px;
+    min-width:38px;
 
-class ConnectionActionRequest(BaseModel):
-    notification_id: int
-    user_id: str
-
-
-class VerifyConnectionCodeRequest(BaseModel):
-    requester_user_id: str
-    target_user_id: str
-    code: str
+    border:0;
+    border-radius:12px;
 
+    background:transparent;
+    color:#9eabc0;
 
-class NotificationReadRequest(BaseModel):
-    notification_id: int
-    user_id: str
+    font-size:20px;
+    cursor:pointer;
 
-
-class SendMessageRequest(BaseModel):
-    sender_user_id: str
-    receiver_user_id: str
-    message: str
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
 
+.composer-btn:active{
+    transform:scale(.92);
+}
 
-# ============================================================
-# OTP FUNCTIONS
-# ============================================================
+.message-input{
+    flex:1;
+    width:100%;
+    min-width:0;
 
-def generate_otp():
-    return str(
-        secrets.randbelow(900000) + 100000
-    )
+    height:38px;
 
+    border:0;
+    outline:0;
 
-def save_otp(
-    db: Session,
-    identifier: str,
-    purpose: str,
-):
-    otp = generate_otp()
+    background:transparent;
+    color:#fff;
 
-    old_otps = (
-        db.query(OTPVerification)
-        .filter(
-            OTPVerification.identifier == identifier,
-            OTPVerification.purpose == purpose,
-        )
-        .all()
-    )
+    font-size:14px;
+}
 
-    for old in old_otps:
-        db.delete(old)
+.message-input::placeholder{
+    color:#66748b;
+}
 
-    new_otp = OTPVerification(
-        identifier=identifier,
-        otp=otp,
-        purpose=purpose,
-        expires_at=(
-            datetime.utcnow()
-            + timedelta(minutes=2)
-        ),
-        verified=False,
-    )
-
-    db.add(new_otp)
-    db.commit()
-
-    return otp
-
-
-# ============================================================
-# REAL-TIME NOTIFICATION HELPER
-# ============================================================
-
-async def push_notification(
-    user_id: str,
-    notification_type: str,
-    notification_id: int,
-    title: str,
-    message: str,
-    sender: dict | None = None,
-    connection_request_id: int | None = None,
-    verification_code: str | None = None,
-    requester_user_id: str | None = None,
-    target_user_id: str | None = None,
-):
-
-    await manager.send_to_user(
-        user_id,
-        {
-            "type": "notification",
-            "notification": {
-                "id": notification_id,
-                "notification_type": notification_type,
-                "title": title,
-                "message": message,
-                "sender": sender,
-                "connection_request_id": connection_request_id,
-                "verification_code": verification_code,
-                "requester_user_id": requester_user_id,
-                "target_user_id": target_user_id,
-                "is_read": False,
-                "created_at": datetime.utcnow().isoformat(),
-            },
-        },
-    )
-
-
-# ============================================================
-# WEBSOCKET
-# ============================================================
-
-@app.websocket("/ws/{user_id}")
-async def websocket_endpoint(
-    websocket: WebSocket,
-    user_id: str,
-):
-
-    user_id = user_id.strip()
-
-    if not user_id:
-        await websocket.close()
-        return
-
-    db = SessionLocal()
-
-    try:
-
-        user = (
-            db.query(User)
-            .filter(
-                User.user_id == user_id
-            )
-            .first()
-        )
-
-        if not user:
-            await websocket.close(
-                code=1008
-            )
-            return
-
-    finally:
-        db.close()
-
-    # --------------------------------------------------------
-    # CONNECT SOCKET
-    # --------------------------------------------------------
-
-    await manager.connect(
-        user_id,
-        websocket,
-    )
-
-    # --------------------------------------------------------
-    # SET USER ONLINE
-    # --------------------------------------------------------
-
-    set_user_presence(
-        user_id,
-        True,
-    )
-
-    # --------------------------------------------------------
-    # TELL CONNECTED FRIENDS THAT USER IS ONLINE
-    # --------------------------------------------------------
-
-    await broadcast_presence(
-        user_id,
-        True,
-    )
-
-    try:
-
-        await websocket.send_json(
-            {
-                "type": "websocket_connected",
-                "message": "Real-time connection active",
-                "user_id": user_id,
-                "is_online": True,
-            }
-        )
-
-        while True:
-
-            try:
-
-                data = await websocket.receive_text()
-
-                if data == "ping":
-
-                    await websocket.send_json(
-                        {
-                            "type": "pong",
-                            "timestamp": datetime.utcnow().isoformat(),
-                        }
-                    )
-
-            except WebSocketDisconnect:
-                break
-
-            except Exception:
-                break
-
-    finally:
-
-        # ----------------------------------------------------
-        # REMOVE THIS SOCKET
-        # ----------------------------------------------------
-
-        await manager.disconnect(
-            user_id,
-            websocket,
-        )
-
-        # ----------------------------------------------------
-        # IF NO OTHER SOCKET IS ACTIVE,
-        # USER IS REALLY OFFLINE
-        # ----------------------------------------------------
-
-        still_online = await manager.is_online(
-            user_id
-        )
-
-        if not still_online:
-
-            last_seen = set_user_presence(
-                user_id,
-                False,
-            )
-
-            await broadcast_presence(
-                user_id,
-                False,
-                last_seen,
-            )
-
-
-# ============================================================
-# CHAT PRESENCE API
-# ============================================================
-
-@app.get("/api/chat/presence")
-async def chat_presence(
-    user_id: str,
-    other_user_id: str,
-    db: Session = Depends(get_db),
-):
-
-    user_id = user_id.strip()
-    other_user_id = other_user_id.strip()
-
-    if not user_id or not other_user_id:
-
-        raise HTTPException(
-            status_code=400,
-            detail="User IDs are required",
-        )
-
-    if user_id == other_user_id:
-
-        raise HTTPException(
-            status_code=400,
-            detail="Invalid users",
-        )
-
-    if not are_connected(
-        db,
-        user_id,
-        other_user_id,
-    ):
-
-        raise HTTPException(
-            status_code=403,
-            detail="Not connected",
-        )
-
-    online = await manager.is_online(
-        other_user_id
-    )
-
-    presence = (
-        db.query(UserPresence)
-        .filter(
-            UserPresence.user_id
-            == other_user_id
-        )
-        .first()
-    )
-
-    last_seen_at = None
-
-    if (
-        presence
-        and presence.last_seen_at
-    ):
-        last_seen_at = (
-            presence.last_seen_at.isoformat()
-        )
-
-    return {
-        "ok": True,
-        "user_id": other_user_id,
-        "is_online": online,
-        "status": (
-            "online"
-            if online
-            else "offline"
-        ),
-        "last_seen_at": (
-            None
-            if online
-            else last_seen_at
-        ),
+.send-btn{
+    width:40px;
+    height:40px;
+    min-width:40px;
+
+    border:0;
+    border-radius:14px;
+
+    background:linear-gradient(
+        145deg,
+        #2185ff,
+        #0052c9
+    );
+
+    color:#fff;
+
+    font-size:19px;
+    cursor:pointer;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    box-shadow:0 5px 16px rgba(0,100,255,.28);
+}
+
+.send-btn:active{
+    transform:scale(.92);
+}
+
+/* POPUPS */
+
+.attach-menu{
+    display:none;
+
+    position:absolute;
+
+    bottom:calc(var(--composer-h) - 2px);
+    left:12px;
+
+    padding:9px;
+
+    border-radius:16px;
+
+    background:#101c30;
+
+    border:1px solid rgba(255,255,255,.08);
+
+    box-shadow:0 12px 35px rgba(0,0,0,.35);
+
+    gap:7px;
+
+    z-index:4000;
+}
+
+.attach-menu.show{
+    display:flex;
+}
+
+.attach-item{
+    width:42px;
+    height:42px;
+
+    border:0;
+    border-radius:12px;
+
+    background:rgba(255,255,255,.06);
+
+    color:#fff;
+    font-size:19px;
+    cursor:pointer;
+}
+
+.emoji-panel{
+    display:none;
+
+    position:absolute;
+
+    bottom:calc(var(--composer-h) - 2px);
+
+    left:12px;
+    right:12px;
+
+    padding:12px;
+
+    border-radius:17px;
+
+    background:#0f1a2d;
+
+    border:1px solid rgba(255,255,255,.07);
+
+    box-shadow:0 12px 35px rgba(0,0,0,.3);
+
+    grid-template-columns:repeat(8,1fr);
+
+    gap:8px;
+
+    z-index:4000;
+}
+
+.emoji-panel.show{
+    display:grid;
+}
+
+.emoji{
+    border:0;
+    background:transparent;
+    font-size:22px;
+    cursor:pointer;
+}
+
+/* TOAST */
+
+.toast{
+    position:fixed;
+
+    left:50%;
+
+    bottom:85px;
+
+    transform:
+        translateX(-50%)
+        translateY(15px);
+
+    padding:9px 15px;
+
+    border-radius:12px;
+
+    background:#14233a;
+
+    border:1px solid rgba(255,255,255,.08);
+
+    color:#dbe7f7;
+
+    font-size:12px;
+
+    opacity:0;
+
+    pointer-events:none;
+
+    transition:.25s;
+
+    z-index:5000;
+}
+
+.toast.show{
+    opacity:1;
+
+    transform:
+        translateX(-50%)
+        translateY(0);
+}
+
+/* MOBILE */
+
+@media(max-width:500px){
+
+    :root{
+        --header-h:66px;
+        --composer-h:70px;
     }
 
-
-# ============================================================
-# SEARCH PAGE
-# ============================================================
-
-@app.get("/search")
-async def search_page():
-
-    search_file = os.path.join(
-        BASE_DIR,
-        "search.html",
-    )
-
-    if not os.path.isfile(search_file):
-
-        raise HTTPException(
-            status_code=404,
-            detail="search.html file not found on server",
-        )
-
-    return FileResponse(search_file)
-
-
-@app.get("/search.html")
-async def search_html():
-
-    search_file = os.path.join(
-        BASE_DIR,
-        "search.html",
-    )
-
-    if not os.path.isfile(search_file):
-
-        raise HTTPException(
-            status_code=404,
-            detail="search.html file not found on server",
-        )
-
-    return FileResponse(search_file)
-
-
-# ============================================================
-# SEARCH API
-# ============================================================
-
-@app.get("/api/search")
-async def search_users(
-    q: str = "",
-    db: Session = Depends(get_db),
-):
-
-    q = q.strip()
-
-    if not q:
-
-        return {
-            "ok": True,
-            "users": [],
-        }
-
-    users = (
-        db.query(User)
-        .filter(
-            (User.user_id.ilike(f"%{q}%"))
-            |
-            (User.mobile.ilike(f"%{q}%"))
-            |
-            (User.name.ilike(f"%{q}%"))
-        )
-        .limit(20)
-        .all()
-    )
-
-    return {
-        "ok": True,
-        "users": [
-            {
-                "user_id": user.user_id,
-                "name": user.name,
-                "profile_photo": user.profile_photo,
-                "profile_picture": user.profile_photo,
-            }
-            for user in users
-        ],
+    .chat-header{
+        height:var(--header-h);
+        min-height:var(--header-h);
+        padding:9px 10px;
     }
 
-
-# ============================================================
-# REGISTER PAGE
-# ============================================================
-
-@app.get("/")
-async def register_page():
-
-    register_file = os.path.join(
-        BASE_DIR,
-        "register.html",
-    )
-
-    if not os.path.isfile(register_file):
-
-        raise HTTPException(
-            status_code=404,
-            detail="register.html file not found",
-        )
-
-    return FileResponse(register_file)
-
-
-@app.get("/register.html")
-async def register_html():
-
-    register_file = os.path.join(
-        BASE_DIR,
-        "register.html",
-    )
-
-    if not os.path.isfile(register_file):
-
-        raise HTTPException(
-            status_code=404,
-            detail="register.html file not found",
-        )
-
-    return FileResponse(register_file)
-
-
-# ============================================================
-# LOGIN
-# ============================================================
-
-@app.post("/login")
-async def login(
-    request: LoginRequest,
-    db: Session = Depends(get_db),
-):
-
-    identifier = request.identifier.strip()
-    password = request.password
-
-    if not identifier or not password:
-
-        return {
-            "ok": False,
-            "message": (
-                "User ID/mobile and password are required"
-            ),
-        }
-
-    user = (
-        db.query(User)
-        .filter(
-            (User.user_id == identifier)
-            |
-            (User.mobile == identifier)
-        )
-        .first()
-    )
-
-    if not user:
-
-        return {
-            "ok": False,
-            "message": (
-                "Invalid User ID/mobile or password"
-            ),
-        }
-
-    try:
-
-        password_hasher.verify(
-            user.password_hash,
-            password,
-        )
-
-    except (
-        VerifyMismatchError,
-        VerificationError,
-    ):
-
-        return {
-            "ok": False,
-            "message": (
-                "Invalid User ID/mobile or password"
-            ),
-        }
-
-    token = secrets.token_urlsafe(32)
-
-    return {
-        "ok": True,
-        "message": "Login successful",
-        "token": token,
-        "user_id": user.user_id,
-        "name": user.name,
-        "mobile": user.mobile,
-        "profile_photo": user.profile_photo,
-        "user": {
-            "user_id": user.user_id,
-            "name": user.name,
-            "mobile": user.mobile,
-            "profile_photo": user.profile_photo,
-        },
+    .back-btn{
+        width:37px;
+        height:37px;
+        min-width:37px;
     }
 
-
-# ============================================================
-# REGISTER - REQUEST OTP
-# ============================================================
-
-@app.post("/register/request-otp")
-async def register_request_otp(
-    request: RegisterOTPRequest,
-    db: Session = Depends(get_db),
-):
-
-    name = request.name.strip()
-    mobile = request.mobile.strip()
-    password = request.password
-
-    if not name:
-
-        return {
-            "ok": False,
-            "message": "Name is required",
-        }
-
-    if not mobile:
-
-        return {
-            "ok": False,
-            "message": "Mobile number is required",
-        }
-
-    if (
-        not mobile.isdigit()
-        or len(mobile) != 10
-    ):
-
-        return {
-            "ok": False,
-            "message": (
-                "Enter a valid 10-digit mobile number"
-            ),
-        }
-
-    if not password:
-
-        return {
-            "ok": False,
-            "message": "Password is required",
-        }
-
-    if len(password) < 6:
-
-        return {
-            "ok": False,
-            "message": (
-                "Password must be at least 6 characters"
-            ),
-        }
-
-    existing_user = (
-        db.query(User)
-        .filter(
-            User.mobile == mobile
-        )
-        .first()
-    )
-
-    if existing_user:
-
-        return {
-            "ok": False,
-            "message": (
-                "Mobile number already registered"
-            ),
-        }
-
-    otp = save_otp(
-        db,
-        mobile,
-        "register",
-    )
-
-    return {
-        "ok": True,
-        "message": "OTP generated",
-        "otp": otp,
-        "expires_in": 120,
+    .profile-photo{
+        width:41px;
+        height:41px;
+        min-width:41px;
     }
 
-
-# ============================================================
-# REGISTER - VERIFY OTP
-# ============================================================
-
-@app.post("/register/verify-otp")
-async def register_verify_otp(
-    request: RegisterVerifyRequest,
-    db: Session = Depends(get_db),
-):
-
-    mobile = request.mobile.strip()
-    otp = request.otp.strip()
-
-    verification = (
-        db.query(OTPVerification)
-        .filter(
-            OTPVerification.identifier == mobile,
-            OTPVerification.purpose == "register",
-            OTPVerification.verified == False,
-        )
-        .order_by(
-            OTPVerification.id.desc()
-        )
-        .first()
-    )
-
-    if not verification:
-
-        return {
-            "ok": False,
-            "message": (
-                "OTP not found. Please request a new OTP"
-            ),
-        }
-
-    if datetime.utcnow() > verification.expires_at:
-
-        db.delete(verification)
-        db.commit()
-
-        return {
-            "ok": False,
-            "message": (
-                "OTP expired. Please request a new OTP"
-            ),
-        }
-
-    if verification.otp != otp:
-
-        return {
-            "ok": False,
-            "message": "Invalid OTP",
-        }
-
-    existing_user = (
-        db.query(User)
-        .filter(
-            User.mobile == mobile
-        )
-        .first()
-    )
-
-    if existing_user:
-
-        return {
-            "ok": False,
-            "message": (
-                "Mobile number already registered"
-            ),
-        }
-
-    user_id = (
-        "UX"
-        + uuid.uuid4().hex[:10]
-    )
-
-    password_hash = password_hasher.hash(
-        request.password
-    )
-
-    new_user = User(
-        user_id=user_id,
-        name=request.name.strip(),
-        mobile=mobile,
-        password_hash=password_hash,
-    )
-
-    try:
-
-        db.add(new_user)
-
-        verification.verified = True
-
-        db.commit()
-
-        db.refresh(new_user)
-
-    except IntegrityError:
-
-        db.rollback()
-
-        return {
-            "ok": False,
-            "message": (
-                "Registration failed. Please try again"
-            ),
-        }
-
-    return {
-        "ok": True,
-        "message": "Registration successful",
-        "user_id": new_user.user_id,
-        "name": new_user.name,
-        "mobile": new_user.mobile,
-        "profile_photo": new_user.profile_photo,
+    .profile-name{
+        font-size:15px;
     }
 
-
-# ============================================================
-# FORGOT PASSWORD - REQUEST OTP
-# ============================================================
-
-@app.post("/forgot-password/request-otp")
-async def forgot_password_request_otp(
-    request: ForgotOTPRequest,
-    db: Session = Depends(get_db),
-):
-
-    identifier = request.identifier.strip()
-
-    if not identifier:
-
-        return {
-            "ok": False,
-            "message": (
-                "User ID or mobile number is required"
-            ),
-        }
-
-    user = (
-        db.query(User)
-        .filter(
-            (User.user_id == identifier)
-            |
-            (User.mobile == identifier)
-        )
-        .first()
-    )
-
-    if not user:
-
-        return {
-            "ok": False,
-            "message": (
-                "User ID or mobile number not found"
-            ),
-        }
-
-    otp = save_otp(
-        db,
-        user.mobile,
-        "forgot_password",
-    )
-
-    return {
-        "ok": True,
-        "message": "OTP generated",
-        "otp": otp,
-        "expires_in": 120,
+    .chat-area{
+        padding-left:12px;
+        padding-right:12px;
     }
 
-
-# ============================================================
-# FORGOT PASSWORD - VERIFY OTP
-# ============================================================
-
-@app.post("/forgot-password/verify-otp")
-async def forgot_password_verify_otp(
-    request: ForgotVerifyRequest,
-    db: Session = Depends(get_db),
-):
-
-    identifier = request.identifier.strip()
-    otp = request.otp.strip()
-
-    user = (
-        db.query(User)
-        .filter(
-            (User.user_id == identifier)
-            |
-            (User.mobile == identifier)
-        )
-        .first()
-    )
-
-    if not user:
-
-        return {
-            "ok": False,
-            "message": "User not found",
-        }
-
-    verification = (
-        db.query(OTPVerification)
-        .filter(
-            OTPVerification.identifier == user.mobile,
-            OTPVerification.purpose == "forgot_password",
-            OTPVerification.verified == False,
-        )
-        .order_by(
-            OTPVerification.id.desc()
-        )
-        .first()
-    )
-
-    if not verification:
-
-        return {
-            "ok": False,
-            "message": (
-                "OTP not found. Please request a new OTP"
-            ),
-        }
-
-    if datetime.utcnow() > verification.expires_at:
-
-        db.delete(verification)
-        db.commit()
-
-        return {
-            "ok": False,
-            "message": (
-                "OTP expired. Please request a new OTP"
-            ),
-        }
-
-    if verification.otp != otp:
-
-        return {
-            "ok": False,
-            "message": "Invalid OTP",
-        }
-
-    verification.verified = True
-
-    db.commit()
-
-    return {
-        "ok": True,
-        "message": "OTP verified",
+    .message{
+        max-width:82%;
+        font-size:14px;
     }
 
-
-# ============================================================
-# RESET PASSWORD
-# ============================================================
-
-@app.post("/forgot-password/reset-password")
-async def reset_password(
-    request: ResetPasswordRequest,
-    db: Session = Depends(get_db),
-):
-
-    identifier = request.identifier.strip()
-
-    if len(request.new_password) < 6:
-
-        return {
-            "ok": False,
-            "message": (
-                "Password must be at least 6 characters"
-            ),
-        }
-
-    if (
-        request.new_password
-        != request.confirm_password
-    ):
-
-        return {
-            "ok": False,
-            "message": "Passwords do not match",
-        }
-
-    user = (
-        db.query(User)
-        .filter(
-            (User.user_id == identifier)
-            |
-            (User.mobile == identifier)
-        )
-        .first()
-    )
-
-    if not user:
-
-        return {
-            "ok": False,
-            "message": "User not found",
-        }
-
-    verification = (
-        db.query(OTPVerification)
-        .filter(
-            OTPVerification.identifier == user.mobile,
-            OTPVerification.purpose == "forgot_password",
-            OTPVerification.verified == True,
-        )
-        .order_by(
-            OTPVerification.id.desc()
-        )
-        .first()
-    )
-
-    if not verification:
-
-        return {
-            "ok": False,
-            "message": (
-                "OTP verification required"
-            ),
-        }
-
-    if datetime.utcnow() > verification.expires_at:
-
-        verification.verified = False
-
-        db.commit()
-
-        return {
-            "ok": False,
-            "message": (
-                "OTP verification expired"
-            ),
-        }
-
-    user.password_hash = password_hasher.hash(
-        request.new_password
-    )
-
-    verification.verified = False
-
-    db.commit()
-
-    return {
-        "ok": True,
-        "message": (
-            "Password changed successfully"
-        ),
+    .composer-area{
+        padding:8px 9px 12px;
     }
 
+    .composer{
+        min-height:51px;
+        border-radius:17px;
+    }
+}
 
-# ============================================================
-# FOLLOW SYSTEM
-# ============================================================
+/* SAFE AREA */
 
-@app.post("/api/follow")
-async def follow_user(
-    request: FollowRequest,
-    db: Session = Depends(get_db),
-):
+@supports(padding:max(0px)){
 
-    requester_id = request.requester_user_id.strip()
-    target_id = request.target_user_id.strip()
+    .chat-header{
+        padding-top:max(
+            10px,
+            env(safe-area-inset-top)
+        );
+    }
 
-    if not requester_id or not target_id:
+    .composer-area{
+        padding-bottom:max(
+            12px,
+            env(safe-area-inset-bottom)
+        );
+    }
+}
 
-        return {
-            "ok": False,
-            "message": "User IDs are required",
-        }
+/* SMALL DEVICES */
 
-    if requester_id == target_id:
+@media(max-width:360px){
 
-        return {
-            "ok": False,
-            "message": (
-                "You cannot follow your own account"
-            ),
-        }
+    .chat-header{
+        padding-left:6px;
+        padding-right:6px;
+    }
 
-    requester = (
-        db.query(User)
-        .filter(
-            User.user_id == requester_id
-        )
-        .first()
-    )
+    .profile{
+        gap:8px;
+    }
 
-    target = (
-        db.query(User)
-        .filter(
-            User.user_id == target_id
-        )
-        .first()
-    )
+    .profile-name{
+        font-size:14px;
+    }
 
-    if not requester:
+    .online{
+        font-size:11px;
+    }
 
-        return {
-            "ok": False,
-            "message": (
-                "Requester account not found"
-            ),
-        }
+    .composer{
+        gap:3px;
+        padding-left:5px;
+        padding-right:5px;
+    }
 
-    if not target:
+    .composer-btn{
+        width:34px;
+        min-width:34px;
+    }
 
-        return {
-            "ok": False,
-            "message": "User not found",
-        }
+    .send-btn{
+        width:37px;
+        min-width:37px;
+    }
+}
+</style>
+</head>
 
-    existing_connection = (
-        db.query(Connection)
-        .filter(
-            (
-                (Connection.user_a_id == requester_id)
-                &
-                (Connection.user_b_id == target_id)
-            )
-            |
-            (
-                (Connection.user_a_id == target_id)
-                &
-                (Connection.user_b_id == requester_id)
-            )
-        )
-        .first()
-    )
+<body>
 
-    if existing_connection:
+<div class="chat-app">
 
-        return {
-            "ok": True,
-            "status": "verified",
-            "message": (
-                "You are already connected"
-            ),
-        }
+<header class="chat-header">
 
-    existing_request = (
-        db.query(ConnectionRequest)
-        .filter(
-            ConnectionRequest.requester_user_id
-            == requester_id,
-            ConnectionRequest.target_user_id
-            == target_id,
-        )
-        .order_by(
-            ConnectionRequest.id.desc()
-        )
-        .first()
-    )
+    <button
+        class="back-btn"
+        onclick="goBack()"
+        aria-label="Back"
+    >‹</button>
 
-    if existing_request:
+    <div class="profile">
 
-        if existing_request.status == "pending":
+        <div
+            class="profile-photo"
+            id="profilePhoto"
+        >U</div>
 
-            return {
-                "ok": True,
-                "status": "pending",
-                "message": (
-                    "Follow request already sent"
-                ),
+        <div class="profile-info">
+
+            <div
+                class="profile-name"
+                id="chatName"
+            >Loading...</div>
+
+            <!-- ONLY TEXT -->
+            <div
+                class="online"
+                id="onlineText"
+            >Checking...</div>
+
+        </div>
+
+    </div>
+
+    <button
+        class="header-action"
+        onclick="showToast('Coming soon')"
+    >⋮</button>
+
+</header>
+
+
+<main
+    class="chat-area"
+    id="chatArea"
+>
+
+    <div class="date-divider">
+        <span id="dateText">Today</span>
+    </div>
+
+    <div
+        class="message-row received"
+        id="typingRow"
+    >
+
+        <div class="typing">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
+    </div>
+
+</main>
+
+
+<div class="composer-area">
+
+    <div
+        class="attach-menu"
+        id="attachMenu"
+    >
+
+        <button
+            class="attach-item"
+            onclick="showToast('Gallery coming soon')"
+        >🖼️</button>
+
+        <button
+            class="attach-item"
+            onclick="showToast('Camera coming soon')"
+        >📷</button>
+
+        <button
+            class="attach-item"
+            onclick="showToast('File sharing coming soon')"
+        >📄</button>
+
+    </div>
+
+
+    <div
+        class="emoji-panel"
+        id="emojiPanel"
+    >
+
+        <button class="emoji" onclick="addEmoji('😀')">😀</button>
+        <button class="emoji" onclick="addEmoji('😂')">😂</button>
+        <button class="emoji" onclick="addEmoji('😊')">😊</button>
+        <button class="emoji" onclick="addEmoji('😍')">😍</button>
+        <button class="emoji" onclick="addEmoji('🥰')">🥰</button>
+        <button class="emoji" onclick="addEmoji('😎')">😎</button>
+        <button class="emoji" onclick="addEmoji('❤️')">❤️</button>
+        <button class="emoji" onclick="addEmoji('🔥')">🔥</button>
+        <button class="emoji" onclick="addEmoji('👍')">👍</button>
+        <button class="emoji" onclick="addEmoji('👏')">👏</button>
+        <button class="emoji" onclick="addEmoji('🙌')">🙌</button>
+        <button class="emoji" onclick="addEmoji('🤝')">🤝</button>
+        <button class="emoji" onclick="addEmoji('✨')">✨</button>
+        <button class="emoji" onclick="addEmoji('💙')">💙</button>
+        <button class="emoji" onclick="addEmoji('😁')">😁</button>
+        <button class="emoji" onclick="addEmoji('🤣')">🤣</button>
+
+    </div>
+
+
+    <div class="composer">
+
+        <button
+            class="composer-btn"
+            onclick="toggleEmoji()"
+        >☺</button>
+
+        <input
+            id="messageInput"
+            class="message-input"
+            type="text"
+            placeholder="Message..."
+            autocomplete="off"
+            enterkeyhint="send"
+        >
+
+        <button
+            class="composer-btn"
+            onclick="toggleAttach()"
+        >＋</button>
+
+        <button
+            class="send-btn"
+            id="sendButton"
+            onclick="sendMessage()"
+        >➤</button>
+
+    </div>
+
+</div>
+
+</div>
+
+<div
+    class="toast"
+    id="toast"
+></div>
+
+
+<script>
+
+const input =
+    document.getElementById("messageInput");
+
+const chatArea =
+    document.getElementById("chatArea");
+
+const emojiPanel =
+    document.getElementById("emojiPanel");
+
+const attachMenu =
+    document.getElementById("attachMenu");
+
+const chatName =
+    document.getElementById("chatName");
+
+const profilePhoto =
+    document.getElementById("profilePhoto");
+
+const onlineText =
+    document.getElementById("onlineText");
+
+const typingRow =
+    document.getElementById("typingRow");
+
+const sendButton =
+    document.getElementById("sendButton");
+
+
+const params =
+    new URLSearchParams(window.location.search);
+
+const otherUserId =
+    (params.get("user_id") || "").trim();
+
+
+function getCurrentUserId(){
+
+    const keys = [
+        "usanex_user",
+        "user",
+        "currentUser",
+        "logged_in_user"
+    ];
+
+    for(const key of keys){
+
+        try{
+
+            const value =
+                localStorage.getItem(key);
+
+            if(!value) continue;
+
+            try{
+
+                const parsed =
+                    JSON.parse(value);
+
+                if(typeof parsed === "string"){
+                    return parsed.trim();
+                }
+
+                if(
+                    parsed &&
+                    parsed.user_id
+                ){
+                    return String(
+                        parsed.user_id
+                    ).trim();
+                }
+
+                if(
+                    parsed &&
+                    parsed.id
+                ){
+                    return String(
+                        parsed.id
+                    ).trim();
+                }
+
+            }catch(e){
+
+                if(value.trim()){
+                    return value.trim();
+                }
+
             }
 
-        if existing_request.status == "accepted":
+        }catch(e){}
 
-            return {
-                "ok": True,
-                "status": "accepted",
-                "message": (
-                    "Request accepted. Verification required"
-                ),
-            }
-
-        if existing_request.status == "verified":
-
-            return {
-                "ok": True,
-                "status": "verified",
-                "message": (
-                    "Connection already verified"
-                ),
-            }
-
-        existing_request.status = "pending"
-
-        existing_request.updated_at = (
-            datetime.utcnow()
-        )
-
-        request_row = existing_request
-
-    else:
-
-        request_row = ConnectionRequest(
-            requester_user_id=requester_id,
-            target_user_id=target_id,
-            status="pending",
-        )
-
-        db.add(request_row)
-
-        db.flush()
-
-    notification = Notification(
-        receiver_user_id=target_id,
-        sender_user_id=requester_id,
-        type="follow_request",
-        title="New Follow Request",
-        message=(
-            f"{requester.name} "
-            "wants to connect with you."
-        ),
-        connection_request_id=request_row.id,
-        verification_code=None,
-        is_read=False,
-    )
-
-    db.add(notification)
-
-    db.commit()
-
-    db.refresh(notification)
-
-    await push_notification(
-        target_id,
-        "follow_request",
-        notification.id,
-        notification.title,
-        notification.message,
-        sender={
-            "user_id": requester.user_id,
-            "name": requester.name,
-            "profile_photo": requester.profile_photo,
-        },
-        connection_request_id=request_row.id,
-        requester_user_id=requester_id,
-        target_user_id=target_id,
-    )
-
-    return {
-        "ok": True,
-        "status": "pending",
-        "message": "Follow request sent",
-        "notification_id": notification.id,
     }
-
-
-# ============================================================
-# CANCEL FOLLOW
-# ============================================================
-
-@app.post("/api/follow/cancel")
-async def cancel_follow(
-    request: FollowRequest,
-    db: Session = Depends(get_db),
-):
-
-    requester_id = request.requester_user_id.strip()
-    target_id = request.target_user_id.strip()
-
-    if not requester_id or not target_id:
-
-        return {
-            "ok": False,
-            "message": "User IDs are required",
-        }
-
-    connection_request = (
-        db.query(ConnectionRequest)
-        .filter(
-            ConnectionRequest.requester_user_id
-            == requester_id,
-            ConnectionRequest.target_user_id
-            == target_id,
-            ConnectionRequest.status
-            == "pending",
-        )
-        .order_by(
-            ConnectionRequest.id.desc()
-        )
-        .first()
-    )
-
-    if not connection_request:
-
-        return {
-            "ok": True,
-            "status": "none",
-            "message": "No pending request",
-        }
-
-    request_id = connection_request.id
-
-    connection_request.status = "rejected"
-
-    connection_request.updated_at = (
-        datetime.utcnow()
-    )
-
-    pending_notifications = (
-        db.query(Notification)
-        .filter(
-            Notification.receiver_user_id
-            == target_id,
-            Notification.sender_user_id
-            == requester_id,
-            Notification.connection_request_id
-            == request_id,
-            Notification.type
-            == "follow_request",
-            Notification.is_read
-            == False,
-        )
-        .all()
-    )
-
-    for notification in pending_notifications:
-        notification.is_read = True
-
-    db.commit()
-
-    await manager.send_to_user(
-        target_id,
-        {
-            "type": "follow_cancelled",
-            "requester_user_id": requester_id,
-            "target_user_id": target_id,
-            "connection_request_id": request_id,
-        },
-    )
-
-    return {
-        "ok": True,
-        "status": "none",
-        "message": "Follow request cancelled",
-    }
-
-
-# ============================================================
-# FOLLOW STATUS
-# ============================================================
-
-@app.get("/api/follow/status")
-async def follow_status(
-    requester_user_id: str,
-    target_user_id: str,
-    db: Session = Depends(get_db),
-):
-
-    requester_id = requester_user_id.strip()
-    target_id = target_user_id.strip()
-
-    if not requester_id or not target_id:
-
-        return {
-            "ok": False,
-            "message": "User IDs are required",
-        }
-
-    connection = (
-        db.query(Connection)
-        .filter(
-            (
-                (Connection.user_a_id == requester_id)
-                &
-                (Connection.user_b_id == target_id)
-            )
-            |
-            (
-                (Connection.user_a_id == target_id)
-                &
-                (Connection.user_b_id == requester_id)
-            )
-        )
-        .first()
-    )
-
-    if connection:
-
-        return {
-            "ok": True,
-            "status": "verified",
-        }
-
-    row = (
-        db.query(ConnectionRequest)
-        .filter(
-            ConnectionRequest.requester_user_id
-            == requester_id,
-            ConnectionRequest.target_user_id
-            == target_id,
-        )
-        .order_by(
-            ConnectionRequest.id.desc()
-        )
-        .first()
-    )
-
-    if not row:
-
-        return {
-            "ok": True,
-            "status": "none",
-        }
-
-    if row.status == "rejected":
-
-        return {
-            "ok": True,
-            "status": "none",
-        }
-
-    return {
-        "ok": True,
-        "status": row.status,
-    }
-
-
-# ============================================================
-# NOTIFICATIONS PAGE
-# ============================================================
-
-@app.get("/notifications")
-async def notifications_page():
-
-    notifications_file = os.path.join(
-        BASE_DIR,
-        "notifications.html",
-    )
-
-    if not os.path.isfile(notifications_file):
-
-        raise HTTPException(
-            status_code=404,
-            detail=(
-                "notifications.html file not found"
-            ),
-        )
-
-    return FileResponse(
-        notifications_file
-    )
-
-
-@app.get("/notifications.html")
-async def notifications_html():
-
-    notifications_file = os.path.join(
-        BASE_DIR,
-        "notifications.html",
-    )
-
-    if not os.path.isfile(notifications_file):
-
-        raise HTTPException(
-            status_code=404,
-            detail=(
-                "notifications.html file not found"
-            ),
-        )
-
-    return FileResponse(
-        notifications_file
-    )
-
-
-# ============================================================
-# GET NOTIFICATIONS
-# ============================================================
-
-@app.get("/api/notifications")
-async def get_notifications(
-    user_id: str,
-    db: Session = Depends(get_db),
-):
-
-    user_id = user_id.strip()
-
-    if not user_id:
-
-        return {
-            "ok": False,
-            "message": "User ID is required",
-        }
-
-    notifications = (
-        db.query(Notification)
-        .filter(
-            Notification.receiver_user_id
-            == user_id
-        )
-        .order_by(
-            Notification.id.desc()
-        )
-        .limit(50)
-        .all()
-    )
-
-    result = []
-
-    for notification in notifications:
-
-        sender = None
-
-        if notification.sender_user_id:
-
-            sender = (
-                db.query(User)
-                .filter(
-                    User.user_id
-                    == notification.sender_user_id
-                )
-                .first()
-            )
-
-        result.append(
-            {
-                "id": notification.id,
-                "type": notification.type,
-                "title": notification.title,
-                "message": notification.message,
-                "sender": {
-                    "user_id": (
-                        sender.user_id
-                        if sender
-                        else None
-                    ),
-                    "name": (
-                        sender.name
-                        if sender
-                        else None
-                    ),
-                    "profile_photo": (
-                        sender.profile_photo
-                        if sender
-                        else None
-                    ),
-                },
-                "connection_request_id": (
-                    notification.connection_request_id
-                ),
-                "verification_code": (
-                    notification.verification_code
-                ),
-                "is_read": notification.is_read,
-                "created_at": (
-                    notification.created_at.isoformat()
-                ),
-            }
-        )
-
-    return {
-        "ok": True,
-        "notifications": result,
-    }
-
-
-# ============================================================
-# ACCEPT FOLLOW REQUEST
-# ============================================================
-
-@app.post("/api/follow/accept")
-async def accept_follow(
-    request: ConnectionActionRequest,
-    db: Session = Depends(get_db),
-):
-
-    notification = (
-        db.query(Notification)
-        .filter(
-            Notification.id
-            == request.notification_id,
-            Notification.receiver_user_id
-            == request.user_id,
-        )
-        .first()
-    )
-
-    if not notification:
-
-        return {
-            "ok": False,
-            "message": "Notification not found",
-        }
-
-    if notification.type != "follow_request":
-
-        return {
-            "ok": False,
-            "message": "Invalid follow request",
-        }
-
-    connection_request = (
-        db.query(ConnectionRequest)
-        .filter(
-            ConnectionRequest.id
-            == notification.connection_request_id,
-            ConnectionRequest.target_user_id
-            == request.user_id,
-        )
-        .first()
-    )
-
-    if not connection_request:
-
-        return {
-            "ok": False,
-            "message": (
-                "Follow request not found"
-            ),
-        }
-
-    requester_id = (
-        connection_request.requester_user_id
-    )
-
-    target_id = (
-        connection_request.target_user_id
-    )
-
-    requester = (
-        db.query(User)
-        .filter(
-            User.user_id == requester_id
-        )
-        .first()
-    )
-
-    target = (
-        db.query(User)
-        .filter(
-            User.user_id == target_id
-        )
-        .first()
-    )
-
-    if not requester or not target:
-
-        return {
-            "ok": False,
-            "message": (
-                "User account not found"
-            ),
-        }
-
-    if connection_request.status == "verified":
-
-        notification.is_read = True
-        db.commit()
-
-        return {
-            "ok": True,
-            "status": "verified",
-            "message": (
-                "Connection already verified"
-            ),
-        }
-
-    if connection_request.status == "accepted":
-
-        notification.is_read = True
-        db.commit()
-
-        active_code = (
-            db.query(ConnectionCode)
-            .filter(
-                ConnectionCode.requester_user_id
-                == requester_id,
-                ConnectionCode.target_user_id
-                == target_id,
-                ConnectionCode.verified
-                == False,
-                ConnectionCode.expires_at
-                > datetime.utcnow(),
-            )
-            .order_by(
-                ConnectionCode.id.desc()
-            )
-            .first()
-        )
-
-        if active_code:
-
-            return {
-                "ok": True,
-                "status": "accepted",
-                "message": (
-                    "Request already accepted. "
-                    "Verification code already sent"
-                ),
-            }
-
-        return {
-            "ok": True,
-            "status": "accepted",
-            "message": (
-                "Request already accepted. "
-                "Verification code expired"
-            ),
-        }
-
-    if connection_request.status != "pending":
-
-        return {
-            "ok": False,
-            "message": (
-                "This request is no longer pending"
-            ),
-        }
-
-    connection_request.status = "accepted"
-
-    connection_request.updated_at = (
-        datetime.utcnow()
-    )
-
-    notification.is_read = True
-
-    active_codes = (
-        db.query(ConnectionCode)
-        .filter(
-            ConnectionCode.requester_user_id
-            == requester_id,
-            ConnectionCode.target_user_id
-            == target_id,
-            ConnectionCode.verified
-            == False,
-        )
-        .all()
-    )
-
-    for old_code in active_codes:
-        old_code.verified = True
-
-    code = generate_otp()
-
-    connection_code = ConnectionCode(
-        requester_user_id=requester_id,
-        target_user_id=target_id,
-        code=code,
-        expires_at=(
-            datetime.utcnow()
-            + timedelta(minutes=10)
-        ),
-        verified=False,
-    )
-
-    db.add(connection_code)
-
-    requester_notification = Notification(
-        receiver_user_id=requester_id,
-        sender_user_id=target_id,
-        type="connection_code",
-        title="Connection Accepted",
-        message=(
-            f"{target.name} accepted your "
-            f"connection request. "
-            f"Your verification code is {code}."
-        ),
-        connection_request_id=(
-            connection_request.id
-        ),
-        verification_code=code,
-        is_read=False,
-    )
-
-    db.add(requester_notification)
-
-    db.commit()
-
-    db.refresh(
-        requester_notification
-    )
-
-    await push_notification(
-        requester_id,
-        "connection_code",
-        requester_notification.id,
-        requester_notification.title,
-        requester_notification.message,
-        sender={
-            "user_id": target.user_id,
-            "name": target.name,
-            "profile_photo": target.profile_photo,
-        },
-        connection_request_id=(
-            connection_request.id
-        ),
-        verification_code=code,
-        requester_user_id=requester_id,
-        target_user_id=target_id,
-    )
-
-    return {
-        "ok": True,
-        "status": "accepted",
-        "message": (
-            "Request accepted. Verification code sent"
-        ),
-    }
-
-
-# ============================================================
-# REJECT FOLLOW REQUEST
-# ============================================================
-
-@app.post("/api/follow/reject")
-async def reject_follow(
-    request: ConnectionActionRequest,
-    db: Session = Depends(get_db),
-):
-
-    notification = (
-        db.query(Notification)
-        .filter(
-            Notification.id
-            == request.notification_id,
-            Notification.receiver_user_id
-            == request.user_id,
-        )
-        .first()
-    )
-
-    if not notification:
-
-        return {
-            "ok": False,
-            "message": "Notification not found",
-        }
-
-    if notification.type != "follow_request":
-
-        return {
-            "ok": False,
-            "message": "Invalid follow request",
-        }
-
-    connection_request = (
-        db.query(ConnectionRequest)
-        .filter(
-            ConnectionRequest.id
-            == notification.connection_request_id,
-            ConnectionRequest.target_user_id
-            == request.user_id,
-        )
-        .first()
-    )
-
-    if not connection_request:
-
-        return {
-            "ok": False,
-            "message": (
-                "Follow request not found"
-            ),
-        }
-
-    requester_id = (
-        connection_request.requester_user_id
-    )
-
-    target_id = (
-        connection_request.target_user_id
-    )
-
-    target = (
-        db.query(User)
-        .filter(
-            User.user_id == target_id
-        )
-        .first()
-    )
-
-    if connection_request.status == "verified":
-
-        notification.is_read = True
-        db.commit()
-
-        return {
-            "ok": True,
-            "status": "verified",
-            "message": (
-                "Connection is already verified"
-            ),
-        }
-
-    connection_request.status = "rejected"
-
-    connection_request.updated_at = (
-        datetime.utcnow()
-    )
-
-    notification.is_read = True
-
-    requester_notification = Notification(
-        receiver_user_id=requester_id,
-        sender_user_id=target_id,
-        type="follow_rejected",
-        title="Connection Request Rejected",
-        message=(
-            f"{target.name if target else target_id} "
-            "rejected your connection request."
-        ),
-        connection_request_id=(
-            connection_request.id
-        ),
-        verification_code=None,
-        is_read=False,
-    )
-
-    db.add(requester_notification)
-
-    db.commit()
-
-    db.refresh(
-        requester_notification
-    )
-
-    await push_notification(
-        requester_id,
-        "follow_rejected",
-        requester_notification.id,
-        requester_notification.title,
-        requester_notification.message,
-        sender={
-            "user_id": (
-                target.user_id
-                if target
-                else target_id
-            ),
-            "name": (
-                target.name
-                if target
-                else target_id
-            ),
-            "profile_photo": (
-                target.profile_photo
-                if target
-                else None
-            ),
-        },
-        connection_request_id=(
-            connection_request.id
-        ),
-        requester_user_id=requester_id,
-        target_user_id=target_id,
-    )
-
-    return {
-        "ok": True,
-        "status": "rejected",
-        "message": (
-            "Follow request rejected"
-        ),
-    }
-
-
-# ============================================================
-# VERIFY CONNECTION CODE
-# ============================================================
-
-@app.post("/api/follow/verify")
-async def verify_connection(
-    request: VerifyConnectionCodeRequest,
-    db: Session = Depends(get_db),
-):
-
-    requester_id = (
-        request.requester_user_id.strip()
-    )
-
-    target_id = (
-        request.target_user_id.strip()
-    )
-
-    code = request.code.strip()
-
-    if not requester_id or not target_id:
-
-        return {
-            "ok": False,
-            "message": "User IDs are required",
-        }
-
-    if not code:
-
-        return {
-            "ok": False,
-            "message": (
-                "Verification code is required"
-            ),
-        }
-
-    connection_request = (
-        db.query(ConnectionRequest)
-        .filter(
-            ConnectionRequest.requester_user_id
-            == requester_id,
-            ConnectionRequest.target_user_id
-            == target_id,
-        )
-        .order_by(
-            ConnectionRequest.id.desc()
-        )
-        .first()
-    )
-
-    if not connection_request:
-
-        return {
-            "ok": False,
-            "message": (
-                "Connection request not found"
-            ),
-        }
-
-    if connection_request.status == "verified":
-
-        return {
-            "ok": True,
-            "status": "verified",
-            "message": (
-                "Connection already verified"
-            ),
-        }
-
-    if connection_request.status != "accepted":
-
-        return {
-            "ok": False,
-            "message": (
-                "Connection has not been accepted"
-            ),
-        }
-
-    connection_code = (
-        db.query(ConnectionCode)
-        .filter(
-            ConnectionCode.requester_user_id
-            == requester_id,
-            ConnectionCode.target_user_id
-            == target_id,
-            ConnectionCode.verified
-            == False,
-        )
-        .order_by(
-            ConnectionCode.id.desc()
-        )
-        .first()
-    )
-
-    if not connection_code:
-
-        return {
-            "ok": False,
-            "message": (
-                "Verification code not found "
-                "or already used"
-            ),
-        }
-
-    if datetime.utcnow() > connection_code.expires_at:
-
-        connection_code.verified = True
-        db.commit()
-
-        return {
-            "ok": False,
-            "message": (
-                "Verification code expired"
-            ),
-        }
-
-    if connection_code.code != code:
-
-        return {
-            "ok": False,
-            "message": (
-                "Invalid verification code"
-            ),
-        }
-
-    requester = (
-        db.query(User)
-        .filter(
-            User.user_id == requester_id
-        )
-        .first()
-    )
-
-    target = (
-        db.query(User)
-        .filter(
-            User.user_id == target_id
-        )
-        .first()
-    )
-
-    if not requester or not target:
-
-        return {
-            "ok": False,
-            "message": (
-                "User account not found"
-            ),
-        }
-
-    existing_connection = (
-        db.query(Connection)
-        .filter(
-            (
-                (Connection.user_a_id == requester_id)
-                &
-                (Connection.user_b_id == target_id)
-            )
-            |
-            (
-                (Connection.user_a_id == target_id)
-                &
-                (Connection.user_b_id == requester_id)
-            )
-        )
-        .first()
-    )
-
-    connection_code.verified = True
-
-    connection_request.status = "verified"
-
-    connection_request.updated_at = (
-        datetime.utcnow()
-    )
-
-    if not existing_connection:
-
-        new_connection = Connection(
-            user_a_id=requester_id,
-            user_b_id=target_id,
-        )
-
-        db.add(new_connection)
-
-    target_notification = Notification(
-        receiver_user_id=target_id,
-        sender_user_id=requester_id,
-        type="connection_verified",
-        title="Connection Verified",
-        message=(
-            f"You are now connected with "
-            f"{requester.name}."
-        ),
-        connection_request_id=(
-            connection_request.id
-        ),
-        verification_code=None,
-        is_read=False,
-    )
-
-    requester_notification = Notification(
-        receiver_user_id=requester_id,
-        sender_user_id=target_id,
-        type="connection_verified",
-        title="Connection Verified",
-        message=(
-            f"You are now connected with "
-            f"{target.name}."
-        ),
-        connection_request_id=(
-            connection_request.id
-        ),
-        verification_code=None,
-        is_read=False,
-    )
-
-    db.add(target_notification)
-    db.add(requester_notification)
-
-    try:
-
-        db.commit()
-
-    except IntegrityError:
-
-        db.rollback()
-
-        return {
-            "ok": False,
-            "message": (
-                "Connection verification failed"
-            ),
-        }
-
-    db.refresh(
-        target_notification
-    )
-
-    db.refresh(
-        requester_notification
-    )
-
-    await push_notification(
-        target_id,
-        "connection_verified",
-        target_notification.id,
-        target_notification.title,
-        target_notification.message,
-        sender={
-            "user_id": requester.user_id,
-            "name": requester.name,
-            "profile_photo": requester.profile_photo,
-        },
-        connection_request_id=(
-            connection_request.id
-        ),
-        requester_user_id=requester_id,
-        target_user_id=target_id,
-    )
-
-    await push_notification(
-        requester_id,
-        "connection_verified",
-        requester_notification.id,
-        requester_notification.title,
-        requester_notification.message,
-        sender={
-            "user_id": target.user_id,
-            "name": target.name,
-            "profile_photo": target.profile_photo,
-        },
-        connection_request_id=(
-            connection_request.id
-        ),
-        requester_user_id=requester_id,
-        target_user_id=target_id,
-    )
-
-    return {
-        "ok": True,
-        "status": "verified",
-        "message": (
-            "Connection verified successfully"
-        ),
-    }
-
-
-# ============================================================
-# MARK NOTIFICATION READ
-# ============================================================
-
-@app.post("/api/notifications/read")
-async def mark_notification_read(
-    request: NotificationReadRequest,
-    db: Session = Depends(get_db),
-):
-
-    notification = (
-        db.query(Notification)
-        .filter(
-            Notification.id
-            == request.notification_id,
-            Notification.receiver_user_id
-            == request.user_id,
-        )
-        .first()
-    )
-
-    if not notification:
-
-        return {
-            "ok": False,
-            "message": "Notification not found",
-        }
-
-    notification.is_read = True
-
-    db.commit()
-
-    return {
-        "ok": True,
-        "message": (
-            "Notification marked as read"
-        ),
-    }
-
-
-# ============================================================
-# MARK ALL NOTIFICATIONS READ
-# ============================================================
-
-@app.post("/api/notifications/read-all")
-async def mark_all_notifications_read(
-    user_id: str,
-    db: Session = Depends(get_db),
-):
-
-    user_id = user_id.strip()
-
-    if not user_id:
-
-        return {
-            "ok": False,
-            "message": "User ID is required",
-        }
-
-    notifications = (
-        db.query(Notification)
-        .filter(
-            Notification.receiver_user_id
-            == user_id,
-            Notification.is_read
-            == False,
-        )
-        .all()
-    )
-
-    for notification in notifications:
-        notification.is_read = True
-
-    db.commit()
-
-    return {
-        "ok": True,
-        "message": (
-            "All notifications marked as read"
-        ),
-        "count": len(notifications),
-    }
-
-
-# ============================================================
-# HOME PAGE
-# ============================================================
-
-@app.get("/home")
-async def home_page():
-
-    home_file = os.path.join(
-        BASE_DIR,
-        "home.html",
-    )
-
-    if not os.path.isfile(home_file):
-
-        raise HTTPException(
-            status_code=404,
-            detail="home.html file not found",
-        )
-
-    return FileResponse(
-        home_file
-    )
-
-
-# ============================================================
-# HOME CONNECTIONS
-# ============================================================
-
-@app.get("/api/home/connections")
-async def home_connections(
-    user_id: str = "",
-    db: Session = Depends(get_db),
-):
-
-    user_id = user_id.strip()
-
-    if not user_id:
-
-        return {
-            "ok": True,
-            "users": [],
-        }
-
-    connections = (
-        db.query(Connection)
-        .filter(
-            (Connection.user_a_id == user_id)
-            |
-            (Connection.user_b_id == user_id)
-        )
-        .order_by(
-            Connection.id.desc()
-        )
-        .all()
-    )
-
-    users = []
-    seen = set()
-
-    for connection in connections:
-
-        if connection.user_a_id == user_id:
-            other_id = connection.user_b_id
-        else:
-            other_id = connection.user_a_id
-
-        if other_id in seen:
-            continue
-
-        seen.add(other_id)
-
-        user = (
-            db.query(User)
-            .filter(
-                User.user_id == other_id
-            )
-            .first()
-        )
-
-        if not user:
-            continue
-
-        users.append(
-            {
-                "user_id": user.user_id,
-                "name": user.name,
-                "profile_photo": user.profile_photo,
-                "profile_picture": user.profile_photo,
-            }
-        )
-
-    return {
-        "ok": True,
-        "users": users,
-    }
-
-
-# ============================================================
-# HOME CONNECTIONS - COMPATIBILITY ROUTE
-# ============================================================
-
-@app.get("/api/connections")
-async def get_connections(
-    user_id: str = "",
-    db: Session = Depends(get_db),
-):
-
-    user_id = user_id.strip()
-
-    if not user_id:
-
-        return {
-            "ok": True,
-            "connections": [],
-        }
-
-    connections = (
-        db.query(Connection)
-        .filter(
-            (Connection.user_a_id == user_id)
-            |
-            (Connection.user_b_id == user_id)
-        )
-        .order_by(
-            Connection.id.desc()
-        )
-        .all()
-    )
-
-    users = []
-    seen = set()
-
-    for connection in connections:
-
-        if connection.user_a_id == user_id:
-            other_id = connection.user_b_id
-        else:
-            other_id = connection.user_a_id
-
-        if other_id in seen:
-            continue
-
-        seen.add(other_id)
-
-        user = (
-            db.query(User)
-            .filter(
-                User.user_id == other_id
-            )
-            .first()
-        )
-
-        if not user:
-            continue
-
-        users.append(
-            {
-                "user_id": user.user_id,
-                "name": user.name,
-                "profile_photo": user.profile_photo,
-                "profile_picture": user.profile_photo,
-            }
-        )
-
-    return {
-        "ok": True,
-        "connections": users,
-    }
-
-
-# ============================================================
-# CHAT PAGE
-# ============================================================
-
-@app.get("/chat")
-async def chat_page():
-
-    chat_file = os.path.join(
-        BASE_DIR,
-        "chat.html",
-    )
-
-    if not os.path.isfile(chat_file):
-
-        raise HTTPException(
-            status_code=404,
-            detail="chat.html file not found",
-        )
-
-    return FileResponse(
-        chat_file
-    )
-
-
-@app.get("/chat.html")
-async def chat_html():
-
-    chat_file = os.path.join(
-        BASE_DIR,
-        "chat.html",
-    )
-
-    if not os.path.isfile(chat_file):
-
-        raise HTTPException(
-            status_code=404,
-            detail="chat.html file not found",
-        )
-
-    return FileResponse(
-        chat_file
-    )
-
-
-# ============================================================
-# CHAT CONNECTION CHECK
-# ============================================================
-
-def are_connected(
-    db: Session,
-    user_a: str,
-    user_b: str,
-):
 
     return (
-        db.query(Connection)
-        .filter(
-            (
-                (Connection.user_a_id == user_a)
-                &
-                (Connection.user_b_id == user_b)
-            )
-            |
-            (
-                (Connection.user_a_id == user_b)
-                &
-                (Connection.user_b_id == user_a)
-            )
+        localStorage.getItem(
+            "usanex_user_id"
+        ) || ""
+    ).trim();
+
+}
+
+
+const currentUserId =
+    getCurrentUserId();
+
+
+function goBack(){
+
+    if(document.referrer){
+        history.back();
+    }else{
+        window.location.href =
+            "/home";
+    }
+
+}
+
+
+function getInitial(name){
+
+    return String(name || "U")
+        .trim()
+        .charAt(0)
+        .toUpperCase() || "U";
+
+}
+
+
+function setProfile(name,photo){
+
+    chatName.textContent =
+        name || "User";
+
+    profilePhoto.innerHTML = "";
+
+    if(photo){
+
+        const img =
+            document.createElement("img");
+
+        img.src = photo;
+        img.alt = "";
+
+        img.onerror = () => {
+
+            profilePhoto.textContent =
+                getInitial(name);
+
+        };
+
+        profilePhoto.appendChild(img);
+
+    }else{
+
+        profilePhoto.textContent =
+            getInitial(name);
+
+    }
+
+}
+
+
+function clearMessages(){
+
+    chatArea
+        .querySelectorAll(
+            ".message-row:not(#typingRow)"
         )
-        .first()
-        is not None
-    )
+        .forEach(row => row.remove());
+
+}
 
 
-# ============================================================
-# GET CHAT MESSAGES
-# ============================================================
+function formatTime(value){
 
-@app.get("/api/chat/messages")
-async def get_chat_messages(
-    user_id: str,
-    other_user_id: str,
-    db: Session = Depends(get_db),
-):
+    if(!value) return "";
 
-    user_id = user_id.strip()
-    other_user_id = other_user_id.strip()
+    try{
 
-    if not user_id or not other_user_id:
+        const date =
+            new Date(value);
 
-        raise HTTPException(
-            status_code=400,
-            detail="User IDs are required",
-        )
+        if(isNaN(date.getTime())){
+            return "";
+        }
 
-    if user_id == other_user_id:
-
-        raise HTTPException(
-            status_code=400,
-            detail="Invalid chat",
-        )
-
-    if not are_connected(
-        db,
-        user_id,
-        other_user_id,
-    ):
-
-        raise HTTPException(
-            status_code=403,
-            detail="You can chat only with connected users",
-        )
-
-    other = (
-        db.query(User)
-        .filter(
-            User.user_id == other_user_id
-        )
-        .first()
-    )
-
-    if not other:
-
-        raise HTTPException(
-            status_code=404,
-            detail="User not found",
-        )
-
-    messages = (
-        db.query(ChatMessage)
-        .filter(
-            (
-                (ChatMessage.sender_user_id == user_id)
-                &
-                (ChatMessage.receiver_user_id == other_user_id)
-            )
-            |
-            (
-                (ChatMessage.sender_user_id == other_user_id)
-                &
-                (ChatMessage.receiver_user_id == user_id)
-            )
-        )
-        .order_by(
-            ChatMessage.id.asc()
-        )
-        .limit(200)
-        .all()
-    )
-
-    return {
-        "ok": True,
-        "other_user": {
-            "user_id": other.user_id,
-            "name": other.name,
-            "profile_photo": other.profile_photo,
-        },
-        "messages": [
+        return date.toLocaleTimeString(
+            [],
             {
-                "id": message.id,
-                "sender_user_id": message.sender_user_id,
-                "receiver_user_id": message.receiver_user_id,
-                "message": message.message,
-                "message_type": message.message_type,
-                "is_read": message.is_read,
-                "created_at": (
-                    message.created_at.isoformat()
-                ),
+                hour:"numeric",
+                minute:"2-digit"
             }
-            for message in messages
-        ],
+        );
+
+    }catch(e){
+
+        return "";
+
+    }
+
+}
+
+
+/* =========================================================
+   PRESENCE
+========================================================= */
+
+function parseServerDate(value){
+
+    if(!value) return null;
+
+    const raw =
+        String(value).trim();
+
+    const normalized =
+        raw.endsWith("Z") ||
+        /[+-]\d\d:\d\d$/.test(raw)
+            ? raw
+            : raw + "Z";
+
+    const date =
+        new Date(normalized);
+
+    if(isNaN(date.getTime())){
+        return null;
+    }
+
+    return date;
+
+}
+
+
+function formatLastSeen(value){
+
+    const date =
+        parseServerDate(value);
+
+    if(!date){
+
+        return "Last seen recently";
+
+    }
+
+    const now =
+        new Date();
+
+    const diff =
+        now.getTime() -
+        date.getTime();
+
+
+    if(diff < 60000){
+
+        return "Last seen just now";
+
     }
 
 
-# ============================================================
-# SEND CHAT MESSAGE
-# ============================================================
+    if(diff < 3600000){
 
-@app.post("/api/chat/send")
-async def send_chat_message(
-    request: SendMessageRequest,
-    db: Session = Depends(get_db),
-):
+        const minutes =
+            Math.max(
+                1,
+                Math.floor(
+                    diff / 60000
+                )
+            );
 
-    sender_id = request.sender_user_id.strip()
-    receiver_id = request.receiver_user_id.strip()
-    text = request.message.strip()
+        return (
+            "Last seen " +
+            minutes +
+            " min ago"
+        );
 
-    if not sender_id or not receiver_id:
+    }
 
-        raise HTTPException(
-            status_code=400,
-            detail="User IDs are required",
+
+    if(
+        date.toDateString() ===
+        now.toDateString()
+    ){
+
+        return (
+            "Last seen today at " +
+            date.toLocaleTimeString(
+                [],
+                {
+                    hour:"numeric",
+                    minute:"2-digit"
+                }
+            )
+        );
+
+    }
+
+
+    return (
+        "Last seen " +
+        date.toLocaleDateString(
+            [],
+            {
+                day:"numeric",
+                month:"short"
+            }
+        ) +
+        " at " +
+        date.toLocaleTimeString(
+            [],
+            {
+                hour:"numeric",
+                minute:"2-digit"
+            }
         )
+    );
 
-    if not text:
+}
 
-        raise HTTPException(
-            status_code=400,
-            detail="Message cannot be empty",
-        )
 
-    if len(text) > 5000:
+function updatePresenceUI(
+    isOnline,
+    lastSeenAt
+){
 
-        raise HTTPException(
-            status_code=400,
-            detail="Message is too long",
-        )
+    if(isOnline){
 
-    if sender_id == receiver_id:
+        onlineText.textContent =
+            "Online";
 
-        raise HTTPException(
-            status_code=400,
-            detail="Invalid chat",
-        )
+        return;
 
-    sender = (
-        db.query(User)
-        .filter(
-            User.user_id == sender_id
-        )
-        .first()
-    )
+    }
 
-    receiver = (
-        db.query(User)
-        .filter(
-            User.user_id == receiver_id
-        )
-        .first()
-    )
+    onlineText.textContent =
+        formatLastSeen(lastSeenAt);
 
-    if not sender or not receiver:
+}
 
-        raise HTTPException(
-            status_code=404,
-            detail="User not found",
-        )
 
-    if not are_connected(
-        db,
-        sender_id,
-        receiver_id,
-    ):
+async function loadPresence(){
 
-        raise HTTPException(
-            status_code=403,
-            detail="You can chat only with connected users",
-        )
+    if(
+        !currentUserId ||
+        !otherUserId
+    ){
+        return;
+    }
 
-    new_message = ChatMessage(
-        sender_user_id=sender_id,
-        receiver_user_id=receiver_id,
-        message=text,
-        message_type="text",
-        is_read=False,
-    )
+    try{
 
-    db.add(new_message)
-    db.commit()
-    db.refresh(new_message)
+        const response =
+            await fetch(
+                "/api/chat/presence?user_id=" +
+                encodeURIComponent(
+                    currentUserId
+                ) +
+                "&other_user_id=" +
+                encodeURIComponent(
+                    otherUserId
+                ),
+                {
+                    method:"GET",
+                    cache:"no-store"
+                }
+            );
 
-    message_data = {
-        "type": "chat_message",
-        "message": {
-            "id": new_message.id,
-            "sender_user_id": sender_id,
-            "receiver_user_id": receiver_id,
-            "message": new_message.message,
-            "message_type": new_message.message_type,
-            "is_read": new_message.is_read,
-            "created_at": (
-                new_message.created_at.isoformat()
+
+        const data =
+            await response.json();
+
+
+        if(!response.ok){
+
+            throw new Error(
+                data.detail ||
+                "Unable to load presence"
+            );
+
+        }
+
+
+        updatePresenceUI(
+            Boolean(data.is_online),
+            data.last_seen_at
+        );
+
+
+    }catch(error){
+
+        console.log(
+            "Presence load error:",
+            error
+        );
+
+        onlineText.textContent =
+            "Last seen recently";
+
+    }
+
+}
+
+
+/* =========================================================
+   MESSAGE RENDER
+========================================================= */
+
+function addMessageFromServer(message){
+
+    if(!message) return;
+
+    const sender =
+        String(
+            message.sender_user_id ||
+            ""
+        ).trim();
+
+    const text =
+        String(
+            message.message ||
+            ""
+        );
+
+    if(!sender || !text){
+        return;
+    }
+
+
+    if(message.id){
+
+        const id =
+            String(message.id);
+
+        const existing =
+            Array.from(
+                document.querySelectorAll(
+                    "[data-message-id]"
+                )
+            ).find(
+                row =>
+                    String(
+                        row.dataset.messageId
+                    ) === id
+            );
+
+        if(existing){
+            return;
+        }
+
+    }
+
+
+    const type =
+        sender === currentUserId
+            ? "sent"
+            : "received";
+
+
+    const row =
+        document.createElement("div");
+
+    row.className =
+        "message-row " + type;
+
+
+    if(message.id){
+
+        row.dataset.messageId =
+            String(message.id);
+
+    }
+
+
+    const bubble =
+        document.createElement("div");
+
+    bubble.className =
+        "message";
+
+
+    const textElement =
+        document.createElement("div");
+
+    textElement.textContent =
+        text;
+
+
+    const time =
+        document.createElement("div");
+
+    time.className =
+        "message-time";
+
+    time.textContent =
+        formatTime(
+            message.created_at
+        );
+
+
+    if(type === "sent"){
+
+        const read =
+            document.createElement("span");
+
+        read.className =
+            "read";
+
+        read.textContent =
+            message.is_read
+                ? "✓✓"
+                : "✓";
+
+        time.appendChild(read);
+
+    }
+
+
+    bubble.appendChild(
+        textElement
+    );
+
+    bubble.appendChild(
+        time
+    );
+
+    row.appendChild(
+        bubble
+    );
+
+
+    chatArea.insertBefore(
+        row,
+        typingRow
+    );
+
+}
+
+
+/* =========================================================
+   LOAD CHAT
+========================================================= */
+
+async function loadChat(){
+
+    if(
+        !currentUserId ||
+        !otherUserId
+    ){
+        return;
+    }
+
+
+    try{
+
+        const response =
+            await fetch(
+                "/api/chat/messages?user_id=" +
+                encodeURIComponent(
+                    currentUserId
+                ) +
+                "&other_user_id=" +
+                encodeURIComponent(
+                    otherUserId
+                ),
+                {
+                    method:"GET",
+                    cache:"no-store"
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if(!response.ok){
+
+            throw new Error(
+                data.detail ||
+                "Unable to load chat"
+            );
+
+        }
+
+
+        if(data.other_user){
+
+            setProfile(
+                data.other_user.name,
+                data.other_user.profile_photo
+            );
+
+        }
+
+
+        clearMessages();
+
+
+        if(
+            Array.isArray(
+                data.messages
+            )
+        ){
+
+            data.messages.forEach(
+                addMessageFromServer
+            );
+
+        }
+
+
+        scrollBottom();
+
+        markMessagesRead();
+
+
+    }catch(error){
+
+        console.error(
+            "Chat load error:",
+            error
+        );
+
+        showToast(
+            error.message ||
+            "Unable to load chat"
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   SEND
+========================================================= */
+
+let sending = false;
+
+
+async function sendMessage(){
+
+    if(sending) return;
+
+
+    const text =
+        input.value.trim();
+
+
+    if(!text) return;
+
+
+    if(
+        !currentUserId ||
+        !otherUserId
+    ){
+
+        showToast(
+            "Invalid chat"
+        );
+
+        return;
+
+    }
+
+
+    sending = true;
+
+    sendButton.style.opacity =
+        ".55";
+
+
+    try{
+
+        const response =
+            await fetch(
+                "/api/chat/send",
+                {
+                    method:"POST",
+                    headers:{
+                        "Content-Type":
+                            "application/json"
+                    },
+                    body:JSON.stringify({
+                        sender_user_id:
+                            currentUserId,
+
+                        receiver_user_id:
+                            otherUserId,
+
+                        message:text
+                    })
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if(!response.ok){
+
+            throw new Error(
+                data.detail ||
+                "Message could not be sent"
+            );
+
+        }
+
+
+        if(data.message){
+
+            addMessageFromServer(
+                data.message
+            );
+
+        }
+
+
+        input.value = "";
+
+        emojiPanel.classList.remove(
+            "show"
+        );
+
+        attachMenu.classList.remove(
+            "show"
+        );
+
+        scrollBottom();
+
+
+    }catch(error){
+
+        console.error(
+            "Send message error:",
+            error
+        );
+
+        showToast(
+            error.message ||
+            "Message could not be sent"
+        );
+
+
+    }finally{
+
+        sending = false;
+
+        sendButton.style.opacity =
+            "1";
+
+    }
+
+}
+
+
+function handleKey(event){
+
+    if(event.key === "Enter"){
+
+        event.preventDefault();
+
+        sendMessage();
+
+    }
+
+}
+
+
+/* =========================================================
+   EMOJI / ATTACH
+========================================================= */
+
+function toggleEmoji(){
+
+    emojiPanel.classList.toggle(
+        "show"
+    );
+
+    attachMenu.classList.remove(
+        "show"
+    );
+
+}
+
+
+function addEmoji(emoji){
+
+    input.value += emoji;
+
+    input.focus();
+
+}
+
+
+function toggleAttach(){
+
+    attachMenu.classList.toggle(
+        "show"
+    );
+
+    emojiPanel.classList.remove(
+        "show"
+    );
+
+}
+
+
+/* =========================================================
+   SCROLL
+========================================================= */
+
+function scrollBottom(){
+
+    requestAnimationFrame(() => {
+
+        chatArea.scrollTop =
+            chatArea.scrollHeight;
+
+    });
+
+}
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+let toastTimer;
+
+
+function showToast(text){
+
+    const toast =
+        document.getElementById(
+            "toast"
+        );
+
+    toast.textContent =
+        text;
+
+    toast.classList.add(
+        "show"
+    );
+
+
+    clearTimeout(
+        toastTimer
+    );
+
+
+    toastTimer =
+        setTimeout(
+            () => {
+
+                toast.classList.remove(
+                    "show"
+                );
+
+            },
+            1800
+        );
+
+}
+
+
+/* =========================================================
+   READ RECEIPT
+========================================================= */
+
+async function markMessagesRead(){
+
+    if(
+        !currentUserId ||
+        !otherUserId
+    ){
+        return;
+    }
+
+
+    try{
+
+        await fetch(
+            "/api/chat/read?user_id=" +
+            encodeURIComponent(
+                currentUserId
+            ) +
+            "&other_user_id=" +
+            encodeURIComponent(
+                otherUserId
             ),
-        },
+            {
+                method:"POST"
+            }
+        );
+
+    }catch(e){
+
+        console.log(
+            "Read status error:",
+            e
+        );
+
     }
 
-    await manager.send_to_user(
-        receiver_id,
-        message_data,
-    )
+}
 
-    return {
-        "ok": True,
-        **message_data,
+
+/* =========================================================
+   WEBSOCKET
+========================================================= */
+
+let socket = null;
+
+let reconnectTimer = null;
+
+let manuallyClosed = false;
+
+let heartbeatTimer = null;
+
+
+function getWebSocketURL(){
+
+    const protocol =
+        window.location.protocol ===
+        "https:"
+            ? "wss:"
+            : "ws:";
+
+
+    return (
+        protocol +
+        "//" +
+        window.location.host +
+        "/ws/" +
+        encodeURIComponent(
+            currentUserId
+        )
+    );
+
+}
+
+
+function startHeartbeat(){
+
+    clearInterval(
+        heartbeatTimer
+    );
+
+
+    heartbeatTimer =
+        setInterval(
+            () => {
+
+                if(
+                    socket &&
+                    socket.readyState ===
+                    WebSocket.OPEN
+                ){
+
+                    try{
+
+                        socket.send(
+                            "ping"
+                        );
+
+                    }catch(e){}
+
+                }
+
+            },
+            25000
+        );
+
+}
+
+
+function connectWebSocket(){
+
+    if(!currentUserId){
+        return;
     }
 
 
-# ============================================================
-# MARK CHAT MESSAGES AS READ
-# ============================================================
+    try{
 
-@app.post("/api/chat/read")
-async def mark_chat_read(
-    user_id: str,
-    other_user_id: str,
-    db: Session = Depends(get_db),
-):
+        if(socket){
+            socket.close();
+        }
 
-    user_id = user_id.strip()
-    other_user_id = other_user_id.strip()
+    }catch(e){}
 
-    if not user_id or not other_user_id:
 
-        raise HTTPException(
-            status_code=400,
-            detail="User IDs are required",
-        )
+    manuallyClosed = false;
 
-    if not are_connected(
-        db,
-        user_id,
-        other_user_id,
-    ):
 
-        raise HTTPException(
-            status_code=403,
-            detail="Not connected",
-        )
+    try{
 
-    messages = (
-        db.query(ChatMessage)
-        .filter(
-            ChatMessage.sender_user_id == other_user_id,
-            ChatMessage.receiver_user_id == user_id,
-            ChatMessage.is_read == False,
-        )
-        .all()
-    )
+        socket =
+            new WebSocket(
+                getWebSocketURL()
+            );
 
-    for message in messages:
-        message.is_read = True
 
-    db.commit()
+        socket.onopen = () => {
 
-    return {
-        "ok": True,
-        "count": len(messages),
+            clearTimeout(
+                reconnectTimer
+            );
+
+        };
+
+
+        socket.onmessage =
+            event => {
+
+                try{
+
+                    handleWebSocketMessage(
+                        JSON.parse(
+                            event.data
+                        )
+                    );
+
+                }catch(e){
+
+                    console.log(
+                        "WebSocket data error:",
+                        e
+                    );
+
+                }
+
+            };
+
+
+        socket.onerror =
+            error => {
+
+                console.log(
+                    "WebSocket error:",
+                    error
+                );
+
+            };
+
+
+        socket.onclose = () => {
+
+            /*
+             IMPORTANT:
+             Do NOT show Offline here.
+             Other user's presence comes from
+             /api/chat/presence and user_presence.
+            */
+
+            if(!manuallyClosed){
+
+                clearTimeout(
+                    reconnectTimer
+                );
+
+                reconnectTimer =
+                    setTimeout(
+                        connectWebSocket,
+                        3000
+                    );
+
+            }
+
+        };
+
+
+    }catch(error){
+
+        console.error(
+            "WebSocket error:",
+            error
+        );
+
+
+        reconnectTimer =
+            setTimeout(
+                connectWebSocket,
+                3000
+            );
+
+    }
+
+}
+
+
+/* =========================================================
+   WEBSOCKET MESSAGE HANDLER
+========================================================= */
+
+function handleWebSocketMessage(data){
+
+    if(!data) return;
+
+
+    /* CONNECTION */
+
+    if(
+        data.type ===
+        "websocket_connected"
+    ){
+
+        return;
+
     }
 
 
-# ============================================================
-# HEALTH CHECK
-# ============================================================
+    /* OTHER USER PRESENCE */
 
-@app.get("/health")
-async def health():
+    if(
+        data.type ===
+        "user_presence"
+    ){
 
-    return {
-        "ok": True,
-        "status": "online",
-        "app": "Usanex",
-        "realtime": "websocket",
+        const userId =
+            String(
+                data.user_id ||
+                ""
+            ).trim();
+
+
+        if(
+            userId !==
+            otherUserId
+        ){
+
+            return;
+
+        }
+
+
+        updatePresenceUI(
+            Boolean(
+                data.is_online
+            ),
+            data.last_seen_at
+        );
+
+
+        return;
+
     }
 
 
-# ============================================================
-# LOCAL RUN
-# ============================================================
+    /* READ RECEIPT */
 
-if __name__ == "__main__":
+    if(
+        data.type ===
+        "messages_read"
+    ){
 
-    import uvicorn
+        const readerUserId =
+            String(
+                data.reader_user_id ||
+                ""
+            ).trim();
 
-    port = int(
-        os.getenv(
-            "PORT",
-            "8000",
+
+        if(
+            readerUserId !==
+            otherUserId
+        ){
+
+            return;
+
+        }
+
+
+        const ids =
+            new Set(
+                (
+                    data.message_ids ||
+                    []
+                ).map(
+                    id =>
+                        String(id)
+                )
+            );
+
+
+        document
+            .querySelectorAll(
+                "[data-message-id]"
+            )
+            .forEach(
+                row => {
+
+                    const id =
+                        String(
+                            row.dataset.messageId ||
+                            ""
+                        );
+
+
+                    if(!ids.has(id)){
+                        return;
+                    }
+
+
+                    const read =
+                        row.querySelector(
+                            ".read"
+                        );
+
+
+                    if(read){
+
+                        read.textContent =
+                            "✓✓";
+
+                    }
+
+                }
+            );
+
+
+        return;
+
+    }
+
+
+    /* CHAT MESSAGE */
+
+    if(
+        data.type !==
+        "chat_message"
+    ){
+
+        return;
+
+    }
+
+
+    const message =
+        data.message;
+
+
+    if(!message){
+        return;
+    }
+
+
+    const sender =
+        String(
+            message.sender_user_id ||
+            ""
+        ).trim();
+
+
+    const receiver =
+        String(
+            message.receiver_user_id ||
+            ""
+        ).trim();
+
+
+    const belongsToChat =
+
+        (
+            sender ===
+            currentUserId &&
+
+            receiver ===
+            otherUserId
         )
-    )
 
-    uvicorn.run(
-        app,
-        host="0.0.0.0",
-        port=port,
-    )
+        ||
+
+        (
+            sender ===
+            otherUserId &&
+
+            receiver ===
+            currentUserId
+        );
+
+
+    if(!belongsToChat){
+        return;
+    }
+
+
+    addMessageFromServer(
+        message
+    );
+
+
+    scrollBottom();
+
+
+    if(
+        sender ===
+        otherUserId
+    ){
+
+        markMessagesRead();
+
+    }
+
+}
+
+
+/* =========================================================
+   VIEWPORT
+========================================================= */
+
+function updateViewport(){
+
+    const root =
+        document.documentElement;
+
+
+    if(!window.visualViewport){
+
+        root.style.setProperty(
+            "--vvh",
+            window.innerHeight +
+            "px"
+        );
+
+        root.style.setProperty(
+            "--vvt",
+            "0px"
+        );
+
+        root.style.setProperty(
+            "--vvl",
+            "0px"
+        );
+
+        root.style.setProperty(
+            "--vvw",
+            window.innerWidth +
+            "px"
+        );
+
+        return;
+
+    }
+
+
+    const vv =
+        window.visualViewport;
+
+
+    root.style.setProperty(
+        "--vvh",
+        Math.round(
+            vv.height
+        ) + "px"
+    );
+
+
+    root.style.setProperty(
+        "--vvt",
+        Math.round(
+            vv.offsetTop || 0
+        ) + "px"
+    );
+
+
+    root.style.setProperty(
+        "--vvl",
+        Math.round(
+            vv.offsetLeft || 0
+        ) + "px"
+    );
+
+
+    root.style.setProperty(
+        "--vvw",
+        Math.round(
+            vv.width ||
+            window.innerWidth
+        ) + "px"
+    );
+
+}
+
+
+if(window.visualViewport){
+
+    window.visualViewport.addEventListener(
+        "resize",
+        updateViewport
+    );
+
+
+    window.visualViewport.addEventListener(
+        "scroll",
+        updateViewport
+    );
+
+}
+
+
+window.addEventListener(
+    "resize",
+    updateViewport
+);
+
+
+/* =========================================================
+   CLOSE POPUPS
+========================================================= */
+
+document.addEventListener(
+    "click",
+    event => {
+
+        if(
+            !event.target.closest(
+                ".composer"
+            ) &&
+            !event.target.closest(
+                ".emoji-panel"
+            )
+        ){
+
+            emojiPanel.classList.remove(
+                "show"
+            );
+
+        }
+
+
+        if(
+            !event.target.closest(
+                ".composer"
+            ) &&
+            !event.target.closest(
+                ".attach-menu"
+            )
+        ){
+
+            attachMenu.classList.remove(
+                "show"
+            );
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   VISIBILITY
+========================================================= */
+
+document.addEventListener(
+    "visibilitychange",
+    () => {
+
+        if(
+            document.visibilityState ===
+            "visible"
+        ){
+
+            updateViewport();
+
+            loadPresence();
+
+            markMessagesRead();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   START
+========================================================= */
+
+window.addEventListener(
+    "load",
+    async () => {
+
+        updateViewport();
+
+
+        if(!currentUserId){
+
+            showToast(
+                "Please login first"
+            );
+
+
+            setTimeout(
+                () => {
+
+                    window.location.href =
+                        "/";
+
+                },
+                1200
+            );
+
+
+            return;
+
+        }
+
+
+        if(!otherUserId){
+
+            showToast(
+                "Invalid chat user"
+            );
+
+
+            setTimeout(
+                () => {
+
+                    window.location.href =
+                        "/home";
+
+                },
+                1200
+            );
+
+
+            return;
+
+        }
+
+
+        await loadChat();
+
+        /*
+         First get actual status.
+        Online -> Online
+        Offline -> Last seen ...
+        */
+
+        await loadPresence();
+
+
+        connectWebSocket();
+
+
+        startHeartbeat();
+
+    }
+);
+
+
+/* =========================================================
+   BEFORE UNLOAD
+========================================================= */
+
+window.addEventListener(
+    "beforeunload",
+    () => {
+
+        manuallyClosed = true;
+
+        clearTimeout(
+            reconnectTimer
+        );
+
+        clearInterval(
+            heartbeatTimer
+        );
+
+
+        if(socket){
+
+            try{
+
+                socket.close();
+
+            }catch(e){}
+
+        }
+
+    }
+);
+
+</script>
+
+</body>
+</html>
