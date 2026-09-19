@@ -639,6 +639,72 @@ body{
 
 <script>
 
+
+
+/* =========================
+   CURRENT USER
+========================= */
+
+let currentUserId = "";
+
+function getCurrentUserId(){
+
+    const params =
+        new URLSearchParams(
+            window.location.search
+        );
+
+    const urlUserId =
+        params.get("user_id");
+
+    if(urlUserId && urlUserId.trim()){
+
+        currentUserId =
+            urlUserId.trim();
+
+        return;
+    }
+
+
+    try{
+
+        const savedUser =
+            localStorage.getItem(
+                "usanex_user"
+            );
+
+        if(savedUser){
+
+            const user =
+                JSON.parse(savedUser);
+
+            if(
+                user &&
+                user.user_id
+            ){
+
+                currentUserId =
+                    String(
+                        user.user_id
+                    ).trim();
+
+            }
+
+        }
+
+    }catch(error){
+
+        console.log(
+            "User data error:",
+            error
+        );
+
+    }
+
+}
+
+getCurrentUserId();
+
 /* =========================
    NAVIGATION
 ========================= */
