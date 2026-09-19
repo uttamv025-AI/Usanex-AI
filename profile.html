@@ -2,12 +2,14 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+
 <meta name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 <title>Usanex - Profile</title>
 
 <style>
+
 *{
     margin:0;
     padding:0;
@@ -129,6 +131,10 @@ body{
     gap:18px;
 }
 
+/* =========================
+   PROFILE AVATAR
+========================= */
+
 .profile-avatar{
     width:88px;
     height:88px;
@@ -143,7 +149,8 @@ body{
     flex-shrink:0;
     box-shadow:0 0 20px rgba(20,110,255,.25);
     cursor:pointer;
-    overflow:hidden;
+    overflow:visible;
+    position:relative;
 }
 
 .profile-avatar img{
@@ -152,6 +159,59 @@ body{
     object-fit:cover;
     border-radius:50%;
 }
+
+/* =========================
+   DP PLUS BUTTON
+========================= */
+
+.dp-add-btn{
+    position:absolute;
+
+    right:-3px;
+    bottom:-3px;
+
+    width:29px;
+    height:29px;
+
+    border-radius:50%;
+
+    background:#1677ff;
+
+    border:3px solid #050b18;
+
+    color:#fff;
+
+    font-size:20px;
+    font-weight:700;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    z-index:10;
+
+    cursor:pointer;
+
+    line-height:1;
+
+    box-shadow:
+        0 3px 10px
+        rgba(22,119,255,.35);
+}
+
+.dp-add-btn:active{
+    transform:scale(.90);
+}
+
+/* Hidden image input */
+
+#profilePhotoInput{
+    display:none;
+}
+
+/* =========================
+   PROFILE BASIC
+========================= */
 
 .profile-basic{
     min-width:0;
@@ -352,8 +412,11 @@ body{
     left:0;
     right:0;
     bottom:0;
+
     height:calc(62px + env(safe-area-inset-bottom));
+
     padding:3px 7px env(safe-area-inset-bottom);
+
     z-index:50;
 
     display:flex;
@@ -361,7 +424,9 @@ body{
     justify-content:space-around;
 
     background:rgba(7,14,28,.98);
+
     border-top:1px solid rgba(255,255,255,.07);
+
     backdrop-filter:blur(18px);
 }
 
@@ -371,9 +436,11 @@ body{
     border:0;
     background:transparent;
     color:#9aa7b9;
+
     display:flex;
     align-items:center;
     justify-content:center;
+
     font-size:24px;
     cursor:pointer;
 }
@@ -385,13 +452,21 @@ body{
 .create-btn{
     width:40px;
     height:40px;
+
     border-radius:12px;
+
     border:0;
+
     background:#1677ff;
+
     color:#fff;
+
     font-size:25px;
     font-weight:400;
-    box-shadow:0 4px 16px rgba(22,119,255,.25);
+
+    box-shadow:
+        0 4px 16px
+        rgba(22,119,255,.25);
 }
 
 /* =========================
@@ -400,25 +475,43 @@ body{
 
 .toast{
     position:fixed;
+
     left:50%;
     bottom:82px;
-    transform:translateX(-50%) translateY(15px);
+
+    transform:
+        translateX(-50%)
+        translateY(15px);
+
     background:#142238;
+
     color:#fff;
+
     padding:10px 15px;
+
     border-radius:10px;
+
     font-size:12px;
+
     opacity:0;
+
     pointer-events:none;
+
     transition:.25s;
+
     z-index:100;
+
     white-space:nowrap;
 }
 
 .toast.show{
     opacity:1;
-    transform:translateX(-50%) translateY(0);
+
+    transform:
+        translateX(-50%)
+        translateY(0);
 }
+
 </style>
 </head>
 
@@ -427,12 +520,17 @@ body{
 <div class="profile-page">
 
     <!-- HEADER -->
+
     <header class="profile-header">
 
         <div class="header-left">
 
-            <button class="back-btn" onclick="goHome()">
+            <button
+                class="back-btn"
+                onclick="goHome()">
+
                 ‹
+
             </button>
 
             <div class="profile-title">
@@ -441,16 +539,23 @@ body{
 
         </div>
 
+
         <div class="header-right">
 
-            <button class="share-header-btn"
-                    onclick="shareProfile()">
+            <button
+                class="share-header-btn"
+                onclick="shareProfile()">
+
                 Share
+
             </button>
 
-            <div class="header-menu"
-                 onclick="showToast('More options')">
+            <div
+                class="header-menu"
+                onclick="showToast('More options')">
+
                 ⋮
+
             </div>
 
         </div>
@@ -459,14 +564,45 @@ body{
 
 
     <!-- PROFILE -->
+
     <section class="profile-top">
 
         <div class="profile-main">
 
-            <div class="profile-avatar"
-                 onclick="openProfilePhoto()">
+
+            <!-- DP -->
+
+            <div
+                class="profile-avatar"
+                onclick="openProfilePhoto()">
+
                 U
+
+
+                <!-- PLUS -->
+
+                <div
+                    class="dp-add-btn"
+                    onclick="
+                        event.stopPropagation();
+                        addProfilePhoto();
+                    ">
+
+                    +
+
+                </div>
+
             </div>
+
+
+            <!-- IMAGE PICKER -->
+
+            <input
+                type="file"
+                id="profilePhotoInput"
+                accept="image/*"
+                onchange="handleProfilePhoto(this)">
+
 
             <div class="profile-basic">
 
@@ -488,27 +624,52 @@ body{
 
 
         <!-- STATS -->
+
         <div class="stats">
 
             <div class="stat">
-                <div class="stat-number">24</div>
-                <div class="stat-label">Posts</div>
+
+                <div class="stat-number">
+                    24
+                </div>
+
+                <div class="stat-label">
+                    Posts
+                </div>
+
             </div>
 
-            <div class="stat">
-                <div class="stat-number">120</div>
-                <div class="stat-label">Followers</div>
-            </div>
 
             <div class="stat">
-                <div class="stat-number">85</div>
-                <div class="stat-label">Following</div>
+
+                <div class="stat-number">
+                    120
+                </div>
+
+                <div class="stat-label">
+                    Followers
+                </div>
+
+            </div>
+
+
+            <div class="stat">
+
+                <div class="stat-number">
+                    85
+                </div>
+
+                <div class="stat-label">
+                    Following
+                </div>
+
             </div>
 
         </div>
 
 
         <!-- BIO -->
+
         <div class="bio">
 
             <div class="bio-name">
@@ -516,8 +677,12 @@ body{
             </div>
 
             <div class="bio-text">
-                B.Tech CSE (AI) student 🤖<br>
+
+                B.Tech CSE (AI) student 🤖
+                <br>
+
                 Building something new with Usanex 🚀
+
             </div>
 
         </div>
@@ -526,58 +691,94 @@ body{
 
 
     <!-- CONTENT TABS -->
+
     <div class="content-tabs">
 
-        <button class="tab active"
-                onclick="changeTab(this,'posts')">
+        <button
+            class="tab active"
+            onclick="changeTab(this,'posts')">
+
             Posts
+
         </button>
 
-        <button class="tab"
-                onclick="changeTab(this,'reels')">
+
+        <button
+            class="tab"
+            onclick="changeTab(this,'reels')">
+
             Reels
+
         </button>
 
-        <button class="tab"
-                onclick="changeTab(this,'saved')">
+
+        <button
+            class="tab"
+            onclick="changeTab(this,'saved')">
+
             Saved
+
         </button>
 
     </div>
 
 
     <!-- POSTS GRID -->
-    <div id="postsGrid" class="content-grid">
+
+    <div
+        id="postsGrid"
+        class="content-grid">
+
 
         <div class="post">
-            <div class="post-icon">▣</div>
+            <div class="post-icon">
+                ▣
+            </div>
         </div>
 
-        <div class="post">
-            <div class="post-icon">▣</div>
-        </div>
 
         <div class="post">
-            <div class="post-icon">▣</div>
+            <div class="post-icon">
+                ▣
+            </div>
         </div>
 
-        <div class="post">
-            <div class="post-icon">▣</div>
-        </div>
 
         <div class="post">
-            <div class="post-icon">▣</div>
+            <div class="post-icon">
+                ▣
+            </div>
         </div>
 
+
         <div class="post">
-            <div class="post-icon">▣</div>
+            <div class="post-icon">
+                ▣
+            </div>
+        </div>
+
+
+        <div class="post">
+            <div class="post-icon">
+                ▣
+            </div>
+        </div>
+
+
+        <div class="post">
+            <div class="post-icon">
+                ▣
+            </div>
         </div>
 
     </div>
 
 
     <!-- EMPTY STATE -->
-    <div id="emptyState" class="empty">
+
+    <div
+        id="emptyState"
+        class="empty">
 
         <div class="empty-icon">
             ○
@@ -597,36 +798,59 @@ body{
 
 
 <!-- BOTTOM NAV -->
+
 <nav class="bottom-nav">
 
-    <button class="nav-btn"
-            onclick="goHome()">
+    <button
+        class="nav-btn"
+        onclick="goHome()">
+
         ⌂
+
     </button>
 
-    <button class="nav-btn"
-            onclick="goReels()">
+
+    <button
+        class="nav-btn"
+        onclick="goReels()">
+
         ▶
+
     </button>
 
-    <button class="nav-btn create-btn"
-            onclick="createPost()">
+
+    <button
+        class="nav-btn create-btn"
+        onclick="createPost()">
+
         +
+
     </button>
 
-    <button class="nav-btn"
-            onclick="goNotifications()">
+
+    <button
+        class="nav-btn"
+        onclick="goNotifications()">
+
         ♡
+
     </button>
 
-    <button class="nav-btn active">
+
+    <button
+        class="nav-btn active">
+
         ◉
+
     </button>
 
 </nav>
 
 
-<div id="toast" class="toast"></div>
+<div
+    id="toast"
+    class="toast">
+</div>
 
 
 <script>
@@ -637,6 +861,7 @@ body{
 
 let currentUserId = "";
 
+
 function getCurrentUserId(){
 
     const params =
@@ -644,16 +869,23 @@ function getCurrentUserId(){
             window.location.search
         );
 
+
     const urlUserId =
         params.get("user_id");
 
-    if(urlUserId && urlUserId.trim()){
+
+    if(
+        urlUserId &&
+        urlUserId.trim()
+    ){
 
         currentUserId =
             urlUserId.trim();
 
         return;
+
     }
+
 
     try{
 
@@ -662,10 +894,14 @@ function getCurrentUserId(){
                 "usanex_user"
             );
 
+
         if(savedUser){
 
             const user =
-                JSON.parse(savedUser);
+                JSON.parse(
+                    savedUser
+                );
+
 
             if(
                 user &&
@@ -681,7 +917,8 @@ function getCurrentUserId(){
 
         }
 
-    }catch(error){
+    }
+    catch(error){
 
         console.log(
             "User data error:",
@@ -691,6 +928,7 @@ function getCurrentUserId(){
     }
 
 }
+
 
 getCurrentUserId();
 
@@ -702,8 +940,11 @@ getCurrentUserId();
 async function loadProfile(){
 
     if(!currentUserId){
+
         return;
+
     }
+
 
     try{
 
@@ -715,12 +956,17 @@ async function loadProfile(){
                 )
             );
 
+
         if(!response.ok){
+
             return;
+
         }
+
 
         const data =
             await response.json();
+
 
         if(
             data.ok &&
@@ -730,10 +976,12 @@ async function loadProfile(){
             const profile =
                 data.profile;
 
+
             document.querySelector(
                 ".display-name"
             ).textContent =
                 profile.name;
+
 
             document.querySelector(
                 ".user-id"
@@ -741,10 +989,12 @@ async function loadProfile(){
                 "User ID: " +
                 profile.user_id;
 
+
             document.querySelector(
                 ".username"
             ).textContent =
-                "@" + profile.user_id;
+                "@" +
+                profile.user_id;
 
 
             const avatar =
@@ -752,29 +1002,63 @@ async function loadProfile(){
                     ".profile-avatar"
                 );
 
+
             if(
                 profile.profile_photo &&
                 profile.profile_photo.trim()
             ){
 
-                avatar.innerHTML =
-                    `<img src="${profile.profile_photo}"
-                          alt="Profile">`;
+                avatar.innerHTML = `
 
-            }else{
+                    <img
+                        src="${profile.profile_photo}"
+                        alt="Profile">
 
-                avatar.textContent =
-                    profile.name
+                    <div
+                        class="dp-add-btn"
+                        onclick="
+                            event.stopPropagation();
+                            addProfilePhoto();
+                        ">
+
+                        +
+
+                    </div>
+
+                `;
+
+            }
+            else{
+
+                avatar.innerHTML = `
+
+                    ${
+                        profile.name
                         ? profile.name
                             .charAt(0)
                             .toUpperCase()
-                        : "U";
+                        : "U"
+                    }
+
+                    <div
+                        class="dp-add-btn"
+                        onclick="
+                            event.stopPropagation();
+                            addProfilePhoto();
+                        ">
+
+                        +
+
+                    </div>
+
+                `;
 
             }
 
         }
 
-    }catch(error){
+    }
+    catch(error){
 
         console.log(
             "Profile load error:",
@@ -785,7 +1069,101 @@ async function loadProfile(){
 
 }
 
+
 loadProfile();
+
+
+/* =========================
+   ADD PROFILE PHOTO
+========================= */
+
+function addProfilePhoto(){
+
+    const input =
+        document.getElementById(
+            "profilePhotoInput"
+        );
+
+
+    if(input){
+
+        input.click();
+
+    }
+
+}
+
+
+/* =========================
+   HANDLE PROFILE PHOTO
+========================= */
+
+function handleProfilePhoto(input){
+
+    if(
+        !input.files ||
+        !input.files[0]
+    ){
+
+        return;
+
+    }
+
+
+    const file =
+        input.files[0];
+
+
+    if(
+        !file.type.startsWith("image/")
+    ){
+
+        showToast(
+            "Please select an image"
+        );
+
+        return;
+
+    }
+
+
+    const imageURL =
+        URL.createObjectURL(
+            file
+        );
+
+
+    const avatar =
+        document.querySelector(
+            ".profile-avatar"
+        );
+
+
+    avatar.innerHTML = `
+
+        <img
+            src="${imageURL}"
+            alt="Profile">
+
+        <div
+            class="dp-add-btn"
+            onclick="
+                event.stopPropagation();
+                addProfilePhoto();
+            ">
+
+            +
+
+        </div>
+
+    `;
+
+
+    showToast(
+        "Profile photo selected"
+    );
+
+}
 
 
 /* =========================
@@ -793,19 +1171,34 @@ loadProfile();
 ========================= */
 
 function goHome(){
-    window.location.href="/home";
+
+    window.location.href =
+        "/home";
+
 }
+
 
 function goReels(){
-    window.location.href="/reels";
+
+    window.location.href =
+        "/reels";
+
 }
+
 
 function createPost(){
-    window.location.href="/create-reel";
+
+    window.location.href =
+        "/create-reel";
+
 }
 
+
 function goNotifications(){
-    window.location.href="/notifications";
+
+    window.location.href =
+        "/notifications";
+
 }
 
 
@@ -815,17 +1208,31 @@ function goNotifications(){
 
 function shareProfile(){
 
-    if(navigator.share){
+    if(
+        navigator.share
+    ){
 
         navigator.share({
-            title:"Usanex Profile",
-            text:"Check out this Usanex profile",
-            url:window.location.href
-        }).catch(()=>{});
 
-    }else{
+            title:
+                "Usanex Profile",
 
-        showToast("Profile link ready");
+            text:
+                "Check out this Usanex profile",
+
+            url:
+                window.location.href
+
+        }).catch(
+            ()=>{}
+        );
+
+    }
+    else{
+
+        showToast(
+            "Profile link ready"
+        );
 
     }
 
@@ -836,34 +1243,61 @@ function shareProfile(){
    TABS
 ========================= */
 
-function changeTab(button,type){
+function changeTab(
+    button,
+    type
+){
 
-    document.querySelectorAll(".tab")
-        .forEach(tab=>{
-            tab.classList.remove("active");
-        });
+    document
+        .querySelectorAll(
+            ".tab"
+        )
+        .forEach(
+            tab=>{
 
-    button.classList.add("active");
+                tab.classList.remove(
+                    "active"
+                );
+
+            }
+        );
+
+
+    button.classList.add(
+        "active"
+    );
+
 
     const grid =
         document.getElementById(
             "postsGrid"
         );
 
+
     const empty =
         document.getElementById(
             "emptyState"
         );
 
-    if(type==="posts"){
 
-        grid.style.display="grid";
-        empty.style.display="none";
+    if(
+        type === "posts"
+    ){
 
-    }else{
+        grid.style.display =
+            "grid";
 
-        grid.style.display="none";
-        empty.style.display="block";
+        empty.style.display =
+            "none";
+
+    }
+    else{
+
+        grid.style.display =
+            "none";
+
+        empty.style.display =
+            "block";
 
     }
 
@@ -876,6 +1310,7 @@ function changeTab(button,type){
 
 let toastTimer;
 
+
 function showToast(message){
 
     const toast =
@@ -883,25 +1318,32 @@ function showToast(message){
             "toast"
         );
 
+
     toast.textContent =
         message;
+
 
     toast.classList.add(
         "show"
     );
 
+
     clearTimeout(
         toastTimer
     );
 
+
     toastTimer =
-        setTimeout(()=>{
+        setTimeout(
+            ()=>{
 
-            toast.classList.remove(
-                "show"
-            );
+                toast.classList.remove(
+                    "show"
+                );
 
-        },1800);
+            },
+            1800
+        );
 
 }
 
@@ -917,10 +1359,12 @@ function openProfilePhoto(){
             ".profile-avatar"
         );
 
+
     const img =
         avatar.querySelector(
             "img"
         );
+
 
     if(!img){
 
@@ -929,49 +1373,74 @@ function openProfilePhoto(){
         );
 
         return;
+
     }
+
 
     const viewer =
         document.createElement(
             "div"
         );
 
+
     viewer.id =
         "photoViewer";
 
+
     viewer.style.cssText = `
+
         position:fixed;
         inset:0;
         background:#000;
         z-index:9999;
+
         display:flex;
         align-items:center;
         justify-content:center;
+
     `;
 
+
     viewer.innerHTML = `
-        <button onclick="closeProfilePhoto()"
-                style="
+
+        <button
+            onclick="closeProfilePhoto()"
+            style="
                 position:absolute;
                 top:18px;
                 left:18px;
+
                 width:40px;
                 height:40px;
+
                 border:0;
                 border-radius:50%;
-                background:rgba(255,255,255,.12);
+
+                background:
+                    rgba(255,255,255,.12);
+
                 color:#fff;
+
                 font-size:25px;
-                z-index:2;">
+
+                z-index:2;
+            ">
+
             ×
+
         </button>
 
-        <img src="${img.src}"
-             style="
-             max-width:100%;
-             max-height:100%;
-             object-fit:contain;">
+
+        <img
+            src="${img.src}"
+            style="
+                max-width:100%;
+                max-height:100%;
+                object-fit:contain;
+            ">
+
     `;
+
 
     viewer.onclick =
         function(e){
@@ -986,6 +1455,7 @@ function openProfilePhoto(){
 
         };
 
+
     document.body.appendChild(
         viewer
     );
@@ -999,6 +1469,7 @@ function closeProfilePhoto(){
         document.getElementById(
             "photoViewer"
         );
+
 
     if(viewer){
 
