@@ -705,6 +705,66 @@ function getCurrentUserId(){
 
 getCurrentUserId();
 
+async function loadProfile(){
+
+    if(!currentUserId){
+        return;
+    }
+
+    try{
+
+        const response =
+            await fetch(
+                "/api/profile/" +
+                encodeURIComponent(
+                    currentUserId
+                )
+            );
+
+        if(!response.ok){
+            return;
+        }
+
+        const data =
+            await response.json();
+
+        if(
+            data.ok &&
+            data.profile
+        ){
+
+            const profile =
+                data.profile;
+
+            document.querySelector(
+                ".display-name"
+            ).textContent =
+                profile.name;
+
+            document.querySelector(
+                ".user-id"
+            ).textContent =
+                profile.user_id;
+
+            document.querySelector(
+                ".username"
+            ).textContent =
+                "@" + profile.user_id;
+        }
+
+    }catch(error){
+
+        console.log(
+            "Profile load error:",
+            error
+        );
+
+    }
+
+}
+
+loadProfile();
+
 /* =========================
    NAVIGATION
 ========================= */
