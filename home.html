@@ -448,7 +448,7 @@ body{
     font-size:12px;
 }
 
-/* ================= DP VIEWER ================= */
+/* ================= CIRCULAR DP VIEWER ================= */
 
 .dp-viewer{
     position:fixed;
@@ -463,10 +463,12 @@ body{
 
     padding:20px;
 
-    background:rgba(0,0,0,.95);
+    background:rgba(0,0,0,.88);
 
     backdrop-filter:blur(8px);
     -webkit-backdrop-filter:blur(8px);
+
+    cursor:pointer;
 }
 
 .dp-viewer.active{
@@ -476,20 +478,25 @@ body{
 .dp-viewer-image{
     display:block;
 
-    max-width:94vw;
-    max-height:82vh;
+    width:min(82vw,360px);
+    height:min(82vw,360px);
 
-    width:auto;
-    height:auto;
+    max-width:none;
+    max-height:none;
 
-    object-fit:contain;
+    object-fit:cover;
 
-    border-radius:14px;
+    border-radius:50%;
+
+    border:4px solid rgba(255,255,255,.92);
 
     box-shadow:
+        0 0 35px rgba(22,119,255,.35),
         0 20px 70px rgba(0,0,0,.75);
 
     animation:dpZoom .18s ease-out;
+
+    cursor:pointer;
 }
 
 @keyframes dpZoom{
@@ -549,6 +556,8 @@ body{
 
     text-shadow:
         0 2px 8px rgba(0,0,0,.8);
+
+    pointer-events:none;
 }
 
 /* ================= BOTTOM NAV ================= */
@@ -848,8 +857,6 @@ body{
     </div>
 
 
-    <!-- SEARCH -->
-
     <div
         class="search-box"
         id="searchBox"
@@ -865,8 +872,6 @@ body{
 
     </div>
 
-
-    <!-- MENU -->
 
     <button
         class="menu-btn"
@@ -1202,11 +1207,11 @@ body{
 <div
     class="dp-viewer"
     id="dpViewer"
-    onclick="closeDPViewer(event)">
+    onclick="closeDPViewer()">
 
     <button
         class="dp-viewer-close"
-        onclick="closeDPViewer(event)">
+        onclick="closeDPViewer()">
         ×
     </button>
 
@@ -1723,18 +1728,6 @@ async function loadConnections(){
                 "user-card";
 
 
-            /*
-            =================================================
-            CHAT CLICK
-            =================================================
-
-            Card par click karne par chat open hoga.
-
-            Lekin agar click DP par hua hai,
-            to chat nahi khulega.
-            DP ka apna viewer open hoga.
-            */
-
             card.addEventListener(
                 "click",
                 function(event){
@@ -1777,11 +1770,6 @@ async function loadConnections(){
             photoBox.className =
                 "profile-photo";
 
-
-            /*
-                DP click only opens DP.
-                It does NOT open chat.
-            */
 
             if(photo){
 
@@ -1834,12 +1822,6 @@ async function loadConnections(){
                 photoBox.textContent =
                     firstLetter;
 
-
-                /*
-                   Agar DP available nahi hai,
-                   letter avatar par click karne
-                   par bhi card/chat nahi khulega.
-                */
 
                 photoBox.addEventListener(
                     "click",
@@ -1918,11 +1900,6 @@ async function loadConnections(){
                 "Connected";
 
 
-            /*
-               Connected button par click
-               bhi chat open hoga.
-            */
-
             button.addEventListener(
                 "click",
                 function(event){
@@ -1975,7 +1952,7 @@ async function loadConnections(){
 
 
 /* =========================================================
-   DP VIEWER
+   CIRCULAR DP VIEWER
 ========================================================= */
 
 function openDPViewer(
@@ -2006,11 +1983,6 @@ function openDPViewer(
     }
 
 
-    /*
-       Agar actual photo available hai
-       to image show karo.
-    */
-
     if(
         photo &&
         String(photo).trim()
@@ -2031,11 +2003,6 @@ function openDPViewer(
         }
 
     }else{
-
-        /*
-           Photo available nahi hai,
-           isliye broken image nahi dikhayenge.
-        */
 
         if(image){
 
@@ -2074,29 +2041,7 @@ function openDPViewer(
    CLOSE DP VIEWER
 ========================================================= */
 
-function closeDPViewer(event){
-
-    /*
-       Agar image par click hua hai
-       to viewer close nahi hoga.
-    */
-
-    if(
-        event &&
-        event.target &&
-        event.target.id ===
-        "dpViewerImage"
-    ){
-
-        return;
-
-    }
-
-
-    /*
-       Close button ya background par click
-       karne par viewer close hoga.
-    */
+function closeDPViewer(){
 
     const viewer =
         document.getElementById(
