@@ -2584,6 +2584,30 @@ async def home_page():
 
 
 # ============================================================
+# PROFILE PAGE
+# ============================================================
+
+@app.get("/profile")
+async def profile_page():
+
+    profile_file = os.path.join(
+        BASE_DIR,
+        "profile.html",
+    )
+
+    if not os.path.isfile(profile_file):
+
+        raise HTTPException(
+            status_code=404,
+            detail="profile.html file not found",
+        )
+
+    return FileResponse(
+        profile_file
+    )
+
+
+# ============================================================
 # HOME CONNECTIONS
 # ============================================================
 
