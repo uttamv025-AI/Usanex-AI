@@ -9,6 +9,7 @@ from fastapi import (
 )
 
 from pydantic import BaseModel
+from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
