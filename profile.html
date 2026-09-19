@@ -456,7 +456,8 @@ body{
 
         <div class="profile-main">
 
-            <div class="profile-avatar">
+            <div class="profile-avatar"
+                  onclick="openProfilePhoto()">
                 U
             </div>
 
@@ -885,6 +886,84 @@ function showToast(message){
     toastTimer=setTimeout(()=>{
         toast.classList.remove("show");
     },1800);
+}
+function openProfilePhoto(){
+
+    const avatar =
+        document.querySelector(
+            ".profile-avatar"
+        );
+
+    const img =
+        avatar.querySelector("img");
+
+    if(!img){
+        showToast("Profile photo available nahi hai");
+        return;
+    }
+
+    const viewer =
+        document.createElement("div");
+
+    viewer.id = "photoViewer";
+
+    viewer.style.cssText = `
+        position:fixed;
+        inset:0;
+        background:#000;
+        z-index:9999;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+    `;
+
+    viewer.innerHTML = `
+        <button onclick="closeProfilePhoto()"
+                style="
+                position:absolute;
+                top:18px;
+                left:18px;
+                width:40px;
+                height:40px;
+                border:0;
+                border-radius:50%;
+                background:rgba(255,255,255,.12);
+                color:#fff;
+                font-size:25px;
+                z-index:2;">
+            ×
+        </button>
+
+        <img src="${img.src}"
+             style="
+             max-width:100%;
+             max-height:100%;
+             object-fit:contain;">
+    `;
+
+    viewer.onclick = function(e){
+
+        if(e.target === viewer){
+            closeProfilePhoto();
+        }
+
+    };
+
+    document.body.appendChild(viewer);
+}
+
+
+function closeProfilePhoto(){
+
+    const viewer =
+        document.getElementById(
+            "photoViewer"
+        );
+
+    if(viewer){
+        viewer.remove();
+    }
+
 }
 
 </script>
