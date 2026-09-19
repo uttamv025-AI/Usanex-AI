@@ -4,6 +4,8 @@ from fastapi import (
     HTTPException,
     WebSocket,
     WebSocketDisconnect,
+    UploadFile,
+    File,
 )
 
 from pydantic import BaseModel
