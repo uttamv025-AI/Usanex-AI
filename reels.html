@@ -1,0 +1,2346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width,
+      initial-scale=1,
+      maximum-scale=1,
+      user-scalable=no,
+      viewport-fit=cover">
+
+<title>Usanex Reels</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    -webkit-tap-highlight-color:transparent;
+}
+
+html,
+body{
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    background:#030914;
+    color:white;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+    position:fixed;
+    inset:0;
+}
+
+/* ================= APP ================= */
+
+.reels-app{
+    position:fixed;
+    inset:0;
+    width:100%;
+    height:100dvh;
+    background:#030914;
+    overflow:hidden;
+}
+
+.reels-container{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    touch-action:pan-y;
+}
+
+/* ================= REEL ================= */
+
+.reel{
+    position:absolute;
+    inset:0;
+
+    width:100%;
+    height:100%;
+
+    overflow:hidden;
+
+    opacity:0;
+    transform:translateY(100%);
+
+    transition:
+        transform .38s ease,
+        opacity .38s ease;
+
+    pointer-events:none;
+
+    background:#030914;
+}
+
+.reel.active{
+    opacity:1;
+    transform:translateY(0);
+    pointer-events:auto;
+}
+
+.reel.previous{
+    transform:translateY(-100%);
+}
+
+/* ================= BACKGROUND ================= */
+
+.reel-bg{
+    position:absolute;
+    inset:0;
+}
+
+.bg-one{
+    background:
+        radial-gradient(
+            circle at 60% 38%,
+            rgba(20,130,255,.28),
+            transparent 35%
+        ),
+        linear-gradient(
+            180deg,
+            #071b3c,
+            #061331 50%,
+            #020712
+        );
+}
+
+.bg-two{
+    background:
+        radial-gradient(
+            circle at 35% 35%,
+            rgba(0,160,255,.28),
+            transparent 35%
+        ),
+        linear-gradient(
+            145deg,
+            #03152d,
+            #07366a 48%,
+            #020712
+        );
+}
+
+.bg-three{
+    background:
+        radial-gradient(
+            circle at 65% 35%,
+            rgba(0,110,255,.28),
+            transparent 35%
+        ),
+        linear-gradient(
+            160deg,
+            #020a19,
+            #071d3f 50%,
+            #020610
+        );
+}
+
+.reel-video{
+    position:absolute;
+    inset:0;
+
+    width:100%;
+    height:100%;
+
+    object-fit:cover;
+
+    background:#030914;
+}
+
+.reel-overlay{
+    position:absolute;
+    inset:0;
+
+    background:
+        linear-gradient(
+            to bottom,
+            rgba(0,0,0,.58),
+            rgba(0,0,0,.04) 30%,
+            rgba(0,0,0,.08) 55%,
+            rgba(0,0,0,.82)
+        );
+
+    pointer-events:none;
+}
+
+/* ================= TOP ================= */
+
+.top-bar{
+    position:absolute;
+
+    top:0;
+    left:0;
+    right:0;
+
+    height:82px;
+
+    padding:
+        max(18px,env(safe-area-inset-top))
+        15px
+        8px;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    z-index:30;
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+
+    gap:8px;
+
+    font-size:21px;
+    font-weight:800;
+}
+
+.brand-mark{
+    width:36px;
+    height:36px;
+
+    border-radius:11px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:
+        linear-gradient(
+            145deg,
+            #0b7cff,
+            #13a4ff
+        );
+
+    color:white;
+
+    font-size:22px;
+    font-weight:900;
+
+    box-shadow:
+        0 4px 15px
+        rgba(0,130,255,.35);
+}
+
+.brand-text span{
+    color:#1688ff;
+}
+
+/* ================= TABS ================= */
+
+.reel-tabs{
+    position:absolute;
+
+    left:50%;
+
+    transform:translateX(-50%);
+
+    display:flex;
+
+    gap:25px;
+}
+
+.tab{
+    position:relative;
+
+    border:0;
+    background:transparent;
+
+    color:#9da9bd;
+
+    font-size:14px;
+    font-weight:700;
+
+    padding:8px 2px;
+}
+
+.tab.active{
+    color:white;
+}
+
+.tab.active::after{
+    content:"";
+
+    position:absolute;
+
+    left:0;
+    right:0;
+
+    bottom:0;
+
+    height:3px;
+
+    border-radius:8px;
+
+    background:#1688ff;
+}
+
+/* ================= TOP RIGHT ================= */
+
+.top-message{
+    width:40px;
+    height:40px;
+
+    border:0;
+    background:transparent;
+
+    color:white;
+
+    font-size:27px;
+}
+
+/* ================= PLAY ================= */
+
+.play-button{
+    position:absolute;
+
+    left:50%;
+    top:50%;
+
+    transform:
+        translate(-50%,-50%);
+
+    width:72px;
+    height:72px;
+
+    border:0;
+    border-radius:50%;
+
+    background:
+        rgba(0,0,0,.45);
+
+    color:white;
+
+    font-size:34px;
+
+    z-index:20;
+
+    backdrop-filter:blur(8px);
+}
+
+/* ================= VOLUME ================= */
+
+.volume-button{
+    position:absolute;
+
+    left:17px;
+    bottom:194px;
+
+    width:45px;
+    height:45px;
+
+    border:0;
+
+    border-radius:50%;
+
+    background:
+        rgba(0,0,0,.52);
+
+    color:white;
+
+    font-size:21px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    z-index:40;
+}
+
+/* ================= RIGHT ACTIONS ================= */
+
+.actions{
+    position:absolute;
+
+    right:8px;
+    bottom:169px;
+
+    width:60px;
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+
+    gap:14px;
+
+    z-index:35;
+}
+
+.action{
+    width:58px;
+
+    border:0;
+    background:transparent;
+
+    color:white;
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+
+    gap:4px;
+}
+
+.action-icon{
+    width:44px;
+    height:44px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:29px;
+
+    text-shadow:
+        0 2px 6px
+        rgba(0,0,0,.9);
+}
+
+.action-count{
+    font-size:11px;
+    font-weight:700;
+
+    text-shadow:
+        0 2px 6px
+        rgba(0,0,0,.9);
+}
+
+.action.liked .action-icon{
+    color:#ff315f;
+}
+
+.action.saved .action-icon{
+    color:#1688ff;
+}
+
+.action.reposted .action-icon{
+    color:#1688ff;
+}
+
+/* ================= INFORMATION ================= */
+
+.reel-info{
+    position:absolute;
+
+    left:15px;
+    right:78px;
+
+    bottom:97px;
+
+    z-index:35;
+}
+
+/* creator */
+
+.creator{
+    display:flex;
+
+    align-items:center;
+
+    gap:9px;
+
+    margin-bottom:9px;
+}
+
+.creator-photo{
+    width:44px;
+    height:44px;
+
+    min-width:44px;
+
+    border-radius:50%;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    background:
+        linear-gradient(
+            145deg,
+            #1688ff,
+            #003b91
+        );
+
+    border:2px solid #1688ff;
+
+    font-weight:800;
+}
+
+.creator-name{
+    font-size:15px;
+    font-weight:800;
+
+    text-shadow:
+        0 2px 6px
+        rgba(0,0,0,.9);
+}
+
+.verified{
+    display:inline-flex;
+
+    width:16px;
+    height:16px;
+
+    margin-left:3px;
+
+    border-radius:50%;
+
+    background:#1688ff;
+
+    align-items:center;
+    justify-content:center;
+
+    font-size:10px;
+}
+
+.follow-btn{
+    height:32px;
+
+    padding:0 14px;
+
+    border-radius:10px;
+
+    border:1px solid white;
+
+    background:
+        rgba(0,0,0,.3);
+
+    color:white;
+
+    font-size:12px;
+
+    font-weight:700;
+}
+
+.follow-btn.following{
+    background:#1688ff;
+    border-color:#1688ff;
+}
+
+/* caption */
+
+.caption{
+    font-size:14px;
+
+    line-height:1.4;
+
+    margin-bottom:8px;
+
+    text-shadow:
+        0 2px 7px
+        rgba(0,0,0,.9);
+}
+
+/* audio */
+
+.audio{
+    display:flex;
+
+    align-items:center;
+
+    gap:7px;
+
+    width:max-content;
+
+    max-width:100%;
+
+    padding:7px 11px;
+
+    border-radius:18px;
+
+    background:
+        rgba(0,0,0,.4);
+
+    font-size:11px;
+
+    color:#dce8ff;
+}
+
+/* ================= INTEREST ================= */
+
+.preference-row{
+    display:flex;
+
+    gap:7px;
+
+    margin-top:9px;
+}
+
+.preference{
+    height:31px;
+
+    padding:0 11px;
+
+    border-radius:9px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.45);
+
+    background:
+        rgba(0,0,0,.38);
+
+    color:white;
+
+    font-size:11px;
+
+    font-weight:700;
+}
+
+.preference.interested.active{
+    background:#1688ff;
+    border-color:#1688ff;
+}
+
+.preference.not-interested.active{
+    background:#e83b55;
+    border-color:#e83b55;
+}
+
+/* ================= HEART ================= */
+
+.double-heart{
+    position:absolute;
+
+    left:50%;
+    top:50%;
+
+    transform:
+        translate(-50%,-50%)
+        scale(.2);
+
+    font-size:110px;
+
+    color:#1688ff;
+
+    opacity:0;
+
+    z-index:45;
+
+    pointer-events:none;
+}
+
+.double-heart.show{
+    animation:
+        heartPop .65s ease;
+}
+
+@keyframes heartPop{
+
+    0%{
+        opacity:0;
+
+        transform:
+            translate(-50%,-50%)
+            scale(.2);
+    }
+
+    25%{
+        opacity:1;
+
+        transform:
+            translate(-50%,-50%)
+            scale(1.15);
+    }
+
+    70%{
+        opacity:1;
+
+        transform:
+            translate(-50%,-50%)
+            scale(1);
+    }
+
+    100%{
+        opacity:0;
+
+        transform:
+            translate(-50%,-50%)
+            scale(1.25);
+    }
+}
+
+/* ================= BOTTOM NAV ================= */
+
+.bottom-nav{
+    position:absolute;
+
+    left:0;
+    right:0;
+
+    bottom:0;
+
+    height:76px;
+
+    padding:
+        6px
+        12px
+        max(9px,env(safe-area-inset-bottom));
+
+    background:
+        rgba(2,8,18,.97);
+
+    border-top:
+        1px solid
+        rgba(255,255,255,.05);
+
+    display:flex;
+
+    align-items:center;
+    justify-content:space-around;
+
+    z-index:60;
+}
+
+.nav-item{
+    position:relative;
+
+    width:48px;
+    height:55px;
+
+    border:0;
+    background:transparent;
+
+    color:#dce5f5;
+
+    display:flex;
+    flex-direction:column;
+
+    align-items:center;
+    justify-content:center;
+
+    gap:3px;
+
+    font-size:9px;
+}
+
+.nav-icon{
+    font-size:27px;
+    line-height:1;
+}
+
+.nav-item.active{
+    color:white;
+}
+
+.create-btn{
+    width:62px;
+    height:49px;
+
+    border:0;
+
+    border-radius:15px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #1688ff,
+            #0061df
+        );
+
+    color:white;
+
+    font-size:33px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    box-shadow:
+        0 7px 22px
+        rgba(0,105,255,.42);
+}
+
+.notification-badge{
+    position:absolute;
+
+    top:1px;
+    right:0;
+
+    width:17px;
+    height:17px;
+
+    border-radius:50%;
+
+    background:#1688ff;
+
+    color:white;
+
+    font-size:9px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border:2px solid #030914;
+}
+
+/* ================= TOAST ================= */
+
+.toast{
+    position:absolute;
+
+    left:50%;
+
+    bottom:88px;
+
+    transform:
+        translateX(-50%)
+        translateY(15px);
+
+    padding:9px 14px;
+
+    border-radius:12px;
+
+    background:#101c30;
+
+    border:
+        1px solid
+        rgba(255,255,255,.1);
+
+    color:white;
+
+    font-size:12px;
+
+    opacity:0;
+
+    pointer-events:none;
+
+    transition:.25s;
+
+    z-index:100;
+}
+
+.toast.show{
+    opacity:1;
+
+    transform:
+        translateX(-50%)
+        translateY(0);
+}
+
+/* ================= MOBILE ================= */
+
+@media(max-width:500px){
+
+    .brand{
+        font-size:19px;
+    }
+
+    .brand-mark{
+        width:34px;
+        height:34px;
+    }
+
+    .reel-tabs{
+        gap:20px;
+    }
+
+    .actions{
+        bottom:169px;
+        gap:12px;
+    }
+
+    .reel-info{
+        bottom:96px;
+    }
+
+}
+
+@media(max-width:360px){
+
+    .brand-text{
+        display:none;
+    }
+
+    .reel-tabs{
+        left:46%;
+        gap:14px;
+    }
+
+    .action-icon{
+        font-size:26px;
+    }
+
+    .preference{
+        padding:0 8px;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="reels-app">
+
+<div
+    class="reels-container"
+    id="reelsContainer"
+>
+
+<!-- =====================================================
+     REEL 1
+===================================================== -->
+
+<section
+    class="reel active"
+    data-index="0"
+>
+
+    <!--
+    REAL VIDEO LAGANA HO TO:
+
+    <video
+        class="reel-video"
+        loop
+        playsinline
+        muted
+    >
+        <source
+            src="/static/reels/reel1.mp4"
+            type="video/mp4"
+        >
+    </video>
+    -->
+
+    <div class="reel-bg bg-one"></div>
+
+    <div class="reel-overlay"></div>
+
+
+    <!-- TOP -->
+
+    <div class="top-bar">
+
+        <div class="brand">
+
+            <div class="brand-mark">
+                U
+            </div>
+
+            <div class="brand-text">
+                Usa<span>nex</span>
+            </div>
+
+        </div>
+
+
+        <div class="reel-tabs">
+
+            <button class="tab active">
+                For You
+            </button>
+
+            <button class="tab">
+                Following
+            </button>
+
+        </div>
+
+
+        <button
+            class="top-message"
+            onclick="showToast('Messages')"
+        >
+            ◇
+        </button>
+
+    </div>
+
+
+    <!-- PLAY -->
+
+    <button
+        class="play-button"
+        onclick="togglePlay(this)"
+    >
+        ▶
+    </button>
+
+
+    <!-- VOLUME -->
+
+    <button
+        class="volume-button"
+        onclick="toggleVolume(this)"
+    >
+        🔇
+    </button>
+
+
+    <!-- DOUBLE HEART -->
+
+    <div class="double-heart">
+        ♥
+    </div>
+
+
+    <!-- ACTIONS -->
+
+    <div class="actions">
+
+        <button
+            class="action like-btn"
+            onclick="toggleLike(this)"
+        >
+
+            <span class="action-icon">
+                ♡
+            </span>
+
+            <span class="action-count">
+                265K
+            </span>
+
+        </button>
+
+
+        <button
+            class="action"
+            onclick="showToast('Comments')"
+        >
+
+            <span class="action-icon">
+                ◯
+            </span>
+
+            <span class="action-count">
+                1,505
+            </span>
+
+        </button>
+
+
+        <button
+            class="action repost-btn"
+            onclick="repost(this)"
+        >
+
+            <span class="action-icon">
+                ⇄
+            </span>
+
+            <span class="action-count">
+                9,235
+            </span>
+
+        </button>
+
+
+        <button
+            class="action"
+            onclick="shareReel()"
+        >
+
+            <span class="action-icon">
+                ▷
+            </span>
+
+            <span class="action-count">
+                161K
+            </span>
+
+        </button>
+
+
+        <button
+            class="action save-btn"
+            onclick="saveReel(this)"
+        >
+
+            <span class="action-icon">
+                ♧
+            </span>
+
+            <span class="action-count">
+                30.6K
+            </span>
+
+        </button>
+
+    </div>
+
+
+    <!-- INFO -->
+
+    <div class="reel-info">
+
+        <div class="creator">
+
+            <div class="creator-photo">
+                U
+            </div>
+
+
+            <div class="creator-name">
+
+                usanex_official
+
+                <span class="verified">
+                    ✓
+                </span>
+
+            </div>
+
+
+            <button
+                class="follow-btn"
+                onclick="toggleFollow(this)"
+            >
+                Follow
+            </button>
+
+        </div>
+
+
+        <div class="caption">
+
+            Good things take time... 💙
+
+        </div>
+
+
+        <div class="audio">
+
+            ♪ Original Audio –
+            usanex_official
+
+        </div>
+
+
+        <!-- INTEREST -->
+
+        <div class="preference-row">
+
+            <button
+                class="preference not-interested"
+                onclick="
+                    setPreference(
+                        this,
+                        'not-interested'
+                    )
+                "
+            >
+                ✕ Not interested
+            </button>
+
+
+            <button
+                class="preference interested"
+                onclick="
+                    setPreference(
+                        this,
+                        'interested'
+                    )
+                "
+            >
+                ✓ Interested
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     REEL 2
+===================================================== -->
+
+<section
+    class="reel"
+    data-index="1"
+>
+
+    <div class="reel-bg bg-two"></div>
+
+    <div class="reel-overlay"></div>
+
+
+    <div class="top-bar">
+
+        <div class="brand">
+
+            <div class="brand-mark">
+                U
+            </div>
+
+            <div class="brand-text">
+                Usa<span>nex</span>
+            </div>
+
+        </div>
+
+
+        <div class="reel-tabs">
+
+            <button class="tab active">
+                For You
+            </button>
+
+            <button class="tab">
+                Following
+            </button>
+
+        </div>
+
+
+        <button
+            class="top-message"
+            onclick="showToast('Messages')"
+        >
+            ◇
+        </button>
+
+    </div>
+
+
+    <button
+        class="play-button"
+        onclick="togglePlay(this)"
+    >
+        ▶
+    </button>
+
+
+    <button
+        class="volume-button"
+        onclick="toggleVolume(this)"
+    >
+        🔇
+    </button>
+
+
+    <div class="double-heart">
+        ♥
+    </div>
+
+
+    <div class="actions">
+
+        <button
+            class="action like-btn"
+            onclick="toggleLike(this)"
+        >
+            <span class="action-icon">♡</span>
+            <span class="action-count">98K</span>
+        </button>
+
+
+        <button
+            class="action"
+            onclick="showToast('Comments')"
+        >
+            <span class="action-icon">◯</span>
+            <span class="action-count">732</span>
+        </button>
+
+
+        <button
+            class="action repost-btn"
+            onclick="repost(this)"
+        >
+            <span class="action-icon">⇄</span>
+            <span class="action-count">4,210</span>
+        </button>
+
+
+        <button
+            class="action"
+            onclick="shareReel()"
+        >
+            <span class="action-icon">▷</span>
+            <span class="action-count">45K</span>
+        </button>
+
+
+        <button
+            class="action save-btn"
+            onclick="saveReel(this)"
+        >
+            <span class="action-icon">♧</span>
+            <span class="action-count">12K</span>
+        </button>
+
+    </div>
+
+
+    <div class="reel-info">
+
+        <div class="creator">
+
+            <div class="creator-photo">
+                A
+            </div>
+
+            <div class="creator-name">
+
+                ai_creator
+
+                <span class="verified">
+                    ✓
+                </span>
+
+            </div>
+
+            <button
+                class="follow-btn"
+                onclick="toggleFollow(this)"
+            >
+                Follow
+            </button>
+
+        </div>
+
+
+        <div class="caption">
+
+            Build. Learn. Create. 🚀
+
+        </div>
+
+
+        <div class="audio">
+
+            ♪ Original Audio
+
+        </div>
+
+
+        <div class="preference-row">
+
+            <button
+                class="preference not-interested"
+                onclick="
+                    setPreference(
+                        this,
+                        'not-interested'
+                    )
+                "
+            >
+                ✕ Not interested
+            </button>
+
+
+            <button
+                class="preference interested"
+                onclick="
+                    setPreference(
+                        this,
+                        'interested'
+                    )
+                "
+            >
+                ✓ Interested
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     REEL 3
+===================================================== -->
+
+<section
+    class="reel"
+    data-index="2"
+>
+
+    <div class="reel-bg bg-three"></div>
+
+    <div class="reel-overlay"></div>
+
+
+    <div class="top-bar">
+
+        <div class="brand">
+
+            <div class="brand-mark">
+                U
+            </div>
+
+            <div class="brand-text">
+                Usa<span>nex</span>
+            </div>
+
+        </div>
+
+
+        <div class="reel-tabs">
+
+            <button class="tab active">
+                For You
+            </button>
+
+            <button class="tab">
+                Following
+            </button>
+
+        </div>
+
+
+        <button
+            class="top-message"
+            onclick="showToast('Messages')"
+        >
+            ◇
+        </button>
+
+    </div>
+
+
+    <button
+        class="play-button"
+        onclick="togglePlay(this)"
+    >
+        ▶
+    </button>
+
+
+    <button
+        class="volume-button"
+        onclick="toggleVolume(this)"
+    >
+        🔇
+    </button>
+
+
+    <div class="double-heart">
+        ♥
+    </div>
+
+
+    <div class="actions">
+
+        <button
+            class="action like-btn"
+            onclick="toggleLike(this)"
+        >
+            <span class="action-icon">♡</span>
+            <span class="action-count">152K</span>
+        </button>
+
+
+        <button
+            class="action"
+            onclick="showToast('Comments')"
+        >
+            <span class="action-icon">◯</span>
+            <span class="action-count">2,301</span>
+        </button>
+
+
+        <button
+            class="action repost-btn"
+            onclick="repost(this)"
+        >
+            <span class="action-icon">⇄</span>
+            <span class="action-count">7,830</span>
+        </button>
+
+
+        <button
+            class="action"
+            onclick="shareReel()"
+        >
+            <span class="action-icon">▷</span>
+            <span class="action-count">81K</span>
+        </button>
+
+
+        <button
+            class="action save-btn"
+            onclick="saveReel(this)"
+        >
+            <span class="action-icon">♧</span>
+            <span class="action-count">22K</span>
+        </button>
+
+    </div>
+
+
+    <div class="reel-info">
+
+        <div class="creator">
+
+            <div class="creator-photo">
+                C
+            </div>
+
+            <div class="creator-name">
+                coding_daily
+            </div>
+
+            <button
+                class="follow-btn"
+                onclick="toggleFollow(this)"
+            >
+                Follow
+            </button>
+
+        </div>
+
+
+        <div class="caption">
+
+            Keep coding until it works. 💙
+
+        </div>
+
+
+        <div class="audio">
+
+            ♪ Coding Vibes
+
+        </div>
+
+
+        <div class="preference-row">
+
+            <button
+                class="preference not-interested"
+                onclick="
+                    setPreference(
+                        this,
+                        'not-interested'
+                    )
+                "
+            >
+                ✕ Not interested
+            </button>
+
+
+            <button
+                class="preference interested"
+                onclick="
+                    setPreference(
+                        this,
+                        'interested'
+                    )
+                "
+            >
+                ✓ Interested
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+</div>
+
+
+<!-- ================= BOTTOM NAV ================= -->
+
+<nav class="bottom-nav">
+
+    <button
+        class="nav-item"
+        onclick="goHome()"
+    >
+
+        <span class="nav-icon">
+            ⌂
+        </span>
+
+        <span>
+            Home
+        </span>
+
+    </button>
+
+
+    <button
+        class="nav-item active"
+    >
+
+        <span class="nav-icon">
+            ▣
+        </span>
+
+        <span>
+            Reels
+        </span>
+
+    </button>
+
+
+    <button
+        class="create-btn"
+        onclick="showToast('Create Reel')"
+    >
+        +
+    </button>
+
+
+    <button
+        class="nav-item"
+        onclick="showToast('Notifications')"
+    >
+
+        <span class="nav-icon">
+            ♡
+        </span>
+
+        <span>
+            Likes
+        </span>
+
+    </button>
+
+
+    <button
+        class="nav-item"
+        onclick="goProfile()"
+    >
+
+        <span class="nav-icon">
+            ◎
+        </span>
+
+        <span>
+            Profile
+        </span>
+
+    </button>
+
+</nav>
+
+
+<div
+    class="toast"
+    id="toast"
+></div>
+
+</div>
+
+
+<script>
+
+/* =====================================================
+   REELS
+===================================================== */
+
+const container =
+    document.getElementById(
+        "reelsContainer"
+    );
+
+const reels =
+    Array.from(
+        document.querySelectorAll(
+            ".reel"
+        )
+    );
+
+let currentIndex = 0;
+
+let touchStartY = 0;
+
+let touchEndY = 0;
+
+let isAnimating = false;
+
+let lastTap = 0;
+
+
+/* =====================================================
+   CHANGE REEL
+===================================================== */
+
+function showReel(index){
+
+    if(isAnimating){
+        return;
+    }
+
+    if(index < 0){
+        index = reels.length - 1;
+    }
+
+    if(index >= reels.length){
+        index = 0;
+    }
+
+    if(index === currentIndex){
+        return;
+    }
+
+    isAnimating = true;
+
+
+    reels.forEach(
+        (reel,i)=>{
+
+            reel.classList.remove(
+                "active",
+                "previous"
+            );
+
+            if(i < index){
+
+                reel.classList.add(
+                    "previous"
+                );
+
+            }
+
+        }
+    );
+
+
+    reels[index].classList.add(
+        "active"
+    );
+
+
+    currentIndex = index;
+
+
+    setTimeout(
+        ()=>{
+            isAnimating = false;
+        },
+        400
+    );
+
+}
+
+
+/* =====================================================
+   SWIPE
+===================================================== */
+
+container.addEventListener(
+    "touchstart",
+    event=>{
+
+        touchStartY =
+            event.touches[0].clientY;
+
+    },
+    {
+        passive:true
+    }
+);
+
+
+container.addEventListener(
+    "touchend",
+    event=>{
+
+        touchEndY =
+            event.changedTouches[0].clientY;
+
+
+        const difference =
+            touchStartY -
+            touchEndY;
+
+
+        if(
+            Math.abs(difference) < 60
+        ){
+
+            return;
+
+        }
+
+
+        if(difference > 0){
+
+            showReel(
+                currentIndex + 1
+            );
+
+        }else{
+
+            showReel(
+                currentIndex - 1
+            );
+
+        }
+
+    },
+    {
+        passive:true
+    }
+);
+
+
+/* =====================================================
+   DOUBLE TAP LIKE
+===================================================== */
+
+container.addEventListener(
+    "click",
+    event=>{
+
+        const now =
+            Date.now();
+
+
+        if(
+            now - lastTap < 300
+        ){
+
+            const reel =
+                event.target.closest(
+                    ".reel"
+                );
+
+
+            if(reel){
+
+                const like =
+                    reel.querySelector(
+                        ".like-btn"
+                    );
+
+
+                if(
+                    like &&
+                    !like.classList.contains(
+                        "liked"
+                    )
+                ){
+
+                    toggleLike(
+                        like
+                    );
+
+                }
+
+
+                const heart =
+                    reel.querySelector(
+                        ".double-heart"
+                    );
+
+
+                if(heart){
+
+                    heart.classList.remove(
+                        "show"
+                    );
+
+                    void heart.offsetWidth;
+
+                    heart.classList.add(
+                        "show"
+                    );
+
+                }
+
+            }
+
+        }
+
+
+        lastTap = now;
+
+    }
+);
+
+
+/* =====================================================
+   LIKE
+===================================================== */
+
+function toggleLike(button){
+
+    const icon =
+        button.querySelector(
+            ".action-icon"
+        );
+
+
+    if(
+        button.classList.contains(
+            "liked"
+        )
+    ){
+
+        button.classList.remove(
+            "liked"
+        );
+
+        icon.textContent =
+            "♡";
+
+    }else{
+
+        button.classList.add(
+            "liked"
+        );
+
+        icon.textContent =
+            "♥";
+
+    }
+
+}
+
+
+/* =====================================================
+   VOLUME
+===================================================== */
+
+function toggleVolume(button){
+
+    const reel =
+        button.closest(
+            ".reel"
+        );
+
+
+    const video =
+        reel.querySelector(
+            "video"
+        );
+
+
+    if(video){
+
+        video.muted =
+            !video.muted;
+
+
+        button.textContent =
+            video.muted
+                ? "🔇"
+                : "🔊";
+
+
+        if(
+            !video.muted &&
+            video.paused
+        ){
+
+            video.play().catch(
+                ()=>{}
+            );
+
+        }
+
+        return;
+
+    }
+
+
+    /*
+      Demo mode:
+      Actual video lagane ke baad
+      automatically real mute/unmute chalega.
+    */
+
+    const muted =
+        button.dataset.muted !== "false";
+
+
+    if(muted){
+
+        button.dataset.muted =
+            "false";
+
+        button.textContent =
+            "🔊";
+
+        showToast(
+            "Volume on"
+        );
+
+    }else{
+
+        button.dataset.muted =
+            "true";
+
+        button.textContent =
+            "🔇";
+
+        showToast(
+            "Volume off"
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   PLAY
+===================================================== */
+
+function togglePlay(button){
+
+    const reel =
+        button.closest(
+            ".reel"
+        );
+
+
+    const video =
+        reel.querySelector(
+            "video"
+        );
+
+
+    if(video){
+
+        if(video.paused){
+
+            video.play().catch(
+                ()=>{}
+            );
+
+            button.textContent =
+                "Ⅱ";
+
+        }else{
+
+            video.pause();
+
+            button.textContent =
+                "▶";
+
+        }
+
+        return;
+
+    }
+
+
+    button.dataset.playing =
+        button.dataset.playing !== "true";
+
+
+    button.textContent =
+        button.dataset.playing === "true"
+            ? "Ⅱ"
+            : "▶";
+
+}
+
+
+/* =====================================================
+   INTERESTED / NOT INTERESTED
+===================================================== */
+
+function setPreference(
+    button,
+    type
+){
+
+    const row =
+        button.closest(
+            ".preference-row"
+        );
+
+
+    const interested =
+        row.querySelector(
+            ".interested"
+        );
+
+
+    const notInterested =
+        row.querySelector(
+            ".not-interested"
+        );
+
+
+    interested.classList.remove(
+        "active"
+    );
+
+
+    notInterested.classList.remove(
+        "active"
+    );
+
+
+    button.classList.add(
+        "active"
+    );
+
+
+    if(
+        type ===
+        "interested"
+    ){
+
+        showToast(
+            "We'll show you more like this"
+        );
+
+    }else{
+
+        showToast(
+            "We'll show you less like this"
+        );
+
+
+        setTimeout(
+            ()=>{
+                showReel(
+                    currentIndex + 1
+                );
+            },
+            500
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   SAVE
+===================================================== */
+
+function saveReel(button){
+
+    const icon =
+        button.querySelector(
+            ".action-icon"
+        );
+
+
+    button.classList.toggle(
+        "saved"
+    );
+
+
+    if(
+        button.classList.contains(
+            "saved"
+        )
+    ){
+
+        icon.textContent =
+            "◆";
+
+        showToast(
+            "Saved"
+        );
+
+    }else{
+
+        icon.textContent =
+            "♧";
+
+        showToast(
+            "Removed from saved"
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   REPOST
+===================================================== */
+
+function repost(button){
+
+    button.classList.toggle(
+        "reposted"
+    );
+
+
+    showToast(
+        button.classList.contains(
+            "reposted"
+        )
+            ? "Reposted"
+            : "Repost removed"
+    );
+
+}
+
+
+/* =====================================================
+   SHARE
+===================================================== */
+
+async function shareReel(){
+
+    if(
+        navigator.share
+    ){
+
+        try{
+
+            await navigator.share({
+
+                title:
+                    "Usanex Reel",
+
+                text:
+                    "Check this reel on Usanex"
+
+            });
+
+        }catch(error){}
+
+    }else{
+
+        showToast(
+            "Share link copied"
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   FOLLOW
+===================================================== */
+
+function toggleFollow(button){
+
+    if(
+        button.classList.contains(
+            "following"
+        )
+    ){
+
+        button.classList.remove(
+            "following"
+        );
+
+        button.textContent =
+            "Follow";
+
+    }else{
+
+        button.classList.add(
+            "following"
+        );
+
+        button.textContent =
+            "Following";
+
+    }
+
+}
+
+
+/* =====================================================
+   TOAST
+===================================================== */
+
+let toastTimer;
+
+
+function showToast(message){
+
+    const toast =
+        document.getElementById(
+            "toast"
+        );
+
+
+    toast.textContent =
+        message;
+
+
+    toast.classList.add(
+        "show"
+    );
+
+
+    clearTimeout(
+        toastTimer
+    );
+
+
+    toastTimer =
+        setTimeout(
+            ()=>{
+                toast.classList.remove(
+                    "show"
+                );
+            },
+            1800
+        );
+
+}
+
+
+/* =====================================================
+   NAVIGATION
+===================================================== */
+
+function goHome(){
+
+    window.location.href =
+        "/home";
+
+}
+
+
+function goProfile(){
+
+    window.location.href =
+        "/profile";
+
+}
+
+
+/* =====================================================
+   KEYBOARD
+===================================================== */
+
+document.addEventListener(
+    "keydown",
+    event=>{
+
+        if(
+            event.key ===
+            "ArrowDown"
+        ){
+
+            showReel(
+                currentIndex + 1
+            );
+
+        }
+
+
+        if(
+            event.key ===
+            "ArrowUp"
+        ){
+
+            showReel(
+                currentIndex - 1
+            );
+
+        }
+
+    }
+);
+
+</script>
+
+</body>
+</html>
