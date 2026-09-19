@@ -82,6 +82,27 @@ body{
     font-weight:800;
 }
 
+.header-right{
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.share-header-btn{
+    height:34px;
+    padding:0 12px;
+    border:0;
+    border-radius:10px;
+    background:rgba(255,255,255,.06);
+    color:#fff;
+    font-size:13px;
+    font-weight:700;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+}
+
 .header-menu{
     width:34px;
     height:34px;
@@ -121,6 +142,15 @@ body{
     font-weight:900;
     flex-shrink:0;
     box-shadow:0 0 20px rgba(20,110,255,.25);
+    cursor:pointer;
+    overflow:hidden;
+}
+
+.profile-avatar img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    border-radius:50%;
 }
 
 .profile-basic{
@@ -172,39 +202,6 @@ body{
     margin-top:4px;
     font-size:11px;
     color:#8f9db2;
-}
-
-/* =========================
-   BUTTONS
-========================= */
-
-.profile-actions{
-    display:flex;
-    gap:9px;
-    margin-top:13px;
-}
-
-.action-primary,
-.action-secondary{
-    height:38px;
-    border-radius:10px;
-    border:1px solid rgba(255,255,255,.10);
-    font-size:13px;
-    font-weight:700;
-    cursor:pointer;
-}
-
-.action-primary{
-    flex:1;
-    color:#fff;
-    background:#146cff;
-    border-color:#146cff;
-}
-
-.action-secondary{
-    width:105px;
-    color:#fff;
-    background:#101d32;
 }
 
 /* =========================
@@ -444,8 +441,18 @@ body{
 
         </div>
 
-        <div class="header-menu" onclick="showToast('More options')">
-            ⋮
+        <div class="header-right">
+
+            <button class="share-header-btn"
+                    onclick="shareProfile()">
+                Share
+            </button>
+
+            <div class="header-menu"
+                 onclick="showToast('More options')">
+                ⋮
+            </div>
+
         </div>
 
     </header>
@@ -457,7 +464,7 @@ body{
         <div class="profile-main">
 
             <div class="profile-avatar"
-                  onclick="openProfilePhoto()">
+                 onclick="openProfilePhoto()">
                 U
             </div>
 
@@ -497,22 +504,6 @@ body{
                 <div class="stat-number">85</div>
                 <div class="stat-label">Following</div>
             </div>
-
-        </div>
-
-
-        <!-- ACTION BUTTONS -->
-        <div class="profile-actions">
-
-            <button class="action-primary"
-                    onclick="editProfile()">
-                Edit Profile
-            </button>
-
-            <button class="action-secondary"
-                    onclick="shareProfile()">
-                Share
-            </button>
 
         </div>
 
@@ -640,8 +631,6 @@ body{
 
 <script>
 
-
-
 /* =========================
    CURRENT USER
 ========================= */
@@ -665,7 +654,6 @@ function getCurrentUserId(){
 
         return;
     }
-
 
     try{
 
@@ -706,6 +694,11 @@ function getCurrentUserId(){
 
 getCurrentUserId();
 
+
+/* =========================
+   LOAD PROFILE
+========================= */
+
 async function loadProfile(){
 
     if(!currentUserId){
@@ -745,37 +738,40 @@ async function loadProfile(){
             document.querySelector(
                 ".user-id"
             ).textContent =
+                "User ID: " +
                 profile.user_id;
 
             document.querySelector(
                 ".username"
             ).textContent =
                 "@" + profile.user_id;
+
+
             const avatar =
-    document.querySelector(
-        ".profile-avatar"
-    );
+                document.querySelector(
+                    ".profile-avatar"
+                );
 
-if(
-    profile.profile_photo &&
-    profile.profile_photo.trim()
-){
+            if(
+                profile.profile_photo &&
+                profile.profile_photo.trim()
+            ){
 
-    avatar.innerHTML =
-        `<img src="${profile.profile_photo}"
-              alt="Profile"
-              style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
+                avatar.innerHTML =
+                    `<img src="${profile.profile_photo}"
+                          alt="Profile">`;
 
-}else{
+            }else{
 
-    avatar.textContent =
-        profile.name
-            ? profile.name
-                .charAt(0)
-                .toUpperCase()
-            : "U";
+                avatar.textContent =
+                    profile.name
+                        ? profile.name
+                            .charAt(0)
+                            .toUpperCase()
+                        : "U";
 
-}
+            }
+
         }
 
     }catch(error){
@@ -790,6 +786,7 @@ if(
 }
 
 loadProfile();
+
 
 /* =========================
    NAVIGATION
@@ -813,12 +810,8 @@ function goNotifications(){
 
 
 /* =========================
-   PROFILE
+   SHARE PROFILE
 ========================= */
-
-function editProfile(){
-    showToast("Edit Profile coming soon");
-}
 
 function shareProfile(){
 
@@ -835,6 +828,7 @@ function shareProfile(){
         showToast("Profile link ready");
 
     }
+
 }
 
 
@@ -851,8 +845,15 @@ function changeTab(button,type){
 
     button.classList.add("active");
 
-    const grid=document.getElementById("postsGrid");
-    const empty=document.getElementById("emptyState");
+    const grid =
+        document.getElementById(
+            "postsGrid"
+        );
+
+    const empty =
+        document.getElementById(
+            "emptyState"
+        );
 
     if(type==="posts"){
 
@@ -865,6 +866,7 @@ function changeTab(button,type){
         empty.style.display="block";
 
     }
+
 }
 
 
@@ -876,17 +878,38 @@ let toastTimer;
 
 function showToast(message){
 
-    const toast=document.getElementById("toast");
+    const toast =
+        document.getElementById(
+            "toast"
+        );
 
-    toast.textContent=message;
-    toast.classList.add("show");
+    toast.textContent =
+        message;
 
-    clearTimeout(toastTimer);
+    toast.classList.add(
+        "show"
+    );
 
-    toastTimer=setTimeout(()=>{
-        toast.classList.remove("show");
-    },1800);
+    clearTimeout(
+        toastTimer
+    );
+
+    toastTimer =
+        setTimeout(()=>{
+
+            toast.classList.remove(
+                "show"
+            );
+
+        },1800);
+
 }
+
+
+/* =========================
+   FULL SCREEN PROFILE PHOTO
+========================= */
+
 function openProfilePhoto(){
 
     const avatar =
@@ -895,17 +918,26 @@ function openProfilePhoto(){
         );
 
     const img =
-        avatar.querySelector("img");
+        avatar.querySelector(
+            "img"
+        );
 
     if(!img){
-        showToast("Profile photo available nahi hai");
+
+        showToast(
+            "Profile photo available nahi hai"
+        );
+
         return;
     }
 
     const viewer =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
 
-    viewer.id = "photoViewer";
+    viewer.id =
+        "photoViewer";
 
     viewer.style.cssText = `
         position:fixed;
@@ -941,15 +973,23 @@ function openProfilePhoto(){
              object-fit:contain;">
     `;
 
-    viewer.onclick = function(e){
+    viewer.onclick =
+        function(e){
 
-        if(e.target === viewer){
-            closeProfilePhoto();
-        }
+            if(
+                e.target === viewer
+            ){
 
-    };
+                closeProfilePhoto();
 
-    document.body.appendChild(viewer);
+            }
+
+        };
+
+    document.body.appendChild(
+        viewer
+    );
+
 }
 
 
@@ -961,7 +1001,9 @@ function closeProfilePhoto(){
         );
 
     if(viewer){
+
         viewer.remove();
+
     }
 
 }
