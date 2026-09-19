@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
-<title>Usanex • Reels</title>
+
+<title>Usanex Reels</title>
 
 <style>
 *{
@@ -17,345 +18,460 @@ html,body{
     width:100%;
     height:100%;
     overflow:hidden;
-    font-family:Arial,sans-serif;
-    background:#000;
+    font-family:Arial,Helvetica,sans-serif;
+    background:#050b13;
 }
+
+button{
+    font-family:inherit;
+    cursor:pointer;
+}
+
+/* =====================================================
+   APP
+===================================================== */
 
 .app{
     width:100%;
     height:100vh;
     position:relative;
     overflow:hidden;
-    background:#07101d;
+    background:#07111f;
 }
 
-/* ================= REEL AREA ================= */
+/* =====================================================
+   TOP
+===================================================== */
 
-.reel{
-    position:absolute;
-    inset:0;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    background:
-        radial-gradient(
-            circle at 50% 35%,
-            #173963 0%,
-            #0b1d34 35%,
-            #050b13 75%
-        );
-}
-
-/* No video here */
-.empty-reel{
-    width:100%;
-    height:100%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    flex-direction:column;
-    color:white;
-    text-align:center;
-}
-
-.empty-logo{
-    width:74px;
-    height:74px;
-    border-radius:22px;
-    background:linear-gradient(145deg,#3998ff,#075dcc);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:42px;
-    font-weight:900;
-    box-shadow:0 12px 35px rgba(0,100,255,.35);
-}
-
-.empty-title{
-    margin-top:18px;
-    font-size:21px;
-    font-weight:800;
-}
-
-.empty-text{
-    margin-top:7px;
-    color:#aebbd0;
-    font-size:13px;
-}
-
-/* ================= TOP ================= */
-
-.topbar{
+.top{
     position:absolute;
     top:0;
     left:0;
     right:0;
+
     height:70px;
-    z-index:10;
 
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-
-    padding:12px 15px;
-}
-
-.brand{
-    display:flex;
-    align-items:center;
-    gap:9px;
-}
-
-.logo{
-    width:39px;
-    height:39px;
-    border-radius:12px;
-    background:linear-gradient(145deg,#3998ff,#075dcc);
+    z-index:30;
 
     display:flex;
     align-items:center;
     justify-content:center;
 
-    color:white;
-    font-size:24px;
-    font-weight:900;
+    background:linear-gradient(
+        to bottom,
+        rgba(3,10,20,.82),
+        rgba(3,10,20,.18)
+    );
 }
-
-.brand-name{
-    color:#fff;
-    font-size:20px;
-    font-weight:800;
-}
-
-.top-btn{
-    width:40px;
-    height:40px;
-    border:0;
-    border-radius:50%;
-    background:rgba(0,0,0,.35);
-    color:#fff;
-    font-size:19px;
-}
-
-/* ================= TABS ================= */
 
 .tabs{
-    position:absolute;
-    top:78px;
-    left:50%;
-    transform:translateX(-50%);
-    z-index:11;
-
     display:flex;
-    gap:25px;
+    align-items:center;
+    gap:28px;
+}
 
-    color:#8997aa;
-    font-size:14px;
+.tab{
+    position:relative;
+
+    border:none;
+    background:none;
+
+    color:#8f9db0;
+
+    font-size:15px;
     font-weight:700;
+
+    padding:10px 3px;
 }
 
 .tab.active{
     color:#fff;
 }
 
-.tab{
-    position:relative;
-}
-
-.tab.active:after{
+.tab.active::after{
     content:"";
-    position:absolute;
-    left:50%;
-    transform:translateX(-50%);
-    bottom:-8px;
 
-    width:20px;
+    position:absolute;
+
+    left:50%;
+    bottom:2px;
+
+    transform:translateX(-50%);
+
+    width:24px;
     height:3px;
+
     border-radius:10px;
+
     background:#fff;
 }
 
-/* ================= RIGHT BUTTONS ================= */
+/* =====================================================
+   REEL AREA
+===================================================== */
 
-.actions{
+.reel-area{
     position:absolute;
-    right:13px;
-    bottom:110px;
-    z-index:12;
+    inset:0;
+
+    background:
+        radial-gradient(
+            circle at 50% 40%,
+            #183b63 0%,
+            #0b1e35 35%,
+            #050b13 75%
+        );
+}
+
+/*
+   NO VIDEO HERE.
+   Real video will be connected later.
+*/
+
+.empty{
+    position:absolute;
+    left:50%;
+    top:48%;
+
+    transform:translate(-50%,-50%);
+
+    text-align:center;
+
+    color:#fff;
+}
+
+.empty-title{
+    font-size:20px;
+    font-weight:800;
+}
+
+.empty-subtitle{
+    margin-top:7px;
+
+    color:#9eafc3;
+
+    font-size:13px;
+}
+
+/* =====================================================
+   RIGHT ACTIONS
+===================================================== */
+
+.right-actions{
+    position:absolute;
+
+    right:12px;
+    bottom:135px;
+
+    z-index:25;
 
     display:flex;
     flex-direction:column;
     align-items:center;
-    gap:16px;
+
+    gap:14px;
 }
 
 .action{
     display:flex;
     flex-direction:column;
     align-items:center;
-    gap:4px;
+
+    gap:3px;
 }
 
 .action-btn{
-    width:48px;
-    height:48px;
+    width:47px;
+    height:47px;
 
-    border:0;
+    border:none;
     border-radius:50%;
 
-    background:rgba(0,0,0,.38);
+    background:rgba(0,0,0,.40);
+
     color:#fff;
 
-    font-size:21px;
-}
-
-.count{
-    color:#fff;
-    font-size:11px;
-    font-weight:700;
-}
-
-/* ================= INFO ================= */
-
-.info{
-    position:absolute;
-    left:16px;
-    right:80px;
-    bottom:100px;
-    z-index:12;
-    color:#fff;
-}
-
-.creator{
     display:flex;
     align-items:center;
+    justify-content:center;
+
+    font-size:22px;
+
+    backdrop-filter:blur(8px);
+}
+
+.action-btn:hover{
+    background:rgba(255,255,255,.16);
+}
+
+.action-count{
+    color:#fff;
+
+    font-size:10px;
+    font-weight:700;
+
+    text-shadow:0 1px 5px #000;
+}
+
+/* BIG CREATE PLUS */
+
+.create-side{
+    width:56px;
+    height:56px;
+
+    font-size:32px;
+    font-weight:400;
+
+    background:rgba(0,105,230,.82);
+
+    box-shadow:
+        0 8px 25px rgba(0,80,200,.35);
+}
+
+/* =====================================================
+   USER INFORMATION
+===================================================== */
+
+.user-info{
+    position:absolute;
+
+    left:15px;
+    right:82px;
+
+    bottom:102px;
+
+    z-index:25;
+
+    color:#fff;
+}
+
+.user-row{
+    display:flex;
+    align-items:center;
+
     gap:9px;
 }
 
 .avatar{
-    width:44px;
-    height:44px;
+    width:45px;
+    height:45px;
+
+    flex-shrink:0;
+
     border-radius:50%;
 
-    background:linear-gradient(135deg,#55aaff,#075dcc);
+    background:
+        linear-gradient(
+            135deg,
+            #58adff,
+            #0864d8
+        );
+
+    border:2px solid #fff;
 
     display:flex;
     align-items:center;
     justify-content:center;
 
-    font-size:18px;
-    font-weight:900;
+    color:#fff;
 
-    border:2px solid white;
+    font-size:18px;
+    font-weight:800;
 }
 
-.creator-name{
+.user-details{
+    min-width:0;
+}
+
+.name{
     font-size:15px;
     font-weight:800;
+
+    white-space:nowrap;
 }
 
 .username{
     margin-top:3px;
+
+    color:#a9b7c9;
+
     font-size:11px;
-    color:#aebbd0;
+
+    white-space:nowrap;
 }
 
-.follow{
-    margin-left:5px;
-    padding:7px 12px;
+/* FOLLOW */
 
-    border:1px solid #fff;
-    border-radius:8px;
+.follow-btn{
+    margin-left:3px;
 
-    background:rgba(0,0,0,.25);
+    min-width:72px;
+
+    height:34px;
+
+    padding:0 12px;
+
+    border:1px solid rgba(255,255,255,.8);
+    border-radius:9px;
+
+    background:rgba(0,0,0,.30);
+
     color:#fff;
 
     font-size:11px;
     font-weight:700;
 }
 
+.follow-btn.following{
+    background:#fff;
+    color:#0966dc;
+}
+
+/* BIG PLUS NEXT TO FOLLOW */
+
+.profile-plus{
+    width:38px;
+    height:38px;
+
+    margin-left:0;
+
+    border:none;
+    border-radius:50%;
+
+    background:#0869e6;
+
+    color:#fff;
+
+    font-size:25px;
+    font-weight:400;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    box-shadow:
+        0 6px 18px rgba(0,90,220,.40);
+}
+
+/* =====================================================
+   INTERESTED
+===================================================== */
+
+.preference-row{
+    display:flex;
+    align-items:center;
+
+    gap:8px;
+
+    margin-top:10px;
+}
+
+.preference{
+    height:31px;
+
+    padding:0 11px;
+
+    border:1px solid rgba(255,255,255,.35);
+
+    border-radius:17px;
+
+    background:rgba(0,0,0,.30);
+
+    color:#fff;
+
+    font-size:11px;
+    font-weight:700;
+
+    backdrop-filter:blur(7px);
+}
+
+.preference.selected{
+    background:#fff;
+    color:#0867dd;
+    border-color:#fff;
+}
+
+/* =====================================================
+   CAPTION
+===================================================== */
+
 .caption{
-    margin-top:12px;
-    font-size:14px;
+    margin-top:10px;
+
+    color:#fff;
+
+    font-size:13px;
+
+    line-height:1.4;
 }
 
 .audio{
-    margin-top:8px;
-    font-size:12px;
-    color:#d7dfeb;
+    margin-top:7px;
+
+    color:#c6d1df;
+
+    font-size:11px;
 }
 
-/* ================= EMPTY REEL LABEL ================= */
+/* =====================================================
+   BOTTOM NAV
+===================================================== */
 
-.coming{
+.bottom-nav{
     position:absolute;
-    top:50%;
-    left:50%;
-    transform:translate(-50%,-50%);
 
-    color:#7f91a8;
-    font-size:12px;
-    letter-spacing:.5px;
-}
-
-/* ================= CAMERA ================= */
-
-.camera{
-    position:absolute;
-    right:20px;
-    bottom:74px;
-    z-index:20;
-
-    width:48px;
-    height:48px;
-
-    border-radius:50%;
-    border:4px solid white;
-
-    background:#0869e6;
-    color:#fff;
-
-    font-size:20px;
-
-    box-shadow:0 8px 25px rgba(0,70,180,.45);
-}
-
-/* ================= BOTTOM ================= */
-
-.bottom{
-    position:absolute;
     left:0;
     right:0;
     bottom:0;
 
-    height:70px;
-    z-index:19;
+    height:72px;
+
+    z-index:40;
 
     display:grid;
-    grid-template-columns:repeat(4,1fr);
 
-    background:rgba(3,11,21,.93);
+    grid-template-columns:
+        1fr
+        1fr
+        1fr
+        1fr
+        1fr;
+
+    background:rgba(3,10,20,.94);
+
+    border-top:
+        1px solid
+        rgba(255,255,255,.08);
+
     backdrop-filter:blur(18px);
-
-    border-top:1px solid rgba(255,255,255,.08);
 }
 
 .nav{
-    border:0;
+    border:none;
     background:none;
+
     color:#8997aa;
 
     display:flex;
     flex-direction:column;
+
     align-items:center;
     justify-content:center;
+
     gap:4px;
 
-    font-size:10px;
+    font-size:9px;
     font-weight:700;
 }
 
 .nav-icon{
+    width:25px;
+    height:25px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
     font-size:20px;
 }
 
@@ -364,34 +480,137 @@ html,body{
 }
 
 .nav.active .nav-icon{
-    color:#4a9cff;
+    color:#4c9fff;
 }
 
-.profile{
+/* CREATE BOTTOM PLUS */
+
+.bottom-create{
+    width:43px;
+    height:43px;
+
+    margin-top:-9px;
+
+    border-radius:14px;
+
+    border:2px solid #fff;
+
+    background:#0869e6;
+
+    color:#fff;
+
+    font-size:29px;
+    font-weight:400;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    box-shadow:
+        0 7px 22px rgba(0,90,220,.40);
+}
+
+/* PROFILE */
+
+.profile-icon{
     width:25px;
     height:25px;
+
     border-radius:50%;
 
-    background:linear-gradient(135deg,#55aaff,#075dcc);
+    background:
+        linear-gradient(
+            135deg,
+            #58adff,
+            #0864d8
+        );
 
     display:flex;
     align-items:center;
     justify-content:center;
 
     color:#fff;
+
     font-size:11px;
     font-weight:800;
 }
 
+/* =====================================================
+   TOAST
+===================================================== */
+
+.toast{
+    position:absolute;
+
+    left:50%;
+    bottom:88px;
+
+    transform:
+        translateX(-50%)
+        translateY(15px);
+
+    z-index:60;
+
+    padding:9px 15px;
+
+    border-radius:10px;
+
+    background:rgba(5,15,28,.95);
+
+    color:#fff;
+
+    font-size:12px;
+    font-weight:600;
+
+    opacity:0;
+
+    pointer-events:none;
+
+    transition:.2s;
+}
+
+.toast.show{
+    opacity:1;
+
+    transform:
+        translateX(-50%)
+        translateY(0);
+}
+
+/* =====================================================
+   DESKTOP
+===================================================== */
+
 @media(min-width:700px){
+
     .app{
         max-width:480px;
         margin:auto;
-        box-shadow:0 0 60px #000;
+
+        box-shadow:
+            0 0 70px rgba(0,0,0,.65);
     }
 
     body{
-        background:#050b13;
+        background:#02060c;
+    }
+}
+
+/* =====================================================
+   SAFE AREA
+===================================================== */
+
+@supports(padding-bottom:env(safe-area-inset-bottom)){
+
+    .bottom-nav{
+        height:
+            calc(
+                72px +
+                env(safe-area-inset-bottom)
+            );
+
+        padding-bottom:
+            env(safe-area-inset-bottom);
     }
 }
 </style>
@@ -401,149 +620,592 @@ html,body{
 
 <div class="app">
 
-    <!-- TOP -->
-    <div class="topbar">
+    <!-- =================================================
+         TOP
+    ================================================== -->
 
-        <div class="brand">
-            <div class="logo">U</div>
-            <div class="brand-name">Usanex</div>
+    <header class="top">
+
+        <div class="tabs">
+
+            <button
+                class="tab active"
+                onclick="selectTab(this)">
+                For You
+            </button>
+
+            <button
+                class="tab"
+                onclick="selectTab(this)">
+                Following
+            </button>
+
         </div>
 
-        <button class="top-btn"
-                onclick="alert('Messages')">
-            💬
-        </button>
-
-    </div>
+    </header>
 
 
-    <!-- TABS -->
-    <div class="tabs">
-        <div class="tab active">For You</div>
-        <div class="tab">Following</div>
-    </div>
+    <!-- =================================================
+         REEL AREA
+    ================================================== -->
 
+    <main class="reel-area">
 
-    <!-- EMPTY REEL -->
-    <div class="reel">
-
-        <div class="empty-reel">
-
-            <div class="empty-logo">U</div>
+        <div class="empty">
 
             <div class="empty-title">
                 Usanex Reels
             </div>
 
-            <div class="empty-text">
+            <div class="empty-subtitle">
                 Reels will appear here
             </div>
 
         </div>
 
-    </div>
 
+        <!-- =============================================
+             RIGHT SIDE
+        ============================================== -->
 
-    <!-- RIGHT ACTIONS -->
-    <div class="actions">
+        <div class="right-actions">
 
-        <div class="action">
-            <button class="action-btn">♡</button>
-            <span class="count">0</span>
-        </div>
+            <!-- LIKE -->
 
-        <div class="action">
-            <button class="action-btn">💬</button>
-            <span class="count">0</span>
-        </div>
+            <div class="action">
 
-        <div class="action">
-            <button class="action-btn">↻</button>
-            <span class="count">0</span>
-        </div>
+                <button
+                    class="action-btn"
+                    onclick="toggleLike(this)">
+                    ♡
+                </button>
 
-        <div class="action">
-            <button class="action-btn">↗</button>
-            <span class="count">Share</span>
-        </div>
+                <span class="action-count">
+                    0
+                </span>
 
-        <div class="action">
-            <button class="action-btn">🔖</button>
-            <span class="count">Save</span>
-        </div>
-
-    </div>
-
-
-    <!-- INFO -->
-    <div class="info">
-
-        <div class="creator">
-
-            <div class="avatar">U</div>
-
-            <div>
-                <div class="creator-name">
-                    Usanex ✓
-                </div>
-
-                <div class="username">
-                    @usanex
-                </div>
             </div>
 
-            <button class="follow">
-                Follow
-            </button>
+
+            <!-- CREATE REEL -->
+
+            <div class="action">
+
+                <button
+                    class="action-btn create-side"
+                    onclick="openCreateReel()">
+                    +
+                </button>
+
+                <span class="action-count">
+                    Create
+                </span>
+
+            </div>
+
+
+            <!-- COMMENT -->
+
+            <div class="action">
+
+                <button
+                    class="action-btn"
+                    onclick="showToast('Comments')">
+                    💭
+                </button>
+
+                <span class="action-count">
+                    0
+                </span>
+
+            </div>
+
+
+            <!-- REPOST -->
+
+            <div class="action">
+
+                <button
+                    class="action-btn"
+                    onclick="showToast('Reposted')">
+                    ↻
+                </button>
+
+                <span class="action-count">
+                    0
+                </span>
+
+            </div>
+
+
+            <!-- SHARE -->
+
+            <div class="action">
+
+                <button
+                    class="action-btn"
+                    onclick="shareReel()">
+                    ↗
+                </button>
+
+                <span class="action-count">
+                    Share
+                </span>
+
+            </div>
+
+
+            <!-- INTERESTED -->
+
+            <div class="action">
+
+                <button
+                    class="action-btn"
+                    onclick="selectInterest('interested')">
+                    ⭐
+                </button>
+
+                <span class="action-count">
+                    Interested
+                </span>
+
+            </div>
+
+
+            <!-- NOT INTERESTED -->
+
+            <div class="action">
+
+                <button
+                    class="action-btn"
+                    onclick="selectInterest('not')">
+                    ✕
+                </button>
+
+                <span class="action-count">
+                    Not interested
+                </span>
+
+            </div>
 
         </div>
 
-        <div class="caption">
-            Share your moments on Usanex 💙
-        </div>
 
-        <div class="audio">
-            ♫ Original audio
-        </div>
+        <!-- =============================================
+             USER INFO
+        ============================================== -->
 
-    </div>
+        <section class="user-info">
 
+            <div class="user-row">
 
-    <!-- CAMERA -->
-    <button class="camera"
-            onclick="alert('Create Reel')">
-        📷
-    </button>
+                <div class="avatar">
+                    U
+                </div>
 
 
-    <!-- BOTTOM NAV -->
-    <nav class="bottom">
+                <div class="user-details">
 
-        <button class="nav"
-                onclick="location.href='/home'">
-            <span class="nav-icon">⌂</span>
-            <span>Home</span>
+                    <div class="name">
+                        Uttam Vishwakarma
+                    </div>
+
+                    <div class="username">
+                        @uttamv025
+                    </div>
+
+                </div>
+
+
+                <!-- FOLLOW -->
+
+                <button
+                    class="follow-btn"
+                    onclick="toggleFollow(this)">
+                    Follow
+                </button>
+
+
+                <!-- BIG PLUS -->
+
+                <button
+                    class="profile-plus"
+                    onclick="openCreateReel()">
+                    +
+                </button>
+
+            </div>
+
+
+            <!-- INTERESTED / NOT INTERESTED -->
+
+            <div class="preference-row">
+
+                <button
+                    class="preference"
+                    id="interestedBtn"
+                    onclick="selectPreference('interested')">
+                    👍 Interested
+                </button>
+
+                <button
+                    class="preference"
+                    id="notInterestedBtn"
+                    onclick="selectPreference('not')">
+                    × Not interested
+                </button>
+
+            </div>
+
+
+            <!-- CAPTION -->
+
+            <div class="caption">
+                Your reel caption will appear here...
+            </div>
+
+
+            <!-- AUDIO -->
+
+            <div class="audio">
+                ♫ Original audio
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =================================================
+         BOTTOM NAV
+    ================================================== -->
+
+    <nav class="bottom-nav">
+
+        <!-- HOME -->
+
+        <button
+            class="nav"
+            onclick="goHome()">
+
+            <span class="nav-icon">
+                ⌂
+            </span>
+
+            <span>
+                Home
+            </span>
+
         </button>
 
-        <button class="nav active">
-            <span class="nav-icon">▶</span>
-            <span>Reels</span>
+
+        <!-- REELS -->
+
+        <button
+            class="nav active">
+
+            <span class="nav-icon">
+                ▶
+            </span>
+
+            <span>
+                Reels
+            </span>
+
         </button>
 
-        <button class="nav">
-            <span class="nav-icon">◎</span>
-            <span>Coll</span>
+
+        <!-- CREATE -->
+
+        <button
+            class="nav"
+            onclick="openCreateReel()">
+
+            <span class="bottom-create">
+                +
+            </span>
+
+            <span>
+                Create
+            </span>
+
         </button>
 
-        <button class="nav"
-                onclick="location.href='/home'">
-            <span class="profile">U</span>
-            <span>Profile</span>
+
+        <!-- NOTIFICATION -->
+
+        <button
+            class="nav"
+            onclick="openNotifications()">
+
+            <span class="nav-icon">
+                ♡
+            </span>
+
+            <span>
+                Notification
+            </span>
+
+        </button>
+
+
+        <!-- PROFILE -->
+
+        <button
+            class="nav"
+            onclick="goProfile()">
+
+            <span class="profile-icon">
+                U
+            </span>
+
+            <span>
+                Profile
+            </span>
+
         </button>
 
     </nav>
 
+
+    <!-- TOAST -->
+
+    <div
+        class="toast"
+        id="toast">
+    </div>
+
 </div>
+
+
+<script>
+
+/* =====================================================
+   TAB
+===================================================== */
+
+function selectTab(button){
+
+    document
+        .querySelectorAll(".tab")
+        .forEach(tab=>{
+            tab.classList.remove("active");
+        });
+
+    button.classList.add("active");
+
+}
+
+
+/* =====================================================
+   CREATE REEL
+===================================================== */
+
+function openCreateReel(){
+
+    window.location.href =
+        "/create-reel";
+
+}
+
+
+/* =====================================================
+   LIKE
+===================================================== */
+
+function toggleLike(button){
+
+    if(button.dataset.liked === "true"){
+
+        button.dataset.liked = "false";
+
+        button.textContent = "♡";
+
+        showToast("Removed like");
+
+    }else{
+
+        button.dataset.liked = "true";
+
+        button.textContent = "♥";
+
+        showToast("Liked");
+
+    }
+
+}
+
+
+/* =====================================================
+   FOLLOW
+===================================================== */
+
+function toggleFollow(button){
+
+    if(button.dataset.following === "true"){
+
+        button.dataset.following = "false";
+
+        button.textContent = "Follow";
+
+    }else{
+
+        button.dataset.following = "true";
+
+        button.textContent = "Following";
+
+    }
+
+}
+
+
+/* =====================================================
+   INTERESTED
+===================================================== */
+
+function selectPreference(type){
+
+    const interested =
+        document.getElementById(
+            "interestedBtn"
+        );
+
+    const notInterested =
+        document.getElementById(
+            "notInterestedBtn"
+        );
+
+    interested.classList.remove("selected");
+
+    notInterested.classList.remove("selected");
+
+
+    if(type === "interested"){
+
+        interested.classList.add("selected");
+
+        showToast("Marked Interested");
+
+    }else{
+
+        notInterested.classList.add("selected");
+
+        showToast("Not interested");
+
+    }
+
+}
+
+
+/* =====================================================
+   RIGHT INTEREST
+===================================================== */
+
+function selectInterest(type){
+
+    if(type === "interested"){
+
+        selectPreference("interested");
+
+    }else{
+
+        selectPreference("not");
+
+    }
+
+}
+
+
+/* =====================================================
+   SHARE
+===================================================== */
+
+async function shareReel(){
+
+    try{
+
+        if(navigator.share){
+
+            await navigator.share({
+
+                title:"Usanex Reel",
+
+                text:
+                    "Check this reel on Usanex"
+
+            });
+
+        }else{
+
+            showToast("Share");
+
+        }
+
+    }catch(e){
+
+        /* cancelled */
+
+    }
+
+}
+
+
+/* =====================================================
+   NAVIGATION
+===================================================== */
+
+function goHome(){
+
+    window.location.href =
+        "/home";
+
+}
+
+
+function goProfile(){
+
+    window.location.href =
+        "/home";
+
+}
+
+
+function openNotifications(){
+
+    window.location.href =
+        "/notifications";
+
+}
+
+
+/* =====================================================
+   TOAST
+===================================================== */
+
+let toastTimer;
+
+function showToast(message){
+
+    const toast =
+        document.getElementById("toast");
+
+    toast.textContent =
+        message;
+
+    toast.classList.add("show");
+
+    clearTimeout(toastTimer);
+
+    toastTimer =
+        setTimeout(()=>{
+
+            toast.classList.remove("show");
+
+        },1400);
+
+}
+
+</script>
 
 </body>
 </html>
