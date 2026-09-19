@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<title>Usanex - Profile</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    -webkit-tap-highlight-color:transparent;
+}
+
+html,body{
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    font-family:Arial,Helvetica,sans-serif;
+    background:#050b18;
+    color:#fff;
+}
+
+body{
+    position:relative;
+}
+
+/* =========================
+   PROFILE PAGE
+========================= */
+
+.profile-page{
+    width:100%;
+    height:100dvh;
+    background:#050b18;
+    overflow-y:auto;
+    padding-bottom:75px;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.profile-header{
+    height:58px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 15px;
+    border-bottom:1px solid rgba(255,255,255,.06);
+    background:#071022;
+    position:sticky;
+    top:0;
+    z-index:20;
+}
+
+.header-left{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.back-btn{
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    border:0;
+    background:rgba(255,255,255,.06);
+    color:#fff;
+    font-size:21px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+}
+
+.profile-title{
+    font-size:17px;
+    font-weight:800;
+}
+
+.header-menu{
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    background:rgba(255,255,255,.06);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:21px;
+    cursor:pointer;
+}
+
+/* =========================
+   PROFILE TOP
+========================= */
+
+.profile-top{
+    padding:22px 15px 15px;
+}
+
+.profile-main{
+    display:flex;
+    align-items:center;
+    gap:18px;
+}
+
+.profile-avatar{
+    width:88px;
+    height:88px;
+    border-radius:50%;
+    background:linear-gradient(135deg,#1677ff,#0b4dcc);
+    border:3px solid #1c83ff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:35px;
+    font-weight:900;
+    flex-shrink:0;
+    box-shadow:0 0 20px rgba(20,110,255,.25);
+}
+
+.profile-basic{
+    min-width:0;
+}
+
+.display-name{
+    font-size:20px;
+    font-weight:800;
+    margin-bottom:5px;
+}
+
+.username{
+    font-size:14px;
+    color:#aebbd0;
+    margin-bottom:4px;
+}
+
+.user-id{
+    font-size:12px;
+    color:#71819b;
+}
+
+/* =========================
+   STATS
+========================= */
+
+.stats{
+    margin-top:20px;
+    display:flex;
+    justify-content:space-around;
+    background:#091326;
+    border:1px solid rgba(255,255,255,.06);
+    border-radius:14px;
+    padding:13px 5px;
+}
+
+.stat{
+    text-align:center;
+    min-width:80px;
+}
+
+.stat-number{
+    font-size:17px;
+    font-weight:800;
+}
+
+.stat-label{
+    margin-top:4px;
+    font-size:11px;
+    color:#8f9db2;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+.profile-actions{
+    display:flex;
+    gap:9px;
+    margin-top:13px;
+}
+
+.action-primary,
+.action-secondary{
+    height:38px;
+    border-radius:10px;
+    border:1px solid rgba(255,255,255,.10);
+    font-size:13px;
+    font-weight:700;
+    cursor:pointer;
+}
+
+.action-primary{
+    flex:1;
+    color:#fff;
+    background:#146cff;
+    border-color:#146cff;
+}
+
+.action-secondary{
+    width:105px;
+    color:#fff;
+    background:#101d32;
+}
+
+/* =========================
+   BIO
+========================= */
+
+.bio{
+    margin-top:17px;
+}
+
+.bio-name{
+    font-size:15px;
+    font-weight:800;
+}
+
+.bio-text{
+    margin-top:5px;
+    color:#aab7ca;
+    font-size:13px;
+    line-height:1.5;
+}
+
+/* =========================
+   CONTENT TABS
+========================= */
+
+.content-tabs{
+    height:48px;
+    display:flex;
+    align-items:center;
+    margin-top:13px;
+    border-top:1px solid rgba(255,255,255,.06);
+    border-bottom:1px solid rgba(255,255,255,.06);
+    background:#071022;
+}
+
+.tab{
+    flex:1;
+    height:100%;
+    border:0;
+    background:transparent;
+    color:#7e8da4;
+    font-size:12px;
+    font-weight:700;
+    position:relative;
+    cursor:pointer;
+}
+
+.tab.active{
+    color:#fff;
+}
+
+.tab.active::after{
+    content:"";
+    position:absolute;
+    left:28%;
+    right:28%;
+    bottom:0;
+    height:2px;
+    background:#2580ff;
+    border-radius:5px;
+}
+
+/* =========================
+   GRID
+========================= */
+
+.content-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:2px;
+    padding:2px;
+}
+
+.post{
+    aspect-ratio:1/1;
+    background:#101d31;
+    overflow:hidden;
+    position:relative;
+}
+
+.post:nth-child(1){
+    background:linear-gradient(135deg,#123d73,#071529);
+}
+
+.post:nth-child(2){
+    background:linear-gradient(135deg,#1b2948,#0b1527);
+}
+
+.post:nth-child(3){
+    background:linear-gradient(135deg,#153c50,#071321);
+}
+
+.post:nth-child(4){
+    background:linear-gradient(135deg,#27344a,#0a1323);
+}
+
+.post:nth-child(5){
+    background:linear-gradient(135deg,#103b62,#07162a);
+}
+
+.post:nth-child(6){
+    background:linear-gradient(135deg,#302c52,#0b1022);
+}
+
+.post-icon{
+    position:absolute;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    font-size:28px;
+    opacity:.8;
+}
+
+/* =========================
+   EMPTY STATE
+========================= */
+
+.empty{
+    display:none;
+    padding:55px 20px;
+    text-align:center;
+    color:#7e8da4;
+}
+
+.empty-icon{
+    font-size:40px;
+    margin-bottom:10px;
+}
+
+.empty-title{
+    color:#fff;
+    font-size:15px;
+    font-weight:800;
+}
+
+.empty-text{
+    margin-top:5px;
+    font-size:12px;
+}
+
+/* =========================
+   BOTTOM NAV
+========================= */
+
+.bottom-nav{
+    position:fixed;
+    left:0;
+    right:0;
+    bottom:0;
+    height:calc(62px + env(safe-area-inset-bottom));
+    padding:3px 7px env(safe-area-inset-bottom);
+    z-index:50;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-around;
+
+    background:rgba(7,14,28,.98);
+    border-top:1px solid rgba(255,255,255,.07);
+    backdrop-filter:blur(18px);
+}
+
+.nav-btn{
+    width:45px;
+    height:50px;
+    border:0;
+    background:transparent;
+    color:#9aa7b9;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:24px;
+    cursor:pointer;
+}
+
+.nav-btn.active{
+    color:#fff;
+}
+
+.create-btn{
+    width:40px;
+    height:40px;
+    border-radius:12px;
+    border:0;
+    background:#1677ff;
+    color:#fff;
+    font-size:25px;
+    font-weight:400;
+    box-shadow:0 4px 16px rgba(22,119,255,.25);
+}
+
+/* =========================
+   TOAST
+========================= */
+
+.toast{
+    position:fixed;
+    left:50%;
+    bottom:82px;
+    transform:translateX(-50%) translateY(15px);
+    background:#142238;
+    color:#fff;
+    padding:10px 15px;
+    border-radius:10px;
+    font-size:12px;
+    opacity:0;
+    pointer-events:none;
+    transition:.25s;
+    z-index:100;
+    white-space:nowrap;
+}
+
+.toast.show{
+    opacity:1;
+    transform:translateX(-50%) translateY(0);
+}
+</style>
+</head>
+
+<body>
+
+<div class="profile-page">
+
+    <!-- HEADER -->
+    <header class="profile-header">
+
+        <div class="header-left">
+
+            <button class="back-btn" onclick="goHome()">
+                ‹
+            </button>
+
+            <div class="profile-title">
+                Profile
+            </div>
+
+        </div>
+
+        <div class="header-menu" onclick="showToast('More options')">
+            ⋮
+        </div>
+
+    </header>
+
+
+    <!-- PROFILE -->
+    <section class="profile-top">
+
+        <div class="profile-main">
+
+            <div class="profile-avatar">
+                U
+            </div>
+
+            <div class="profile-basic">
+
+                <div class="display-name">
+                    Uttam Vishwakarma
+                </div>
+
+                <div class="username">
+                    @uttamv025
+                </div>
+
+                <div class="user-id">
+                    User ID: uttamv025
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- STATS -->
+        <div class="stats">
+
+            <div class="stat">
+                <div class="stat-number">24</div>
+                <div class="stat-label">Posts</div>
+            </div>
+
+            <div class="stat">
+                <div class="stat-number">120</div>
+                <div class="stat-label">Followers</div>
+            </div>
+
+            <div class="stat">
+                <div class="stat-number">85</div>
+                <div class="stat-label">Following</div>
+            </div>
+
+        </div>
+
+
+        <!-- ACTION BUTTONS -->
+        <div class="profile-actions">
+
+            <button class="action-primary"
+                    onclick="editProfile()">
+                Edit Profile
+            </button>
+
+            <button class="action-secondary"
+                    onclick="shareProfile()">
+                Share
+            </button>
+
+        </div>
+
+
+        <!-- BIO -->
+        <div class="bio">
+
+            <div class="bio-name">
+                Uttam Vishwakarma
+            </div>
+
+            <div class="bio-text">
+                B.Tech CSE (AI) student 🤖<br>
+                Building something new with Usanex 🚀
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- CONTENT TABS -->
+    <div class="content-tabs">
+
+        <button class="tab active"
+                onclick="changeTab(this,'posts')">
+            Posts
+        </button>
+
+        <button class="tab"
+                onclick="changeTab(this,'reels')">
+            Reels
+        </button>
+
+        <button class="tab"
+                onclick="changeTab(this,'saved')">
+            Saved
+        </button>
+
+    </div>
+
+
+    <!-- POSTS GRID -->
+    <div id="postsGrid" class="content-grid">
+
+        <div class="post">
+            <div class="post-icon">▣</div>
+        </div>
+
+        <div class="post">
+            <div class="post-icon">▣</div>
+        </div>
+
+        <div class="post">
+            <div class="post-icon">▣</div>
+        </div>
+
+        <div class="post">
+            <div class="post-icon">▣</div>
+        </div>
+
+        <div class="post">
+            <div class="post-icon">▣</div>
+        </div>
+
+        <div class="post">
+            <div class="post-icon">▣</div>
+        </div>
+
+    </div>
+
+
+    <!-- EMPTY STATE -->
+    <div id="emptyState" class="empty">
+
+        <div class="empty-icon">
+            ○
+        </div>
+
+        <div class="empty-title">
+            Nothing here yet
+        </div>
+
+        <div class="empty-text">
+            Your content will appear here.
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+
+    <button class="nav-btn"
+            onclick="goHome()">
+        ⌂
+    </button>
+
+    <button class="nav-btn"
+            onclick="goReels()">
+        ▶
+    </button>
+
+    <button class="nav-btn create-btn"
+            onclick="createPost()">
+        +
+    </button>
+
+    <button class="nav-btn"
+            onclick="goNotifications()">
+        ♡
+    </button>
+
+    <button class="nav-btn active">
+        ◉
+    </button>
+
+</nav>
+
+
+<div id="toast" class="toast"></div>
+
+
+<script>
+
+/* =========================
+   NAVIGATION
+========================= */
+
+function goHome(){
+    window.location.href="/home";
+}
+
+function goReels(){
+    window.location.href="/reels";
+}
+
+function createPost(){
+    window.location.href="/create-reel";
+}
+
+function goNotifications(){
+    window.location.href="/notifications";
+}
+
+
+/* =========================
+   PROFILE
+========================= */
+
+function editProfile(){
+    showToast("Edit Profile coming soon");
+}
+
+function shareProfile(){
+
+    if(navigator.share){
+
+        navigator.share({
+            title:"Usanex Profile",
+            text:"Check out this Usanex profile",
+            url:window.location.href
+        }).catch(()=>{});
+
+    }else{
+
+        showToast("Profile link ready");
+
+    }
+}
+
+
+/* =========================
+   TABS
+========================= */
+
+function changeTab(button,type){
+
+    document.querySelectorAll(".tab")
+        .forEach(tab=>{
+            tab.classList.remove("active");
+        });
+
+    button.classList.add("active");
+
+    const grid=document.getElementById("postsGrid");
+    const empty=document.getElementById("emptyState");
+
+    if(type==="posts"){
+
+        grid.style.display="grid";
+        empty.style.display="none";
+
+    }else{
+
+        grid.style.display="none";
+        empty.style.display="block";
+
+    }
+}
+
+
+/* =========================
+   TOAST
+========================= */
+
+let toastTimer;
+
+function showToast(message){
+
+    const toast=document.getElementById("toast");
+
+    toast.textContent=message;
+    toast.classList.add("show");
+
+    clearTimeout(toastTimer);
+
+    toastTimer=setTimeout(()=>{
+        toast.classList.remove("show");
+    },1800);
+}
+
+</script>
+
+</body>
+</html>
