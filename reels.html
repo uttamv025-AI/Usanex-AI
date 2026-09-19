@@ -14,6 +14,7 @@
     margin:0;
     padding:0;
     box-sizing:border-box;
+    font-family:Arial,Helvetica,sans-serif;
     -webkit-tap-highlight-color:transparent;
 }
 
@@ -22,17 +23,13 @@ body{
     width:100%;
     height:100%;
     overflow:hidden;
-    background:#000;
-    font-family:Arial,Helvetica,sans-serif;
-}
-
-body{
-    overscroll-behavior:none;
+    background:#050b18;
+    color:#fff;
 }
 
 button{
     font-family:inherit;
-    border:none;
+    border:0;
     cursor:pointer;
 }
 
@@ -45,22 +42,16 @@ button{
 }
 
 /* =====================================================
-   FULL SCREEN REEL
+   REEL
 ===================================================== */
 
 .reel{
     position:absolute;
     inset:0;
-
     width:100%;
     height:100%;
-
     background:#000;
-
-    overflow:hidden;
 }
-
-/* VIDEO */
 
 .reel-video{
     position:absolute;
@@ -72,38 +63,26 @@ button{
     object-fit:cover;
 
     background:#000;
-
-    user-select:none;
-    -webkit-user-select:none;
 }
-
-/*
-   Touch layer:
-   normal tap = mute/unmute
-   long press = pause/resume
-*/
 
 .video-touch{
     position:absolute;
     inset:0;
-
     z-index:5;
-
     background:transparent;
 }
 
 /* =====================================================
-   TOP BAR
+   TOP
 ===================================================== */
 
 .top{
     position:absolute;
-
     top:0;
     left:0;
     right:0;
 
-    height:64px;
+    height:68px;
 
     z-index:20;
 
@@ -111,32 +90,29 @@ button{
     align-items:center;
     justify-content:center;
 
-    padding-top:
-        env(safe-area-inset-top);
+    padding-top:env(safe-area-inset-top);
 }
 
 .top-inner{
     display:flex;
     align-items:center;
     justify-content:center;
-
-    gap:24px;
+    gap:25px;
 }
 
 .tab{
     position:relative;
 
+    padding:8px 3px;
+
     background:transparent;
 
-    color:rgba(255,255,255,.65);
+    color:#aab5c5;
 
     font-size:15px;
     font-weight:700;
 
-    padding:8px 3px;
-
-    text-shadow:
-        0 1px 6px rgba(0,0,0,.8);
+    text-shadow:0 1px 7px #000;
 }
 
 .tab.active{
@@ -171,16 +147,11 @@ button{
 
     background:transparent;
 
-    color:#fff;
-
     display:flex;
     align-items:center;
     justify-content:center;
 
-    padding:4px;
-
-    text-shadow:
-        0 1px 8px #000;
+    color:#fff;
 }
 
 .camera-btn:active{
@@ -200,7 +171,7 @@ button{
     position:absolute;
 
     right:10px;
-    bottom:155px;
+    bottom:157px;
 
     z-index:15;
 
@@ -208,14 +179,13 @@ button{
     flex-direction:column;
     align-items:center;
 
-    gap:12px;
+    gap:11px;
 }
 
 .action{
     display:flex;
     flex-direction:column;
     align-items:center;
-
     gap:3px;
 }
 
@@ -225,7 +195,7 @@ button{
 
     border-radius:50%;
 
-    background:rgba(0,0,0,.32);
+    background:rgba(0,0,0,.38);
 
     color:#fff;
 
@@ -233,12 +203,11 @@ button{
     align-items:center;
     justify-content:center;
 
-    font-size:24px;
+    font-size:23px;
 
     backdrop-filter:blur(5px);
 
-    text-shadow:
-        0 1px 5px #000;
+    text-shadow:0 1px 6px #000;
 }
 
 .action-btn:active{
@@ -251,8 +220,7 @@ button{
     font-size:10px;
     font-weight:700;
 
-    text-shadow:
-        0 1px 6px #000;
+    text-shadow:0 1px 6px #000;
 }
 
 .more-btn{
@@ -267,22 +235,20 @@ button{
     position:absolute;
 
     left:14px;
-    right:72px;
+    right:70px;
 
-    bottom:102px;
+    bottom:101px;
 
     z-index:15;
 
     color:#fff;
 
-    text-shadow:
-        0 1px 6px rgba(0,0,0,.9);
+    text-shadow:0 1px 7px #000;
 }
 
 .user-row{
     display:flex;
     align-items:center;
-
     gap:9px;
 }
 
@@ -290,30 +256,33 @@ button{
     width:44px;
     height:44px;
 
-    flex-shrink:0;
+    min-width:44px;
 
     border-radius:50%;
-
-    background:
-        linear-gradient(
-            135deg,
-            #58adff,
-            #0864d8
-        );
-
-    border:2px solid #fff;
 
     display:flex;
     align-items:center;
     justify-content:center;
 
-    color:#fff;
+    background:
+        linear-gradient(
+            145deg,
+            #2185ff,
+            #0868e8,
+            #0049b5
+        );
+
+    border:2px solid #fff;
 
     font-size:17px;
     font-weight:800;
 }
 
 .username{
+    flex:1;
+
+    min-width:0;
+
     color:#fff;
 
     font-size:14px;
@@ -323,15 +292,15 @@ button{
 .follow-btn{
     height:32px;
 
-    min-width:72px;
-
     padding:0 12px;
+
+    min-width:72px;
 
     border-radius:9px;
 
-    border:1px solid rgba(255,255,255,.9);
+    background:rgba(0,0,0,.35);
 
-    background:rgba(0,0,0,.3);
+    border:1px solid rgba(255,255,255,.85);
 
     color:#fff;
 
@@ -344,13 +313,8 @@ button{
     color:#0867dd;
 }
 
-/* =====================================================
-   PREFERENCE
-===================================================== */
-
 .preference-row{
     display:flex;
-
     gap:8px;
 
     margin-top:8px;
@@ -361,18 +325,16 @@ button{
 
     padding:0 11px;
 
-    border-radius:16px;
+    border-radius:17px;
 
-    border:1px solid rgba(255,255,255,.45);
+    background:rgba(0,0,0,.38);
 
-    background:rgba(0,0,0,.32);
+    border:1px solid rgba(255,255,255,.4);
 
     color:#fff;
 
     font-size:11px;
     font-weight:700;
-
-    backdrop-filter:blur(5px);
 }
 
 .preference.selected{
@@ -380,30 +342,24 @@ button{
     color:#0867dd;
 }
 
-/* =====================================================
-   CAPTION
-===================================================== */
-
 .caption{
     margin-top:8px;
 
     font-size:13px;
 
     line-height:1.4;
-
-    color:#fff;
 }
 
 .audio{
     margin-top:5px;
 
-    font-size:11px;
+    color:#d4dbe5;
 
-    color:#d7dce3;
+    font-size:11px;
 }
 
 /* =====================================================
-   BOTTOM NAV
+   HOME PAGE EXACT BOTTOM NAV STYLE
 ===================================================== */
 
 .bottom-nav{
@@ -419,49 +375,36 @@ button{
             env(safe-area-inset-bottom)
         );
 
-    padding-bottom:
+    padding:
+        5px 8px
         env(safe-area-inset-bottom);
 
     z-index:40;
 
-    display:grid;
+    display:flex;
+    align-items:center;
+    justify-content:space-around;
 
-    grid-template-columns:
-        1fr
-        1fr
-        1fr
-        1fr
-        1fr;
-
-    background:
-        rgba(3,10,20,.96);
+    background:rgba(7,14,28,.98);
 
     border-top:
         1px solid
-        rgba(255,255,255,.08);
+        rgba(255,255,255,.07);
 
     backdrop-filter:blur(18px);
 }
 
-.nav{
-    background:transparent;
-
-    color:#8997aa;
+.nav-item{
+    width:20%;
+    height:58px;
 
     display:flex;
-    flex-direction:column;
-
     align-items:center;
     justify-content:center;
 
-    gap:4px;
+    position:relative;
 
-    font-size:9px;
-    font-weight:700;
-}
-
-.nav.active{
-    color:#fff;
+    cursor:pointer;
 }
 
 .nav-icon{
@@ -472,76 +415,75 @@ button{
     align-items:center;
     justify-content:center;
 
-    font-size:20px;
+    color:#9aa7b9;
+
+    font-size:23px;
 }
 
-.nav.active .nav-icon{
-    color:#4c9fff;
+.nav-item.active .nav-icon{
+    color:#fff;
 }
 
-.bottom-create{
-    width:43px;
-    height:43px;
-
-    margin-top:-8px;
+.plus-nav{
+    width:44px;
+    height:44px;
 
     border-radius:14px;
 
-    border:2px solid #fff;
-
-    background:#0869e6;
+    background:#1677ff;
 
     color:#fff;
-
-    font-size:29px;
 
     display:flex;
     align-items:center;
     justify-content:center;
+
+    font-size:27px;
 
     box-shadow:
-        0 7px 22px
-        rgba(0,90,220,.4);
+        0 5px 20px
+        rgba(22,119,255,.25);
 }
 
-.profile-icon{
-    width:25px;
-    height:25px;
+.notification-badge{
+    position:absolute;
 
-    border-radius:50%;
+    top:7px;
+    right:25%;
 
-    background:
-        linear-gradient(
-            135deg,
-            #58adff,
-            #0864d8
-        );
+    min-width:17px;
+    height:17px;
 
-    display:flex;
-    align-items:center;
-    justify-content:center;
+    padding:0 4px;
+
+    border-radius:10px;
+
+    background:#1677ff;
 
     color:#fff;
 
-    font-size:11px;
-    font-weight:800;
+    font-size:9px;
+    font-weight:bold;
+
+    display:none;
+
+    align-items:center;
+    justify-content:center;
 }
 
 /* =====================================================
-   MORE SHEET
+   DARK MORE SHEET
 ===================================================== */
 
 .sheet-overlay{
     position:absolute;
-
     inset:0;
 
     z-index:80;
 
-    background:rgba(0,0,0,.58);
+    background:rgba(0,0,0,.62);
 
     opacity:0;
-
     pointer-events:none;
 
     transition:.25s;
@@ -549,7 +491,6 @@ button{
 
 .sheet-overlay.show{
     opacity:1;
-
     pointer-events:auto;
 }
 
@@ -562,14 +503,18 @@ button{
 
     height:50dvh;
 
-    min-height:340px;
+    min-height:350px;
 
-    background:#fff;
+    background:#0d1728;
 
-    color:#111;
+    color:#fff;
 
     border-radius:
         22px 22px 0 0;
+
+    border:
+        1px solid
+        rgba(255,255,255,.07);
 
     transform:translateY(100%);
 
@@ -580,8 +525,8 @@ button{
     overflow:hidden;
 
     box-shadow:
-        0 -10px 35px
-        rgba(0,0,0,.35);
+        0 -15px 45px
+        rgba(0,0,0,.55);
 }
 
 .sheet-overlay.show .bottom-sheet{
@@ -596,19 +541,21 @@ button{
 
     border-radius:10px;
 
-    background:#c8c8c8;
+    background:#5f6d80;
 }
 
 .sheet-header{
-    height:54px;
+    height:55px;
+
+    padding:0 17px;
 
     display:flex;
     align-items:center;
     justify-content:space-between;
 
-    padding:0 18px;
-
-    border-bottom:1px solid #eee;
+    border-bottom:
+        1px solid
+        rgba(255,255,255,.07);
 }
 
 .sheet-title{
@@ -622,40 +569,54 @@ button{
 
     border-radius:50%;
 
-    background:#f1f1f1;
+    background:#17243a;
 
-    color:#222;
+    color:#fff;
 
     font-size:21px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
 }
 
 .sheet-content{
-    height:calc(50dvh - 68px);
+    height:calc(50dvh - 70px);
 
-    padding:16px 18px 30px;
+    padding:16px 17px 30px;
 
     overflow-y:auto;
 }
 
 .detail{
     margin-bottom:18px;
+
+    padding:13px;
+
+    border-radius:14px;
+
+    background:#101b2d;
+
+    border:
+        1px solid
+        rgba(255,255,255,.06);
 }
 
 .detail-label{
-    margin-bottom:6px;
+    margin-bottom:7px;
 
-    color:#777;
+    color:#7f8da3;
 
-    font-size:11px;
+    font-size:10px;
     font-weight:700;
 
     text-transform:uppercase;
 }
 
 .detail-value{
-    color:#111;
+    color:#dce3ee;
 
-    font-size:14px;
+    font-size:13px;
 
     line-height:1.45;
 }
@@ -671,9 +632,14 @@ button{
 
     border-radius:15px;
 
-    background:#edf4ff;
+    background:
+        rgba(22,119,255,.12);
 
-    color:#0867dd;
+    border:
+        1px solid
+        rgba(22,119,255,.22);
+
+    color:#63a7ff;
 
     font-size:11px;
     font-weight:700;
@@ -682,13 +648,15 @@ button{
 .video-type{
     display:inline-flex;
 
-    padding:8px 12px;
+    padding:7px 11px;
 
-    border-radius:16px;
+    border-radius:15px;
 
-    background:#f1f1f1;
+    background:#17243a;
 
-    font-size:12px;
+    color:#b9c5d5;
+
+    font-size:11px;
     font-weight:700;
 }
 
@@ -700,7 +668,7 @@ button{
     position:absolute;
 
     left:50%;
-    bottom:88px;
+    bottom:86px;
 
     transform:
         translateX(-50%)
@@ -708,11 +676,11 @@ button{
 
     z-index:100;
 
-    padding:9px 15px;
+    padding:10px 16px;
 
-    border-radius:10px;
+    border-radius:22px;
 
-    background:rgba(5,15,28,.95);
+    background:#17243a;
 
     color:#fff;
 
@@ -724,6 +692,10 @@ button{
     pointer-events:none;
 
     transition:.2s;
+
+    box-shadow:
+        0 8px 30px
+        rgba(0,0,0,.4);
 }
 
 .toast.show{
@@ -733,10 +705,6 @@ button{
         translateX(-50%)
         translateY(0);
 }
-
-/* =====================================================
-   DESKTOP
-===================================================== */
 
 @media(min-width:700px){
 
@@ -752,6 +720,7 @@ button{
     body{
         background:#02060c;
     }
+
 }
 
 </style>
@@ -762,16 +731,10 @@ button{
 <div class="app">
 
     <!-- =================================================
-         FULL SCREEN VIDEO
+         FULL SCREEN REEL
     ================================================== -->
 
     <main class="reel">
-
-        <!--
-            Backend se actual video URL yahan set karein.
-            Example:
-            src="/media/reel.mp4"
-        -->
 
         <video
             id="reelVideo"
@@ -780,9 +743,7 @@ button{
             autoplay
             loop
             preload="auto">
-
         </video>
-
 
         <!-- Invisible touch layer -->
         <div
@@ -810,9 +771,6 @@ button{
                     onclick="selectTab(this)">
                     Following
                 </button>
-
-
-                <!-- CAMERA -->
 
                 <button
                     class="camera-btn"
@@ -848,12 +806,35 @@ button{
 
 
         <!-- =================================================
+             CENTER
+        ================================================== -->
+
+        <button
+            class="create-center"
+            onclick="openCreateReel()"
+            style="
+                position:absolute;
+                left:50%;
+                top:50%;
+                transform:translate(-50%,-50%);
+                z-index:8;
+                padding:14px 21px;
+                border-radius:13px;
+                background:rgba(13,23,40,.78);
+                border:1px solid rgba(255,255,255,.1);
+                color:#fff;
+                font-size:18px;
+                font-weight:800;
+            ">
+            Create a Reel
+        </button>
+
+
+        <!-- =================================================
              RIGHT ACTIONS
         ================================================== -->
 
         <div class="right-actions">
-
-            <!-- LIKE -->
 
             <div class="action">
 
@@ -870,8 +851,6 @@ button{
             </div>
 
 
-            <!-- COMMENT -->
-
             <div class="action">
 
                 <button
@@ -886,8 +865,6 @@ button{
 
             </div>
 
-
-            <!-- REPOST -->
 
             <div class="action">
 
@@ -904,8 +881,6 @@ button{
             </div>
 
 
-            <!-- SHARE -->
-
             <div class="action">
 
                 <button
@@ -920,8 +895,6 @@ button{
 
             </div>
 
-
-            <!-- MORE -->
 
             <div class="action">
 
@@ -941,7 +914,7 @@ button{
 
 
         <!-- =================================================
-             USER INFO
+             USER
         ================================================== -->
 
         <section class="user-info">
@@ -999,90 +972,76 @@ button{
 
 
     <!-- =================================================
-         BOTTOM NAV
+         EXACT HOME BOTTOM NAV
     ================================================== -->
 
     <nav class="bottom-nav">
 
-        <button
-            class="nav"
+        <div
+            class="nav-item"
             onclick="goHome()">
 
-            <span class="nav-icon">
+            <div class="nav-icon">
                 ⌂
-            </span>
+            </div>
 
-            <span>
-                Home
-            </span>
-
-        </button>
+        </div>
 
 
-        <button
-            class="nav active"
+        <div
+            class="nav-item active"
             onclick="goReels()">
 
-            <span class="nav-icon">
+            <div class="nav-icon">
                 ▶
-            </span>
+            </div>
 
-            <span>
-                Reels
-            </span>
-
-        </button>
+        </div>
 
 
-        <button
-            class="nav"
-            onclick="openCreateReel()">
+        <div
+            class="nav-item"
+            onclick="createPost()">
 
-            <span class="bottom-create">
+            <div class="plus-nav">
                 +
-            </span>
+            </div>
 
-            <span>
-                Create
-            </span>
-
-        </button>
+        </div>
 
 
-        <button
-            class="nav"
-            onclick="openNotifications()">
+        <div
+            class="nav-item"
+            onclick="goNotifications()">
 
-            <span class="nav-icon">
-                🔔
-            </span>
+            <div class="nav-icon">
+                ♡
+            </div>
 
-            <span>
-                Notification
-            </span>
+            <div
+                class="notification-badge"
+                id="notificationBadge">
+                0
+            </div>
 
-        </button>
+        </div>
 
 
-        <button
-            class="nav"
+        <div
+            class="nav-item"
             onclick="goProfile()">
 
-            <span class="profile-icon">
-                U
-            </span>
+            <div class="nav-icon">
+                ◉
+            </div>
 
-            <span>
-                Profile
-            </span>
-
-        </button>
+        </div>
 
     </nav>
 
 
     <!-- =================================================
-         MORE SHEET
+         DARK MORE SHEET
     ================================================== -->
 
     <div
@@ -1195,7 +1154,7 @@ button{
 <script>
 
 /* =====================================================
-   ELEMENTS
+   VIDEO
 ===================================================== */
 
 const video =
@@ -1204,100 +1163,70 @@ const video =
 const videoTouch =
     document.getElementById("videoTouch");
 
-
-/* =====================================================
-   VIDEO START
-===================================================== */
-
-document.addEventListener(
-    "DOMContentLoaded",
-    function(){
-
-        /*
-         * Browser autoplay policy normally allows
-         * autoplay only when video is muted.
-         *
-         * When your real video URL is connected,
-         * this starts it muted.
-         */
-
-        video.muted = true;
-
-        video.play().catch(()=>{});
-
-    }
-);
-
-
-/* =====================================================
-   NORMAL TAP
-   ONLY AUDIO MUTE / UNMUTE
-===================================================== */
-
-let longPress = false;
-
 let pressTimer = null;
-
+let longPress = false;
 let touchStarted = false;
 
 const LONG_PRESS_TIME = 500;
 
 
+/*
+   Video is initially muted because
+   browser autoplay generally requires mute.
+*/
+
+video.muted = true;
+
+video.play().catch(()=>{});
+
+
 /* =====================================================
-   START PRESS
+   NORMAL TAP / LONG PRESS
 ===================================================== */
 
 function startPress(){
 
     touchStarted = true;
-
     longPress = false;
 
     clearTimeout(pressTimer);
 
-    pressTimer = setTimeout(
-        function(){
+    pressTimer =
+        setTimeout(
+            function(){
 
-            longPress = true;
+                longPress = true;
 
-            /*
-             * Long press:
-             * VIDEO + AUDIO PAUSE
-             */
+                /*
+                   Long press:
+                   video + audio pause
+                */
 
-            video.pause();
+                video.pause();
 
-        },
-        LONG_PRESS_TIME
-    );
+            },
+            LONG_PRESS_TIME
+        );
 
 }
 
-
-/* =====================================================
-   END PRESS
-===================================================== */
 
 function endPress(){
 
     clearTimeout(pressTimer);
 
-    /*
-     * Long press finished
-     */
-
     if(longPress){
 
         /*
-         * Resume video + audio
-         */
+           Long press released:
+           video + audio resume
+        */
 
         video.muted = false;
 
         video.play().catch(()=>{});
 
         longPress = false;
-
         touchStarted = false;
 
         return;
@@ -1305,14 +1234,15 @@ function endPress(){
     }
 
 
-    /*
-     * Normal tap:
-     * ONLY mute / unmute
-     */
-
     if(touchStarted){
 
-        video.muted = !video.muted;
+        /*
+           Normal tap:
+           ONLY audio mute/unmute.
+        */
+
+        video.muted =
+            !video.muted;
 
         touchStarted = false;
 
@@ -1320,10 +1250,6 @@ function endPress(){
 
 }
 
-
-/* =====================================================
-   TOUCH EVENTS
-===================================================== */
 
 videoTouch.addEventListener(
     "touchstart",
@@ -1334,9 +1260,7 @@ videoTouch.addEventListener(
         startPress();
 
     },
-    {
-        passive:false
-    }
+    {passive:false}
 );
 
 
@@ -1349,9 +1273,7 @@ videoTouch.addEventListener(
         endPress();
 
     },
-    {
-        passive:false
-    }
+    {passive:false}
 );
 
 
@@ -1359,12 +1281,9 @@ videoTouch.addEventListener(
     "touchcancel",
     function(){
 
-        clearTimeout(pressTimer);
-
-        /*
-         * If long press was active,
-         * resume video.
-         */
+        clearTimeout(
+            pressTimer
+        );
 
         if(longPress){
 
@@ -1375,63 +1294,10 @@ videoTouch.addEventListener(
         }
 
         longPress = false;
-
         touchStarted = false;
 
     },
-    {
-        passive:true
-    }
-);
-
-
-/* =====================================================
-   DESKTOP / MOUSE SUPPORT
-===================================================== */
-
-videoTouch.addEventListener(
-    "mousedown",
-    function(e){
-
-        e.preventDefault();
-
-        startPress();
-
-    }
-);
-
-
-videoTouch.addEventListener(
-    "mouseup",
-    function(e){
-
-        e.preventDefault();
-
-        endPress();
-
-    }
-);
-
-
-videoTouch.addEventListener(
-    "mouseleave",
-    function(){
-
-        if(longPress){
-
-            clearTimeout(pressTimer);
-
-            video.muted = false;
-
-            video.play().catch(()=>{});
-
-            longPress = false;
-
-            touchStarted = false;
-
-        }
-
-    }
+    {passive:true}
 );
 
 
@@ -1443,19 +1309,22 @@ function selectTab(button){
 
     document
         .querySelectorAll(".tab")
-        .forEach(function(tab){
+        .forEach(
+            tab =>
+                tab.classList.remove(
+                    "active"
+                )
+        );
 
-            tab.classList.remove("active");
-
-        });
-
-    button.classList.add("active");
+    button.classList.add(
+        "active"
+    );
 
 }
 
 
 /* =====================================================
-   CREATE
+   CREATE REEL
 ===================================================== */
 
 function openCreateReel(){
@@ -1483,7 +1352,9 @@ function toggleLike(button){
         button.textContent =
             "♡";
 
-        showToast("Removed like");
+        showToast(
+            "Removed like"
+        );
 
     }else{
 
@@ -1493,7 +1364,9 @@ function toggleLike(button){
         button.textContent =
             "♥";
 
-        showToast("Liked");
+        showToast(
+            "Liked"
+        );
 
     }
 
@@ -1539,7 +1412,7 @@ function toggleFollow(button){
 
 
 /* =====================================================
-   PREFERENCE
+   INTERESTED
 ===================================================== */
 
 function selectPreference(type){
@@ -1564,7 +1437,10 @@ function selectPreference(type){
     );
 
 
-    if(type === "interested"){
+    if(
+        type ===
+        "interested"
+    ){
 
         interested.classList.add(
             "selected"
@@ -1597,11 +1473,14 @@ async function shareReel(){
 
     try{
 
-        if(navigator.share){
+        if(
+            navigator.share
+        ){
 
             await navigator.share({
 
-                title:"Usanex Reel",
+                title:
+                    "Usanex Reel",
 
                 text:
                     "Check this reel on Usanex"
@@ -1610,13 +1489,15 @@ async function shareReel(){
 
         }else{
 
-            showToast("Share");
+            showToast(
+                "Share"
+            );
 
         }
 
     }catch(error){
 
-        /* user cancelled share */
+        /* cancelled */
 
     }
 
@@ -1633,7 +1514,9 @@ function openMoreSheet(){
         .getElementById(
             "sheetOverlay"
         )
-        .classList.add("show");
+        .classList.add(
+            "show"
+        );
 
 }
 
@@ -1652,18 +1535,19 @@ function closeMoreSheet(event){
 
     }
 
-
     document
         .getElementById(
             "sheetOverlay"
         )
-        .classList.remove("show");
+        .classList.remove(
+            "show"
+        );
 
 }
 
 
 /* =====================================================
-   SHEET SWIPE DOWN
+   SWIPE SHEET DOWN
 ===================================================== */
 
 let sheetStartY = 0;
@@ -1682,9 +1566,7 @@ sheet.addEventListener(
             e.touches[0].clientY;
 
     },
-    {
-        passive:true
-    }
+    {passive:true}
 );
 
 
@@ -1692,12 +1574,11 @@ sheet.addEventListener(
     "touchend",
     function(e){
 
-        const sheetEndY =
+        const endY =
             e.changedTouches[0].clientY;
 
         if(
-            sheetEndY -
-            sheetStartY >
+            endY - sheetStartY >
             70
         ){
 
@@ -1706,14 +1587,12 @@ sheet.addEventListener(
         }
 
     },
-    {
-        passive:true
-    }
+    {passive:true}
 );
 
 
 /* =====================================================
-   NAVIGATION
+   EXACT HOME NAVIGATION
 ===================================================== */
 
 function goHome(){
@@ -1732,7 +1611,15 @@ function goReels(){
 }
 
 
-function openNotifications(){
+function createPost(){
+
+    window.location.href =
+        "/create-reel";
+
+}
+
+
+function goNotifications(){
 
     window.location.href =
         "/notifications";
@@ -1740,10 +1627,15 @@ function openNotifications(){
 }
 
 
+/*
+   Home page ke current code ke
+   according profile search?user_id
+*/
+
 function goProfile(){
 
     window.location.href =
-        "/profile";
+        "/search?user_id=uttamv025";
 
 }
 
@@ -1781,7 +1673,7 @@ function showToast(message){
                 );
 
             },
-            1400
+            1500
         );
 
 }
