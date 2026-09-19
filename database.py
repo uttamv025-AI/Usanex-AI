@@ -29,7 +29,6 @@ if not DATABASE_URL:
         "DATABASE_URL environment variable is not configured."
     )
 
-
 if DATABASE_URL.startswith("postgresql://"):
     DATABASE_URL = DATABASE_URL.replace(
         "postgresql://",
@@ -105,6 +104,49 @@ class User(Base):
 
 
 # ============================================================
+# USER PRESENCE
+# ============================================================
+# Online / Offline / Last Seen
+#
+# Important:
+# Existing users table ko modify nahi kar rahe.
+# Ye separate table automatically create hogi.
+# ============================================================
+
+class UserPresence(Base):
+    __tablename__ = "user_presence"
+
+    id: Mapped[int] = mapped_column(
+        primary_key=True,
+        autoincrement=True
+    )
+
+    user_id: Mapped[str] = mapped_column(
+        String(20),
+        unique=True,
+        index=True,
+        nullable=False
+    )
+
+    is_online: Mapped[bool] = mapped_column(
+        Boolean,
+        default=False,
+        nullable=False
+    )
+
+    last_seen_at: Mapped[datetime | None] = mapped_column(
+        DateTime,
+        nullable=True
+    )
+
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime,
+        default=datetime.utcnow,
+        nullable=False
+    )
+
+
+# ============================================================
 # OTP VERIFICATION
 # ============================================================
 
@@ -147,16 +189,6 @@ class OTPVerification(Base):
 # ============================================================
 # CONNECTION REQUESTS
 # ============================================================
-
-# requester_user_id = Follow bhejne wala
-# target_user_id    = Jisko Follow request bheji gayi
-#
-# status:
-# pending
-# accepted
-# rejected
-# verified
-
 
 class ConnectionRequest(Base):
     __tablename__ = "connection_requests"
