@@ -2,9 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 <title>Usanex • Reels</title>
 
 <style>
@@ -19,95 +17,88 @@ html,body{
     width:100%;
     height:100%;
     overflow:hidden;
-    font-family:Arial,Helvetica,sans-serif;
+    font-family:Arial,sans-serif;
     background:#000;
 }
-
-/* =========================================================
-   APP
-========================================================= */
 
 .app{
     width:100%;
     height:100vh;
     position:relative;
     overflow:hidden;
-    background:#000;
+    background:#07101d;
 }
 
-/* =========================================================
-   REELS
-========================================================= */
-
-.reels-container{
-    width:100%;
-    height:100%;
-    overflow:hidden;
-    position:relative;
-}
+/* ================= REEL AREA ================= */
 
 .reel{
     position:absolute;
     inset:0;
-    width:100%;
-    height:100%;
-    display:none;
-    background:#07101d;
-    overflow:hidden;
-}
-
-.reel.active{
-    display:block;
-}
-
-/* Video */
-
-.reel video{
-    position:absolute;
-    inset:0;
-    width:100%;
-    height:100%;
-    object-fit:cover;
-    background:#07101d;
-}
-
-/* Dark overlay */
-
-.reel::after{
-    content:"";
-    position:absolute;
-    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
     background:
-        linear-gradient(
-            to bottom,
-            rgba(0,0,0,.38),
-            transparent 25%,
-            transparent 55%,
-            rgba(0,0,0,.72)
+        radial-gradient(
+            circle at 50% 35%,
+            #173963 0%,
+            #0b1d34 35%,
+            #050b13 75%
         );
-    pointer-events:none;
 }
 
-/* =========================================================
-   TOP BAR
-========================================================= */
+/* No video here */
+.empty-reel{
+    width:100%;
+    height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+    color:white;
+    text-align:center;
+}
+
+.empty-logo{
+    width:74px;
+    height:74px;
+    border-radius:22px;
+    background:linear-gradient(145deg,#3998ff,#075dcc);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:42px;
+    font-weight:900;
+    box-shadow:0 12px 35px rgba(0,100,255,.35);
+}
+
+.empty-title{
+    margin-top:18px;
+    font-size:21px;
+    font-weight:800;
+}
+
+.empty-text{
+    margin-top:7px;
+    color:#aebbd0;
+    font-size:13px;
+}
+
+/* ================= TOP ================= */
 
 .topbar{
     position:absolute;
     top:0;
     left:0;
     right:0;
-    height:72px;
-    z-index:20;
+    height:70px;
+    z-index:10;
 
     display:flex;
     align-items:center;
     justify-content:space-between;
 
-    padding:14px 16px;
+    padding:12px 15px;
 }
-
-/* Logo */
 
 .brand{
     display:flex;
@@ -116,38 +107,24 @@ html,body{
 }
 
 .logo{
-    width:38px;
-    height:38px;
+    width:39px;
+    height:39px;
     border-radius:12px;
-
-    background:linear-gradient(
-        145deg,
-        #2f8cff,
-        #075fd9
-    );
+    background:linear-gradient(145deg,#3998ff,#075dcc);
 
     display:flex;
     align-items:center;
     justify-content:center;
 
-    color:#fff;
-    font-size:23px;
+    color:white;
+    font-size:24px;
     font-weight:900;
-
-    box-shadow:0 5px 18px rgba(0,102,255,.35);
 }
 
 .brand-name{
     color:#fff;
     font-size:20px;
     font-weight:800;
-    letter-spacing:.2px;
-}
-
-.top-actions{
-    display:flex;
-    align-items:center;
-    gap:10px;
 }
 
 .top-btn{
@@ -155,81 +132,64 @@ html,body{
     height:40px;
     border:0;
     border-radius:50%;
-
     background:rgba(0,0,0,.35);
-    backdrop-filter:blur(10px);
-
     color:#fff;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    font-size:20px;
-    cursor:pointer;
+    font-size:19px;
 }
 
-/* =========================================================
-   TABS
-========================================================= */
+/* ================= TABS ================= */
 
 .tabs{
     position:absolute;
-    top:76px;
+    top:78px;
     left:50%;
     transform:translateX(-50%);
-
-    z-index:21;
+    z-index:11;
 
     display:flex;
-    align-items:center;
-    gap:24px;
+    gap:25px;
 
-    color:rgba(255,255,255,.65);
+    color:#8997aa;
     font-size:14px;
     font-weight:700;
-}
-
-.tab{
-    position:relative;
-    cursor:pointer;
 }
 
 .tab.active{
     color:#fff;
 }
 
-.tab.active::after{
+.tab{
+    position:relative;
+}
+
+.tab.active:after{
     content:"";
     position:absolute;
     left:50%;
-    bottom:-8px;
     transform:translateX(-50%);
+    bottom:-8px;
 
     width:20px;
     height:3px;
     border-radius:10px;
-
     background:#fff;
 }
 
-/* =========================================================
-   RIGHT ACTIONS
-========================================================= */
+/* ================= RIGHT BUTTONS ================= */
 
 .actions{
     position:absolute;
     right:13px;
-    bottom:112px;
-
-    z-index:15;
+    bottom:110px;
+    z-index:12;
 
     display:flex;
     flex-direction:column;
     align-items:center;
-    gap:17px;
+    gap:16px;
 }
 
-.action-box{
+.action{
     display:flex;
     flex-direction:column;
     align-items:center;
@@ -240,441 +200,198 @@ html,body{
     width:48px;
     height:48px;
 
-    border:none;
+    border:0;
     border-radius:50%;
 
-    background:rgba(0,0,0,.34);
-    backdrop-filter:blur(9px);
-
+    background:rgba(0,0,0,.38);
     color:#fff;
-    font-size:22px;
 
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    cursor:pointer;
+    font-size:21px;
 }
 
-.action-count{
+.count{
     color:#fff;
     font-size:11px;
     font-weight:700;
-
-    text-shadow:0 1px 4px #000;
 }
 
-.action-btn.liked{
-    color:#61a9ff;
-}
+/* ================= INFO ================= */
 
-/* =========================================================
-   REEL INFORMATION
-========================================================= */
-
-.reel-info{
+.info{
     position:absolute;
     left:16px;
-    right:78px;
-    bottom:105px;
-
-    z-index:14;
-
+    right:80px;
+    bottom:100px;
+    z-index:12;
     color:#fff;
 }
 
 .creator{
     display:flex;
     align-items:center;
-    gap:10px;
-    margin-bottom:12px;
+    gap:9px;
 }
 
 .avatar{
     width:44px;
     height:44px;
-
     border-radius:50%;
 
-    background:linear-gradient(
-        135deg,
-        #5aa9ff,
-        #075bd1
-    );
+    background:linear-gradient(135deg,#55aaff,#075dcc);
 
     display:flex;
     align-items:center;
     justify-content:center;
 
-    color:#fff;
-    font-weight:900;
     font-size:18px;
+    font-weight:900;
 
-    border:2px solid rgba(255,255,255,.9);
-}
-
-.creator-info{
-    min-width:0;
+    border:2px solid white;
 }
 
 .creator-name{
     font-size:15px;
     font-weight:800;
-
-    display:flex;
-    align-items:center;
-    gap:5px;
-}
-
-.verified{
-    width:14px;
-    height:14px;
-
-    border-radius:50%;
-    background:#2588ff;
-
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-
-    font-size:9px;
 }
 
 .username{
-    font-size:12px;
-    opacity:.75;
-    margin-top:2px;
+    margin-top:3px;
+    font-size:11px;
+    color:#aebbd0;
 }
 
-.follow-btn{
-    margin-left:4px;
+.follow{
+    margin-left:5px;
+    padding:7px 12px;
 
-    border:1px solid rgba(255,255,255,.8);
+    border:1px solid #fff;
+    border-radius:8px;
+
     background:rgba(0,0,0,.25);
-
     color:#fff;
 
-    padding:7px 12px;
-    border-radius:9px;
-
-    font-size:12px;
+    font-size:11px;
     font-weight:700;
-
-    cursor:pointer;
-}
-
-.follow-btn.following{
-    background:#fff;
-    color:#0864df;
-    border-color:#fff;
 }
 
 .caption{
+    margin-top:12px;
     font-size:14px;
-    line-height:1.4;
-
-    margin-bottom:8px;
-
-    max-width:400px;
 }
 
 .audio{
-    display:flex;
-    align-items:center;
-    gap:7px;
-
+    margin-top:8px;
     font-size:12px;
-    opacity:.85;
+    color:#d7dfeb;
 }
 
-.audio-icon{
-    font-size:14px;
-}
+/* ================= EMPTY REEL LABEL ================= */
 
-/* =========================================================
-   PLAY BUTTON
-========================================================= */
-
-.play-center{
+.coming{
     position:absolute;
-    left:50%;
     top:50%;
-
+    left:50%;
     transform:translate(-50%,-50%);
 
-    width:68px;
-    height:68px;
+    color:#7f91a8;
+    font-size:12px;
+    letter-spacing:.5px;
+}
+
+/* ================= CAMERA ================= */
+
+.camera{
+    position:absolute;
+    right:20px;
+    bottom:74px;
+    z-index:20;
+
+    width:48px;
+    height:48px;
 
     border-radius:50%;
-    border:none;
+    border:4px solid white;
 
-    background:rgba(0,0,0,.42);
-    backdrop-filter:blur(10px);
-
+    background:#0869e6;
     color:#fff;
-    font-size:28px;
 
-    display:flex;
-    align-items:center;
-    justify-content:center;
+    font-size:20px;
 
-    z-index:16;
-
-    opacity:0;
-    transition:.2s;
-
-    pointer-events:none;
+    box-shadow:0 8px 25px rgba(0,70,180,.45);
 }
 
-.reel.paused .play-center{
-    opacity:1;
-}
+/* ================= BOTTOM ================= */
 
-/* =========================================================
-   VOLUME
-========================================================= */
-
-.volume{
-    position:absolute;
-    left:16px;
-    bottom:115px;
-
-    z-index:18;
-
-    width:42px;
-    height:42px;
-
-    border:0;
-    border-radius:50%;
-
-    background:rgba(0,0,0,.35);
-    backdrop-filter:blur(10px);
-
-    color:#fff;
-    font-size:18px;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-}
-
-/* =========================================================
-   SWIPE HINT
-========================================================= */
-
-.swipe-hint{
-    position:absolute;
-    left:50%;
-    top:94px;
-
-    transform:translateX(-50%);
-
-    z-index:19;
-
-    color:rgba(255,255,255,.65);
-    font-size:11px;
-
-    opacity:0;
-    animation:hint 3s ease forwards;
-}
-
-@keyframes hint{
-    0%{opacity:0;transform:translate(-50%,8px)}
-    25%{opacity:1}
-    75%{opacity:1}
-    100%{opacity:0;transform:translate(-50%,-8px)}
-}
-
-/* =========================================================
-   BOTTOM NAV
-========================================================= */
-
-.bottom-nav{
+.bottom{
     position:absolute;
     left:0;
     right:0;
     bottom:0;
 
-    height:72px;
-
-    z-index:30;
+    height:70px;
+    z-index:19;
 
     display:grid;
-    grid-template-columns:1fr 1fr 1fr 1fr;
+    grid-template-columns:repeat(4,1fr);
 
-    padding:8px 10px 9px;
-
-    background:rgba(4,12,23,.88);
+    background:rgba(3,11,21,.93);
     backdrop-filter:blur(18px);
 
     border-top:1px solid rgba(255,255,255,.08);
 }
 
-.nav-item{
-    border:none;
+.nav{
+    border:0;
     background:none;
-
-    color:rgba(255,255,255,.65);
+    color:#8997aa;
 
     display:flex;
     flex-direction:column;
     align-items:center;
     justify-content:center;
-
     gap:4px;
 
     font-size:10px;
     font-weight:700;
-
-    cursor:pointer;
 }
 
 .nav-icon{
     font-size:20px;
 }
 
-.nav-item.active{
+.nav.active{
     color:#fff;
 }
 
-.nav-item.active .nav-icon{
-    color:#4b9dff;
+.nav.active .nav-icon{
+    color:#4a9cff;
 }
 
-/* Coll */
-
-.coll-icon{
-    font-size:19px;
-}
-
-/* Profile */
-
-.profile-icon{
+.profile{
     width:25px;
     height:25px;
-
     border-radius:50%;
 
-    background:linear-gradient(
-        135deg,
-        #5caaff,
-        #0862d7
-    );
+    background:linear-gradient(135deg,#55aaff,#075dcc);
 
     display:flex;
     align-items:center;
     justify-content:center;
 
     color:#fff;
-
-    font-size:12px;
+    font-size:11px;
+    font-weight:800;
 }
-
-/* Camera floating above profile */
-
-.camera{
-    position:absolute;
-
-    right:21px;
-    bottom:75px;
-
-    z-index:35;
-
-    width:48px;
-    height:48px;
-
-    border-radius:50%;
-
-    border:4px solid rgba(255,255,255,.95);
-
-    background:#0869e6;
-
-    color:#fff;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    font-size:21px;
-
-    box-shadow:
-        0 8px 25px rgba(0,70,180,.45);
-
-    cursor:pointer;
-}
-
-/* =========================================================
-   TOAST
-========================================================= */
-
-.toast{
-    position:absolute;
-
-    left:50%;
-    bottom:91px;
-
-    transform:translateX(-50%) translateY(20px);
-
-    z-index:50;
-
-    background:rgba(10,20,35,.92);
-    color:#fff;
-
-    padding:10px 17px;
-
-    border-radius:12px;
-
-    font-size:12px;
-    font-weight:600;
-
-    opacity:0;
-    pointer-events:none;
-
-    transition:.25s;
-}
-
-.toast.show{
-    opacity:1;
-    transform:translateX(-50%) translateY(0);
-}
-
-/* =========================================================
-   DESKTOP
-========================================================= */
 
 @media(min-width:700px){
-
     .app{
         max-width:480px;
         margin:auto;
-
-        box-shadow:
-            0 0 60px rgba(0,0,0,.5);
+        box-shadow:0 0 60px #000;
     }
 
     body{
-        background:#07101d;
-    }
-}
-
-/* =========================================================
-   SAFE AREA
-========================================================= */
-
-@supports(padding-bottom:env(safe-area-inset-bottom)){
-    .bottom-nav{
-        padding-bottom:calc(
-            9px + env(safe-area-inset-bottom)
-        );
-        height:calc(
-            72px + env(safe-area-inset-bottom)
-        );
-    }
-
-    .camera{
-        bottom:calc(
-            75px + env(safe-area-inset-bottom)
-        );
+        background:#050b13;
     }
 }
 </style>
@@ -684,898 +401,149 @@ html,body{
 
 <div class="app">
 
-    <!-- =====================================================
-         REELS CONTAINER
-    ====================================================== -->
-
-    <div class="reels-container" id="reelsContainer">
-
-        <!-- REEL 1 -->
-        <section class="reel active" data-index="0">
-
-            <video
-                id="video0"
-                playsinline
-                loop
-                muted
-                preload="metadata"
-                poster=""
-            >
-                <source
-                    src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
-                    type="video/mp4"
-                >
-            </video>
-
-            <button class="play-center"
-                    onclick="togglePlay(0)">
-                ▶
-            </button>
-
-            <button class="volume"
-                    onclick="toggleVolume(0)">
-                🔇
-            </button>
-
-            <div class="actions">
-
-                <div class="action-box">
-                    <button class="action-btn"
-                            onclick="toggleLike(this)">
-                        ♡
-                    </button>
-                    <span class="action-count">0</span>
-                </div>
-
-                <div class="action-box">
-                    <button class="action-btn"
-                            onclick="showToast('Comments')">
-                        💬
-                    </button>
-                    <span class="action-count">0</span>
-                </div>
-
-                <div class="action-box">
-                    <button class="action-btn"
-                            onclick="showToast('Repost')">
-                        ↻
-                    </button>
-                    <span class="action-count">0</span>
-                </div>
-
-                <div class="action-box">
-                    <button class="action-btn"
-                            onclick="shareReel()">
-                        ↗
-                    </button>
-                    <span class="action-count">Share</span>
-                </div>
-
-                <div class="action-box">
-                    <button class="action-btn"
-                            onclick="saveReel(this)">
-                        🔖
-                    </button>
-                    <span class="action-count">Save</span>
-                </div>
-
-            </div>
-
-            <div class="reel-info">
-
-                <div class="creator">
-
-                    <div class="avatar">U</div>
-
-                    <div class="creator-info">
-
-                        <div class="creator-name">
-                            Usanex
-                            <span class="verified">✓</span>
-                        </div>
-
-                        <div class="username">
-                            @usanex
-                        </div>
-
-                    </div>
-
-                    <button class="follow-btn"
-                            onclick="toggleFollow(this)">
-                        Follow
-                    </button>
-
-                </div>
-
-                <div class="caption">
-                    Welcome to Usanex Reels 💙
-                </div>
-
-                <div class="audio">
-                    <span class="audio-icon">♫</span>
-                    <span>Original audio • Usanex</span>
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- REEL 2 -->
-        <section class="reel" data-index="1">
-
-            <video
-                id="video1"
-                playsinline
-                loop
-                muted
-                preload="metadata"
-            >
-                <source
-                    src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
-                    type="video/mp4"
-                >
-            </video>
-
-            <button class="play-center"
-                    onclick="togglePlay(1)">
-                ▶
-            </button>
-
-            <button class="volume"
-                    onclick="toggleVolume(1)">
-                🔇
-            </button>
-
-            <div class="actions">
-
-                <div class="action-box">
-                    <button class="action-btn"
-                            onclick="toggleLike(this)">
-                        ♡
-                    </button>
-                    <span class="action-count">0</span>
-                </div>
-
-                <div class="action-box">
-                    <button class="action-btn"
-                            onclick="showToast('Comments')">
-                        💬
-                    </button>
-                    <span class="action-count">0</span>
-                </div>
-
-                <div class="action-box">
-                    <button class="action-btn"
-                            onclick="showToast('Repost')">
-                        ↻
-                    </button>
-                    <span class="action-count">0</span>
-                </div>
-
-                <div class="action-box">
-                    <button class="action-btn"
-                            onclick="shareReel()">
-                        ↗
-                    </button>
-                    <span class="action-count">Share</span>
-                </div>
-
-                <div class="action-box">
-                    <button class="action-btn"
-                            onclick="saveReel(this)">
-                        🔖
-                    </button>
-                    <span class="action-count">Save</span>
-                </div>
-
-            </div>
-
-            <div class="reel-info">
-
-                <div class="creator">
-
-                    <div class="avatar">U</div>
-
-                    <div class="creator-info">
-
-                        <div class="creator-name">
-                            Usanex
-                            <span class="verified">✓</span>
-                        </div>
-
-                        <div class="username">
-                            @usanex
-                        </div>
-
-                    </div>
-
-                    <button class="follow-btn"
-                            onclick="toggleFollow(this)">
-                        Follow
-                    </button>
-
-                </div>
-
-                <div class="caption">
-                    Your story. Your people. Your Usanex. 💙
-                </div>
-
-                <div class="audio">
-                    <span class="audio-icon">♫</span>
-                    <span>Original audio • Usanex</span>
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- REEL 3 -->
-        <section class="reel" data-index="2">
-
-            <video
-                id="video2"
-                playsinline
-                loop
-                muted
-                preload="metadata"
-            >
-                <source
-                    src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
-                    type="video/mp4"
-                >
-            </video>
-
-            <button class="play-center"
-                    onclick="togglePlay(2)">
-                ▶
-            </button>
-
-            <button class="volume"
-                    onclick="toggleVolume(2)">
-                🔇
-            </button>
-
-            <div class="actions">
-
-                <div class="action-box">
-                    <button class="action-btn"
-                            onclick="toggleLike(this)">
-                        ♡
-                    </button>
-                    <span class="action-count">0</span>
-                </div>
-
-                <div class="action-box">
-                    <button class="action-btn"
-                            onclick="showToast('Comments')">
-                        💬
-                    </button>
-                    <span class="action-count">0</span>
-                </div>
-
-                <div class="action-box">
-                    <button class="action-btn"
-                            onclick="showToast('Repost')">
-                        ↻
-                    </button>
-                    <span class="action-count">0</span>
-                </div>
-
-                <div class="action-box">
-                    <button class="action-btn"
-                            onclick="shareReel()">
-                        ↗
-                    </button>
-                    <span class="action-count">Share</span>
-                </div>
-
-                <div class="action-box">
-                    <button class="action-btn"
-                            onclick="saveReel(this)">
-                        🔖
-                    </button>
-                    <span class="action-count">Save</span>
-                </div>
-
-            </div>
-
-            <div class="reel-info">
-
-                <div class="creator">
-
-                    <div class="avatar">U</div>
-
-                    <div class="creator-info">
-
-                        <div class="creator-name">
-                            Usanex
-                            <span class="verified">✓</span>
-                        </div>
-
-                        <div class="username">
-                            @usanex
-                        </div>
-
-                    </div>
-
-                    <button class="follow-btn"
-                            onclick="toggleFollow(this)">
-                        Follow
-                    </button>
-
-                </div>
-
-                <div class="caption">
-                    Create. Connect. Share. ✨
-                </div>
-
-                <div class="audio">
-                    <span class="audio-icon">♫</span>
-                    <span>Original audio • Usanex</span>
-                </div>
-
-            </div>
-
-        </section>
-
-    </div>
-
-
-    <!-- =====================================================
-         TOP
-    ====================================================== -->
-
+    <!-- TOP -->
     <div class="topbar">
 
         <div class="brand">
-
             <div class="logo">U</div>
+            <div class="brand-name">Usanex</div>
+        </div>
 
-            <div class="brand-name">
-                Usanex
+        <button class="top-btn"
+                onclick="alert('Messages')">
+            💬
+        </button>
+
+    </div>
+
+
+    <!-- TABS -->
+    <div class="tabs">
+        <div class="tab active">For You</div>
+        <div class="tab">Following</div>
+    </div>
+
+
+    <!-- EMPTY REEL -->
+    <div class="reel">
+
+        <div class="empty-reel">
+
+            <div class="empty-logo">U</div>
+
+            <div class="empty-title">
+                Usanex Reels
+            </div>
+
+            <div class="empty-text">
+                Reels will appear here
             </div>
 
         </div>
 
-        <div class="top-actions">
+    </div>
 
-            <button class="top-btn"
-                    onclick="showToast('Messages')">
-                💬
+
+    <!-- RIGHT ACTIONS -->
+    <div class="actions">
+
+        <div class="action">
+            <button class="action-btn">♡</button>
+            <span class="count">0</span>
+        </div>
+
+        <div class="action">
+            <button class="action-btn">💬</button>
+            <span class="count">0</span>
+        </div>
+
+        <div class="action">
+            <button class="action-btn">↻</button>
+            <span class="count">0</span>
+        </div>
+
+        <div class="action">
+            <button class="action-btn">↗</button>
+            <span class="count">Share</span>
+        </div>
+
+        <div class="action">
+            <button class="action-btn">🔖</button>
+            <span class="count">Save</span>
+        </div>
+
+    </div>
+
+
+    <!-- INFO -->
+    <div class="info">
+
+        <div class="creator">
+
+            <div class="avatar">U</div>
+
+            <div>
+                <div class="creator-name">
+                    Usanex ✓
+                </div>
+
+                <div class="username">
+                    @usanex
+                </div>
+            </div>
+
+            <button class="follow">
+                Follow
             </button>
 
         </div>
 
-    </div>
-
-
-    <!-- =====================================================
-         TABS
-    ====================================================== -->
-
-    <div class="tabs">
-
-        <div class="tab active"
-             onclick="changeTab(this)">
-            For You
+        <div class="caption">
+            Share your moments on Usanex 💙
         </div>
 
-        <div class="tab"
-             onclick="changeTab(this)">
-            Following
+        <div class="audio">
+            ♫ Original audio
         </div>
 
     </div>
 
 
-    <div class="swipe-hint">
-        ↑ Swipe for next reel
-    </div>
-
-
-    <!-- =====================================================
-         CAMERA
-    ====================================================== -->
-
+    <!-- CAMERA -->
     <button class="camera"
-            onclick="showToast('Create Reel')">
+            onclick="alert('Create Reel')">
         📷
     </button>
 
 
-    <!-- =====================================================
-         BOTTOM NAV
-    ====================================================== -->
+    <!-- BOTTOM NAV -->
+    <nav class="bottom">
 
-    <nav class="bottom-nav">
-
-        <button class="nav-item"
-                onclick="goHome()">
-
+        <button class="nav"
+                onclick="location.href='/home'">
             <span class="nav-icon">⌂</span>
             <span>Home</span>
-
         </button>
 
-
-        <button class="nav-item active">
-
+        <button class="nav active">
             <span class="nav-icon">▶</span>
             <span>Reels</span>
-
         </button>
 
-
-        <button class="nav-item"
-                onclick="showToast('Coll')">
-
-            <span class="nav-icon coll-icon">◎</span>
+        <button class="nav">
+            <span class="nav-icon">◎</span>
             <span>Coll</span>
-
         </button>
 
-
-        <button class="nav-item"
-                onclick="goProfile()">
-
-            <span class="profile-icon">
-                U
-            </span>
-
+        <button class="nav"
+                onclick="location.href='/home'">
+            <span class="profile">U</span>
             <span>Profile</span>
-
         </button>
 
     </nav>
 
-
-    <!-- =====================================================
-         TOAST
-    ====================================================== -->
-
-    <div class="toast" id="toast"></div>
-
 </div>
-
-
-<script>
-
-/* =========================================================
-   VARIABLES
-========================================================= */
-
-let currentReel = 0;
-
-const reels =
-    document.querySelectorAll(".reel");
-
-
-/* =========================================================
-   SHOW REEL
-========================================================= */
-
-function showReel(index){
-
-    if(index < 0){
-        index = reels.length - 1;
-    }
-
-    if(index >= reels.length){
-        index = 0;
-    }
-
-    reels.forEach((reel,i)=>{
-
-        reel.classList.remove("active");
-        reel.classList.remove("paused");
-
-        const video =
-            reel.querySelector("video");
-
-        if(video){
-            video.pause();
-        }
-
-    });
-
-
-    currentReel = index;
-
-    const reel =
-        reels[currentReel];
-
-    reel.classList.add("active");
-
-    const video =
-        reel.querySelector("video");
-
-    if(video){
-
-        video.currentTime = 0;
-
-        video.play()
-            .catch(()=>{});
-
-    }
-
-}
-
-
-/* =========================================================
-   PLAY / PAUSE
-========================================================= */
-
-function togglePlay(index){
-
-    const reel = reels[index];
-
-    const video =
-        reel.querySelector("video");
-
-    if(!video) return;
-
-    if(video.paused){
-
-        video.play()
-            .catch(()=>{});
-
-        reel.classList.remove("paused");
-
-    }else{
-
-        video.pause();
-
-        reel.classList.add("paused");
-
-    }
-
-}
-
-
-/* =========================================================
-   VOLUME
-========================================================= */
-
-function toggleVolume(index){
-
-    const reel = reels[index];
-
-    const video =
-        reel.querySelector("video");
-
-    const button =
-        reel.querySelector(".volume");
-
-    if(!video) return;
-
-    video.muted = !video.muted;
-
-    button.textContent =
-        video.muted ? "🔇" : "🔊";
-
-}
-
-
-/* =========================================================
-   LIKE
-========================================================= */
-
-function toggleLike(button){
-
-    button.classList.toggle("liked");
-
-    if(button.classList.contains("liked")){
-
-        button.textContent = "♥";
-
-    }else{
-
-        button.textContent = "♡";
-
-    }
-
-}
-
-
-/* =========================================================
-   SAVE
-========================================================= */
-
-function saveReel(button){
-
-    button.classList.toggle("liked");
-
-    if(button.classList.contains("liked")){
-
-        button.textContent = "🔖";
-
-        showToast("Saved");
-
-    }else{
-
-        showToast("Removed from saved");
-
-    }
-
-}
-
-
-/* =========================================================
-   FOLLOW
-========================================================= */
-
-function toggleFollow(button){
-
-    button.classList.toggle("following");
-
-    if(button.classList.contains("following")){
-
-        button.textContent = "Following";
-
-    }else{
-
-        button.textContent = "Follow";
-
-    }
-
-}
-
-
-/* =========================================================
-   SHARE
-========================================================= */
-
-async function shareReel(){
-
-    try{
-
-        if(navigator.share){
-
-            await navigator.share({
-                title:"Usanex Reel",
-                text:"Check this reel on Usanex"
-            });
-
-        }else{
-
-            showToast("Share link copied");
-
-        }
-
-    }catch(error){
-
-        /* user cancelled */
-
-    }
-
-}
-
-
-/* =========================================================
-   TAB
-========================================================= */
-
-function changeTab(tab){
-
-    document
-        .querySelectorAll(".tab")
-        .forEach(t=>{
-            t.classList.remove("active");
-        });
-
-    tab.classList.add("active");
-
-}
-
-
-/* =========================================================
-   TOUCH SWIPE
-========================================================= */
-
-let startY = 0;
-let endY = 0;
-
-const container =
-    document.getElementById("reelsContainer");
-
-
-container.addEventListener(
-    "touchstart",
-    function(e){
-
-        startY =
-            e.touches[0].clientY;
-
-    },
-    {passive:true}
-);
-
-
-container.addEventListener(
-    "touchend",
-    function(e){
-
-        endY =
-            e.changedTouches[0].clientY;
-
-        const distance =
-            startY - endY;
-
-        if(Math.abs(distance) < 50){
-            return;
-        }
-
-        if(distance > 0){
-
-            showReel(currentReel + 1);
-
-        }else{
-
-            showReel(currentReel - 1);
-
-        }
-
-    },
-    {passive:true}
-);
-
-
-/* =========================================================
-   MOUSE WHEEL
-========================================================= */
-
-let wheelLock = false;
-
-container.addEventListener(
-    "wheel",
-    function(e){
-
-        if(wheelLock) return;
-
-        wheelLock = true;
-
-        if(e.deltaY > 0){
-
-            showReel(currentReel + 1);
-
-        }else{
-
-            showReel(currentReel - 1);
-
-        }
-
-        setTimeout(()=>{
-            wheelLock = false;
-        },500);
-
-    },
-    {passive:true}
-);
-
-
-/* =========================================================
-   KEYBOARD
-========================================================= */
-
-document.addEventListener(
-    "keydown",
-    function(e){
-
-        if(e.key === "ArrowDown"){
-
-            showReel(currentReel + 1);
-
-        }
-
-        if(e.key === "ArrowUp"){
-
-            showReel(currentReel - 1);
-
-        }
-
-        if(e.key === " "){
-
-            e.preventDefault();
-
-            togglePlay(currentReel);
-
-        }
-
-    }
-);
-
-
-/* =========================================================
-   DOUBLE TAP LIKE
-========================================================= */
-
-let lastTap = 0;
-
-container.addEventListener(
-    "dblclick",
-    function(){
-
-        const reel =
-            reels[currentReel];
-
-        const likeButton =
-            reel.querySelector(
-                ".action-btn"
-            );
-
-        if(
-            !likeButton.classList.contains(
-                "liked"
-            )
-        ){
-
-            toggleLike(likeButton);
-
-        }
-
-        showToast("Liked");
-
-    }
-);
-
-
-/* =========================================================
-   TOAST
-========================================================= */
-
-let toastTimer;
-
-function showToast(message){
-
-    const toast =
-        document.getElementById("toast");
-
-    toast.textContent =
-        message;
-
-    toast.classList.add("show");
-
-    clearTimeout(toastTimer);
-
-    toastTimer =
-        setTimeout(()=>{
-
-            toast.classList.remove("show");
-
-        },1500);
-
-}
-
-
-/* =========================================================
-   NAVIGATION
-========================================================= */
-
-function goHome(){
-
-    window.location.href =
-        "/home";
-
-}
-
-
-function goProfile(){
-
-    window.location.href =
-        "/home";
-
-}
-
-
-/* =========================================================
-   START
-========================================================= */
-
-showReel(0);
-
-</script>
 
 </body>
 </html>
