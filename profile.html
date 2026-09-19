@@ -1097,73 +1097,102 @@ function addProfilePhoto(){
 /* =========================
    HANDLE PROFILE PHOTO
 ========================= */
-
-function handleProfilePhoto(input){
+async function handleProfilePhoto(input){
 
     if(
         !input.files ||
         !input.files[0]
     ){
-
         return;
-
     }
 
-
-    const file =
-        input.files[0];
-
+    const file = input.files[0];
 
     if(
         !file.type.startsWith("image/")
     ){
-
-        showToast(
-            "Please select an image"
-        );
-
+        showToast("Please select an image");
         return;
-
     }
 
+    if(!currentUserId){
+        showToast("User ID not found");
+        return;
+    }
 
-    const imageURL =
-        URL.createObjectURL(
-            file
-        );
+    const formData = new FormData();
 
-
-    const avatar =
-        document.querySelector(
-            ".profile-avatar"
-        );
-
-
-    avatar.innerHTML = `
-
-        <img
-            src="${imageURL}"
-            alt="Profile">
-
-        <div
-            class="dp-add-btn"
-            onclick="
-                event.stopPropagation();
-                addProfilePhoto();
-            ">
-
-            +
-
-        </div>
-
-    `;
-
-
-    showToast(
-        "Profile photo selected"
+    formData.append(
+        "file",
+        file
     );
 
-}
+    try{
+
+        showToast("Uploading photo...");
+
+        const response = await fetch(
+            `/api/profile/${encodeURIComponent(currentUserId)}/photo`,
+            {
+                method: "POST",
+                body: formData
+            }
+        );
+
+        const data =
+            await response.json();
+
+        if(!response.ok || !data.ok){
+
+            showToast(
+                data.detail ||
+                "Photo upload failed"
+            );
+
+            return;
+        }
+
+        const avatar =
+            document.querySelector(
+                ".profile-avatar"
+            );
+
+        avatar.innerHTML = `
+            <img
+                src="${data.profile_photo}?t=${Date.now()}"
+                alt="Profile"
+            >
+
+            <div
+                class="dp-add-btn"
+                onclick="
+                    event.stopPropagation();
+                    addProfilePhoto();
+                ">
+                +
+            </div>
+        `;
+
+        showToast(
+            "Profile photo saved"
+        );
+
+        input.value = "";
+
+    }catch(error){
+
+        console.error(
+            "Profile photo upload error:",
+            error
+        );
+
+        showToast(
+            "Photo upload failed"
+        );
+    }
+      }
+
+
 
 
 /* =========================
