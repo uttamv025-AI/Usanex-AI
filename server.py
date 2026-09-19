@@ -2584,6 +2584,37 @@ async def home_page():
 
 
 # ============================================================
+# PROFILE API
+# ============================================================
+
+@app.get("/api/profile/{user_id}")
+async def get_profile(
+    user_id: str,
+    db: Session = Depends(get_db)
+):
+
+    user = (
+        db.query(User)
+        .filter(User.user_id == user_id.strip())
+        .first()
+    )
+
+    if not user:
+        raise HTTPException(
+            status_code=404,
+            detail="User not found"
+        )
+
+    return {
+        "ok": True,
+        "profile": {
+            "user_id": user.user_id,
+            "name": user.name,
+            "profile_photo": user.profile_photo
+        }
+    }
+
+# ============================================================
 # PROFILE PAGE
 # ============================================================
 
