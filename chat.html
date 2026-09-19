@@ -17,6 +17,9 @@
     --header-h:70px;
     --composer-h:76px;
     --vvh:100dvh;
+    --vvt:0px;
+    --vvl:0px;
+    --vvw:100vw;
 }
 
 html,body{
@@ -42,10 +45,9 @@ body{
 
 .chat-app{
     position:fixed;
-    left:0;
-    top:0;
-    width:100%;
-    max-width:600px;
+    left:var(--vvl);
+    top:var(--vvt);
+    width:min(var(--vvw),600px);
     height:var(--vvh);
     margin:0 auto;
     background:
@@ -64,10 +66,10 @@ body{
 
 .chat-header{
     position:fixed;
-    top:0;
-    left:50%;
-    transform:translateX(-50%);
-    width:min(100%,600px);
+    top:var(--vvt);
+    left:var(--vvl);
+    transform:none;
+    width:min(var(--vvw),600px);
     height:var(--header-h);
     min-height:var(--header-h);
 
@@ -211,13 +213,14 @@ body{
 .chat-area{
     position:fixed;
 
-    top:var(--header-h);
-    bottom:var(--composer-h);
+    top:calc(var(--vvt) + var(--header-h));
+    bottom:auto;
+    height:calc(var(--vvh) - var(--header-h) - var(--composer-h));
 
-    left:50%;
-    transform:translateX(-50%);
+    left:var(--vvl);
+    transform:none;
 
-    width:min(100%,600px);
+    width:min(var(--vvw),600px);
 
     overflow-y:auto;
     overflow-x:hidden;
@@ -392,12 +395,12 @@ body{
 .composer-area{
     position:fixed;
 
-    left:50%;
-    bottom:0;
+    left:var(--vvl);
+    top:calc(var(--vvt) + var(--vvh) - var(--composer-h));
 
-    transform:translateX(-50%);
+    transform:none;
 
-    width:min(100%,600px);
+    width:min(var(--vvw),600px);
 
     height:var(--composer-h);
     min-height:var(--composer-h);
@@ -1237,19 +1240,27 @@ function handleWebSocketMessage(data){
 
 /* KEYBOARD-SAFE VISUAL VIEWPORT */
 function updateViewport(){
-    if(!window.visualViewport) return;
+    const root = document.documentElement;
+
+    if(!window.visualViewport){
+        root.style.setProperty("--vvh", window.innerHeight + "px");
+        root.style.setProperty("--vvt", "0px");
+        root.style.setProperty("--vvl", "0px");
+        root.style.setProperty("--vvw", window.innerWidth + "px");
+        return;
+    }
 
     const vv = window.visualViewport;
 
     /*
-      Keep the app exactly inside the visible viewport.
-      Header and composer are fixed independently, so Android
-      keyboard cannot push them away.
+      IMPORTANT: Android can move the VisualViewport when the IME opens.
+      We follow its exact top/left/width/height so the header remains
+      inside the visible viewport instead of being panned off-screen.
     */
-    document.documentElement.style.setProperty(
-        "--vvh",
-        vv.height + "px"
-    );
+    root.style.setProperty("--vvh", Math.round(vv.height) + "px");
+    root.style.setProperty("--vvt", Math.round(vv.offsetTop || 0) + "px");
+    root.style.setProperty("--vvl", Math.round(vv.offsetLeft || 0) + "px");
+    root.style.setProperty("--vvw", Math.round(vv.width || window.innerWidth) + "px");
 }
 
 if(window.visualViewport){
