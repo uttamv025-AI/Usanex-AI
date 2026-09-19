@@ -2637,6 +2637,102 @@ async def get_profile(
             "profile_photo": user.profile_photo
         }
     }
+# ============================================================
+# PROFILE PHOTO UPLOAD
+# ============================================================
+
+@app.post("/api/profile/{user_id}/photo")
+async def upload_profile_photo(
+    user_id: str,
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db),
+):
+
+    user_id = user_id.strip()
+
+    if not user_id:
+
+        raise HTTPException(
+            status_code=400,
+            detail="User ID is required",
+        )
+
+    user = (
+        db.query(User)
+        .filter(
+            User.user_id == user_id
+        )
+        .first()
+    )
+
+    if not user:
+
+        raise HTTPException(
+            status_code=404,
+            detail="User not found",
+        )
+
+    if not file.content_type:
+
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid image",
+        )
+
+    if not file.content_type.startswith("image/"):
+
+        raise HTTPException(
+            status_code=400,
+            detail="Please select an image",
+        )
+
+    extension = os.path.splitext(
+        file.filename or ""
+    )[1].lower()
+
+    if not extension:
+
+        extension = ".jpg"
+
+    filename = (
+        f"{user_id}_"
+        f"{uuid.uuid4().hex}"
+        f"{extension}"
+    )
+
+    file_path = os.path.join(
+        UPLOAD_DIR,
+        filename
+    )
+
+    with open(
+        file_path,
+        "wb"
+    ) as buffer:
+
+        while True:
+
+            chunk = await file.read(
+                1024 * 1024
+            )
+
+            if not chunk:
+                break
+
+            buffer.write(chunk)
+
+    user.profile_photo = (
+        f"/uploads/profile_photos/{filename}"
+    )
+
+    db.commit()
+    db.refresh(user)
+
+    return {
+        "ok": True,
+        "message": "Profile photo saved",
+        "profile_photo": user.profile_photo,
+    }
 
 # ============================================================
 # PROFILE PAGE
