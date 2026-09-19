@@ -45,6 +45,7 @@ BASE_DIR = os.path.dirname(
 from database import (
     SessionLocal,
     User,
+    UserPresence,
     OTPVerification,
     ConnectionRequest,
     ConnectionCode,
@@ -143,8 +144,133 @@ class ConnectionManager:
                 websocket,
             )
 
+    async def is_online(
+        self,
+        user_id: str,
+    ):
+        async with self.lock:
+
+            return bool(
+                self.active_connections.get(
+                    user_id,
+                    set(),
+                )
+            )
+
 
 manager = ConnectionManager()
+
+
+# ============================================================
+# USER PRESENCE
+# ============================================================
+
+def set_user_presence(
+    user_id: str,
+    is_online: bool,
+):
+    db = SessionLocal()
+
+    try:
+
+        now = datetime.utcnow()
+
+        presence = (
+            db.query(UserPresence)
+            .filter(
+                UserPresence.user_id == user_id
+            )
+            .first()
+        )
+
+        if not presence:
+
+            presence = UserPresence(
+                user_id=user_id,
+                is_online=is_online,
+                last_seen_at=(
+                    None
+                    if is_online
+                    else now
+                ),
+                updated_at=now,
+            )
+
+            db.add(presence)
+
+        else:
+
+            presence.is_online = is_online
+            presence.updated_at = now
+
+            if not is_online:
+                presence.last_seen_at = now
+
+        db.commit()
+
+        return presence.last_seen_at
+
+    finally:
+        db.close()
+
+
+async def broadcast_presence(
+    user_id: str,
+    is_online: bool,
+    last_seen_at=None,
+):
+    db = SessionLocal()
+
+    try:
+
+        connections = (
+            db.query(Connection)
+            .filter(
+                (Connection.user_a_id == user_id)
+                |
+                (Connection.user_b_id == user_id)
+            )
+            .all()
+        )
+
+        other_user_ids = []
+
+        for connection in connections:
+
+            if connection.user_a_id == user_id:
+                other_id = connection.user_b_id
+            else:
+                other_id = connection.user_a_id
+
+            if other_id not in other_user_ids:
+                other_user_ids.append(
+                    other_id
+                )
+
+    finally:
+        db.close()
+
+    payload = {
+        "type": "user_presence",
+        "user_id": user_id,
+        "is_online": is_online,
+        "last_seen_at": (
+            None
+            if is_online
+            else (
+                last_seen_at.isoformat()
+                if last_seen_at
+                else None
+            )
+        ),
+    }
+
+    for other_user_id in other_user_ids:
+
+        await manager.send_to_user(
+            other_user_id,
+            payload,
+        )
 
 
 # ============================================================
@@ -332,9 +458,31 @@ async def websocket_endpoint(
     finally:
         db.close()
 
+    # --------------------------------------------------------
+    # CONNECT SOCKET
+    # --------------------------------------------------------
+
     await manager.connect(
         user_id,
         websocket,
+    )
+
+    # --------------------------------------------------------
+    # SET USER ONLINE
+    # --------------------------------------------------------
+
+    set_user_presence(
+        user_id,
+        True,
+    )
+
+    # --------------------------------------------------------
+    # TELL CONNECTED FRIENDS THAT USER IS ONLINE
+    # --------------------------------------------------------
+
+    await broadcast_presence(
+        user_id,
+        True,
     )
 
     try:
@@ -344,6 +492,7 @@ async def websocket_endpoint(
                 "type": "websocket_connected",
                 "message": "Real-time connection active",
                 "user_id": user_id,
+                "is_online": True,
             }
         )
 
@@ -370,10 +519,115 @@ async def websocket_endpoint(
 
     finally:
 
+        # ----------------------------------------------------
+        # REMOVE THIS SOCKET
+        # ----------------------------------------------------
+
         await manager.disconnect(
             user_id,
             websocket,
         )
+
+        # ----------------------------------------------------
+        # IF NO OTHER SOCKET IS ACTIVE,
+        # USER IS REALLY OFFLINE
+        # ----------------------------------------------------
+
+        still_online = await manager.is_online(
+            user_id
+        )
+
+        if not still_online:
+
+            last_seen = set_user_presence(
+                user_id,
+                False,
+            )
+
+            await broadcast_presence(
+                user_id,
+                False,
+                last_seen,
+            )
+
+
+# ============================================================
+# CHAT PRESENCE API
+# ============================================================
+
+@app.get("/api/chat/presence")
+async def chat_presence(
+    user_id: str,
+    other_user_id: str,
+    db: Session = Depends(get_db),
+):
+
+    user_id = user_id.strip()
+    other_user_id = other_user_id.strip()
+
+    if not user_id or not other_user_id:
+
+        raise HTTPException(
+            status_code=400,
+            detail="User IDs are required",
+        )
+
+    if user_id == other_user_id:
+
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid users",
+        )
+
+    if not are_connected(
+        db,
+        user_id,
+        other_user_id,
+    ):
+
+        raise HTTPException(
+            status_code=403,
+            detail="Not connected",
+        )
+
+    online = await manager.is_online(
+        other_user_id
+    )
+
+    presence = (
+        db.query(UserPresence)
+        .filter(
+            UserPresence.user_id
+            == other_user_id
+        )
+        .first()
+    )
+
+    last_seen_at = None
+
+    if (
+        presence
+        and presence.last_seen_at
+    ):
+        last_seen_at = (
+            presence.last_seen_at.isoformat()
+        )
+
+    return {
+        "ok": True,
+        "user_id": other_user_id,
+        "is_online": online,
+        "status": (
+            "online"
+            if online
+            else "offline"
+        ),
+        "last_seen_at": (
+            None
+            if online
+            else last_seen_at
+        ),
+    }
 
 
 # ============================================================
