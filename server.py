@@ -31,6 +31,10 @@ import asyncio
 
 app = FastAPI(title="Usanex")
 
+@app.get("/reels")
+async def reels_page():
+    return FileResponse("reels.html")
+
 password_hasher = PasswordHasher()
 
 BASE_DIR = os.path.dirname(
