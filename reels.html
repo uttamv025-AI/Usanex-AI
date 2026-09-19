@@ -18,7 +18,8 @@
     -webkit-tap-highlight-color:transparent;
 }
 
-html,body{
+html,
+body{
     width:100%;
     height:100%;
     overflow:hidden;
@@ -47,6 +48,8 @@ button{
 .reel{
     position:absolute;
     inset:0;
+    width:100%;
+    height:100%;
     background:#000;
     overflow:hidden;
 }
@@ -54,25 +57,33 @@ button{
 .reel-video{
     position:absolute;
     inset:0;
+
     width:100%;
     height:100%;
+
     object-fit:cover;
+
     background:#000;
 }
 
 .video-touch{
     position:absolute;
     inset:0;
+
     z-index:5;
+
     background:transparent;
+
+    touch-action:manipulation;
 }
 
 /* =====================================================
-   TOP - COMPACT
+   TOP
 ===================================================== */
 
 .top{
     position:absolute;
+
     top:0;
     left:0;
     right:0;
@@ -87,22 +98,25 @@ button{
 
     padding-top:env(safe-area-inset-top);
 
-    background:linear-gradient(
-        to bottom,
-        rgba(0,0,0,.38),
-        transparent
-    );
+    background:
+        linear-gradient(
+            to bottom,
+            rgba(0,0,0,.42),
+            transparent
+        );
 }
 
 .top-inner{
     display:flex;
     align-items:center;
     justify-content:center;
+
     gap:19px;
 }
 
 .tab{
     position:relative;
+
     padding:7px 2px;
 
     background:transparent;
@@ -198,18 +212,26 @@ button{
 }
 
 .create-center:active{
-    transform:translate(-50%,-50%) scale(.96);
+    transform:
+        translate(-50%,-50%)
+        scale(.96);
 }
 
 /* =====================================================
-   RIGHT ACTIONS - CORNER COMPACT
+   RIGHT ACTIONS
+   BOTTOM SIDE
 ===================================================== */
 
 .right-actions{
     position:absolute;
 
     right:7px;
-    bottom:128px;
+
+    /*
+       Bottom navigation ke just upar
+       actions set kiye gaye hain.
+    */
+    bottom:82px;
 
     z-index:15;
 
@@ -217,19 +239,20 @@ button{
     flex-direction:column;
     align-items:center;
 
-    gap:8px;
+    gap:7px;
 }
 
 .action{
     display:flex;
     flex-direction:column;
     align-items:center;
+
     gap:2px;
 }
 
 .action-btn{
-    width:39px;
-    height:39px;
+    width:38px;
+    height:38px;
 
     border-radius:50%;
 
@@ -241,7 +264,7 @@ button{
     align-items:center;
     justify-content:center;
 
-    font-size:20px;
+    font-size:19px;
 
     backdrop-filter:blur(5px);
 
@@ -266,14 +289,19 @@ button{
 }
 
 /* =====================================================
-   USER INFO - BOTTOM LEFT
+   USER INFO
+   BOTTOM LEFT
 ===================================================== */
 
 .user-info{
     position:absolute;
 
     left:11px;
-    right:57px;
+
+    /*
+       Right side actions se distance.
+    */
+    right:62px;
 
     bottom:82px;
 
@@ -286,8 +314,12 @@ button{
 
 .user-row{
     display:flex;
+
     align-items:center;
-    gap:7px;
+
+    gap:6px;
+
+    width:100%;
 }
 
 .avatar{
@@ -310,14 +342,16 @@ button{
             #0049b5
         );
 
-    border:1.5px solid #fff;
+    border:
+        1.5px solid
+        #fff;
 
     font-size:15px;
     font-weight:800;
 }
 
 .username{
-    flex:1;
+    flex:0 1 auto;
 
     min-width:0;
 
@@ -325,14 +359,22 @@ button{
 
     font-size:13px;
     font-weight:800;
+
+    white-space:nowrap;
+
+    overflow:hidden;
+
+    text-overflow:ellipsis;
 }
 
 .follow-btn{
-    height:28px;
+    height:27px;
 
-    padding:0 10px;
+    padding:0 9px;
 
-    min-width:66px;
+    min-width:62px;
+
+    flex-shrink:0;
 
     border-radius:8px;
 
@@ -350,11 +392,13 @@ button{
 
 .follow-btn.following{
     background:#fff;
+
     color:#0867dd;
 }
 
 .preference-row{
     display:flex;
+
     gap:6px;
 
     margin-top:6px;
@@ -381,6 +425,7 @@ button{
 
 .preference.selected{
     background:#fff;
+
     color:#0867dd;
 }
 
@@ -390,6 +435,8 @@ button{
     font-size:12px;
 
     line-height:1.3;
+
+    max-width:290px;
 }
 
 .audio{
@@ -401,7 +448,7 @@ button{
 }
 
 /* =====================================================
-   BOTTOM NAV - COMPACT HOME STYLE
+   BOTTOM NAV
 ===================================================== */
 
 .bottom-nav{
@@ -424,6 +471,7 @@ button{
     z-index:40;
 
     display:flex;
+
     align-items:center;
     justify-content:space-around;
 
@@ -519,6 +567,7 @@ button{
 
 .sheet-overlay{
     position:absolute;
+
     inset:0;
 
     z-index:80;
@@ -526,6 +575,7 @@ button{
     background:rgba(0,0,0,.62);
 
     opacity:0;
+
     pointer-events:none;
 
     transition:.25s;
@@ -533,6 +583,7 @@ button{
 
 .sheet-overlay.show{
     opacity:1;
+
     pointer-events:auto;
 }
 
@@ -544,6 +595,7 @@ button{
     bottom:0;
 
     height:48dvh;
+
     min-height:320px;
 
     background:#0d1728;
@@ -601,6 +653,7 @@ button{
 
 .sheet-title{
     font-size:16px;
+
     font-weight:800;
 }
 
@@ -664,7 +717,9 @@ button{
 
 .tags{
     display:flex;
+
     flex-wrap:wrap;
+
     gap:6px;
 }
 
@@ -683,6 +738,7 @@ button{
     color:#63a7ff;
 
     font-size:10px;
+
     font-weight:700;
 }
 
@@ -698,6 +754,7 @@ button{
     color:#b9c5d5;
 
     font-size:10px;
+
     font-weight:700;
 }
 
@@ -709,6 +766,7 @@ button{
     position:absolute;
 
     left:50%;
+
     bottom:74px;
 
     transform:
@@ -726,6 +784,7 @@ button{
     color:#fff;
 
     font-size:11px;
+
     font-weight:600;
 
     opacity:0;
@@ -751,6 +810,7 @@ button{
 
     .app{
         max-width:480px;
+
         margin:auto;
 
         box-shadow:
@@ -771,6 +831,10 @@ button{
 
 <div class="app">
 
+    <!-- =================================================
+         REEL
+    ================================================== -->
+
     <main class="reel">
 
         <video
@@ -787,7 +851,10 @@ button{
             class="video-touch">
         </div>
 
-        <!-- TOP -->
+
+        <!-- =================================================
+             TOP
+        ================================================== -->
 
         <header class="top">
 
@@ -838,16 +905,22 @@ button{
         </header>
 
 
-        <!-- CENTER -->
+        <!-- =================================================
+             CENTER
+        ================================================== -->
 
         <button
             class="create-center"
             onclick="openCreateReel()">
+
             Create a Reel
+
         </button>
 
 
-        <!-- RIGHT ACTIONS -->
+        <!-- =================================================
+             RIGHT ACTIONS
+        ================================================== -->
 
         <div class="right-actions">
 
@@ -856,7 +929,9 @@ button{
                 <button
                     class="action-btn"
                     onclick="toggleLike(this)">
+
                     ♡
+
                 </button>
 
                 <span class="action-count">
@@ -871,7 +946,9 @@ button{
                 <button
                     class="action-btn"
                     onclick="showToast('Comments')">
+
                     💭
+
                 </button>
 
                 <span class="action-count">
@@ -886,7 +963,9 @@ button{
                 <button
                     class="action-btn"
                     onclick="showToast('Reposted')">
+
                     ↻
+
                 </button>
 
                 <span class="action-count">
@@ -901,7 +980,9 @@ button{
                 <button
                     class="action-btn"
                     onclick="shareReel()">
+
                     ↗
+
                 </button>
 
                 <span class="action-count">
@@ -911,12 +992,16 @@ button{
             </div>
 
 
+            <!-- 3 DOT ALWAYS LAST -->
+
             <div class="action">
 
                 <button
                     class="action-btn more-btn"
                     onclick="openMoreSheet()">
+
                     ⋮
+
                 </button>
 
                 <span class="action-count">
@@ -928,7 +1013,9 @@ button{
         </div>
 
 
-        <!-- USER INFO -->
+        <!-- =================================================
+             USER
+        ================================================== -->
 
         <section class="user-info">
 
@@ -945,7 +1032,9 @@ button{
                 <button
                     class="follow-btn"
                     onclick="toggleFollow(this)">
+
                     Follow
+
                 </button>
 
             </div>
@@ -957,14 +1046,18 @@ button{
                     class="preference"
                     id="interestedBtn"
                     onclick="selectPreference('interested')">
+
                     👍 Interested
+
                 </button>
 
                 <button
                     class="preference"
                     id="notInterestedBtn"
                     onclick="selectPreference('not')">
+
                     × Not interested
+
                 </button>
 
             </div>
@@ -984,7 +1077,9 @@ button{
     </main>
 
 
-    <!-- BOTTOM NAV -->
+    <!-- =================================================
+         BOTTOM NAV
+    ================================================== -->
 
     <nav class="bottom-nav">
 
@@ -1032,7 +1127,9 @@ button{
             <div
                 class="notification-badge"
                 id="notificationBadge">
+
                 0
+
             </div>
 
         </div>
@@ -1051,7 +1148,9 @@ button{
     </nav>
 
 
-    <!-- MORE -->
+    <!-- =================================================
+         MORE SHEET
+    ================================================== -->
 
     <div
         class="sheet-overlay"
@@ -1074,7 +1173,9 @@ button{
                 <button
                     class="sheet-close"
                     onclick="closeMoreSheet()">
+
                     ×
+
                 </button>
 
             </div>
@@ -1173,7 +1274,9 @@ const videoTouch =
     document.getElementById("videoTouch");
 
 let pressTimer = null;
+
 let longPress = false;
+
 let touchStarted = false;
 
 const LONG_PRESS_TIME = 500;
@@ -1184,12 +1287,13 @@ video.play().catch(()=>{});
 
 
 /* =====================================================
-   NORMAL TAP / LONG PRESS
+   TAP / LONG PRESS
 ===================================================== */
 
 function startPress(){
 
     touchStarted = true;
+
     longPress = false;
 
     clearTimeout(pressTimer);
@@ -1200,12 +1304,8 @@ function startPress(){
 
                 longPress = true;
 
-                /*
-                   Long press:
-                   video pause + mute
-                */
-
                 video.muted = true;
+
                 video.pause();
 
             },
@@ -1221,37 +1321,27 @@ function endPress(){
 
     if(longPress){
 
-        /*
-           Release:
-           video resume
-        */
-
         video.muted = false;
 
         video.play().catch(()=>{});
 
         longPress = false;
+
         touchStarted = false;
 
         return;
 
     }
 
-
     if(touchStarted){
 
         /*
            Normal tap:
-           ONLY audio toggle.
+           only mute/unmute.
         */
 
         video.muted =
             !video.muted;
-
-        /*
-           If video was accidentally stopped,
-           normal tap should continue playing.
-        */
 
         if(video.paused){
 
@@ -1296,9 +1386,7 @@ videoTouch.addEventListener(
     "touchcancel",
     function(){
 
-        clearTimeout(
-            pressTimer
-        );
+        clearTimeout(pressTimer);
 
         if(longPress){
 
@@ -1309,6 +1397,7 @@ videoTouch.addEventListener(
         }
 
         longPress = false;
+
         touchStarted = false;
 
     },
@@ -1326,14 +1415,10 @@ function selectTab(button){
         .querySelectorAll(".tab")
         .forEach(
             tab =>
-                tab.classList.remove(
-                    "active"
-                )
+                tab.classList.remove("active")
         );
 
-    button.classList.add(
-        "active"
-    );
+    button.classList.add("active");
 
 }
 
@@ -1357,8 +1442,7 @@ function openCreateReel(){
 function toggleLike(button){
 
     if(
-        button.dataset.liked ===
-        "true"
+        button.dataset.liked === "true"
     ){
 
         button.dataset.liked =
@@ -1395,8 +1479,7 @@ function toggleLike(button){
 function toggleFollow(button){
 
     if(
-        button.dataset.following ===
-        "true"
+        button.dataset.following === "true"
     ){
 
         button.dataset.following =
@@ -1427,7 +1510,7 @@ function toggleFollow(button){
 
 
 /* =====================================================
-   INTERESTED
+   PREFERENCE
 ===================================================== */
 
 function selectPreference(type){
@@ -1450,10 +1533,8 @@ function selectPreference(type){
         "selected"
     );
 
-
     if(
-        type ===
-        "interested"
+        type === "interested"
     ){
 
         interested.classList.add(
@@ -1561,7 +1642,7 @@ function closeMoreSheet(event){
 
 
 /* =====================================================
-   SWIPE SHEET DOWN
+   SWIPE DOWN
 ===================================================== */
 
 let sheetStartY = 0;
@@ -1592,8 +1673,7 @@ sheet.addEventListener(
             e.changedTouches[0].clientY;
 
         if(
-            endY - sheetStartY >
-            60
+            endY - sheetStartY > 60
         ){
 
             closeMoreSheet();
