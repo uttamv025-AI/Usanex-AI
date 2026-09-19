@@ -17,72 +17,126 @@
     -webkit-tap-highlight-color:transparent;
 }
 
-html,body{
+html,
+body{
     width:100%;
     height:100%;
     overflow:hidden;
-    font-family:Arial,Helvetica,sans-serif;
     background:#000;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+    overscroll-behavior:none;
 }
 
 button{
     font-family:inherit;
+    border:none;
     cursor:pointer;
 }
 
-/* =====================================================
-   APP
-===================================================== */
-
 .app{
     width:100%;
-    height:100vh;
+    height:100dvh;
     position:relative;
     overflow:hidden;
     background:#000;
 }
 
 /* =====================================================
-   TOP
+   FULL SCREEN REEL
+===================================================== */
+
+.reel{
+    position:absolute;
+    inset:0;
+
+    width:100%;
+    height:100%;
+
+    background:#000;
+
+    overflow:hidden;
+}
+
+/* VIDEO */
+
+.reel-video{
+    position:absolute;
+    inset:0;
+
+    width:100%;
+    height:100%;
+
+    object-fit:cover;
+
+    background:#000;
+
+    user-select:none;
+    -webkit-user-select:none;
+}
+
+/*
+   Touch layer:
+   normal tap = mute/unmute
+   long press = pause/resume
+*/
+
+.video-touch{
+    position:absolute;
+    inset:0;
+
+    z-index:5;
+
+    background:transparent;
+}
+
+/* =====================================================
+   TOP BAR
 ===================================================== */
 
 .top{
     position:absolute;
+
     top:0;
     left:0;
     right:0;
 
     height:64px;
 
-    z-index:30;
+    z-index:20;
 
     display:flex;
     align-items:center;
     justify-content:center;
 
-    background:transparent;
+    padding-top:
+        env(safe-area-inset-top);
 }
 
-.tabs{
+.top-inner{
     display:flex;
     align-items:center;
     justify-content:center;
 
-    gap:28px;
+    gap:24px;
 }
 
 .tab{
     position:relative;
 
-    border:none;
-    background:none;
+    background:transparent;
 
-    color:#a5afbd;
+    color:rgba(255,255,255,.65);
 
     font-size:15px;
     font-weight:700;
 
-    padding:8px 2px;
+    padding:8px 3px;
+
+    text-shadow:
+        0 1px 6px rgba(0,0,0,.8);
 }
 
 .tab.active{
@@ -108,16 +162,13 @@ button{
 }
 
 /* =====================================================
-   CAMERA ICON
+   CAMERA
 ===================================================== */
 
 .camera-btn{
-    width:40px;
-    height:40px;
+    width:38px;
+    height:38px;
 
-    margin-left:2px;
-
-    border:none;
     background:transparent;
 
     color:#fff;
@@ -126,61 +177,19 @@ button{
     align-items:center;
     justify-content:center;
 
-    padding:5px;
+    padding:4px;
+
+    text-shadow:
+        0 1px 8px #000;
 }
 
 .camera-btn:active{
-    transform:scale(.90);
+    transform:scale(.9);
 }
 
 .camera-svg{
     width:29px;
     height:29px;
-
-    display:block;
-}
-
-/* =====================================================
-   REEL AREA
-===================================================== */
-
-.reel-area{
-    position:absolute;
-    inset:0;
-
-    background:#000;
-}
-
-/* CENTER */
-
-.create-reel-center{
-    position:absolute;
-
-    left:50%;
-    top:50%;
-
-    transform:translate(-50%,-50%);
-
-    border:none;
-
-    padding:15px 22px;
-
-    border-radius:12px;
-
-    background:rgba(255,255,255,.06);
-
-    border:1px solid rgba(255,255,255,.12);
-
-    color:#fff;
-
-    font-size:19px;
-    font-weight:800;
-
-    white-space:nowrap;
-}
-
-.create-reel-center:active{
-    transform:translate(-50%,-50%) scale(.96);
 }
 
 /* =====================================================
@@ -190,16 +199,16 @@ button{
 .right-actions{
     position:absolute;
 
-    right:11px;
-    bottom:142px;
+    right:10px;
+    bottom:155px;
 
-    z-index:25;
+    z-index:15;
 
     display:flex;
     flex-direction:column;
     align-items:center;
 
-    gap:13px;
+    gap:12px;
 }
 
 .action{
@@ -214,10 +223,9 @@ button{
     width:46px;
     height:46px;
 
-    border:none;
     border-radius:50%;
 
-    background:rgba(0,0,0,.45);
+    background:rgba(0,0,0,.32);
 
     color:#fff;
 
@@ -225,13 +233,16 @@ button{
     align-items:center;
     justify-content:center;
 
-    font-size:22px;
+    font-size:24px;
 
-    backdrop-filter:blur(8px);
+    backdrop-filter:blur(5px);
+
+    text-shadow:
+        0 1px 5px #000;
 }
 
 .action-btn:active{
-    transform:scale(.90);
+    transform:scale(.9);
 }
 
 .action-count{
@@ -240,14 +251,12 @@ button{
     font-size:10px;
     font-weight:700;
 
-    text-shadow:0 1px 5px #000;
+    text-shadow:
+        0 1px 6px #000;
 }
 
-/* MORE */
-
 .more-btn{
-    font-size:27px;
-    line-height:1;
+    font-size:28px;
 }
 
 /* =====================================================
@@ -257,14 +266,17 @@ button{
 .user-info{
     position:absolute;
 
-    left:15px;
-    right:75px;
+    left:14px;
+    right:72px;
 
-    bottom:103px;
+    bottom:102px;
 
-    z-index:25;
+    z-index:15;
 
     color:#fff;
+
+    text-shadow:
+        0 1px 6px rgba(0,0,0,.9);
 }
 
 .user-row{
@@ -301,32 +313,25 @@ button{
     font-weight:800;
 }
 
-.user-details{
-    min-width:0;
-    flex:1;
-}
-
 .username{
     color:#fff;
 
     font-size:14px;
     font-weight:800;
-
-    white-space:nowrap;
 }
 
 .follow-btn{
-    min-width:72px;
+    height:32px;
 
-    height:33px;
+    min-width:72px;
 
     padding:0 12px;
 
-    border:1px solid rgba(255,255,255,.85);
-
     border-radius:9px;
 
-    background:rgba(0,0,0,.35);
+    border:1px solid rgba(255,255,255,.9);
+
+    background:rgba(0,0,0,.3);
 
     color:#fff;
 
@@ -340,16 +345,15 @@ button{
 }
 
 /* =====================================================
-   INTERESTED / NOT INTERESTED
+   PREFERENCE
 ===================================================== */
 
 .preference-row{
     display:flex;
-    align-items:center;
 
     gap:8px;
 
-    margin-top:9px;
+    margin-top:8px;
 }
 
 .preference{
@@ -357,24 +361,23 @@ button{
 
     padding:0 11px;
 
-    border:1px solid rgba(255,255,255,.35);
+    border-radius:16px;
 
-    border-radius:17px;
+    border:1px solid rgba(255,255,255,.45);
 
-    background:rgba(0,0,0,.38);
+    background:rgba(0,0,0,.32);
 
     color:#fff;
 
     font-size:11px;
     font-weight:700;
 
-    backdrop-filter:blur(7px);
+    backdrop-filter:blur(5px);
 }
 
 .preference.selected{
     background:#fff;
     color:#0867dd;
-    border-color:#fff;
 }
 
 /* =====================================================
@@ -382,21 +385,21 @@ button{
 ===================================================== */
 
 .caption{
-    margin-top:9px;
-
-    color:#fff;
+    margin-top:8px;
 
     font-size:13px;
 
     line-height:1.4;
+
+    color:#fff;
 }
 
 .audio{
-    margin-top:6px;
-
-    color:#c6d1df;
+    margin-top:5px;
 
     font-size:11px;
+
+    color:#d7dce3;
 }
 
 /* =====================================================
@@ -410,7 +413,14 @@ button{
     right:0;
     bottom:0;
 
-    height:72px;
+    height:
+        calc(
+            70px +
+            env(safe-area-inset-bottom)
+        );
+
+    padding-bottom:
+        env(safe-area-inset-bottom);
 
     z-index:40;
 
@@ -423,7 +433,8 @@ button{
         1fr
         1fr;
 
-    background:rgba(3,10,20,.96);
+    background:
+        rgba(3,10,20,.96);
 
     border-top:
         1px solid
@@ -433,8 +444,7 @@ button{
 }
 
 .nav{
-    border:none;
-    background:none;
+    background:transparent;
 
     color:#8997aa;
 
@@ -450,6 +460,10 @@ button{
     font-weight:700;
 }
 
+.nav.active{
+    color:#fff;
+}
+
 .nav-icon{
     width:25px;
     height:25px;
@@ -461,10 +475,6 @@ button{
     font-size:20px;
 }
 
-.nav.active{
-    color:#fff;
-}
-
 .nav.active .nav-icon{
     color:#4c9fff;
 }
@@ -473,7 +483,7 @@ button{
     width:43px;
     height:43px;
 
-    margin-top:-9px;
+    margin-top:-8px;
 
     border-radius:14px;
 
@@ -490,7 +500,8 @@ button{
     justify-content:center;
 
     box-shadow:
-        0 7px 22px rgba(0,90,220,.40);
+        0 7px 22px
+        rgba(0,90,220,.4);
 }
 
 .profile-icon{
@@ -517,7 +528,7 @@ button{
 }
 
 /* =====================================================
-   BOTTOM SHEET OVERLAY
+   MORE SHEET
 ===================================================== */
 
 .sheet-overlay{
@@ -527,7 +538,7 @@ button{
 
     z-index:80;
 
-    background:rgba(0,0,0,.55);
+    background:rgba(0,0,0,.58);
 
     opacity:0;
 
@@ -542,10 +553,6 @@ button{
     pointer-events:auto;
 }
 
-/* =====================================================
-   HALF PAGE SHEET
-===================================================== */
-
 .bottom-sheet{
     position:absolute;
 
@@ -553,19 +560,16 @@ button{
     right:0;
     bottom:0;
 
-    height:50vh;
+    height:50dvh;
 
-    min-height:350px;
+    min-height:340px;
 
     background:#fff;
 
     color:#111;
 
     border-radius:
-        22px
-        22px
-        0
-        0;
+        22px 22px 0 0;
 
     transform:translateY(100%);
 
@@ -584,20 +588,16 @@ button{
     transform:translateY(0);
 }
 
-/* SHEET HANDLE */
-
 .sheet-handle{
     width:42px;
     height:4px;
 
+    margin:10px auto 4px;
+
     border-radius:10px;
 
     background:#c8c8c8;
-
-    margin:10px auto 4px;
 }
-
-/* SHEET HEADER */
 
 .sheet-header{
     height:54px;
@@ -608,9 +608,7 @@ button{
 
     padding:0 18px;
 
-    border-bottom:
-        1px solid
-        #eeeeee;
+    border-bottom:1px solid #eee;
 }
 
 .sheet-title{
@@ -622,7 +620,6 @@ button{
     width:34px;
     height:34px;
 
-    border:none;
     border-radius:50%;
 
     background:#f1f1f1;
@@ -630,39 +627,29 @@ button{
     color:#222;
 
     font-size:21px;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
 }
 
-/* SHEET CONTENT */
-
 .sheet-content{
-    padding:16px 18px 28px;
+    height:calc(50dvh - 68px);
+
+    padding:16px 18px 30px;
 
     overflow-y:auto;
-
-    height:
-        calc(
-            50vh -
-            68px
-        );
 }
 
 .detail{
-    margin-bottom:17px;
+    margin-bottom:18px;
 }
 
 .detail-label{
+    margin-bottom:6px;
+
     color:#777;
 
     font-size:11px;
     font-weight:700;
 
     text-transform:uppercase;
-
-    margin-bottom:6px;
 }
 
 .detail-value{
@@ -671,17 +658,11 @@ button{
     font-size:14px;
 
     line-height:1.45;
-
-    font-weight:500;
 }
-
-/* TAGS */
 
 .tags{
     display:flex;
-
     flex-wrap:wrap;
-
     gap:7px;
 }
 
@@ -697,8 +678,6 @@ button{
     font-size:11px;
     font-weight:700;
 }
-
-/* VIDEO TYPE */
 
 .video-type{
     display:inline-flex;
@@ -763,7 +742,6 @@ button{
 
     .app{
         max-width:480px;
-
         margin:auto;
 
         box-shadow:
@@ -776,24 +754,6 @@ button{
     }
 }
 
-/* =====================================================
-   SAFE AREA
-===================================================== */
-
-@supports(padding-bottom:env(safe-area-inset-bottom)){
-
-    .bottom-nav{
-        height:
-            calc(
-                72px +
-                env(safe-area-inset-bottom)
-            );
-
-        padding-bottom:
-            env(safe-area-inset-bottom);
-    }
-}
-
 </style>
 </head>
 
@@ -802,76 +762,89 @@ button{
 <div class="app">
 
     <!-- =================================================
-         TOP
+         FULL SCREEN VIDEO
     ================================================== -->
 
-    <header class="top">
+    <main class="reel">
 
-        <div class="tabs">
+        <!--
+            Backend se actual video URL yahan set karein.
+            Example:
+            src="/media/reel.mp4"
+        -->
 
-            <button
-                class="tab active"
-                onclick="selectTab(this)">
-                For You
-            </button>
+        <video
+            id="reelVideo"
+            class="reel-video"
+            playsinline
+            autoplay
+            loop
+            preload="auto">
 
-            <button
-                class="tab"
-                onclick="selectTab(this)">
-                Following
-            </button>
+        </video>
 
-            <!-- CAMERA -->
-            <button
-                class="camera-btn"
-                onclick="openCreateReel()"
-                aria-label="Create Reel">
 
-                <!-- Camera outline like your reference -->
-
-                <svg
-                    class="camera-svg"
-                    viewBox="0 0 64 64"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg">
-
-                    <path
-                        d="M18 18H27L31 12H43C47 12 50 15 50 19V21H53C57 21 60 24 60 28V48C60 52 57 55 53 55H11C7 55 4 52 4 48V28C4 24 7 21 11 21H18V18Z"
-                        stroke="white"
-                        stroke-width="4"
-                        stroke-linejoin="round"/>
-
-                    <circle
-                        cx="32"
-                        cy="38"
-                        r="10"
-                        stroke="white"
-                        stroke-width="4"/>
-
-                </svg>
-
-            </button>
-
+        <!-- Invisible touch layer -->
+        <div
+            id="videoTouch"
+            class="video-touch">
         </div>
 
-    </header>
+
+        <!-- =================================================
+             TOP
+        ================================================== -->
+
+        <header class="top">
+
+            <div class="top-inner">
+
+                <button
+                    class="tab active"
+                    onclick="selectTab(this)">
+                    For You
+                </button>
+
+                <button
+                    class="tab"
+                    onclick="selectTab(this)">
+                    Following
+                </button>
 
 
-    <!-- =================================================
-         REEL AREA
-    ================================================== -->
+                <!-- CAMERA -->
 
-    <main class="reel-area">
+                <button
+                    class="camera-btn"
+                    onclick="openCreateReel()"
+                    aria-label="Create Reel">
 
-        <!-- CENTER -->
+                    <svg
+                        class="camera-svg"
+                        viewBox="0 0 64 64"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
 
-        <button
-            class="create-reel-center"
-            onclick="openCreateReel()">
+                        <path
+                            d="M18 18H27L31 12H43C47 12 50 15 50 19V21H53C57 21 60 24 60 28V48C60 52 57 55 53 55H11C7 55 4 52 4 48V28C4 24 7 21 11 21H18V18Z"
+                            stroke="white"
+                            stroke-width="4"
+                            stroke-linejoin="round"/>
 
-            Create a Reel
+                        <circle
+                            cx="32"
+                            cy="38"
+                            r="10"
+                            stroke="white"
+                            stroke-width="4"/>
 
-        </button>
+                    </svg>
+
+                </button>
+
+            </div>
+
+        </header>
 
 
         <!-- =================================================
@@ -955,9 +928,7 @@ button{
                 <button
                     class="action-btn more-btn"
                     onclick="openMoreSheet()">
-
                     ⋮
-
                 </button>
 
                 <span class="action-count">
@@ -981,28 +952,18 @@ button{
                     U
                 </div>
 
-
-                <div class="user-details">
-
-                    <div class="username">
-                        @uttamv025
-                    </div>
-
+                <div class="username">
+                    @uttamv025
                 </div>
-
 
                 <button
                     class="follow-btn"
                     onclick="toggleFollow(this)">
-
                     Follow
-
                 </button>
 
             </div>
 
-
-            <!-- INTERESTED / NOT INTERESTED -->
 
             <div class="preference-row">
 
@@ -1010,31 +971,23 @@ button{
                     class="preference"
                     id="interestedBtn"
                     onclick="selectPreference('interested')">
-
                     👍 Interested
-
                 </button>
 
                 <button
                     class="preference"
                     id="notInterestedBtn"
                     onclick="selectPreference('not')">
-
                     × Not interested
-
                 </button>
 
             </div>
 
 
-            <!-- CAPTION -->
-
             <div class="caption">
                 Your reel caption will appear here...
             </div>
 
-
-            <!-- AUDIO -->
 
             <div class="audio">
                 ♫ Original audio
@@ -1051,8 +1004,6 @@ button{
 
     <nav class="bottom-nav">
 
-        <!-- HOME -->
-
         <button
             class="nav"
             onclick="goHome()">
@@ -1067,8 +1018,6 @@ button{
 
         </button>
 
-
-        <!-- REELS -->
 
         <button
             class="nav active"
@@ -1085,8 +1034,6 @@ button{
         </button>
 
 
-        <!-- CREATE -->
-
         <button
             class="nav"
             onclick="openCreateReel()">
@@ -1102,8 +1049,6 @@ button{
         </button>
 
 
-        <!-- NOTIFICATION -->
-
         <button
             class="nav"
             onclick="openNotifications()">
@@ -1118,8 +1063,6 @@ button{
 
         </button>
 
-
-        <!-- PROFILE -->
 
         <button
             class="nav"
@@ -1139,7 +1082,7 @@ button{
 
 
     <!-- =================================================
-         MORE OVERLAY + HALF PAGE
+         MORE SHEET
     ================================================== -->
 
     <div
@@ -1154,9 +1097,6 @@ button{
 
             <div class="sheet-handle"></div>
 
-
-            <!-- HEADER -->
-
             <div class="sheet-header">
 
                 <div class="sheet-title">
@@ -1166,19 +1106,13 @@ button{
                 <button
                     class="sheet-close"
                     onclick="closeMoreSheet()">
-
                     ×
-
                 </button>
 
             </div>
 
 
-            <!-- CONTENT -->
-
             <div class="sheet-content">
-
-                <!-- DESCRIPTION -->
 
                 <div class="detail">
 
@@ -1192,8 +1126,6 @@ button{
 
                 </div>
 
-
-                <!-- TAGS -->
 
                 <div class="detail">
 
@@ -1220,8 +1152,6 @@ button{
                 </div>
 
 
-                <!-- LOCATION -->
-
                 <div class="detail">
 
                     <div class="detail-label">
@@ -1234,8 +1164,6 @@ button{
 
                 </div>
 
-
-                <!-- VIDEO TYPE -->
 
                 <div class="detail">
 
@@ -1256,8 +1184,6 @@ button{
     </div>
 
 
-    <!-- TOAST -->
-
     <div
         class="toast"
         id="toast">
@@ -1269,6 +1195,247 @@ button{
 <script>
 
 /* =====================================================
+   ELEMENTS
+===================================================== */
+
+const video =
+    document.getElementById("reelVideo");
+
+const videoTouch =
+    document.getElementById("videoTouch");
+
+
+/* =====================================================
+   VIDEO START
+===================================================== */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function(){
+
+        /*
+         * Browser autoplay policy normally allows
+         * autoplay only when video is muted.
+         *
+         * When your real video URL is connected,
+         * this starts it muted.
+         */
+
+        video.muted = true;
+
+        video.play().catch(()=>{});
+
+    }
+);
+
+
+/* =====================================================
+   NORMAL TAP
+   ONLY AUDIO MUTE / UNMUTE
+===================================================== */
+
+let longPress = false;
+
+let pressTimer = null;
+
+let touchStarted = false;
+
+const LONG_PRESS_TIME = 500;
+
+
+/* =====================================================
+   START PRESS
+===================================================== */
+
+function startPress(){
+
+    touchStarted = true;
+
+    longPress = false;
+
+    clearTimeout(pressTimer);
+
+    pressTimer = setTimeout(
+        function(){
+
+            longPress = true;
+
+            /*
+             * Long press:
+             * VIDEO + AUDIO PAUSE
+             */
+
+            video.pause();
+
+        },
+        LONG_PRESS_TIME
+    );
+
+}
+
+
+/* =====================================================
+   END PRESS
+===================================================== */
+
+function endPress(){
+
+    clearTimeout(pressTimer);
+
+    /*
+     * Long press finished
+     */
+
+    if(longPress){
+
+        /*
+         * Resume video + audio
+         */
+
+        video.muted = false;
+
+        video.play().catch(()=>{});
+
+        longPress = false;
+
+        touchStarted = false;
+
+        return;
+
+    }
+
+
+    /*
+     * Normal tap:
+     * ONLY mute / unmute
+     */
+
+    if(touchStarted){
+
+        video.muted = !video.muted;
+
+        touchStarted = false;
+
+    }
+
+}
+
+
+/* =====================================================
+   TOUCH EVENTS
+===================================================== */
+
+videoTouch.addEventListener(
+    "touchstart",
+    function(e){
+
+        e.preventDefault();
+
+        startPress();
+
+    },
+    {
+        passive:false
+    }
+);
+
+
+videoTouch.addEventListener(
+    "touchend",
+    function(e){
+
+        e.preventDefault();
+
+        endPress();
+
+    },
+    {
+        passive:false
+    }
+);
+
+
+videoTouch.addEventListener(
+    "touchcancel",
+    function(){
+
+        clearTimeout(pressTimer);
+
+        /*
+         * If long press was active,
+         * resume video.
+         */
+
+        if(longPress){
+
+            video.muted = false;
+
+            video.play().catch(()=>{});
+
+        }
+
+        longPress = false;
+
+        touchStarted = false;
+
+    },
+    {
+        passive:true
+    }
+);
+
+
+/* =====================================================
+   DESKTOP / MOUSE SUPPORT
+===================================================== */
+
+videoTouch.addEventListener(
+    "mousedown",
+    function(e){
+
+        e.preventDefault();
+
+        startPress();
+
+    }
+);
+
+
+videoTouch.addEventListener(
+    "mouseup",
+    function(e){
+
+        e.preventDefault();
+
+        endPress();
+
+    }
+);
+
+
+videoTouch.addEventListener(
+    "mouseleave",
+    function(){
+
+        if(longPress){
+
+            clearTimeout(pressTimer);
+
+            video.muted = false;
+
+            video.play().catch(()=>{});
+
+            longPress = false;
+
+            touchStarted = false;
+
+        }
+
+    }
+);
+
+
+/* =====================================================
    TAB
 ===================================================== */
 
@@ -1276,8 +1443,10 @@ function selectTab(button){
 
     document
         .querySelectorAll(".tab")
-        .forEach(tab=>{
+        .forEach(function(tab){
+
             tab.classList.remove("active");
+
         });
 
     button.classList.add("active");
@@ -1286,7 +1455,7 @@ function selectTab(button){
 
 
 /* =====================================================
-   CREATE REEL
+   CREATE
 ===================================================== */
 
 function openCreateReel(){
@@ -1303,19 +1472,26 @@ function openCreateReel(){
 
 function toggleLike(button){
 
-    if(button.dataset.liked === "true"){
+    if(
+        button.dataset.liked ===
+        "true"
+    ){
 
-        button.dataset.liked = "false";
+        button.dataset.liked =
+            "false";
 
-        button.textContent = "♡";
+        button.textContent =
+            "♡";
 
         showToast("Removed like");
 
     }else{
 
-        button.dataset.liked = "true";
+        button.dataset.liked =
+            "true";
 
-        button.textContent = "♥";
+        button.textContent =
+            "♥";
 
         showToast("Liked");
 
@@ -1330,17 +1506,32 @@ function toggleLike(button){
 
 function toggleFollow(button){
 
-    if(button.dataset.following === "true"){
+    if(
+        button.dataset.following ===
+        "true"
+    ){
 
-        button.dataset.following = "false";
+        button.dataset.following =
+            "false";
 
-        button.textContent = "Follow";
+        button.textContent =
+            "Follow";
+
+        button.classList.remove(
+            "following"
+        );
 
     }else{
 
-        button.dataset.following = "true";
+        button.dataset.following =
+            "true";
 
-        button.textContent = "Following";
+        button.textContent =
+            "Following";
+
+        button.classList.add(
+            "following"
+        );
 
     }
 
@@ -1348,7 +1539,7 @@ function toggleFollow(button){
 
 
 /* =====================================================
-   INTERESTED
+   PREFERENCE
 ===================================================== */
 
 function selectPreference(type){
@@ -1363,22 +1554,35 @@ function selectPreference(type){
             "notInterestedBtn"
         );
 
-    interested.classList.remove("selected");
 
-    notInterested.classList.remove("selected");
+    interested.classList.remove(
+        "selected"
+    );
+
+    notInterested.classList.remove(
+        "selected"
+    );
 
 
     if(type === "interested"){
 
-        interested.classList.add("selected");
+        interested.classList.add(
+            "selected"
+        );
 
-        showToast("Marked Interested");
+        showToast(
+            "Marked Interested"
+        );
 
     }else{
 
-        notInterested.classList.add("selected");
+        notInterested.classList.add(
+            "selected"
+        );
 
-        showToast("Not interested");
+        showToast(
+            "Not interested"
+        );
 
     }
 
@@ -1410,9 +1614,9 @@ async function shareReel(){
 
         }
 
-    }catch(e){
+    }catch(error){
 
-        /* cancelled */
+        /* user cancelled share */
 
     }
 
@@ -1425,12 +1629,11 @@ async function shareReel(){
 
 function openMoreSheet(){
 
-    const overlay =
-        document.getElementById(
+    document
+        .getElementById(
             "sheetOverlay"
-        );
-
-    overlay.classList.add("show");
+        )
+        .classList.add("show");
 
 }
 
@@ -1444,14 +1647,69 @@ function closeMoreSheet(event){
             "sheetOverlay"
         )
     ){
+
         return;
+
     }
 
+
     document
-        .getElementById("sheetOverlay")
+        .getElementById(
+            "sheetOverlay"
+        )
         .classList.remove("show");
 
 }
+
+
+/* =====================================================
+   SHEET SWIPE DOWN
+===================================================== */
+
+let sheetStartY = 0;
+
+const sheet =
+    document.getElementById(
+        "bottomSheet"
+    );
+
+
+sheet.addEventListener(
+    "touchstart",
+    function(e){
+
+        sheetStartY =
+            e.touches[0].clientY;
+
+    },
+    {
+        passive:true
+    }
+);
+
+
+sheet.addEventListener(
+    "touchend",
+    function(e){
+
+        const sheetEndY =
+            e.changedTouches[0].clientY;
+
+        if(
+            sheetEndY -
+            sheetStartY >
+            70
+        ){
+
+            closeMoreSheet();
+
+        }
+
+    },
+    {
+        passive:true
+    }
+);
 
 
 /* =====================================================
@@ -1474,18 +1732,18 @@ function goReels(){
 }
 
 
-function goProfile(){
-
-    window.location.href =
-        "/profile";
-
-}
-
-
 function openNotifications(){
 
     window.location.href =
         "/notifications";
+
+}
+
+
+function goProfile(){
+
+    window.location.href =
+        "/profile";
 
 }
 
@@ -1506,62 +1764,27 @@ function showToast(message){
     toast.textContent =
         message;
 
-    toast.classList.add("show");
-
-    clearTimeout(toastTimer);
-
-    toastTimer =
-        setTimeout(()=>{
-
-            toast.classList.remove("show");
-
-        },1400);
-
-}
-
-
-/* =====================================================
-   SWIPE DOWN TO CLOSE
-===================================================== */
-
-let touchStartY = 0;
-
-const sheet =
-    document.getElementById(
-        "bottomSheet"
+    toast.classList.add(
+        "show"
     );
 
-sheet.addEventListener(
-    "touchstart",
-    function(e){
+    clearTimeout(
+        toastTimer
+    );
 
-        touchStartY =
-            e.touches[0].clientY;
+    toastTimer =
+        setTimeout(
+            function(){
 
-    },
-    {passive:true}
-);
+                toast.classList.remove(
+                    "show"
+                );
 
+            },
+            1400
+        );
 
-sheet.addEventListener(
-    "touchend",
-    function(e){
-
-        const touchEndY =
-            e.changedTouches[0].clientY;
-
-        const difference =
-            touchEndY - touchStartY;
-
-        if(difference > 70){
-
-            closeMoreSheet();
-
-        }
-
-    },
-    {passive:true}
-);
+}
 
 </script>
 
