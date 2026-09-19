@@ -31,8 +31,32 @@ import asyncio
 # ============================================================
 # APP
 # ============================================================
-
+BASE_DIR = os.path.dirname(
+    os.path.abspath(__file__)
+)
 app = FastAPI(title="Usanex")
+
+UPLOAD_DIR = os.path.join(
+    BASE_DIR,
+    "uploads",
+    "profile_photos"
+)
+
+os.makedirs(
+    UPLOAD_DIR,
+    exist_ok=True
+)
+
+app.mount(
+    "/uploads",
+    StaticFiles(
+        directory=os.path.join(
+            BASE_DIR,
+            "uploads"
+        )
+    ),
+    name="uploads"
+)
 
 @app.get("/reels")
 async def reels_page():
@@ -40,9 +64,6 @@ async def reels_page():
 
 password_hasher = PasswordHasher()
 
-BASE_DIR = os.path.dirname(
-    os.path.abspath(__file__)
-)
 
 
 # ============================================================
