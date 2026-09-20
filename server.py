@@ -9,7 +9,6 @@ from fastapi import (
 )
 
 from pydantic import BaseModel
-from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
@@ -26,6 +25,7 @@ import secrets
 import uuid
 import os
 import asyncio
+
 import cloudinary
 import cloudinary.uploader
 
@@ -33,10 +33,17 @@ import cloudinary.uploader
 # ============================================================
 # APP
 # ============================================================
+
 BASE_DIR = os.path.dirname(
     os.path.abspath(__file__)
 )
+
 app = FastAPI(title="Usanex")
+
+
+# ============================================================
+# CLOUDINARY
+# ============================================================
 
 cloudinary.config(
     cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
@@ -45,34 +52,8 @@ cloudinary.config(
     secure=True,
 )
 
-UPLOAD_DIR = os.path.join(
-    BASE_DIR,
-    "uploads",
-    "profile_photos"
-)
-
-os.makedirs(
-    UPLOAD_DIR,
-    exist_ok=True
-)
-
-app.mount(
-    "/uploads",
-    StaticFiles(
-        directory=os.path.join(
-            BASE_DIR,
-            "uploads"
-        )
-    ),
-    name="uploads"
-)
-
-@app.get("/reels")
-async def reels_page():
-    return FileResponse("reels.html")
 
 password_hasher = PasswordHasher()
-
 
 
 # ============================================================
@@ -495,27 +476,15 @@ async def websocket_endpoint(
     finally:
         db.close()
 
-    # --------------------------------------------------------
-    # CONNECT SOCKET
-    # --------------------------------------------------------
-
     await manager.connect(
         user_id,
         websocket,
     )
 
-    # --------------------------------------------------------
-    # SET USER ONLINE
-    # --------------------------------------------------------
-
     set_user_presence(
         user_id,
         True,
     )
-
-    # --------------------------------------------------------
-    # TELL CONNECTED FRIENDS THAT USER IS ONLINE
-    # --------------------------------------------------------
 
     await broadcast_presence(
         user_id,
@@ -556,19 +525,10 @@ async def websocket_endpoint(
 
     finally:
 
-        # ----------------------------------------------------
-        # REMOVE THIS SOCKET
-        # ----------------------------------------------------
-
         await manager.disconnect(
             user_id,
             websocket,
         )
-
-        # ----------------------------------------------------
-        # IF NO OTHER SOCKET IS ACTIVE,
-        # USER IS REALLY OFFLINE
-        # ----------------------------------------------------
 
         still_online = await manager.is_online(
             user_id
@@ -2628,11 +2588,14 @@ async def get_profile(
 
     user = (
         db.query(User)
-        .filter(User.user_id == user_id.strip())
+        .filter(
+            User.user_id == user_id.strip()
+        )
         .first()
     )
 
     if not user:
+
         raise HTTPException(
             status_code=404,
             detail="User not found"
@@ -2645,104 +2608,103 @@ async def get_profile(
             "name": user.name,
             "profile_photo": user.profile_photo
         }
-
-    
     }
-#============================================================
 
-#PROFILE PHOTO UPLOAD
 
-#============================================================
+# ============================================================
+# PROFILE PHOTO UPLOAD - CLOUDINARY
+# ============================================================
 
 @app.post("/api/profile/{user_id}/photo")
 async def upload_profile_photo(
-user_id: str,
-file: UploadFile = File(...),
-db: Session = Depends(get_db),
+    user_id: str,
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db),
 ):
 
-user_id = user_id.strip()
+    user_id = user_id.strip()
 
-if not user_id:
+    if not user_id:
 
-    raise HTTPException(
-        status_code=400,
-        detail="User ID is required",
+        raise HTTPException(
+            status_code=400,
+            detail="User ID is required",
+        )
+
+    user = (
+        db.query(User)
+        .filter(
+            User.user_id == user_id
+        )
+        .first()
     )
 
-user = (
-    db.query(User)
-    .filter(
-        User.user_id == user_id
-    )
-    .first()
-)
+    if not user:
 
-if not user:
+        raise HTTPException(
+            status_code=404,
+            detail="User not found",
+        )
 
-    raise HTTPException(
-        status_code=404,
-        detail="User not found",
-    )
+    if not file.content_type:
 
-if not file.content_type:
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid image",
+        )
 
-    raise HTTPException(
-        status_code=400,
-        detail="Invalid image",
-    )
+    if not file.content_type.startswith("image/"):
 
-if not file.content_type.startswith("image/"):
+        raise HTTPException(
+            status_code=400,
+            detail="Please select an image",
+        )
 
-    raise HTTPException(
-        status_code=400,
-        detail="Please select an image",
-    )
+    try:
 
-try:
+        result = cloudinary.uploader.upload(
+            file.file,
+            folder="usanex/profile_photos",
+            public_id=user_id,
+            overwrite=True,
+            resource_type="image",
+            secure=True,
+        )
 
-    result = cloudinary.uploader.upload(
-        file.file,
-        folder="usanex/profile_photos",
-        public_id=user_id,
-        overwrite=True,
-        resource_type="image",
-        secure=True,
-    )
+    except Exception as e:
 
-except Exception as e:
+        print(
+            "Cloudinary upload error:",
+            str(e)
+        )
 
-    print(
-        "Cloudinary upload error:",
-        str(e)
-    )
+        raise HTTPException(
+            status_code=500,
+            detail="Profile photo upload failed",
+        )
 
-    raise HTTPException(
-        status_code=500,
-        detail="Profile photo upload failed",
+    profile_photo_url = result.get(
+        "secure_url"
     )
 
-profile_photo_url = result.get(
-    "secure_url"
-)
+    if not profile_photo_url:
 
-if not profile_photo_url:
+        raise HTTPException(
+            status_code=500,
+            detail="Cloudinary image URL not received",
+        )
 
-    raise HTTPException(
-        status_code=500,
-        detail="Cloudinary image URL not received",
-    )
+    user.profile_photo = profile_photo_url
 
-user.profile_photo = profile_photo_url
+    db.commit()
+    db.refresh(user)
 
-db.commit()
-db.refresh(user)
+    return {
+        "ok": True,
+        "message": "Profile photo saved",
+        "profile_photo": user.profile_photo,
+    }
 
-return {
-    "ok": True,
-    "message": "Profile photo saved",
-    "profile_photo": user.profile_photo,
-}
 
 # ============================================================
 # PROFILE PAGE
@@ -3253,6 +3215,30 @@ async def mark_chat_read(
         "ok": True,
         "count": len(messages),
     }
+
+
+# ============================================================
+# REELS PAGE
+# ============================================================
+
+@app.get("/reels")
+async def reels_page():
+
+    reels_file = os.path.join(
+        BASE_DIR,
+        "reels.html",
+    )
+
+    if not os.path.isfile(reels_file):
+
+        raise HTTPException(
+            status_code=404,
+            detail="reels.html file not found",
+        )
+
+    return FileResponse(
+        reels_file
+    )
 
 
 # ============================================================
