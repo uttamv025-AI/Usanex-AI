@@ -321,6 +321,22 @@ body{
     background:rgba(70,200,120,.08);
 }
 
+/* NEW: Connected search button */
+
+.search-follow-btn.connected{
+    color:#63a7ff;
+
+    border-color:rgba(23,119,255,.35);
+
+    background:rgba(23,119,255,.10);
+
+    cursor:default;
+}
+
+.search-follow-btn:disabled{
+    opacity:1;
+}
+
 .search-empty{
     padding:28px 15px;
 
@@ -1455,6 +1471,19 @@ let currentUserId = "";
 let searchTimer = null;
 
 
+/*
+ * IMPORTANT:
+ * Is Set me currently connected users ke user_id
+ * save honge.
+ *
+ * Search result me isi Set se check hoga:
+ *
+ * Connected -> Connected
+ * Not Connected -> Follow
+ */
+let connectedUserIds = new Set();
+
+
 /* =========================================================
    USER RESOLUTION
 ========================================================= */
@@ -1595,6 +1624,26 @@ function resolveCurrentUser(){
         }
 
     }
+
+}
+
+
+/* =========================================================
+   CHECK CONNECTION
+========================================================= */
+
+function isConnectedUser(userId){
+
+    if(!userId){
+        return false;
+    }
+
+    const cleanId =
+        String(userId).trim();
+
+    return connectedUserIds.has(
+        cleanId
+    );
 
 }
 
@@ -1848,9 +1897,6 @@ async function searchUsers(query){
 
         /*
          * Extra frontend filtering.
-         *
-         * This makes sure the returned
-         * users match name / ID / number.
          */
 
         const q =
@@ -2012,6 +2058,10 @@ function renderSearchResults(
                 "";
 
 
+            const cleanUserId =
+                String(userId).trim();
+
+
             const name =
                 user.name ||
                 user.display_name ||
@@ -2048,8 +2098,7 @@ function renderSearchResults(
 
             if(
                 currentUserId &&
-                String(userId).trim()
-                    ===
+                cleanUserId ===
                 String(currentUserId).trim()
             ){
 
@@ -2148,7 +2197,7 @@ function renderSearchResults(
 
             idBox.textContent =
                 "ID: " +
-                userId;
+                cleanUserId;
 
 
             info.appendChild(
@@ -2181,36 +2230,66 @@ function renderSearchResults(
             }
 
 
-            /* ================= FOLLOW ================= */
+            /* ================= ACTION BUTTON ================= */
 
             const followBtn =
                 document.createElement(
                     "button"
                 );
 
-            followBtn.className =
-                "search-follow-btn";
 
-            followBtn.textContent =
-                "Follow";
+            /*
+             * IMPORTANT FIX:
+             *
+             * Search result ka user agar
+             * already Connected People me hai,
+             * to Follow nahi dikhana hai.
+             */
+
+            const alreadyConnected =
+                isConnectedUser(
+                    cleanUserId
+                );
 
 
-            followBtn.addEventListener(
-                "click",
-                async function(event){
+            if(alreadyConnected){
 
-                    event.preventDefault();
+                followBtn.className =
+                    "search-follow-btn connected";
 
-                    event.stopPropagation();
+                followBtn.textContent =
+                    "Connected";
+
+                followBtn.disabled =
+                    true;
+
+            }else{
+
+                followBtn.className =
+                    "search-follow-btn";
+
+                followBtn.textContent =
+                    "Follow";
 
 
-                    await followUser(
-                        String(userId).trim(),
-                        followBtn
-                    );
+                followBtn.addEventListener(
+                    "click",
+                    async function(event){
 
-                }
-            );
+                        event.preventDefault();
+
+                        event.stopPropagation();
+
+
+                        await followUser(
+                            cleanUserId,
+                            followBtn
+                        );
+
+                    }
+                );
+
+            }
 
 
             /* ================= CARD CLICK ================= */
@@ -2219,7 +2298,7 @@ function renderSearchResults(
                 "click",
                 function(){
 
-                    if(!userId){
+                    if(!cleanUserId){
                         return;
                     }
 
@@ -2228,13 +2307,14 @@ function renderSearchResults(
 
 
                     /*
-                     * Open profile.
+                     * Search result par click
+                     * karne par profile open hoga.
                      */
 
                     window.location.href =
                         "/profile?user_id=" +
                         encodeURIComponent(
-                            String(userId).trim()
+                            cleanUserId
                         );
 
                 }
@@ -2285,6 +2365,33 @@ async function followUser(
 
 
     if(!targetUserId){
+
+        return;
+
+    }
+
+
+    /*
+     * Safety:
+     * Connected user ko follow request
+     * send nahi hogi.
+     */
+
+    if(
+        isConnectedUser(
+            targetUserId
+        )
+    ){
+
+        button.textContent =
+            "Connected";
+
+        button.classList.add(
+            "connected"
+        );
+
+        button.disabled =
+            true;
 
         return;
 
@@ -2446,6 +2553,9 @@ async function loadConnections(){
 
     if(!currentUserId){
 
+        connectedUserIds =
+            new Set();
+
         count.textContent =
             "0";
 
@@ -2573,6 +2683,15 @@ async function loadConnections(){
             );
 
 
+            /*
+             * Connection API fail hone par
+             * purana Set use nahi karna.
+             */
+
+            connectedUserIds =
+                new Set();
+
+
             count.textContent =
                 "0";
 
@@ -2695,6 +2814,53 @@ async function loadConnections(){
 
     users =
         uniqueUsers;
+
+
+    /*
+     * =====================================================
+     * IMPORTANT FIX
+     *
+     * Connected users ke IDs ko global Set me save karo.
+     *
+     * Example:
+     *
+     * UX214ee93583
+     * UX9a041066aa
+     * UX3e524ce730
+     *
+     * Ab search result me in IDs ko check
+     * karke Connected dikhaya jayega.
+     * =====================================================
+     */
+
+    connectedUserIds =
+        new Set();
+
+
+    users.forEach(
+        function(user){
+
+            const id =
+                user.user_id ||
+                user.id ||
+                user.username ||
+                "";
+
+
+            const cleanId =
+                String(id).trim();
+
+
+            if(cleanId){
+
+                connectedUserIds.add(
+                    cleanId
+                );
+
+            }
+
+        }
+    );
 
 
     count.textContent =
@@ -3503,6 +3669,15 @@ document.addEventListener(
 
         resolveCurrentUser();
 
+        /*
+         * IMPORTANT:
+         * Pehle connections load honge.
+         * Iske baad connectedUserIds Set ready hoga.
+         *
+         * Search karne par ab existing connection
+         * ko Follow nahi dikhaya jayega.
+         */
+
         await loadConnections();
 
         await loadNotificationCount();
@@ -3520,9 +3695,33 @@ setInterval(
 
         resolveCurrentUser();
 
+        /*
+         * Connections refresh hone ke baad
+         * connectedUserIds bhi refresh hoga.
+         */
+
         await loadConnections();
 
         await loadNotificationCount();
+
+        /*
+         * Agar search result already open hai,
+         * to current search ko dobara render karo.
+         * Isse Connected/Follow status bhi fresh rahega.
+         */
+
+        if(
+            searchInput &&
+            searchInput.value.trim().length >= 2 &&
+            searchResults &&
+            searchResults.classList.contains("active")
+        ){
+
+            await searchUsers(
+                searchInput.value.trim()
+            );
+
+        }
 
     },
     30000
