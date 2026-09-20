@@ -1171,60 +1171,163 @@ body{
 
 <section class="status-section">
 
-    <div class="section-title">
-        Status
+    <div class="status-title-row">
+
+        <div class="status-title">
+            Status
+        </div>
+
+        <div
+            class="status-see-all"
+            onclick="showAllStatuses()">
+
+            See all
+
+        </div>
+
     </div>
+
 
     <div class="status-scroll">
 
-        <div class="status-item">
 
-            <div class="status-circle you-circle">
+        <!-- YOUR STATUS -->
 
-                <span id="youLetter">
-                    U
-                </span>
+        <div
+            class="status-item"
+            onclick="addMyStatus()">
 
-                <div class="plus-small">
+            <div class="status-circle your-status">
+
+                <div class="status-avatar-inner">
+
+                    <span id="youLetter">
+                        U
+                    </span>
+
+                </div>
+
+                <div class="status-plus">
                     +
                 </div>
 
             </div>
 
             <div class="status-name">
-                You
+                Your status
             </div>
 
         </div>
 
-        <div class="status-item">
 
-            <div class="status-circle">
-                S
+        <!-- SHIVAM -->
+
+        <div
+            class="status-item"
+            onclick="openStatus('S','Shivam',false)">
+
+            <div class="status-circle unseen">
+
+                <div class="status-avatar-inner">
+                    S
+                </div>
+
             </div>
 
             <div class="status-name">
-                Status
+                Shivam
             </div>
 
         </div>
 
-        <div class="status-item">
 
-            <div class="status-circle">
-                K
+        <!-- KARAN -->
+
+        <div
+            class="status-item"
+            onclick="openStatus('K','Karan',false)">
+
+            <div class="status-circle unseen">
+
+                <div class="status-avatar-inner">
+                    K
+                </div>
+
             </div>
 
             <div class="status-name">
-                Status
+                Karan
             </div>
 
         </div>
+
+
+        <!-- ANKIT -->
+
+        <div
+            class="status-item"
+            onclick="openStatus('A','Ankit',true)">
+
+            <div class="status-circle seen">
+
+                <div class="status-avatar-inner">
+                    A
+                </div>
+
+            </div>
+
+            <div class="status-name">
+                Ankit
+            </div>
+
+        </div>
+
+
+        <!-- RAHUL -->
+
+        <div
+            class="status-item"
+            onclick="openStatus('R','Rahul',false)">
+
+            <div class="status-circle unseen">
+
+                <div class="status-avatar-inner">
+                    R
+                </div>
+
+            </div>
+
+            <div class="status-name">
+                Rahul
+            </div>
+
+        </div>
+
+
+        <!-- PRIYA -->
+
+        <div
+            class="status-item"
+            onclick="openStatus('P','Priya',true)">
+
+            <div class="status-circle seen">
+
+                <div class="status-avatar-inner">
+                    P
+                </div>
+
+            </div>
+
+            <div class="status-name">
+                Priya
+            </div>
+
+        </div>
+
 
     </div>
 
 </section>
-
 
 <!-- ================= CONNECTIONS ================= -->
 
