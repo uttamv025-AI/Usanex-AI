@@ -880,9 +880,11 @@ body{
     touch-action:pan-x;
 
     /*
-     * Browser bounce ko control karta hai.
+     * Browser bounce control.
      */
     overscroll-behavior-x:contain;
+
+    -webkit-overflow-scrolling:touch;
 }
 
 .status-preview-content::-webkit-scrollbar{
@@ -915,7 +917,7 @@ body{
     overflow:hidden;
 
     /*
-     * Default:
+     * Default media:
      * slightly small + blurred
      */
     opacity:.30;
@@ -935,6 +937,10 @@ body{
         transform .34s cubic-bezier(.22,.61,.36,1),
         opacity .30s ease,
         filter .30s ease;
+
+    transform-origin:center center;
+
+    backface-visibility:hidden;
 }
 
 /* ================= ACTIVE MEDIA ================= */
@@ -1000,7 +1006,7 @@ body{
 
 /*
  * Image ko drag nahi karna.
- * Container hi swipe handle karega.
+ * Container swipe handle karega.
  */
 .status-preview-slide img{
     -webkit-user-drag:none;
@@ -1008,10 +1014,17 @@ body{
 }
 
 /*
- * Video controls ko clickable rakha gaya hai.
+ * IMPORTANT:
+ * Video ke native browser controls
+ * completely hidden rahenge.
  */
 .status-preview-slide video{
-    pointer-events:auto;
+    pointer-events:none;
+
+    user-select:none;
+    -webkit-user-select:none;
+
+    -webkit-user-drag:none;
 }
 
 /* =========================================================
@@ -2229,7 +2242,8 @@ function renderSearchResults(
     }
 
 
-    searchResults.innerHTML = "";
+    searchResults.innerHTML =
+        "";
 
 
     const title =
@@ -3683,12 +3697,75 @@ function renderStatusPreview(){
                     url;
 
 
+                /*
+                 * Browser ke native
+                 * video controls completely OFF.
+                 */
+
                 video.controls =
+                    false;
+
+
+                /*
+                 * Video automatically play.
+                 */
+
+                video.autoplay =
                     true;
 
+
+                /*
+                 * Mobile autoplay ke liye muted.
+                 */
+
+                video.muted =
+                    true;
+
+
+                /*
+                 * Video automatically repeat.
+                 */
+
+                video.loop =
+                    true;
+
+
+                /*
+                 * Mobile inline playback.
+                 */
 
                 video.playsInline =
                     true;
+
+
+                /*
+                 * iOS compatibility.
+                 */
+
+                video.setAttribute(
+                    "playsinline",
+                    ""
+                );
+
+                video.setAttribute(
+                    "webkit-playsinline",
+                    ""
+                );
+
+                video.setAttribute(
+                    "muted",
+                    ""
+                );
+
+                video.setAttribute(
+                    "autoplay",
+                    ""
+                );
+
+                video.setAttribute(
+                    "loop",
+                    ""
+                );
 
 
                 video.preload =
@@ -3697,6 +3774,22 @@ function renderStatusPreview(){
 
                 slide.appendChild(
                     video
+                );
+
+
+                /*
+                 * Autoplay safely try.
+                 */
+
+                video.play().catch(
+                    function(error){
+
+                        console.log(
+                            "Video autoplay:",
+                            error
+                        );
+
+                    }
                 );
 
             }
@@ -3726,7 +3819,8 @@ function renderStatusPreview(){
     /*
      * Native finger scrolling.
      *
-     * User actual finger se swipe karega.
+     * User actual finger se
+     * left/right swipe karega.
      */
 
     container.onscroll =
