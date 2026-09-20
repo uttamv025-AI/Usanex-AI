@@ -10,6 +10,7 @@ from fastapi import (
 
 from pydantic import BaseModel
 from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 
@@ -39,6 +40,21 @@ BASE_DIR = os.path.dirname(
 )
 
 app = FastAPI(title="Usanex")
+
+# ============================================================
+# STATIC FILES
+# ============================================================
+
+app.mount(
+    "/static",
+    StaticFiles(
+        directory=os.path.join(
+            BASE_DIR,
+            "static"
+        )
+    ),
+    name="static",
+)
 
 
 # ============================================================
