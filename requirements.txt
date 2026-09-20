@@ -5,3 +5,4 @@ argon2-cffi
 python-multipart
 psycopg[binary]
 psycopg2-binary
+cloudinary
