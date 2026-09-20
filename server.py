@@ -2645,103 +2645,104 @@ async def get_profile(
             "name": user.name,
             "profile_photo": user.profile_photo
         }
+
+    
     }
-# ============================================================
-# PROFILE PHOTO UPLOAD
-# ============================================================
+#============================================================
+
+#PROFILE PHOTO UPLOAD
+
+#============================================================
 
 @app.post("/api/profile/{user_id}/photo")
 async def upload_profile_photo(
-    user_id: str,
-    file: UploadFile = File(...),
-    db: Session = Depends(get_db),
+user_id: str,
+file: UploadFile = File(...),
+db: Session = Depends(get_db),
 ):
 
-    user_id = user_id.strip()
+user_id = user_id.strip()
 
-    if not user_id:
+if not user_id:
 
-        raise HTTPException(
-            status_code=400,
-            detail="User ID is required",
-        )
-
-    user = (
-        db.query(User)
-        .filter(
-            User.user_id == user_id
-        )
-        .first()
+    raise HTTPException(
+        status_code=400,
+        detail="User ID is required",
     )
 
-    if not user:
+user = (
+    db.query(User)
+    .filter(
+        User.user_id == user_id
+    )
+    .first()
+)
 
-        raise HTTPException(
-            status_code=404,
-            detail="User not found",
-        )
+if not user:
 
-    if not file.content_type:
-
-        raise HTTPException(
-            status_code=400,
-            detail="Invalid image",
-        )
-
-    if not file.content_type.startswith("image/"):
-
-        raise HTTPException(
-            status_code=400,
-            detail="Please select an image",
-        )
-
-    extension = os.path.splitext(
-        file.filename or ""
-    )[1].lower()
-
-    if not extension:
-
-        extension = ".jpg"
-
-    filename = (
-        f"{user_id}_"
-        f"{uuid.uuid4().hex}"
-        f"{extension}"
+    raise HTTPException(
+        status_code=404,
+        detail="User not found",
     )
 
-    file_path = os.path.join(
-        UPLOAD_DIR,
-        filename
+if not file.content_type:
+
+    raise HTTPException(
+        status_code=400,
+        detail="Invalid image",
     )
 
-    with open(
-        file_path,
-        "wb"
-    ) as buffer:
+if not file.content_type.startswith("image/"):
 
-        while True:
-
-            chunk = await file.read(
-                1024 * 1024
-            )
-
-            if not chunk:
-                break
-
-            buffer.write(chunk)
-
-    user.profile_photo = (
-        f"/uploads/profile_photos/{filename}"
+    raise HTTPException(
+        status_code=400,
+        detail="Please select an image",
     )
 
-    db.commit()
-    db.refresh(user)
+try:
 
-    return {
-        "ok": True,
-        "message": "Profile photo saved",
-        "profile_photo": user.profile_photo,
-    }
+    result = cloudinary.uploader.upload(
+        file.file,
+        folder="usanex/profile_photos",
+        public_id=user_id,
+        overwrite=True,
+        resource_type="image",
+        secure=True,
+    )
+
+except Exception as e:
+
+    print(
+        "Cloudinary upload error:",
+        str(e)
+    )
+
+    raise HTTPException(
+        status_code=500,
+        detail="Profile photo upload failed",
+    )
+
+profile_photo_url = result.get(
+    "secure_url"
+)
+
+if not profile_photo_url:
+
+    raise HTTPException(
+        status_code=500,
+        detail="Cloudinary image URL not received",
+    )
+
+user.profile_photo = profile_photo_url
+
+db.commit()
+db.refresh(user)
+
+return {
+    "ok": True,
+    "message": "Profile photo saved",
+    "profile_photo": user.profile_photo,
+}
 
 # ============================================================
 # PROFILE PAGE
