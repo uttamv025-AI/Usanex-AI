@@ -1108,6 +1108,79 @@ body{
     }
 
 }
+/* ================= STATUS PREVIEW ================= */
+
+.status-preview-modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.82);
+    z-index:9999;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+}
+
+.status-preview-box{
+    width:100%;
+    max-width:420px;
+    background:#0b1425;
+    border:1px solid #263752;
+    border-radius:20px;
+    overflow:hidden;
+    box-shadow:0 20px 60px rgba(0,0,0,.6);
+}
+
+.status-preview-header{
+    height:55px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 16px;
+    color:#fff;
+    font-size:16px;
+    font-weight:700;
+}
+
+.status-preview-header button{
+    border:none;
+    background:transparent;
+    color:#fff;
+    font-size:20px;
+    cursor:pointer;
+}
+
+.status-preview-content{
+    width:100%;
+    min-height:300px;
+    max-height:65vh;
+    background:#050912;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+}
+
+.status-preview-content img,
+.status-preview-content video{
+    display:none;
+    max-width:100%;
+    max-height:65vh;
+    object-fit:contain;
+}
+
+.status-next-btn{
+    width:calc(100% - 30px);
+    margin:15px;
+    height:46px;
+    border:none;
+    border-radius:12px;
+    background:#1685ff;
+    color:#fff;
+    font-size:15px;
+    font-weight:700;
+    cursor:pointer;
+}
 
 </style>
 </head>
@@ -3538,6 +3611,7 @@ function addMyStatus(){
     const input = document.createElement("input");
 
     input.type = "file";
+
     input.accept = "image/*,video/*";
 
     input.onchange = function(){
@@ -3548,13 +3622,82 @@ function addMyStatus(){
             return;
         }
 
-        alert(
-            "Selected: " + file.name
-        );
+        const modal =
+            document.getElementById(
+                "statusPreviewModal"
+            );
+
+        const image =
+            document.getElementById(
+                "statusPreviewImage"
+            );
+
+        const video =
+            document.getElementById(
+                "statusPreviewVideo"
+            );
+
+        const fileURL =
+            URL.createObjectURL(file);
+
+        image.style.display = "none";
+        video.style.display = "none";
+
+        if(file.type.startsWith("image/")){
+
+            image.src = fileURL;
+
+            image.style.display = "block";
+
+        }
+        else if(file.type.startsWith("video/")){
+
+            video.src = fileURL;
+
+            video.style.display = "block";
+
+        }
+
+        modal.style.display = "flex";
 
     };
 
     input.click();
+
+}
+
+
+function closeStatusPreview(){
+
+    const modal =
+        document.getElementById(
+            "statusPreviewModal"
+        );
+
+    const image =
+        document.getElementById(
+            "statusPreviewImage"
+        );
+
+    const video =
+        document.getElementById(
+            "statusPreviewVideo"
+        );
+
+    image.src = "";
+
+    video.src = "";
+
+    modal.style.display = "none";
+
+}
+
+
+function confirmStatusPreview(){
+
+    alert(
+        "Next step: Status upload."
+    );
 
 }
 
@@ -3910,6 +4053,52 @@ document.addEventListener(
 );
 
 </script>
+
+<!-- STATUS PREVIEW MODAL -->
+
+<div id="statusPreviewModal" class="status-preview-modal">
+
+    <div class="status-preview-box">
+
+        <div class="status-preview-header">
+
+            <span>Preview Status</span>
+
+            <button
+                type="button"
+                onclick="closeStatusPreview()">
+                ✕
+            </button>
+
+        </div>
+
+        <div class="status-preview-content">
+
+            <img
+                id="statusPreviewImage"
+                src=""
+                alt="Status Preview">
+
+            <video
+                id="statusPreviewVideo"
+                controls
+                playsinline>
+            </video>
+
+        </div>
+
+        <button
+            type="button"
+            class="status-next-btn"
+            onclick="confirmStatusPreview()">
+
+            Next
+
+        </button>
+
+    </div>
+
+</div>
 
 </body>
 </html>
