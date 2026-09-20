@@ -1112,74 +1112,246 @@ body{
 
 .status-preview-modal{
     display:none;
+
     position:fixed;
     inset:0;
-    background:rgba(0,0,0,.82);
+
+    width:100%;
+    height:100%;
+
+    background:#000;
+
     z-index:9999;
+
     align-items:center;
     justify-content:center;
-    padding:20px;
+
+    padding:0;
 }
+
+
+/* ================= PREVIEW BOX ================= */
 
 .status-preview-box{
+    position:relative;
+
     width:100%;
-    max-width:420px;
-    background:#0b1425;
-    border:1px solid #263752;
-    border-radius:20px;
+    height:100%;
+
+    max-width:none;
+
+    background:transparent;
+
+    border:none;
+    border-radius:0;
+
     overflow:hidden;
-    box-shadow:0 20px 60px rgba(0,0,0,.6);
+
+    box-shadow:none;
+
+    display:flex;
+    flex-direction:column;
 }
+
+
+/* ================= HEADER ================= */
 
 .status-preview-header{
-    height:55px;
+
+    position:absolute;
+
+    top:0;
+    left:0;
+    right:0;
+
+    z-index:10;
+
+    height:75px;
+
     display:flex;
+
     align-items:center;
+
     justify-content:space-between;
-    padding:0 16px;
+
+    padding:0 18px;
+
     color:#fff;
-    font-size:16px;
+
+    font-size:18px;
+
     font-weight:700;
+
+    background:linear-gradient(
+        to bottom,
+        rgba(0,0,0,.75),
+        rgba(0,0,0,.30),
+        transparent
+    );
 }
+
 
 .status-preview-header button{
-    border:none;
-    background:transparent;
-    color:#fff;
-    font-size:20px;
-    cursor:pointer;
-}
 
-.status-preview-content{
-    width:100%;
-    min-height:300px;
-    max-height:65vh;
-    background:#050912;
+    border:none;
+
+    background:transparent;
+
+    color:#fff;
+
+    font-size:32px;
+
+    line-height:1;
+
+    cursor:pointer;
+
+    width:42px;
+    height:42px;
+
     display:flex;
+
     align-items:center;
     justify-content:center;
+
+    padding:0;
+}
+
+
+/* ================= MEDIA ================= */
+
+.status-preview-content{
+
+    position:absolute;
+
+    inset:0;
+
+    width:100%;
+    height:100%;
+
+    min-height:0;
+
+    background:#000;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
     overflow:hidden;
 }
+
 
 .status-preview-content img,
 .status-preview-content video{
+
     display:none;
+
+    width:100%;
+    height:100%;
+
     max-width:100%;
-    max-height:65vh;
+    max-height:100%;
+
     object-fit:contain;
+
+    background:#000;
 }
 
+
+/* ================= NEXT BUTTON ================= */
+
 .status-next-btn{
-    width:calc(100% - 30px);
-    margin:15px;
-    height:46px;
+
+    position:absolute;
+
+    right:18px;
+    bottom:25px;
+
+    z-index:20;
+
+    min-width:90px;
+
+    height:42px;
+
+    padding:0 20px;
+
+    margin:0;
+
     border:none;
-    border-radius:12px;
+
+    border-radius:22px;
+
     background:#1685ff;
+
     color:#fff;
-    font-size:15px;
+
+    font-size:14px;
+
     font-weight:700;
+
     cursor:pointer;
+
+    box-shadow:
+        0 5px 20px rgba(0,0,0,.45);
+
+    transition:
+        transform .15s ease,
+        opacity .15s ease;
+}
+
+
+.status-next-btn:active{
+
+    transform:scale(.94);
+
+}
+
+
+/* ================= MOBILE ================= */
+
+@media(max-width:500px){
+
+    .status-preview-header{
+
+        height:70px;
+
+        padding:
+            10px
+            15px
+            0
+            15px;
+
+    }
+
+
+    .status-preview-header button{
+
+        font-size:31px;
+
+        width:40px;
+        height:40px;
+
+    }
+
+
+    .status-next-btn{
+
+        right:16px;
+
+        bottom:20px;
+
+        min-width:88px;
+
+        height:40px;
+
+        padding:0 18px;
+
+        font-size:14px;
+
+        border-radius:21px;
+
+    }
+
 }
 
 </style>
