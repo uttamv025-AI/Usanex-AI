@@ -779,6 +779,7 @@ body{
 
 /* =========================================================
    STATUS PREVIEW
+   LIQUID SLIDE + ZOOM + BLUR
 ========================================================= */
 
 .status-preview-modal{
@@ -802,70 +803,105 @@ body{
     overflow:hidden;
 }
 
-/* HEADER */
+/* ================= PREVIEW HEADER ================= */
 
 .status-preview-header{
     position:absolute;
     top:0;
     left:0;
     right:0;
-    z-index:50;
+
+    z-index:80;
+
     height:75px;
+
     display:flex;
     align-items:center;
     justify-content:space-between;
+
     padding:0 18px;
+
     color:#fff;
+
     font-size:18px;
     font-weight:700;
-    background:linear-gradient(
-        to bottom,
-        rgba(0,0,0,.80),
-        rgba(0,0,0,.30),
-        transparent
-    );
+
+    background:
+        linear-gradient(
+            to bottom,
+            rgba(0,0,0,.82),
+            rgba(0,0,0,.30),
+            transparent
+        );
 }
 
 .status-preview-header button{
     border:none;
     background:transparent;
     color:#fff;
+
     font-size:32px;
+
     width:42px;
     height:42px;
+
     cursor:pointer;
 }
 
-/* MEDIA SLIDER */
+/* =========================================================
+   MEDIA CONTAINER
+========================================================= */
 
 .status-preview-content{
     position:absolute;
+
     inset:0;
+
     width:100%;
     height:100%;
+
     display:flex;
     align-items:center;
+
     overflow-x:auto;
     overflow-y:hidden;
+
     scroll-snap-type:x mandatory;
+
+    scroll-behavior:smooth;
+
     scrollbar-width:none;
+
     background:#000;
+
+    /*
+     * Real finger horizontal swipe.
+     */
+    touch-action:pan-x;
+
+    /*
+     * Browser bounce ko control karta hai.
+     */
+    overscroll-behavior-x:contain;
 }
 
 .status-preview-content::-webkit-scrollbar{
     display:none;
 }
 
-/*
- * Har media ek full screen slide hoga.
- */
+/* =========================================================
+   EACH MEDIA SLIDE
+========================================================= */
 
 .status-preview-slide{
+
     min-width:100%;
     width:100%;
     height:100%;
+
     flex:0 0 100%;
-    scroll-snap-align:start;
+
+    scroll-snap-align:center;
     scroll-snap-stop:always;
 
     display:flex;
@@ -873,25 +909,125 @@ body{
     justify-content:center;
 
     position:relative;
+
     background:#000;
+
+    overflow:hidden;
+
+    /*
+     * Default:
+     * slightly small + blurred
+     */
+    opacity:.30;
+
+    transform:
+        scale(.90)
+        translateX(0);
+
+    filter:blur(8px);
+
+    will-change:
+        transform,
+        opacity,
+        filter;
+
+    transition:
+        transform .34s cubic-bezier(.22,.61,.36,1),
+        opacity .30s ease,
+        filter .30s ease;
 }
+
+/* ================= ACTIVE MEDIA ================= */
+
+.status-preview-slide.status-active{
+
+    opacity:1;
+
+    transform:
+        scale(1)
+        translateX(0);
+
+    filter:blur(0);
+
+}
+
+/* ================= NEAR MEDIA ================= */
+
+.status-preview-slide.status-near{
+
+    opacity:.62;
+
+    transform:
+        scale(.94)
+        translateX(0);
+
+    filter:blur(4px);
+
+}
+
+/* ================= FAR MEDIA ================= */
+
+.status-preview-slide.status-far{
+
+    opacity:.20;
+
+    transform:
+        scale(.87)
+        translateX(0);
+
+    filter:blur(9px);
+
+}
+
+/* =========================================================
+   MEDIA ELEMENT
+========================================================= */
 
 .status-preview-slide img,
 .status-preview-slide video{
+
     width:100%;
     height:100%;
+
     object-fit:contain;
+
     background:#000;
+
+    user-select:none;
+    -webkit-user-select:none;
+
 }
 
-/* COUNTER */
+/*
+ * Image ko drag nahi karna.
+ * Container hi swipe handle karega.
+ */
+.status-preview-slide img{
+    -webkit-user-drag:none;
+    user-drag:none;
+}
+
+/*
+ * Video controls ko clickable rakha gaya hai.
+ */
+.status-preview-slide video{
+    pointer-events:auto;
+}
+
+/* =========================================================
+   COUNTER
+========================================================= */
 
 .status-preview-counter{
+
     position:absolute;
+
     top:22px;
     left:50%;
+
     transform:translateX(-50%);
-    z-index:60;
+
+    z-index:100;
 
     padding:6px 11px;
 
@@ -903,55 +1039,26 @@ body{
 
     font-size:12px;
     font-weight:600;
+
+    backdrop-filter:blur(7px);
+    -webkit-backdrop-filter:blur(7px);
+
+    box-shadow:
+        0 4px 15px rgba(0,0,0,.25);
 }
 
-/* SWIPE HINT */
-
-.status-swipe-hint{
-    position:absolute;
-    left:50%;
-    bottom:78px;
-    transform:translateX(-50%);
-
-    z-index:45;
-
-    padding:8px 14px;
-
-    border-radius:20px;
-
-    background:rgba(0,0,0,.55);
-
-    color:#fff;
-
-    font-size:12px;
-
-    white-space:nowrap;
-
-    pointer-events:none;
-
-    opacity:1;
-
-    transition:
-        opacity .4s ease,
-        transform .4s ease;
-}
-
-.status-swipe-hint.hide{
-    opacity:0;
-    transform:
-        translateX(-50%)
-        translateY(10px);
-}
-
-/* NEXT */
+/* =========================================================
+   NEXT BUTTON
+========================================================= */
 
 .status-next-btn{
+
     position:absolute;
 
     right:18px;
     bottom:22px;
 
-    z-index:70;
+    z-index:120;
 
     min-width:78px;
     height:40px;
@@ -959,6 +1066,7 @@ body{
     padding:0 17px;
 
     border:none;
+
     border-radius:22px;
 
     background:#1685ff;
@@ -974,15 +1082,25 @@ body{
         0 5px 20px rgba(0,0,0,.45);
 
     display:none;
+
+    align-items:center;
+    justify-content:center;
+
+    transition:
+        transform .15s ease,
+        opacity .2s ease;
 }
 
 .status-next-btn:active{
     transform:scale(.94);
 }
 
-/* ================= STATUS NEW USER HINT ================= */
+/* =========================================================
+   STATUS NEW USER HINT
+========================================================= */
 
 .status-new-user-hint{
+
     position:fixed;
 
     left:50%;
@@ -1015,7 +1133,9 @@ body{
     text-align:center;
 }
 
-/* ================= MOBILE ================= */
+/* =========================================================
+   MOBILE
+========================================================= */
 
 @media(max-width:500px){
 
@@ -1067,11 +1187,6 @@ body{
         min-width:78px;
         height:40px;
         padding:0 17px;
-    }
-
-    .status-swipe-hint{
-        bottom:70px;
-        font-size:11px;
     }
 
 }
@@ -1607,22 +1722,11 @@ body{
         </div>
 
 
-        <!-- HORIZONTAL MEDIA AREA -->
+        <!-- MEDIA -->
 
         <div
             class="status-preview-content"
             id="statusPreviewContent">
-
-        </div>
-
-
-        <!-- SWIPE HINT -->
-
-        <div
-            class="status-swipe-hint"
-            id="statusSwipeHint">
-
-            ← Swipe left/right to see all
 
         </div>
 
@@ -3329,10 +3433,6 @@ function addMyStatus(){
         "image/*,video/*";
 
 
-    /*
-     * MULTIPLE ENABLED
-     */
-
     input.multiple =
         true;
 
@@ -3373,7 +3473,7 @@ function addMyStatus(){
 
 
             /*
-             * Old object URLs clean.
+             * Old URLs clean.
              */
 
             statusPreviewObjectURLs
@@ -3436,42 +3536,11 @@ function openStatusPreview(){
 
     renderStatusPreview();
 
-
-    /*
-     * First-time hint.
-     */
-
-    const hint =
-        document.getElementById(
-            "statusSwipeHint"
-        );
-
-
-    if(hint){
-
-        hint.classList.remove(
-            "hide"
-        );
-
-
-        setTimeout(
-            function(){
-
-                hint.classList.add(
-                    "hide"
-                );
-
-            },
-            2500
-        );
-
-    }
-
 }
 
 
 /* =========================================================
-   RENDER ALL STATUS SLIDES
+   RENDER STATUS PREVIEW
 ========================================================= */
 
 function renderStatusPreview(){
@@ -3482,26 +3551,30 @@ function renderStatusPreview(){
         );
 
 
-    const counter =
-        document.getElementById(
-            "statusPreviewCounter"
-        );
-
-
-    const nextBtn =
-        document.getElementById(
-            "statusNextBtn"
-        );
-
-
     if(!container){
         return;
     }
 
 
+    /*
+     * Clear old slides.
+     */
+
     container.innerHTML =
         "";
 
+
+    /*
+     * Reset scroll.
+     */
+
+    container.scrollLeft =
+        0;
+
+
+    /*
+     * Create media slides.
+     */
 
     selectedStatusFiles.forEach(
         function(file,index){
@@ -3516,6 +3589,35 @@ function renderStatusPreview(){
                 "status-preview-slide";
 
 
+            /*
+             * First media active.
+             */
+
+            if(index === 0){
+
+                slide.classList.add(
+                    "status-active"
+                );
+
+            }else if(index === 1){
+
+                slide.classList.add(
+                    "status-near"
+                );
+
+            }else{
+
+                slide.classList.add(
+                    "status-far"
+                );
+
+            }
+
+
+            /*
+             * Object URL.
+             */
+
             const url =
                 URL.createObjectURL(file);
 
@@ -3524,6 +3626,10 @@ function renderStatusPreview(){
                 url
             );
 
+
+            /*
+             * IMAGE
+             */
 
             if(
                 file.type.startsWith(
@@ -3536,12 +3642,18 @@ function renderStatusPreview(){
                         "img"
                     );
 
+
                 img.src =
                     url;
+
 
                 img.alt =
                     "Status " +
                     (index + 1);
+
+
+                img.draggable =
+                    false;
 
 
                 slide.appendChild(
@@ -3549,6 +3661,12 @@ function renderStatusPreview(){
                 );
 
             }
+
+
+            /*
+             * VIDEO
+             */
+
             else if(
                 file.type.startsWith(
                     "video/"
@@ -3560,14 +3678,21 @@ function renderStatusPreview(){
                         "video"
                     );
 
+
                 video.src =
                     url;
+
 
                 video.controls =
                     true;
 
+
                 video.playsInline =
                     true;
+
+
+                video.preload =
+                    "metadata";
 
 
                 slide.appendChild(
@@ -3585,47 +3710,246 @@ function renderStatusPreview(){
     );
 
 
+    /*
+     * Start at first slide.
+     */
+
+    currentStatusIndex =
+        0;
+
+
+    updateStatusSlides();
+
     updateStatusPreviewUI();
 
 
     /*
-     * Scroll listener:
-     * user left/right swipe karega,
-     * current index automatically update hoga.
+     * Native finger scrolling.
+     *
+     * User actual finger se swipe karega.
      */
 
     container.onscroll =
         function(){
 
-            const width =
-                container.clientWidth;
+            updateStatusSlides();
+
+        };
+
+}
 
 
-            if(!width){
-                return;
+/* =========================================================
+   LIQUID SLIDE STATE
+========================================================= */
+
+function updateStatusSlides(){
+
+    const container =
+        document.getElementById(
+            "statusPreviewContent"
+        );
+
+
+    if(!container){
+        return;
+    }
+
+
+    const slides =
+        Array.from(
+            container.querySelectorAll(
+                ".status-preview-slide"
+            )
+        );
+
+
+    if(!slides.length){
+        return;
+    }
+
+
+    const width =
+        container.clientWidth;
+
+
+    if(!width){
+        return;
+    }
+
+
+    const scrollLeft =
+        container.scrollLeft;
+
+
+    /*
+     * Current media.
+     */
+
+    const rawIndex =
+        scrollLeft / width;
+
+
+    const index =
+        Math.round(rawIndex);
+
+
+    currentStatusIndex =
+        Math.max(
+            0,
+            Math.min(
+                index,
+                slides.length - 1
+            )
+        );
+
+
+    /*
+     * Every slide ka distance.
+     *
+     * Isi se:
+     * active
+     * near
+     * far
+     * decide hoga.
+     */
+
+    slides.forEach(
+        function(slide,i){
+
+            const slidePosition =
+                i * width;
+
+
+            const distance =
+                Math.abs(
+                    slidePosition -
+                    scrollLeft
+                ) / width;
+
+
+            slide.classList.remove(
+                "status-active",
+                "status-near",
+                "status-far"
+            );
+
+
+            /*
+             * Main media.
+             */
+
+            if(distance < 0.18){
+
+                slide.classList.add(
+                    "status-active"
+                );
+
             }
 
 
-            const index =
-                Math.round(
-                    container.scrollLeft /
-                    width
+            /*
+             * Next/previous nearby media.
+             */
+
+            else if(distance < 1.1){
+
+                slide.classList.add(
+                    "status-near"
                 );
 
+            }
 
-            currentStatusIndex =
-                Math.max(
-                    0,
-                    Math.min(
-                        index,
-                        selectedStatusFiles.length - 1
-                    )
+
+            /*
+             * Baaki media.
+             */
+
+            else{
+
+                slide.classList.add(
+                    "status-far"
                 );
 
+            }
 
-            updateStatusPreviewUI();
+        }
+    );
 
-        };
+
+    updateStatusPreviewUI();
+
+}
+
+
+/* =========================================================
+   GO TO SPECIFIC STATUS
+========================================================= */
+
+function goToStatus(index){
+
+    const container =
+        document.getElementById(
+            "statusPreviewContent"
+        );
+
+
+    const total =
+        selectedStatusFiles.length;
+
+
+    if(
+        !container ||
+        !total
+    ){
+        return;
+    }
+
+
+    /*
+     * Boundary.
+     */
+
+    if(index < 0){
+
+        index = 0;
+
+    }
+
+
+    if(index >= total){
+
+        index =
+            total - 1;
+
+    }
+
+
+    currentStatusIndex =
+        index;
+
+
+    const width =
+        container.clientWidth;
+
+
+    if(!width){
+        return;
+    }
+
+
+    container.scrollTo({
+
+        left:
+            index * width,
+
+        behavior:
+            "smooth"
+
+    });
+
+
+    updateStatusPreviewUI();
 
 }
 
@@ -3652,6 +3976,10 @@ function updateStatusPreviewUI(){
         selectedStatusFiles.length;
 
 
+    /*
+     * COUNTER
+     */
+
     if(counter){
 
         counter.textContent =
@@ -3663,7 +3991,8 @@ function updateStatusPreviewUI(){
 
 
     /*
-     * NEXT SIRF LAST MEDIA PAR.
+     * NEXT:
+     * ONLY LAST MEDIA.
      */
 
     if(nextBtn){
@@ -3676,12 +4005,6 @@ function updateStatusPreviewUI(){
 
             nextBtn.style.display =
                 "flex";
-
-            nextBtn.style.alignItems =
-                "center";
-
-            nextBtn.style.justifyContent =
-                "center";
 
         }else{
 
@@ -3713,13 +4036,44 @@ function closeStatusPreview(){
         );
 
 
+    /*
+     * Stop videos.
+     */
+
     if(container){
+
+        const videos =
+            container.querySelectorAll(
+                "video"
+            );
+
+
+        videos.forEach(
+            function(video){
+
+                try{
+
+                    video.pause();
+
+                }catch(error){
+
+                    console.log(error);
+
+                }
+
+            }
+        );
+
 
         container.innerHTML =
             "";
 
     }
 
+
+    /*
+     * Revoke URLs.
+     */
 
     statusPreviewObjectURLs
         .forEach(
@@ -3777,9 +4131,11 @@ function confirmStatusPreview(){
 
 
     /*
-     * Abhi actual upload nahi.
-     * Next feature ke liye selected files
-     * ready rahenge.
+     * Abhi upload/backend nahi.
+     *
+     * Ye selected media ko next
+     * editing/composer step ke liye
+     * ready rakhta hai.
      */
 
     console.log(
@@ -4148,10 +4504,6 @@ document.addEventListener(
         await loadConnections();
 
         await loadNotificationCount();
-
-        /*
-         * New user hint
-         */
 
         showNewUserStatusHint();
 
