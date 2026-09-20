@@ -321,8 +321,6 @@ body{
     background:rgba(70,200,120,.08);
 }
 
-/* NEW: Connected search button */
-
 .search-follow-btn.connected{
     color:#63a7ff;
 
@@ -330,7 +328,7 @@ body{
 
     background:rgba(23,119,255,.10);
 
-    cursor:default;
+    cursor:pointer;
 }
 
 .search-follow-btn:disabled{
@@ -660,7 +658,7 @@ body{
     font-size:12px;
 }
 
-/* ================= CIRCULAR DP VIEWER ================= */
+/* ================= DP VIEWER ================= */
 
 .dp-viewer{
     position:fixed;
@@ -692,9 +690,6 @@ body{
 
     width:min(82vw,360px);
     height:min(82vw,360px);
-
-    max-width:none;
-    max-height:none;
 
     object-fit:cover;
 
@@ -1054,9 +1049,7 @@ body{
 
         <div class="logo-mark">
 
-            <span class="logo-u">
-                U
-            </span>
+            <span class="logo-u">U</span>
 
             <span class="logo-shine"></span>
 
@@ -1067,7 +1060,6 @@ body{
         </div>
 
     </div>
-
 
     <div class="search-box">
 
@@ -1085,13 +1077,10 @@ body{
 
     </div>
 
-
     <button
         class="menu-btn"
         id="menuBtn">
-
         ☰
-
     </button>
 
 </header>
@@ -1102,7 +1091,6 @@ body{
 <div
     class="search-results"
     id="searchResults">
-
 </div>
 
 
@@ -1136,7 +1124,6 @@ body{
 
         </div>
 
-
         <div class="status-item">
 
             <div class="status-circle">
@@ -1148,7 +1135,6 @@ body{
             </div>
 
         </div>
-
 
         <div class="status-item">
 
@@ -1180,13 +1166,10 @@ body{
         <div
             class="connection-count"
             id="connectionCount">
-
             0
-
         </div>
 
     </div>
-
 
     <div
         class="connections-list"
@@ -1228,7 +1211,6 @@ body{
 
     </div>
 
-
     <div
         class="nav-item"
         onclick="goReels()">
@@ -1239,7 +1221,6 @@ body{
 
     </div>
 
-
     <div
         class="nav-item"
         onclick="createPost()">
@@ -1249,7 +1230,6 @@ body{
         </div>
 
     </div>
-
 
     <div
         class="nav-item"
@@ -1262,13 +1242,10 @@ body{
         <div
             class="notification-badge"
             id="notificationBadge">
-
             0
-
         </div>
 
     </div>
-
 
     <div
         class="nav-item"
@@ -1295,9 +1272,7 @@ body{
             class="menu-item"
             onclick="goMonetization()">
 
-            <span class="menu-icon">
-                💰
-            </span>
+            <span class="menu-icon">💰</span>
 
             <span class="menu-label">
                 Monetization
@@ -1309,14 +1284,11 @@ body{
 
         </div>
 
-
         <div
             class="menu-item"
             onclick="goBlocked()">
 
-            <span class="menu-icon">
-                🚫
-            </span>
+            <span class="menu-icon">🚫</span>
 
             <span class="menu-label">
                 Blocked
@@ -1328,14 +1300,11 @@ body{
 
         </div>
 
-
         <div
             class="menu-item"
             onclick="goPrivacy()">
 
-            <span class="menu-icon">
-                🔒
-            </span>
+            <span class="menu-icon">🔒</span>
 
             <span class="menu-label">
                 Privacy &amp; Security
@@ -1347,14 +1316,11 @@ body{
 
         </div>
 
-
         <div
             class="menu-item"
             onclick="goSettings()">
 
-            <span class="menu-icon">
-                ⚙️
-            </span>
+            <span class="menu-icon">⚙️</span>
 
             <span class="menu-label">
                 Settings
@@ -1366,14 +1332,11 @@ body{
 
         </div>
 
-
         <div
             class="menu-item"
             onclick="goHelp()">
 
-            <span class="menu-icon">
-                ❓
-            </span>
+            <span class="menu-icon">❓</span>
 
             <span class="menu-label">
                 Help &amp; Support
@@ -1385,14 +1348,11 @@ body{
 
         </div>
 
-
         <div
             class="menu-item"
             onclick="goAbout()">
 
-            <span class="menu-icon">
-                ℹ️
-            </span>
+            <span class="menu-icon">ℹ️</span>
 
             <span class="menu-label">
                 About Usanex
@@ -1403,7 +1363,6 @@ body{
             </span>
 
         </div>
-
 
         <div
             class="menu-item logout"
@@ -1433,7 +1392,7 @@ body{
 
     <button
         class="dp-viewer-close"
-        onclick="closeDPViewer()">
+        onclick="closeDPViewer(event)">
         ×
     </button>
 
@@ -1473,13 +1432,8 @@ let searchTimer = null;
 
 /*
  * IMPORTANT:
- * Is Set me currently connected users ke user_id
+ * Is Set me sirf accepted/current connections ke IDs
  * save honge.
- *
- * Search result me isi Set se check hoga:
- *
- * Connected -> Connected
- * Not Connected -> Follow
  */
 let connectedUserIds = new Set();
 
@@ -1629,7 +1583,7 @@ function resolveCurrentUser(){
 
 
 /* =========================================================
-   CHECK CONNECTION
+   CONNECTION CHECK
 ========================================================= */
 
 function isConnectedUser(userId){
@@ -1638,19 +1592,15 @@ function isConnectedUser(userId){
         return false;
     }
 
-    const cleanId =
-        String(userId).trim();
-
     return connectedUserIds.has(
-        cleanId
+        String(userId).trim()
     );
 
 }
 
 
 /* =========================================================
-   SEARCH
-   Name + User ID + Mobile Number
+   SEARCH ELEMENTS
 ========================================================= */
 
 const searchInput =
@@ -1664,6 +1614,10 @@ const searchResults =
     );
 
 
+/* =========================================================
+   SEARCH INPUT
+========================================================= */
+
 if(searchInput){
 
     searchInput.addEventListener(
@@ -1673,11 +1627,9 @@ if(searchInput){
             const query =
                 this.value.trim();
 
-
             clearTimeout(
                 searchTimer
             );
-
 
             if(query.length < 2){
 
@@ -1686,7 +1638,6 @@ if(searchInput){
                 return;
 
             }
-
 
             searchTimer =
                 setTimeout(
@@ -1725,6 +1676,10 @@ if(searchInput){
 }
 
 
+/* =========================================================
+   SEARCH USERS
+========================================================= */
+
 async function searchUsers(query){
 
     if(!searchResults){
@@ -1747,15 +1702,6 @@ async function searchUsers(query){
 
 
     try{
-
-        /*
-         * Existing Usanex search API.
-         *
-         * q can contain:
-         * - name
-         * - user_id
-         * - mobile number
-         */
 
         const response =
             await fetch(
@@ -1833,10 +1779,6 @@ async function searchUsers(query){
         }
 
 
-        /*
-         * Remove duplicate users.
-         */
-
         const uniqueUsers = [];
 
         const seen =
@@ -1849,9 +1791,7 @@ async function searchUsers(query){
                 !user ||
                 typeof user !== "object"
             ){
-
                 continue;
-
             }
 
 
@@ -1874,15 +1814,11 @@ async function searchUsers(query){
             if(
                 seen.has(cleanId)
             ){
-
                 continue;
-
             }
 
 
-            seen.add(
-                cleanId
-            );
+            seen.add(cleanId);
 
             uniqueUsers.push(
                 user
@@ -1896,7 +1832,11 @@ async function searchUsers(query){
 
 
         /*
-         * Extra frontend filtering.
+         * Frontend filtering:
+         * name
+         * user_id
+         * username
+         * mobile
          */
 
         const q =
@@ -1972,13 +1912,9 @@ async function searchUsers(query){
         searchResults.innerHTML = `
 
             <div class="search-empty">
-
                 Search could not load.
-
                 <br>
-
                 Please try again.
-
             </div>
 
         `;
@@ -2002,7 +1938,8 @@ function renderSearchResults(
     }
 
 
-    searchResults.innerHTML = "";
+    searchResults.innerHTML =
+        "";
 
 
     const title =
@@ -2039,6 +1976,7 @@ function renderSearchResults(
             query +
             '"';
 
+
         searchResults.appendChild(
             empty
         );
@@ -2060,6 +1998,27 @@ function renderSearchResults(
 
             const cleanUserId =
                 String(userId).trim();
+
+
+            if(!cleanUserId){
+                return;
+            }
+
+
+            /*
+             * Current user ko search result me
+             * show nahi karna.
+             */
+
+            if(
+                currentUserId &&
+                cleanUserId ===
+                String(currentUserId).trim()
+            ){
+
+                return;
+
+            }
 
 
             const name =
@@ -2089,22 +2048,6 @@ function renderSearchResults(
                 .charAt(0)
                 .toUpperCase() ||
                 "U";
-
-
-            /*
-             * Do not show current user
-             * in search results.
-             */
-
-            if(
-                currentUserId &&
-                cleanUserId ===
-                String(currentUserId).trim()
-            ){
-
-                return;
-
-            }
 
 
             const card =
@@ -2162,6 +2105,28 @@ function renderSearchResults(
                     firstLetter;
 
             }
+
+
+            /*
+             * Search DP par click:
+             * sirf DP viewer.
+             */
+
+            photoBox.addEventListener(
+                "click",
+                function(event){
+
+                    event.preventDefault();
+
+                    event.stopPropagation();
+
+                    openDPViewer(
+                        photo,
+                        name
+                    );
+
+                }
+            );
 
 
             /* ================= INFO ================= */
@@ -2230,21 +2195,13 @@ function renderSearchResults(
             }
 
 
-            /* ================= ACTION BUTTON ================= */
+            /* ================= BUTTON ================= */
 
             const followBtn =
                 document.createElement(
                     "button"
                 );
 
-
-            /*
-             * IMPORTANT FIX:
-             *
-             * Search result ka user agar
-             * already Connected People me hai,
-             * to Follow nahi dikhana hai.
-             */
 
             const alreadyConnected =
                 isConnectedUser(
@@ -2254,16 +2211,43 @@ function renderSearchResults(
 
             if(alreadyConnected){
 
+                /*
+                 * CONNECTED USER
+                 */
+
                 followBtn.className =
                     "search-follow-btn connected";
 
                 followBtn.textContent =
                     "Connected";
 
-                followBtn.disabled =
-                    true;
+
+                /*
+                 * Connected button par click:
+                 * Chat open hoga.
+                 */
+
+                followBtn.addEventListener(
+                    "click",
+                    function(event){
+
+                        event.preventDefault();
+
+                        event.stopPropagation();
+
+
+                        openChat(
+                            cleanUserId
+                        );
+
+                    }
+                );
 
             }else{
+
+                /*
+                 * NON-CONNECTED USER
+                 */
 
                 followBtn.className =
                     "search-follow-btn";
@@ -2271,6 +2255,11 @@ function renderSearchResults(
                 followBtn.textContent =
                     "Follow";
 
+
+                /*
+                 * Follow button par sirf
+                 * Follow request jayegi.
+                 */
 
                 followBtn.addEventListener(
                     "click",
@@ -2296,26 +2285,46 @@ function renderSearchResults(
 
             card.addEventListener(
                 "click",
-                function(){
+                function(event){
 
-                    if(!cleanUserId){
-                        return;
-                    }
+                    event.preventDefault();
 
-
-                    closeSearchResults();
+                    event.stopPropagation();
 
 
                     /*
-                     * Search result par click
-                     * karne par profile open hoga.
+                     * ONLY connected user:
+                     * card click -> Chat
                      */
 
-                    window.location.href =
-                        "/profile?user_id=" +
-                        encodeURIComponent(
+                    if(
+                        isConnectedUser(
+                            cleanUserId
+                        )
+                    ){
+
+                        closeSearchResults();
+
+                        openChat(
                             cleanUserId
                         );
+
+                        return;
+
+                    }
+
+
+                    /*
+                     * NON-CONNECTED USER:
+                     *
+                     * Card par click karne par
+                     * KISI PAGE par nahi jayega.
+                     *
+                     * Yahan jaan-bujhkar
+                     * koi action nahi hai.
+                     */
+
+                    return;
 
                 }
             );
@@ -2345,6 +2354,29 @@ function renderSearchResults(
 
 
 /* =========================================================
+   OPEN CHAT
+========================================================= */
+
+function openChat(targetUserId){
+
+    if(!targetUserId){
+        return;
+    }
+
+
+    closeSearchResults();
+
+
+    window.location.href =
+        "/chat?user_id=" +
+        encodeURIComponent(
+            String(targetUserId).trim()
+        );
+
+}
+
+
+/* =========================================================
    FOLLOW USER
 ========================================================= */
 
@@ -2365,16 +2397,14 @@ async function followUser(
 
 
     if(!targetUserId){
-
         return;
-
     }
 
 
     /*
      * Safety:
-     * Connected user ko follow request
-     * send nahi hogi.
+     * Already connected user ko follow request
+     * nahi bhejni.
      */
 
     if(
@@ -2386,12 +2416,13 @@ async function followUser(
         button.textContent =
             "Connected";
 
+        button.classList.remove(
+            "following"
+        );
+
         button.classList.add(
             "connected"
         );
-
-        button.disabled =
-            true;
 
         return;
 
@@ -2449,7 +2480,6 @@ async function followUser(
 
         button.textContent =
             "Requested";
-
 
         button.classList.add(
             "following"
@@ -2535,7 +2565,7 @@ document.addEventListener(
 
 
 /* =========================================================
-   CONNECTIONS
+   LOAD CONNECTIONS
 ========================================================= */
 
 async function loadConnections(){
@@ -2609,8 +2639,7 @@ async function loadConnections(){
 
         const response =
             await fetch(
-                "/api/home/connections?user_id="
-                +
+                "/api/home/connections?user_id=" +
                 encodeURIComponent(
                     currentUserId
                 ),
@@ -2650,8 +2679,7 @@ async function loadConnections(){
 
             const response =
                 await fetch(
-                    "/api/connections?user_id="
-                    +
+                    "/api/connections?user_id=" +
                     encodeURIComponent(
                         currentUserId
                     ),
@@ -2682,11 +2710,6 @@ async function loadConnections(){
                 error
             );
 
-
-            /*
-             * Connection API fail hone par
-             * purana Set use nahi karna.
-             */
 
             connectedUserIds =
                 new Set();
@@ -2724,7 +2747,8 @@ async function loadConnections(){
 
     if(Array.isArray(data)){
 
-        users = data;
+        users =
+            data;
 
     }
     else if(
@@ -2768,9 +2792,7 @@ async function loadConnections(){
             !user ||
             typeof user !== "object"
         ){
-
             continue;
-
         }
 
 
@@ -2781,9 +2803,7 @@ async function loadConnections(){
 
 
         if(!id){
-
             continue;
-
         }
 
 
@@ -2795,9 +2815,7 @@ async function loadConnections(){
             !cleanId ||
             seenIds.has(cleanId)
         ){
-
             continue;
-
         }
 
 
@@ -2817,50 +2835,27 @@ async function loadConnections(){
 
 
     /*
-     * =====================================================
-     * IMPORTANT FIX
-     *
-     * Connected users ke IDs ko global Set me save karo.
-     *
-     * Example:
-     *
-     * UX214ee93583
-     * UX9a041066aa
-     * UX3e524ce730
-     *
-     * Ab search result me in IDs ko check
-     * karke Connected dikhaya jayega.
-     * =====================================================
+     * IMPORTANT:
+     * Global Connected IDs refresh.
      */
 
     connectedUserIds =
-        new Set();
+        new Set(
+            users
+                .map(
+                    function(user){
 
+                        return String(
+                            user.user_id ||
+                            user.id ||
+                            user.username ||
+                            ""
+                        ).trim();
 
-    users.forEach(
-        function(user){
-
-            const id =
-                user.user_id ||
-                user.id ||
-                user.username ||
-                "";
-
-
-            const cleanId =
-                String(id).trim();
-
-
-            if(cleanId){
-
-                connectedUserIds.add(
-                    cleanId
-                );
-
-            }
-
-        }
-    );
+                    }
+                )
+                .filter(Boolean)
+        );
 
 
     count.textContent =
@@ -2894,11 +2889,12 @@ async function loadConnections(){
     }
 
 
-    list.innerHTML = "";
+    list.innerHTML =
+        "";
 
 
     users.forEach(
-        user => {
+        function(user){
 
             const userId =
                 user.user_id ||
@@ -2906,11 +2902,15 @@ async function loadConnections(){
                 "";
 
 
+            const cleanUserId =
+                String(userId).trim();
+
+
             const name =
                 user.name ||
                 user.display_name ||
                 user.username ||
-                userId ||
+                cleanUserId ||
                 "User";
 
 
@@ -2938,6 +2938,11 @@ async function loadConnections(){
                 "user-card";
 
 
+            /*
+             * Connected card click:
+             * Chat
+             */
+
             card.addEventListener(
                 "click",
                 function(event){
@@ -2947,28 +2952,24 @@ async function loadConnections(){
                             ".profile-photo"
                         )
                     ){
-
                         return;
-
                     }
 
 
-                    if(!userId){
-
+                    if(!cleanUserId){
                         return;
-
                     }
 
 
-                    window.location.href =
-                        "/chat?user_id=" +
-                        encodeURIComponent(
-                            String(userId).trim()
-                        );
+                    openChat(
+                        cleanUserId
+                    );
 
                 }
             );
 
+
+            /* ================= PHOTO ================= */
 
             const photoBox =
                 document.createElement(
@@ -3008,47 +3009,32 @@ async function loadConnections(){
                     img
                 );
 
-
-                photoBox.addEventListener(
-                    "click",
-                    function(event){
-
-                        event.preventDefault();
-
-                        event.stopPropagation();
-
-                        openDPViewer(
-                            photo,
-                            name
-                        );
-
-                    }
-                );
-
             }else{
 
                 photoBox.textContent =
                     firstLetter;
 
-
-                photoBox.addEventListener(
-                    "click",
-                    function(event){
-
-                        event.preventDefault();
-
-                        event.stopPropagation();
-
-                        openDPViewer(
-                            "",
-                            name
-                        );
-
-                    }
-                );
-
             }
 
+
+            photoBox.addEventListener(
+                "click",
+                function(event){
+
+                    event.preventDefault();
+
+                    event.stopPropagation();
+
+                    openDPViewer(
+                        photo,
+                        name
+                    );
+
+                }
+            );
+
+
+            /* ================= INFO ================= */
 
             const info =
                 document.createElement(
@@ -3080,7 +3066,7 @@ async function loadConnections(){
                 "user-id";
 
             idBox.textContent =
-                userId;
+                cleanUserId;
 
 
             info.appendChild(
@@ -3091,6 +3077,8 @@ async function loadConnections(){
                 idBox
             );
 
+
+            /* ================= CONNECTED BUTTON ================= */
 
             const button =
                 document.createElement(
@@ -3113,18 +3101,9 @@ async function loadConnections(){
                     event.stopPropagation();
 
 
-                    if(!userId){
-
-                        return;
-
-                    }
-
-
-                    window.location.href =
-                        "/chat?user_id=" +
-                        encodeURIComponent(
-                            String(userId).trim()
-                        );
+                    openChat(
+                        cleanUserId
+                    );
 
                 }
             );
@@ -3179,9 +3158,7 @@ function openDPViewer(
 
 
     if(!viewer){
-
         return;
-
     }
 
 
@@ -3227,7 +3204,12 @@ function openDPViewer(
 }
 
 
-function closeDPViewer(){
+function closeDPViewer(event){
+
+    if(event){
+        event.stopPropagation();
+    }
+
 
     const viewer =
         document.getElementById(
@@ -3250,32 +3232,14 @@ function closeDPViewer(){
 }
 
 
-document.addEventListener(
-    "keydown",
-    function(event){
-
-        if(
-            event.key === "Escape"
-        ){
-
-            closeDPViewer();
-
-        }
-
-    }
-);
-
-
 /* =========================================================
-   NOTIFICATIONS
+   NOTIFICATION COUNT
 ========================================================= */
 
 async function loadNotificationCount(){
 
     if(!currentUserId){
-
         return;
-
     }
 
 
@@ -3283,8 +3247,7 @@ async function loadNotificationCount(){
 
         const response =
             await fetch(
-                "/api/notifications?user_id="
-                +
+                "/api/notifications?user_id=" +
                 encodeURIComponent(
                     currentUserId
                 ),
@@ -3296,9 +3259,7 @@ async function loadNotificationCount(){
 
 
         if(!response.ok){
-
             return;
-
         }
 
 
@@ -3341,12 +3302,17 @@ async function loadNotificationCount(){
 
         const unread =
             notifications.filter(
-                item =>
-                    item &&
-                    (
-                        item.is_read === false ||
-                        item.read === false
-                    )
+                function(item){
+
+                    return (
+                        item &&
+                        (
+                            item.is_read === false ||
+                            item.read === false
+                        )
+                    );
+
+                }
             ).length;
 
 
@@ -3400,14 +3366,6 @@ function goHome(){
 }
 
 
-function goSearch(){
-
-    window.location.href =
-        "/search";
-
-}
-
-
 function goReels(){
 
     window.location.href =
@@ -3429,8 +3387,7 @@ function goProfile(){
     if(currentUserId){
 
         window.location.href =
-            "/profile?user_id="
-            +
+            "/profile?user_id=" +
             encodeURIComponent(
                 currentUserId
             );
@@ -3519,9 +3476,7 @@ function showToast(message){
 
 
     if(!toast){
-
         return;
-
     }
 
 
@@ -3670,12 +3625,8 @@ document.addEventListener(
         resolveCurrentUser();
 
         /*
-         * IMPORTANT:
          * Pehle connections load honge.
-         * Iske baad connectedUserIds Set ready hoga.
-         *
-         * Search karne par ab existing connection
-         * ko Follow nahi dikhaya jayega.
+         * Isse connectedUserIds Set ready ho jayega.
          */
 
         await loadConnections();
@@ -3695,26 +3646,23 @@ setInterval(
 
         resolveCurrentUser();
 
-        /*
-         * Connections refresh hone ke baad
-         * connectedUserIds bhi refresh hoga.
-         */
-
         await loadConnections();
 
         await loadNotificationCount();
 
+
         /*
-         * Agar search result already open hai,
-         * to current search ko dobara render karo.
-         * Isse Connected/Follow status bhi fresh rahega.
+         * Agar search open hai,
+         * connected status refresh karo.
          */
 
         if(
             searchInput &&
             searchInput.value.trim().length >= 2 &&
             searchResults &&
-            searchResults.classList.contains("active")
+            searchResults.classList.contains(
+                "active"
+            )
         ){
 
             await searchUsers(
@@ -3725,6 +3673,35 @@ setInterval(
 
     },
     30000
+);
+
+
+/* =========================================================
+   ESCAPE KEY
+========================================================= */
+
+document.addEventListener(
+    "keydown",
+    function(event){
+
+        if(
+            event.key === "Escape"
+        ){
+
+            closeSearchResults();
+
+            closeDPViewer();
+
+            if(menuOverlay){
+
+                menuOverlay.style.display =
+                    "none";
+
+            }
+
+        }
+
+    }
 );
 
 </script>
