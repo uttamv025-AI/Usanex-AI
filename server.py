@@ -26,6 +26,8 @@ import secrets
 import uuid
 import os
 import asyncio
+import cloudinary
+import cloudinary.uploader
 
 
 # ============================================================
@@ -35,6 +37,13 @@ BASE_DIR = os.path.dirname(
     os.path.abspath(__file__)
 )
 app = FastAPI(title="Usanex")
+
+cloudinary.config(
+    cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
+    api_key=os.getenv("CLOUDINARY_API_KEY"),
+    api_secret=os.getenv("CLOUDINARY_API_SECRET"),
+    secure=True,
+)
 
 UPLOAD_DIR = os.path.join(
     BASE_DIR,
