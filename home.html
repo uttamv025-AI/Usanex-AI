@@ -3775,7 +3775,7 @@ async function loadNotificationCount(){
 }
 
 /* =========================================================
-   STATUS: ADD MY STATUS
+   STATUS: ADD MY STATUS — MULTIPLE MEDIA
 ========================================================= */
 
 function addMyStatus(){
@@ -3786,13 +3786,21 @@ function addMyStatus(){
 
     input.accept = "image/*,video/*";
 
+    input.multiple = true;
+
     input.onchange = function(){
 
-        const file = input.files[0];
+        const files = Array.from(input.files);
 
-        if(!file){
+        if(!files.length){
             return;
         }
+
+        // Selected files ko temporarily save
+        window.selectedStatusFiles = files;
+
+        // Abhi preview me first selected media dikhayenge
+        const firstFile = files[0];
 
         const modal =
             document.getElementById(
@@ -3810,19 +3818,19 @@ function addMyStatus(){
             );
 
         const fileURL =
-            URL.createObjectURL(file);
+            URL.createObjectURL(firstFile);
 
         image.style.display = "none";
         video.style.display = "none";
 
-        if(file.type.startsWith("image/")){
+        if(firstFile.type.startsWith("image/")){
 
             image.src = fileURL;
 
             image.style.display = "block";
 
         }
-        else if(file.type.startsWith("video/")){
+        else if(firstFile.type.startsWith("video/")){
 
             video.src = fileURL;
 
@@ -3832,44 +3840,14 @@ function addMyStatus(){
 
         modal.style.display = "flex";
 
+        console.log(
+            "Selected Status Files:",
+            files
+        );
+
     };
 
     input.click();
-
-}
-
-
-function closeStatusPreview(){
-
-    const modal =
-        document.getElementById(
-            "statusPreviewModal"
-        );
-
-    const image =
-        document.getElementById(
-            "statusPreviewImage"
-        );
-
-    const video =
-        document.getElementById(
-            "statusPreviewVideo"
-        );
-
-    image.src = "";
-
-    video.src = "";
-
-    modal.style.display = "none";
-
-}
-
-
-function confirmStatusPreview(){
-
-    alert(
-        "Next step: Status upload."
-    );
 
 }
 
