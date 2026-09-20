@@ -130,7 +130,7 @@ body{
     align-items:center;
 
     padding:0 13px;
-    cursor:pointer;
+    cursor:text;
 }
 
 .search-icon{
@@ -139,10 +139,206 @@ body{
     margin-right:8px;
 }
 
-.search-text{
-    color:#7f8da3;
+.search-input{
+    width:100%;
+    height:100%;
+
+    border:0;
+    outline:0;
+
+    background:transparent;
+
+    color:#fff;
+
     font-size:13px;
+}
+
+.search-input::placeholder{
+    color:#7f8da3;
+}
+
+/* ================= SEARCH RESULT BOX ================= */
+
+.search-results{
+    position:fixed;
+
+    top:72px;
+    left:10px;
+    right:10px;
+
+    z-index:500;
+
+    display:none;
+
+    max-height:70vh;
+    overflow-y:auto;
+
+    background:#0d1728;
+
+    border:1px solid rgba(255,255,255,.08);
+
+    border-radius:17px;
+
+    box-shadow:
+        0 20px 55px rgba(0,0,0,.55);
+
+    padding:8px;
+}
+
+.search-results.active{
+    display:block;
+}
+
+.search-result-title{
+    padding:10px 10px 8px;
+
+    color:#8794a9;
+
+    font-size:12px;
+}
+
+.search-result-card{
+    min-height:70px;
+
+    width:100%;
+
+    display:flex;
+    align-items:center;
+
+    padding:9px;
+
+    border-radius:13px;
+
+    cursor:pointer;
+
+    transition:.15s ease;
+}
+
+.search-result-card:hover{
+    background:#142238;
+}
+
+.search-result-card:active{
+    transform:scale(.985);
+}
+
+.search-result-photo{
+    width:48px;
+    height:48px;
+    min-width:48px;
+
+    border-radius:50%;
+
+    overflow:hidden;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:
+        linear-gradient(
+            145deg,
+            #17345f,
+            #0c1728
+        );
+
+    border:1px solid rgba(255,255,255,.07);
+
+    font-size:18px;
+    font-weight:bold;
+}
+
+.search-result-photo img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.search-result-info{
+    flex:1;
+    min-width:0;
+
+    margin-left:11px;
+}
+
+.search-result-name{
+    font-size:14px;
+    font-weight:700;
+
     white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.search-result-id{
+    margin-top:4px;
+
+    color:#8290a5;
+
+    font-size:11px;
+
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.search-result-mobile{
+    margin-top:3px;
+
+    color:#617087;
+
+    font-size:10px;
+
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.search-follow-btn{
+    border:1px solid rgba(23,119,255,.35);
+
+    background:rgba(23,119,255,.11);
+
+    color:#63a7ff;
+
+    border-radius:18px;
+
+    padding:7px 11px;
+
+    font-size:11px;
+    font-weight:600;
+
+    white-space:nowrap;
+
+    cursor:pointer;
+}
+
+.search-follow-btn.following{
+    color:#7fd8a1;
+
+    border-color:rgba(70,200,120,.30);
+
+    background:rgba(70,200,120,.08);
+}
+
+.search-empty{
+    padding:28px 15px;
+
+    text-align:center;
+
+    color:#78869b;
+
+    font-size:13px;
+}
+
+.search-loading{
+    padding:25px;
+
+    text-align:center;
+
+    color:#8290a5;
+
+    font-size:13px;
 }
 
 /* ================= MENU BUTTON ================= */
@@ -800,7 +996,7 @@ body{
         height:42px;
     }
 
-    .search-text{
+    .search-input{
         font-size:12px;
     }
 
@@ -857,18 +1053,19 @@ body{
     </div>
 
 
-    <div
-        class="search-box"
-        id="searchBox"
-        onclick="goSearch()">
+    <div class="search-box">
 
         <span class="search-icon">
             ⌕
         </span>
 
-        <span class="search-text">
-            Search people...
-        </span>
+        <input
+            type="search"
+            id="searchInput"
+            class="search-input"
+            placeholder="Search name, user ID or number..."
+            autocomplete="off"
+            inputmode="search">
 
     </div>
 
@@ -882,6 +1079,15 @@ body{
     </button>
 
 </header>
+
+
+<!-- ================= SEARCH RESULTS ================= -->
+
+<div
+    class="search-results"
+    id="searchResults">
+
+</div>
 
 
 <!-- ================= STATUS ================= -->
@@ -1239,12 +1445,18 @@ body{
 
 <script>
 
+/* =========================================================
+   GLOBAL USER
+========================================================= */
+
 let currentUser = null;
 let currentUserId = "";
 
+let searchTimer = null;
+
 
 /* =========================================================
-   USER
+   USER RESOLUTION
 ========================================================= */
 
 function resolveCurrentUser(){
@@ -1385,6 +1597,834 @@ function resolveCurrentUser(){
     }
 
 }
+
+
+/* =========================================================
+   SEARCH
+   Name + User ID + Mobile Number
+========================================================= */
+
+const searchInput =
+    document.getElementById(
+        "searchInput"
+    );
+
+const searchResults =
+    document.getElementById(
+        "searchResults"
+    );
+
+
+if(searchInput){
+
+    searchInput.addEventListener(
+        "input",
+        function(){
+
+            const query =
+                this.value.trim();
+
+
+            clearTimeout(
+                searchTimer
+            );
+
+
+            if(query.length < 2){
+
+                closeSearchResults();
+
+                return;
+
+            }
+
+
+            searchTimer =
+                setTimeout(
+                    function(){
+
+                        searchUsers(
+                            query
+                        );
+
+                    },
+                    350
+                );
+
+        }
+    );
+
+
+    searchInput.addEventListener(
+        "focus",
+        function(){
+
+            const query =
+                this.value.trim();
+
+            if(query.length >= 2){
+
+                searchUsers(
+                    query
+                );
+
+            }
+
+        }
+    );
+
+}
+
+
+async function searchUsers(query){
+
+    if(!searchResults){
+        return;
+    }
+
+
+    searchResults.classList.add(
+        "active"
+    );
+
+
+    searchResults.innerHTML = `
+
+        <div class="search-loading">
+            Searching...
+        </div>
+
+    `;
+
+
+    try{
+
+        /*
+         * Existing Usanex search API.
+         *
+         * q can contain:
+         * - name
+         * - user_id
+         * - mobile number
+         */
+
+        const response =
+            await fetch(
+                "/api/search?q=" +
+                encodeURIComponent(query) +
+                "&user_id=" +
+                encodeURIComponent(
+                    currentUserId
+                ),
+                {
+                    method:"GET",
+                    cache:"no-store"
+                }
+            );
+
+
+        if(!response.ok){
+
+            throw new Error(
+                "HTTP " +
+                response.status
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        let users = [];
+
+
+        if(Array.isArray(data)){
+
+            users =
+                data;
+
+        }
+        else if(
+            data &&
+            Array.isArray(data.users)
+        ){
+
+            users =
+                data.users;
+
+        }
+        else if(
+            data &&
+            Array.isArray(data.results)
+        ){
+
+            users =
+                data.results;
+
+        }
+        else if(
+            data &&
+            Array.isArray(data.data)
+        ){
+
+            users =
+                data.data;
+
+        }
+        else if(
+            data &&
+            data.user
+        ){
+
+            users =
+                [data.user];
+
+        }
+
+
+        /*
+         * Remove duplicate users.
+         */
+
+        const uniqueUsers = [];
+
+        const seen =
+            new Set();
+
+
+        for(const user of users){
+
+            if(
+                !user ||
+                typeof user !== "object"
+            ){
+
+                continue;
+
+            }
+
+
+            const id =
+                user.user_id ||
+                user.id ||
+                user.username ||
+                user.mobile;
+
+
+            if(!id){
+                continue;
+            }
+
+
+            const cleanId =
+                String(id).trim();
+
+
+            if(
+                seen.has(cleanId)
+            ){
+
+                continue;
+
+            }
+
+
+            seen.add(
+                cleanId
+            );
+
+            uniqueUsers.push(
+                user
+            );
+
+        }
+
+
+        users =
+            uniqueUsers;
+
+
+        /*
+         * Extra frontend filtering.
+         *
+         * This makes sure the returned
+         * users match name / ID / number.
+         */
+
+        const q =
+            query.toLowerCase();
+
+
+        users =
+            users.filter(
+                function(user){
+
+                    const name =
+                        String(
+                            user.name ||
+                            user.display_name ||
+                            user.username ||
+                            ""
+                        )
+                        .toLowerCase();
+
+
+                    const userId =
+                        String(
+                            user.user_id ||
+                            user.id ||
+                            ""
+                        )
+                        .toLowerCase();
+
+
+                    const username =
+                        String(
+                            user.username ||
+                            ""
+                        )
+                        .toLowerCase();
+
+
+                    const mobile =
+                        String(
+                            user.mobile ||
+                            user.phone ||
+                            user.phone_number ||
+                            ""
+                        )
+                        .toLowerCase();
+
+
+                    return (
+                        name.includes(q) ||
+                        userId.includes(q) ||
+                        username.includes(q) ||
+                        mobile.includes(q)
+                    );
+
+                }
+            );
+
+
+        renderSearchResults(
+            users,
+            query
+        );
+
+
+    }catch(error){
+
+        console.log(
+            "Search error:",
+            error
+        );
+
+
+        searchResults.innerHTML = `
+
+            <div class="search-empty">
+
+                Search could not load.
+
+                <br>
+
+                Please try again.
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+/* =========================================================
+   RENDER SEARCH RESULTS
+========================================================= */
+
+function renderSearchResults(
+    users,
+    query
+){
+
+    if(!searchResults){
+        return;
+    }
+
+
+    searchResults.innerHTML = "";
+
+
+    const title =
+        document.createElement(
+            "div"
+        );
+
+    title.className =
+        "search-result-title";
+
+    title.textContent =
+        users.length
+            ? "People"
+            : "No people found";
+
+
+    searchResults.appendChild(
+        title
+    );
+
+
+    if(users.length === 0){
+
+        const empty =
+            document.createElement(
+                "div"
+            );
+
+        empty.className =
+            "search-empty";
+
+        empty.textContent =
+            'No user found for "' +
+            query +
+            '"';
+
+        searchResults.appendChild(
+            empty
+        );
+
+        return;
+
+    }
+
+
+    users.forEach(
+        function(user){
+
+            const userId =
+                user.user_id ||
+                user.id ||
+                user.username ||
+                "";
+
+
+            const name =
+                user.name ||
+                user.display_name ||
+                user.username ||
+                "User";
+
+
+            const mobile =
+                user.mobile ||
+                user.phone ||
+                user.phone_number ||
+                "";
+
+
+            const photo =
+                user.profile_photo ||
+                user.profile_picture ||
+                user.photo ||
+                "";
+
+
+            const firstLetter =
+                String(name)
+                .trim()
+                .charAt(0)
+                .toUpperCase() ||
+                "U";
+
+
+            /*
+             * Do not show current user
+             * in search results.
+             */
+
+            if(
+                currentUserId &&
+                String(userId).trim()
+                    ===
+                String(currentUserId).trim()
+            ){
+
+                return;
+
+            }
+
+
+            const card =
+                document.createElement(
+                    "div"
+                );
+
+            card.className =
+                "search-result-card";
+
+
+            /* ================= PHOTO ================= */
+
+            const photoBox =
+                document.createElement(
+                    "div"
+                );
+
+            photoBox.className =
+                "search-result-photo";
+
+
+            if(photo){
+
+                const img =
+                    document.createElement(
+                        "img"
+                    );
+
+                img.src =
+                    photo;
+
+                img.alt =
+                    name;
+
+
+                img.onerror =
+                    function(){
+
+                        this.remove();
+
+                        photoBox.textContent =
+                            firstLetter;
+
+                    };
+
+
+                photoBox.appendChild(
+                    img
+                );
+
+            }else{
+
+                photoBox.textContent =
+                    firstLetter;
+
+            }
+
+
+            /* ================= INFO ================= */
+
+            const info =
+                document.createElement(
+                    "div"
+                );
+
+            info.className =
+                "search-result-info";
+
+
+            const nameBox =
+                document.createElement(
+                    "div"
+                );
+
+            nameBox.className =
+                "search-result-name";
+
+            nameBox.textContent =
+                name;
+
+
+            const idBox =
+                document.createElement(
+                    "div"
+                );
+
+            idBox.className =
+                "search-result-id";
+
+            idBox.textContent =
+                "ID: " +
+                userId;
+
+
+            info.appendChild(
+                nameBox
+            );
+
+            info.appendChild(
+                idBox
+            );
+
+
+            if(mobile){
+
+                const mobileBox =
+                    document.createElement(
+                        "div"
+                    );
+
+                mobileBox.className =
+                    "search-result-mobile";
+
+                mobileBox.textContent =
+                    "Mobile: " +
+                    mobile;
+
+                info.appendChild(
+                    mobileBox
+                );
+
+            }
+
+
+            /* ================= FOLLOW ================= */
+
+            const followBtn =
+                document.createElement(
+                    "button"
+                );
+
+            followBtn.className =
+                "search-follow-btn";
+
+            followBtn.textContent =
+                "Follow";
+
+
+            followBtn.addEventListener(
+                "click",
+                async function(event){
+
+                    event.preventDefault();
+
+                    event.stopPropagation();
+
+
+                    await followUser(
+                        String(userId).trim(),
+                        followBtn
+                    );
+
+                }
+            );
+
+
+            /* ================= CARD CLICK ================= */
+
+            card.addEventListener(
+                "click",
+                function(){
+
+                    if(!userId){
+                        return;
+                    }
+
+
+                    closeSearchResults();
+
+
+                    /*
+                     * Open profile.
+                     */
+
+                    window.location.href =
+                        "/profile?user_id=" +
+                        encodeURIComponent(
+                            String(userId).trim()
+                        );
+
+                }
+            );
+
+
+            card.appendChild(
+                photoBox
+            );
+
+            card.appendChild(
+                info
+            );
+
+            card.appendChild(
+                followBtn
+            );
+
+
+            searchResults.appendChild(
+                card
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   FOLLOW USER
+========================================================= */
+
+async function followUser(
+    targetUserId,
+    button
+){
+
+    if(!currentUserId){
+
+        showToast(
+            "Please login again"
+        );
+
+        return;
+
+    }
+
+
+    if(!targetUserId){
+
+        return;
+
+    }
+
+
+    button.disabled =
+        true;
+
+    button.textContent =
+        "...";
+
+
+    try{
+
+        const response =
+            await fetch(
+                "/api/follow",
+                {
+                    method:"POST",
+
+                    headers:{
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:JSON.stringify({
+
+                        requester_id:
+                            currentUserId,
+
+                        target_user_id:
+                            targetUserId
+
+                    })
+
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if(!response.ok){
+
+            throw new Error(
+                data.detail ||
+                data.message ||
+                "Follow failed"
+            );
+
+        }
+
+
+        button.textContent =
+            "Requested";
+
+
+        button.classList.add(
+            "following"
+        );
+
+
+        showToast(
+            data.message ||
+            "Follow request sent"
+        );
+
+
+    }catch(error){
+
+        console.log(
+            "Follow error:",
+            error
+        );
+
+
+        button.disabled =
+            false;
+
+        button.textContent =
+            "Follow";
+
+
+        showToast(
+            error.message ||
+            "Follow request failed"
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   CLOSE SEARCH
+========================================================= */
+
+function closeSearchResults(){
+
+    if(searchResults){
+
+        searchResults.classList.remove(
+            "active"
+        );
+
+        searchResults.innerHTML =
+            "";
+
+    }
+
+}
+
+
+document.addEventListener(
+    "click",
+    function(event){
+
+        const header =
+            document.querySelector(
+                ".header"
+            );
+
+
+        if(
+            searchResults &&
+            header &&
+            !header.contains(event.target) &&
+            !searchResults.contains(
+                event.target
+            )
+        ){
+
+            closeSearchResults();
+
+        }
+
+    }
+);
 
 
 /* =========================================================
@@ -1642,9 +2682,13 @@ async function loadConnections(){
         }
 
 
-        seenIds.add(cleanId);
+        seenIds.add(
+            cleanId
+        );
 
-        uniqueUsers.push(user);
+        uniqueUsers.push(
+            user
+        );
 
     }
 
@@ -1760,8 +2804,6 @@ async function loadConnections(){
             );
 
 
-            /* ================= DP ================= */
-
             const photoBox =
                 document.createElement(
                     "div"
@@ -1842,8 +2884,6 @@ async function loadConnections(){
             }
 
 
-            /* ================= USER INFO ================= */
-
             const info =
                 document.createElement(
                     "div"
@@ -1886,8 +2926,6 @@ async function loadConnections(){
             );
 
 
-            /* ================= CONNECTED BUTTON ================= */
-
             const button =
                 document.createElement(
                     "div"
@@ -1926,8 +2964,6 @@ async function loadConnections(){
             );
 
 
-            /* ================= CARD ================= */
-
             card.appendChild(
                 photoBox
             );
@@ -1952,7 +2988,7 @@ async function loadConnections(){
 
 
 /* =========================================================
-   CIRCULAR DP VIEWER
+   DP VIEWER
 ========================================================= */
 
 function openDPViewer(
@@ -1988,42 +3024,30 @@ function openDPViewer(
         String(photo).trim()
     ){
 
-        if(image){
+        image.src =
+            photo;
 
-            image.src =
-                photo;
+        image.alt =
+            name ||
+            "Profile Photo";
 
-            image.alt =
-                name ||
-                "Profile Photo";
-
-            image.style.display =
-                "block";
-
-        }
+        image.style.display =
+            "block";
 
     }else{
 
-        if(image){
+        image.removeAttribute(
+            "src"
+        );
 
-            image.removeAttribute(
-                "src"
-            );
-
-            image.style.display =
-                "none";
-
-        }
+        image.style.display =
+            "none";
 
     }
 
 
-    if(nameBox){
-
-        nameBox.textContent =
-            name || "";
-
-    }
+    nameBox.textContent =
+        name || "";
 
 
     viewer.classList.add(
@@ -2036,10 +3060,6 @@ function openDPViewer(
 
 }
 
-
-/* =========================================================
-   CLOSE DP VIEWER
-========================================================= */
 
 function closeDPViewer(){
 
@@ -2064,10 +3084,6 @@ function closeDPViewer(){
 }
 
 
-/* =========================================================
-   ESC KEY
-========================================================= */
-
 document.addEventListener(
     "keydown",
     function(event){
@@ -2085,7 +3101,7 @@ document.addEventListener(
 
 
 /* =========================================================
-   NOTIFICATION COUNT
+   NOTIFICATIONS
 ========================================================= */
 
 async function loadNotificationCount(){
@@ -2273,7 +3289,7 @@ function createPost(){
 
 
 /* =========================================================
-   MENU OPTIONS
+   MENU
 ========================================================= */
 
 function goMonetization(){
@@ -2351,7 +3367,7 @@ function showToast(message){
 
 
     setTimeout(
-        () => {
+        function(){
 
             toast.style.display =
                 "none";
