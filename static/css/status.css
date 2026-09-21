@@ -1,0 +1,1177 @@
+/* =========================================================
+   USANEX STATUS
+   status.css
+========================================================= */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #000;
+}
+
+body {
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    color: #fff;
+}
+
+
+/* =========================================================
+   MAIN APP
+========================================================= */
+
+.status-app {
+    position: relative;
+
+    width: 100%;
+    height: 100vh;
+
+    overflow: hidden;
+
+    background: #000;
+}
+
+
+/* =========================================================
+   MEDIA VIEWER
+========================================================= */
+
+.status-viewer {
+    position: absolute;
+
+    inset: 0;
+
+    z-index: 1;
+
+    overflow: hidden;
+
+    background: #000;
+
+    touch-action: pan-y;
+}
+
+.status-media-container {
+    position: absolute;
+
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    overflow: hidden;
+
+    background: #000;
+}
+
+
+/* Individual media created by JS */
+
+.status-media {
+    position: absolute;
+
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+
+    background: #000;
+
+    opacity: 0;
+
+    transform:
+        translateX(0)
+        scale(1.04);
+
+    filter: blur(0);
+
+    transition:
+        opacity .35s ease,
+        transform .45s cubic-bezier(.22,.61,.36,1),
+        filter .35s ease;
+
+    pointer-events: none;
+}
+
+.status-media.active {
+    opacity: 1;
+
+    transform:
+        translateX(0)
+        scale(1);
+}
+
+.status-media.leaving-left {
+    opacity: 0;
+
+    transform:
+        translateX(-22%)
+        scale(.94);
+
+    filter: blur(5px);
+}
+
+.status-media.leaving-right {
+    opacity: 0;
+
+    transform:
+        translateX(22%)
+        scale(.94);
+
+    filter: blur(5px);
+}
+
+.status-media.enter-left {
+    opacity: 0;
+
+    transform:
+        translateX(22%)
+        scale(1.06);
+
+    filter: blur(5px);
+}
+
+.status-media.enter-right {
+    opacity: 0;
+
+    transform:
+        translateX(-22%)
+        scale(1.06);
+
+    filter: blur(5px);
+}
+
+
+/* =========================================================
+   TOP HEADER
+========================================================= */
+
+.status-header {
+    position: absolute;
+
+    top: 0;
+    left: 0;
+    right: 0;
+
+    z-index: 20;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    padding:
+        calc(env(safe-area-inset-top) + 12px)
+        14px
+        14px;
+
+    background:
+        linear-gradient(
+            to bottom,
+            rgba(0, 0, 0, .78),
+            rgba(0, 0, 0, .40),
+            transparent
+        );
+
+    pointer-events: none;
+}
+
+.status-header > * {
+    pointer-events: auto;
+}
+
+
+/* =========================================================
+   BACK BUTTON
+========================================================= */
+
+.status-back-btn {
+    flex: 0 0 42px;
+
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid rgba(255,255,255,.12);
+
+    border-radius: 50%;
+
+    background:
+        rgba(255,255,255,.12);
+
+    color: #fff;
+
+    font-size: 30px;
+
+    line-height: 1;
+
+    cursor: pointer;
+
+    backdrop-filter: blur(12px);
+
+    -webkit-backdrop-filter: blur(12px);
+
+    transition:
+        background .2s ease,
+        transform .2s ease;
+}
+
+.status-back-btn:active {
+    transform: scale(.92);
+
+    background:
+        rgba(255,255,255,.20);
+}
+
+
+/* =========================================================
+   USER INFO
+========================================================= */
+
+.status-user-info {
+    min-width: 0;
+
+    flex: 1;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+}
+
+.status-user-avatar {
+    flex: 0 0 36px;
+
+    width: 36px;
+    height: 36px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background:
+        linear-gradient(
+            135deg,
+            #1683ff,
+            #0057c8
+        );
+
+    color: #fff;
+
+    font-size: 16px;
+
+    font-weight: 700;
+
+    box-shadow:
+        0 4px 16px rgba(22,131,255,.28);
+}
+
+.status-user-text {
+    min-width: 0;
+}
+
+.status-user-text h1 {
+    overflow: hidden;
+
+    font-size: 15px;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+
+    text-overflow: ellipsis;
+}
+
+.status-user-text p {
+    margin-top: 2px;
+
+    overflow: hidden;
+
+    color: rgba(255,255,255,.68);
+
+    font-size: 11px;
+
+    white-space: nowrap;
+
+    text-overflow: ellipsis;
+}
+
+
+/* =========================================================
+   COUNTER
+========================================================= */
+
+.status-counter {
+    flex: 0 0 auto;
+
+    min-width: 54px;
+
+    padding: 7px 10px;
+
+    border: 1px solid rgba(255,255,255,.10);
+
+    border-radius: 20px;
+
+    background:
+        rgba(0,0,0,.42);
+
+    color: #fff;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    text-align: center;
+
+    backdrop-filter: blur(12px);
+
+    -webkit-backdrop-filter: blur(12px);
+}
+
+
+/* =========================================================
+   THUMBNAILS
+========================================================= */
+
+.status-thumbnails-wrapper {
+    position: absolute;
+
+    top: 76px;
+    left: 0;
+    right: 0;
+
+    z-index: 19;
+
+    padding:
+        7px
+        14px;
+
+    pointer-events: none;
+}
+
+.status-thumbnails {
+    display: flex;
+
+    gap: 7px;
+
+    width: 100%;
+
+    overflow-x: auto;
+
+    scrollbar-width: none;
+
+    pointer-events: auto;
+}
+
+.status-thumbnails::-webkit-scrollbar {
+    display: none;
+}
+
+
+/* Thumbnail */
+
+.status-thumbnail {
+    position: relative;
+
+    flex: 0 0 48px;
+
+    width: 48px;
+    height: 48px;
+
+    overflow: hidden;
+
+    padding: 0;
+
+    border: 2px solid transparent;
+
+    border-radius: 11px;
+
+    background: #171717;
+
+    cursor: pointer;
+
+    transition:
+        border-color .2s ease,
+        transform .2s ease;
+}
+
+.status-thumbnail.active {
+    border-color: #1683ff;
+
+    transform: scale(1.05);
+}
+
+.status-thumbnail img,
+.status-thumbnail video {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    object-fit: cover;
+}
+
+
+/* Video icon */
+
+.status-video-icon {
+    position: absolute;
+
+    right: 4px;
+    bottom: 4px;
+
+    width: 17px;
+    height: 17px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background:
+        rgba(0,0,0,.72);
+
+    color: #fff;
+
+    font-size: 8px;
+}
+
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
+.status-empty {
+    position: absolute;
+
+    inset: 0;
+
+    z-index: 10;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    padding:
+        100px
+        28px
+        160px;
+
+    text-align: center;
+
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(22,131,255,.08),
+            transparent 45%
+        );
+}
+
+.status-empty-icon {
+    width: 78px;
+    height: 78px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 18px;
+
+    border:
+        1px solid rgba(255,255,255,.10);
+
+    border-radius: 24px;
+
+    background:
+        rgba(255,255,255,.06);
+
+    color: #1683ff;
+
+    font-size: 38px;
+
+    font-weight: 300;
+}
+
+.status-empty h2 {
+    font-size: 21px;
+
+    font-weight: 700;
+}
+
+.status-empty p {
+    max-width: 300px;
+
+    margin-top: 9px;
+
+    color: #999;
+
+    font-size: 13px;
+
+    line-height: 1.55;
+}
+
+
+/* Empty select button */
+
+.empty-select-btn {
+    min-width: 150px;
+
+    height: 45px;
+
+    margin-top: 20px;
+
+    padding: 0 20px;
+
+    border: 0;
+
+    border-radius: 14px;
+
+    background: #1683ff;
+
+    color: #fff;
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 8px 24px rgba(22,131,255,.22);
+}
+
+.empty-select-btn:active {
+    transform: scale(.97);
+}
+
+
+/* =========================================================
+   EDITOR TOOLBAR
+========================================================= */
+
+.status-editor-toolbar {
+    position: absolute;
+
+    left: 9px;
+    right: 9px;
+
+    bottom: 83px;
+
+    z-index: 25;
+
+    display: flex;
+
+    gap: 7px;
+
+    padding: 8px;
+
+    overflow-x: auto;
+
+    border:
+        1px solid rgba(255,255,255,.11);
+
+    border-radius: 19px;
+
+    background:
+        rgba(13,13,13,.72);
+
+    backdrop-filter: blur(18px);
+
+    -webkit-backdrop-filter: blur(18px);
+
+    scrollbar-width: none;
+}
+
+.status-editor-toolbar::-webkit-scrollbar {
+    display: none;
+}
+
+
+/* Tool */
+
+.status-tool {
+    flex: 0 0 62px;
+
+    width: 62px;
+    height: 50px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 3px;
+
+    border: 0;
+
+    border-radius: 13px;
+
+    background:
+        rgba(255,255,255,.075);
+
+    color: #fff;
+
+    cursor: pointer;
+
+    transition:
+        background .2s ease,
+        transform .2s ease;
+}
+
+.status-tool:active {
+    transform: scale(.94);
+}
+
+.status-tool.active {
+    background: #1683ff;
+}
+
+.tool-icon {
+    display: block;
+
+    font-size: 18px;
+
+    line-height: 18px;
+}
+
+.tool-label {
+    display: block;
+
+    color: rgba(255,255,255,.78);
+
+    font-size: 10px;
+
+    line-height: 12px;
+}
+
+.status-tool.active .tool-label {
+    color: #fff;
+}
+
+
+/* =========================================================
+   BOTTOM FOOTER
+========================================================= */
+
+.status-footer {
+    position: absolute;
+
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    z-index: 30;
+
+    display: flex;
+
+    justify-content: center;
+
+    padding:
+        10px
+        18px
+        calc(env(safe-area-inset-bottom) + 13px);
+
+    background:
+        linear-gradient(
+            to top,
+            rgba(0,0,0,.92),
+            rgba(0,0,0,.45),
+            transparent
+        );
+
+    pointer-events: none;
+}
+
+.status-upload-btn {
+    width: 100%;
+    max-width: 430px;
+
+    height: 52px;
+
+    border: 0;
+
+    border-radius: 17px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #1683ff,
+            #0872e8
+        );
+
+    color: #fff;
+
+    font-size: 16px;
+
+    font-weight: 700;
+
+    letter-spacing: .1px;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 9px 28px rgba(22,131,255,.27);
+
+    pointer-events: auto;
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease;
+}
+
+.status-upload-btn:active {
+    transform: scale(.98);
+
+    box-shadow:
+        0 5px 18px rgba(22,131,255,.22);
+}
+
+
+/* =========================================================
+   TEXT / MODAL
+========================================================= */
+
+.status-modal {
+    position: absolute;
+
+    inset: 0;
+
+    z-index: 80;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 22px;
+}
+
+.status-modal[hidden] {
+    display: none;
+}
+
+.status-modal-backdrop {
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        rgba(0,0,0,.66);
+
+    backdrop-filter: blur(7px);
+
+    -webkit-backdrop-filter: blur(7px);
+}
+
+.status-modal-card,
+.emoji-picker-card {
+    position: relative;
+
+    z-index: 1;
+
+    width: 100%;
+    max-width: 430px;
+
+    padding: 18px;
+
+    border:
+        1px solid rgba(255,255,255,.10);
+
+    border-radius: 22px;
+
+    background:
+        #151515;
+
+    box-shadow:
+        0 20px 60px rgba(0,0,0,.45);
+}
+
+
+/* Modal header */
+
+.modal-header {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin-bottom: 14px;
+}
+
+.modal-header h2 {
+    flex: 1;
+
+    font-size: 18px;
+}
+
+.modal-close-btn {
+    width: 36px;
+    height: 36px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border: 0;
+
+    border-radius: 50%;
+
+    background:
+        rgba(255,255,255,.08);
+
+    color: #fff;
+
+    font-size: 22px;
+
+    cursor: pointer;
+}
+
+
+/* Text input */
+
+.status-text-input {
+    width: 100%;
+
+    min-height: 120px;
+
+    resize: vertical;
+
+    padding: 14px;
+
+    border:
+        1px solid #303030;
+
+    border-radius: 14px;
+
+    outline: none;
+
+    background: #080808;
+
+    color: #fff;
+
+    font-family: inherit;
+
+    font-size: 16px;
+
+    line-height: 1.45;
+}
+
+.status-text-input:focus {
+    border-color: #1683ff;
+}
+
+
+/* Modal actions */
+
+.modal-actions {
+    display: flex;
+
+    gap: 10px;
+
+    margin-top: 13px;
+}
+
+.modal-cancel-btn,
+.modal-apply-btn {
+    flex: 1;
+
+    height: 44px;
+
+    border: 0;
+
+    border-radius: 12px;
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+.modal-cancel-btn {
+    background: #292929;
+
+    color: #fff;
+}
+
+.modal-apply-btn {
+    background: #1683ff;
+
+    color: #fff;
+}
+
+
+/* =========================================================
+   EMOJI PICKER
+========================================================= */
+
+.emoji-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(6, 1fr);
+
+    gap: 8px;
+}
+
+.emoji-grid button {
+    width: 100%;
+
+    aspect-ratio: 1;
+
+    border: 0;
+
+    border-radius: 13px;
+
+    background:
+        rgba(255,255,255,.06);
+
+    font-size: 25px;
+
+    cursor: pointer;
+
+    transition:
+        background .2s ease,
+        transform .2s ease;
+}
+
+.emoji-grid button:active {
+    transform: scale(.91);
+
+    background:
+        rgba(22,131,255,.25);
+}
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+.status-toast {
+    position: absolute;
+
+    left: 50%;
+
+    bottom: 151px;
+
+    z-index: 100;
+
+    max-width: calc(100% - 40px);
+
+    padding:
+        11px
+        16px;
+
+    border:
+        1px solid rgba(255,255,255,.08);
+
+    border-radius: 13px;
+
+    background:
+        rgba(20,20,20,.92);
+
+    color: #fff;
+
+    font-size: 13px;
+
+    text-align: center;
+
+    opacity: 0;
+
+    transform:
+        translate(-50%, 12px);
+
+    pointer-events: none;
+
+    transition:
+        opacity .25s ease,
+        transform .25s ease;
+
+    backdrop-filter: blur(12px);
+
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.status-toast.show {
+    opacity: 1;
+
+    transform:
+        translate(-50%, 0);
+}
+
+
+/* =========================================================
+   DRAWING CANVAS
+   JS WILL USE THIS LAYER
+========================================================= */
+
+.status-drawing-canvas {
+    position: absolute;
+
+    inset: 0;
+
+    z-index: 15;
+
+    width: 100%;
+    height: 100%;
+
+    touch-action: none;
+
+    pointer-events: none;
+}
+
+.status-drawing-canvas.active {
+    pointer-events: auto;
+}
+
+
+/* =========================================================
+   TEXT OVERLAY ON MEDIA
+========================================================= */
+
+.status-text-overlay {
+    position: absolute;
+
+    left: 50%;
+    top: 50%;
+
+    z-index: 16;
+
+    max-width: 85%;
+
+    padding: 10px 14px;
+
+    color: #fff;
+
+    font-size: 28px;
+
+    font-weight: 700;
+
+    line-height: 1.2;
+
+    text-align: center;
+
+    word-break: break-word;
+
+    text-shadow:
+        0 2px 8px rgba(0,0,0,.85);
+
+    transform:
+        translate(-50%, -50%);
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .status-media,
+    .status-thumbnail,
+    .status-tool,
+    .status-upload-btn,
+    .status-toast {
+        transition: none;
+    }
+}
+
+
+/* =========================================================
+   SMALL MOBILE DEVICES
+========================================================= */
+
+@media (max-width: 380px) {
+
+    .status-header {
+        padding-left: 9px;
+        padding-right: 9px;
+    }
+
+    .status-thumbnails-wrapper {
+        padding-left: 9px;
+        padding-right: 9px;
+    }
+
+    .status-editor-toolbar {
+        left: 6px;
+        right: 6px;
+
+        gap: 5px;
+    }
+
+    .status-tool {
+        flex-basis: 58px;
+
+        width: 58px;
+    }
+
+    .status-upload-btn {
+        height: 49px;
+    }
+
+    .emoji-grid {
+        gap: 6px;
+    }
+}
+
+
+/* =========================================================
+   LARGE SCREENS
+========================================================= */
+
+@media (min-width: 700px) {
+
+    .status-editor-toolbar {
+        left: 50%;
+
+        right: auto;
+
+        width: min(
+            620px,
+            calc(100% - 40px)
+        );
+
+        transform:
+            translateX(-50%);
+    }
+
+    .status-footer {
+        padding-left: 30px;
+        padding-right: 30px;
+    }
+}
