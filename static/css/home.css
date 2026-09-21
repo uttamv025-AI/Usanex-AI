@@ -1,19 +1,55 @@
 /* =========================================================
-   USANEX - HOME PAGE STYLES
+   USANEX HOME
+   Complete home.css
 ========================================================= */
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial,Helvetica,sans-serif;
+
+/* =========================================================
+   RESET
+========================================================= */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
-body{
-    background:#050b18;
-    color:#fff;
-    min-height:100vh;
-    overflow-x:hidden;
+html,
+body {
+    width: 100%;
+    min-height: 100%;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background: #050b18;
+    color: #ffffff;
+    font-family:
+        Inter,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+    overflow-x: hidden;
+}
+
+button,
+input {
+    font: inherit;
+}
+
+button {
+    border: 0;
+}
+
+button:focus-visible,
+input:focus-visible {
+    outline: 2px solid #1685ff;
+    outline-offset: 2px;
 }
 
 
@@ -21,100 +57,96 @@ body{
    HEADER
 ========================================================= */
 
-.header{
-    height:72px;
-    width:100%;
-    padding:10px 14px;
-    display:flex;
-    align-items:center;
-    gap:10px;
-    position:sticky;
-    top:0;
-    z-index:100;
-    background:rgba(5,11,24,.97);
-    border-bottom:1px solid rgba(255,255,255,.07);
+.header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+
+    width: 100%;
+    height: 68px;
+
+    display: flex;
+    align-items: center;
+
+    padding: 0 18px;
+
+    background: rgba(5, 11, 24, 0.96);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
 }
 
 
 /* =========================================================
-   LOGO
+   BRAND
 ========================================================= */
 
-.brand{
-    display:flex;
-    align-items:center;
-    flex-shrink:0;
+.brand {
+    flex: 0 0 auto;
+
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
 }
 
-.logo-mark{
-    width:43px;
-    height:43px;
-    min-width:43px;
-    border-radius:13px;
-    position:relative;
-    overflow:hidden;
-    display:flex;
-    align-items:center;
-    justify-content:center;
+.logo-mark {
+    position: relative;
+
+    width: 39px;
+    height: 39px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
 
     background:
         linear-gradient(
             145deg,
-            #2185ff 0%,
-            #0868e8 48%,
-            #0049b5 100%
+            #1685ff,
+            #0757b8
         );
 
-    border:1px solid rgba(255,255,255,.16);
-
     box-shadow:
-        0 5px 18px rgba(0,100,255,.30),
-        inset 0 1px 2px rgba(255,255,255,.20);
+        0 7px 22px rgba(22, 133, 255, 0.25);
 }
 
-.logo-u{
-    position:relative;
-    z-index:3;
-    color:#fff;
-    font-size:27px;
-    line-height:1;
-    font-weight:900;
-    letter-spacing:-2px;
-    transform:translateY(-1px);
+.logo-u {
+    position: relative;
+    z-index: 2;
 
-    text-shadow:
-        0 2px 5px rgba(0,0,0,.25);
+    color: #ffffff;
+
+    font-size: 24px;
+    line-height: 1;
+    font-weight: 900;
 }
 
-.logo-shine{
-    position:absolute;
-    z-index:2;
-    width:65px;
-    height:15px;
-    top:-8px;
-    left:-24px;
-    background:rgba(255,255,255,.23);
-    transform:rotate(-38deg);
-    filter:blur(1px);
+.logo-shine {
+    position: absolute;
+
+    width: 18px;
+    height: 7px;
+
+    top: 6px;
+    right: 5px;
+
+    border-radius: 20px;
+
+    background: rgba(255, 255, 255, 0.28);
+
+    transform: rotate(-35deg);
 }
 
-.logo-mark::after{
-    content:"";
-    position:absolute;
-    width:22px;
-    height:22px;
-    right:-8px;
-    bottom:-9px;
-    border-radius:50%;
-    background:rgba(255,255,255,.08);
-}
+.logo-name {
+    color: #ffffff;
 
-.logo-name{
-    font-size:19px;
-    font-weight:700;
-    margin-left:9px;
-    color:#fff;
-    white-space:nowrap;
+    font-size: 21px;
+    font-weight: 800;
+    letter-spacing: -0.4px;
 }
 
 
@@ -122,181 +154,67 @@ body{
    SEARCH
 ========================================================= */
 
-.search-box{
-    flex:1;
-    height:43px;
-    min-width:0;
-    border-radius:13px;
-    background:#101a2b;
-    border:1px solid rgba(255,255,255,.07);
+.search-box {
+    flex: 1;
 
-    display:flex;
-    align-items:center;
+    max-width: 560px;
 
-    padding:0 13px;
-    cursor:text;
+    height: 42px;
+
+    margin: 0 18px;
+
+    display: flex;
+    align-items: center;
+
+    border-radius: 14px;
+
+    background: #0d1729;
+    border: 1px solid rgba(255, 255, 255, 0.07);
+
+    transition:
+        border-color 0.2s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease;
 }
 
-.search-icon{
-    color:#8794a9;
-    font-size:23px;
-    margin-right:8px;
+.search-box:focus-within {
+    background: #101c31;
+
+    border-color: rgba(22, 133, 255, 0.45);
+
+    box-shadow:
+        0 0 0 3px rgba(22, 133, 255, 0.08);
 }
 
-.search-input{
-    width:100%;
-    height:100%;
-    border:0;
-    outline:0;
-    background:transparent;
-    color:#fff;
-    font-size:13px;
+.search-icon {
+    flex: 0 0 auto;
+
+    margin-left: 13px;
+
+    color: #7f8da3;
+
+    font-size: 22px;
+    line-height: 1;
 }
 
-.search-input::placeholder{
-    color:#7f8da3;
+.search-input {
+    width: 100%;
+    height: 100%;
+
+    padding: 0 12px 0 8px;
+
+    border: 0;
+    outline: 0;
+
+    background: transparent;
+
+    color: #ffffff;
+
+    font-size: 14px;
 }
 
-
-/* =========================================================
-   SEARCH RESULTS
-========================================================= */
-
-.search-results{
-    position:fixed;
-    top:72px;
-    left:10px;
-    right:10px;
-    z-index:500;
-    display:none;
-    max-height:70vh;
-    overflow-y:auto;
-    background:#0d1728;
-    border:1px solid rgba(255,255,255,.08);
-    border-radius:17px;
-    box-shadow:0 20px 55px rgba(0,0,0,.55);
-    padding:8px;
-}
-
-.search-results.active{
-    display:block;
-}
-
-.search-result-title{
-    padding:10px 10px 8px;
-    color:#8794a9;
-    font-size:12px;
-}
-
-.search-result-card{
-    min-height:70px;
-    width:100%;
-    display:flex;
-    align-items:center;
-    padding:9px;
-    border-radius:13px;
-    cursor:pointer;
-    transition:.15s ease;
-}
-
-.search-result-card:hover{
-    background:#142238;
-}
-
-.search-result-card:active{
-    transform:scale(.985);
-}
-
-.search-result-photo{
-    width:48px;
-    height:48px;
-    min-width:48px;
-    border-radius:50%;
-    overflow:hidden;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    background:linear-gradient(145deg,#17345f,#0c1728);
-    border:1px solid rgba(255,255,255,.07);
-    font-size:18px;
-    font-weight:bold;
-}
-
-.search-result-photo img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-}
-
-.search-result-info{
-    flex:1;
-    min-width:0;
-    margin-left:11px;
-}
-
-.search-result-name{
-    font-size:14px;
-    font-weight:700;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-}
-
-.search-result-id{
-    margin-top:4px;
-    color:#8290a5;
-    font-size:11px;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-}
-
-.search-result-mobile{
-    margin-top:3px;
-    color:#617087;
-    font-size:10px;
-}
-
-.search-follow-btn{
-    border:1px solid rgba(23,119,255,.35);
-    background:rgba(23,119,255,.11);
-    color:#63a7ff;
-    border-radius:18px;
-    padding:7px 11px;
-    font-size:11px;
-    font-weight:600;
-    white-space:nowrap;
-    cursor:pointer;
-}
-
-.search-follow-btn.following{
-    color:#7fd8a1;
-    border-color:rgba(70,200,120,.30);
-    background:rgba(70,200,120,.08);
-}
-
-.search-follow-btn.connected{
-    color:#63a7ff;
-    border-color:rgba(23,119,255,.35);
-    background:rgba(23,119,255,.10);
-}
-
-.search-follow-btn:disabled{
-    opacity:1;
-}
-
-.search-empty{
-    padding:28px 15px;
-    text-align:center;
-    color:#78869b;
-    font-size:13px;
-}
-
-.search-loading{
-    padding:25px;
-    text-align:center;
-    color:#8290a5;
-    font-size:13px;
+.search-input::placeholder {
+    color: #6e7c92;
 }
 
 
@@ -304,165 +222,148 @@ body{
    MENU BUTTON
 ========================================================= */
 
-.menu-btn{
-    width:43px;
-    height:43px;
-    min-width:43px;
-    border:0;
-    border-radius:13px;
-    background:#111b2d;
-    color:#fff;
-    font-size:23px;
-    cursor:pointer;
+.menu-btn {
+    flex: 0 0 auto;
+
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 13px;
+
+    background: #0d1729;
+
+    color: #ffffff;
+
+    font-size: 21px;
+
+    cursor: pointer;
+
+    transition:
+        background 0.18s ease,
+        transform 0.18s ease;
+}
+
+.menu-btn:hover {
+    background: #13213a;
+}
+
+.menu-btn:active {
+    transform: scale(0.94);
 }
 
 
 /* =========================================================
-   STATUS
+   SEARCH RESULTS
 ========================================================= */
 
-.status-section{
-    padding:15px 13px 8px;
+.search-results {
+    position: fixed;
+
+    top: 72px;
+    left: 50%;
+
+    z-index: 950;
+
+    width: min(560px, calc(100% - 30px));
+
+    max-height: 70vh;
+
+    overflow-y: auto;
+
+    transform: translateX(-50%);
+
+    background: #0b1424;
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+
+    border-radius: 16px;
+
+    box-shadow:
+        0 18px 50px rgba(0, 0, 0, 0.45);
+
+    display: none;
 }
 
-.status-title-row{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    margin-bottom:12px;
+.search-results.active {
+    display: block;
 }
 
-.status-title{
-    font-size:17px;
-    font-weight:700;
-}
 
-.status-see-all{
-    color:#5ca8ff;
-    font-size:12px;
-    cursor:pointer;
-}
-
-.status-scroll{
-    display:flex;
-    gap:15px;
-    overflow-x:auto;
-    scrollbar-width:none;
-    padding:2px 2px 6px;
-}
-
-.status-scroll::-webkit-scrollbar{
-    display:none;
-}
-
-.status-item{
-    min-width:62px;
-    width:62px;
-    text-align:center;
-    cursor:pointer;
-}
-
-.status-circle{
-    width:58px;
-    height:58px;
-    margin:auto;
-    border-radius:50%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    position:relative;
-    overflow:visible;
-    background:#101a2d;
-    font-size:20px;
-    font-weight:bold;
-}
-
-.status-circle.unseen{
-    border:3px solid #1685ff;
-    padding:3px;
-}
-
-.status-circle.seen{
-    border:3px solid #586273;
-    padding:3px;
-}
-
-.status-avatar-inner{
-    width:100%;
-    height:100%;
-    border-radius:50%;
-    background:linear-gradient(145deg,#1b579d,#0d1a30);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    color:#fff;
-    font-size:19px;
-    font-weight:700;
-    overflow:hidden;
-}
-
-.status-avatar-inner img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-}
-
-.status-circle.your-status{
-    border:2px solid #586273;
-}
 /* =========================================================
-   STATUS
+   STATUS SECTION
 ========================================================= */
 
-.status-section{
-    padding:15px 13px 8px;
+.status-section {
+    width: min(1100px, calc(100% - 28px));
+
+    margin: 18px auto 0;
 }
 
-.status-title-row{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    margin-bottom:12px;
+.status-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 12px;
 }
 
-.status-title{
-    font-size:17px;
-    font-weight:700;
+.status-title {
+    color: #ffffff;
+
+    font-size: 17px;
+    font-weight: 800;
 }
 
-.status-see-all{
-    color:#5ca8ff;
-    font-size:12px;
-    cursor:pointer;
+.status-see-all {
+    color: #1685ff;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+.status-see-all:active {
+    opacity: 0.7;
 }
 
 
 /* =========================================================
    STATUS ROW
-   YOUR STATUS = FIXED
-   OTHER USERS = HORIZONTAL SCROLL
 ========================================================= */
 
-.status-row{
-    width:100%;
-    display:flex;
-    align-items:flex-start;
-    gap:13px;
-    min-width:0;
+.status-row {
+    width: 100%;
+
+    display: flex;
+    align-items: flex-start;
+
+    gap: 13px;
+
+    min-width: 0;
 }
 
 
 /* =========================================================
    YOUR STATUS
+   FIXED LEFT SIDE
 ========================================================= */
 
-.my-status-item{
-    flex:0 0 62px;
-    width:62px;
-    min-width:62px;
-    text-align:center;
-    cursor:pointer;
-    position:relative;
+.my-status-item {
+    flex: 0 0 62px;
+
+    width: 62px;
+    min-width: 62px;
+
+    text-align: center;
+
+    cursor: pointer;
+
+    position: relative;
 }
 
 
@@ -470,23 +371,30 @@ body{
    OTHER STATUS SCROLL
 ========================================================= */
 
-.status-scroll{
-    flex:1;
-    min-width:0;
+.status-scroll {
+    flex: 1;
 
-    display:flex;
-    gap:15px;
+    min-width: 0;
 
-    overflow-x:auto;
-    overflow-y:hidden;
+    display: flex;
+    align-items: flex-start;
 
-    scrollbar-width:none;
+    gap: 15px;
 
-    padding:2px 2px 6px;
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    padding: 2px 2px 8px;
+
+    scrollbar-width: none;
+
+    -webkit-overflow-scrolling: touch;
+
+    scroll-behavior: smooth;
 }
 
-.status-scroll::-webkit-scrollbar{
-    display:none;
+.status-scroll::-webkit-scrollbar {
+    display: none;
 }
 
 
@@ -494,12 +402,21 @@ body{
    STATUS ITEM
 ========================================================= */
 
-.status-item{
-    flex:0 0 62px;
-    width:62px;
-    min-width:62px;
-    text-align:center;
-    cursor:pointer;
+.status-item {
+    flex: 0 0 62px;
+
+    width: 62px;
+    min-width: 62px;
+
+    text-align: center;
+
+    cursor: pointer;
+
+    position: relative;
+}
+
+.status-item:active .status-circle {
+    transform: scale(0.93);
 }
 
 
@@ -507,80 +424,82 @@ body{
    STATUS CIRCLE
 ========================================================= */
 
-.status-circle{
-    width:58px;
-    height:58px;
+.status-circle {
+    width: 58px;
+    height: 58px;
 
-    margin:auto;
+    margin: auto;
 
-    border-radius:50%;
+    border-radius: 50%;
 
-    display:flex;
-    align-items:center;
-    justify-content:center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-    position:relative;
-    overflow:visible;
+    position: relative;
 
-    background:#101a2d;
+    background: #101a2d;
 
-    font-size:20px;
-    font-weight:bold;
+    font-size: 20px;
+    font-weight: 700;
 
     transition:
-        transform .15s ease,
-        border-color .15s ease;
+        transform 0.15s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
 }
 
+.status-circle.unseen {
+    border: 3px solid #1685ff;
 
-/* =========================================================
-   ACTIVE / UNSEEN
-========================================================= */
+    padding: 3px;
 
-.status-circle.unseen{
-    border:3px solid #1685ff;
-    padding:3px;
+    box-shadow:
+        0 0 0 1px rgba(22, 133, 255, 0.10),
+        0 0 13px rgba(22, 133, 255, 0.17);
 }
 
+.status-circle.seen {
+    border: 3px solid #586273;
 
-/* =========================================================
-   SEEN
-========================================================= */
+    padding: 3px;
 
-.status-circle.seen{
-    border:3px solid #586273;
-    padding:3px;
+    box-shadow: none;
 }
 
+.status-circle.your-status {
+    border: 2px solid #586273;
 
-/* =========================================================
-   YOUR STATUS
-========================================================= */
-
-.status-circle.your-status{
-    border:2px solid #586273;
-    padding:2px;
+    padding: 2px;
 }
-
-
-/* Active own status */
 
 .my-status-item.has-status
-.status-circle.your-status{
-    border:3px solid #1685ff;
-    padding:3px;
+.status-circle.your-status {
+    border: 3px solid #1685ff;
+
+    padding: 3px;
+
+    box-shadow:
+        0 0 0 1px rgba(22, 133, 255, 0.10),
+        0 0 13px rgba(22, 133, 255, 0.17);
 }
 
 
 /* =========================================================
-   AVATAR INNER
+   STATUS AVATAR
 ========================================================= */
 
-.status-avatar-inner{
-    width:100%;
-    height:100%;
+.status-avatar-inner {
+    width: 100%;
+    height: 100%;
 
-    border-radius:50%;
+    border-radius: 50%;
+
+    overflow: hidden;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     background:
         linear-gradient(
@@ -589,58 +508,64 @@ body{
             #0d1a30
         );
 
-    display:flex;
-    align-items:center;
-    justify-content:center;
+    color: #ffffff;
 
-    color:#fff;
-
-    font-size:19px;
-    font-weight:700;
-
-    overflow:hidden;
+    font-size: 19px;
+    font-weight: 800;
 }
 
-.status-avatar-inner img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
+.status-avatar-inner img {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    object-fit: cover;
 }
 
 
 /* =========================================================
-   PLUS BUTTON
+   STATUS PLUS
 ========================================================= */
 
-.status-plus{
-    position:absolute;
+.status-plus {
+    position: absolute;
 
-    right:-2px;
-    bottom:-2px;
+    right: -2px;
+    bottom: -2px;
 
-    width:21px;
-    height:21px;
+    width: 21px;
+    height: 21px;
 
-    border-radius:50%;
+    border-radius: 50%;
 
-    background:#1685ff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-    border:2px solid #050b18;
+    background: #1685ff;
 
-    display:flex;
-    align-items:center;
-    justify-content:center;
+    border: 2px solid #050b18;
 
-    color:#fff;
+    color: #ffffff;
 
-    font-size:15px;
-    font-weight:bold;
+    font-size: 15px;
+    font-weight: 800;
 
-    z-index:5;
+    line-height: 1;
 
-    cursor:pointer;
+    z-index: 5;
 
-    padding:0;
+    cursor: pointer;
+
+    padding: 0;
+
+    box-shadow:
+        0 3px 10px rgba(0, 0, 0, 0.3);
+}
+
+.status-plus:active {
+    transform: scale(0.9);
 }
 
 
@@ -648,579 +573,17 @@ body{
    STATUS NAME
 ========================================================= */
 
-.status-name{
-    margin-top:7px;
+.status-name {
+    margin-top: 7px;
 
-    font-size:11px;
+    color: #b4bfce;
 
-    color:#b4bfce;
+    font-size: 11px;
+    font-weight: 500;
 
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-}
-
-
-/* =========================================================
-   STATUS CLICK EFFECT
-========================================================= */
-
-.status-item:active
-.status-circle{
-    transform:scale(.93);
-}
-
-
-/* =========================================================
-   STATUS VIEWER
-========================================================= */
-
-.status-viewer{
-    position:fixed;
-    inset:0;
-
-    z-index:1200;
-
-    display:none;
-
-    align-items:center;
-    justify-content:center;
-
-    background:#000;
-
-    overflow:hidden;
-}
-
-.status-viewer.active{
-    display:flex;
-}
-
-
-/* =========================================================
-   STATUS VIEWER MEDIA
-========================================================= */
-
-.status-viewer-media{
-    width:100%;
-    height:100%;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    background:#000;
-}
-
-
-/* IMAGE */
-
-.status-viewer-image{
-    width:100%;
-    height:100%;
-
-    object-fit:contain;
-
-    display:block;
-}
-
-
-/* VIDEO */
-
-.status-viewer-video{
-    width:100%;
-    height:100%;
-
-    object-fit:contain;
-
-    display:block;
-}
-
-
-/* =========================================================
-   VIEWER HEADER
-========================================================= */
-
-.status-viewer-header{
-    position:absolute;
-
-    top:0;
-    left:0;
-    right:0;
-
-    z-index:10;
-
-    padding:
-        calc(14px + env(safe-area-inset-top))
-        55px
-        14px
-        18px;
-
-    background:
-        linear-gradient(
-            to bottom,
-            rgba(0,0,0,.65),
-            transparent
-        );
-}
-
-.status-viewer-name{
-    color:#fff;
-
-    font-size:15px;
-    font-weight:700;
-
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-}
-
-
-/* =========================================================
-   VIEWER CLOSE
-========================================================= */
-
-.status-viewer-close{
-    position:absolute;
-
-    top:14px;
-    right:15px;
-
-    z-index:20;
-
-    width:42px;
-    height:42px;
-
-    border:0;
-    border-radius:50%;
-
-    background:rgba(0,0,0,.45);
-
-    color:#fff;
-
-    font-size:28px;
-    line-height:1;
-
-    cursor:pointer;
-}
-
-
-/* =========================================================
-   NEXT / PREVIOUS
-========================================================= */
-
-.status-nav{
-    position:absolute;
-
-    top:50%;
-
-    transform:translateY(-50%);
-
-    z-index:20;
-
-    width:45px;
-    height:80px;
-
-    border:0;
-
-    background:rgba(0,0,0,.12);
-
-    color:#fff;
-
-    font-size:48px;
-    font-weight:300;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    cursor:pointer;
-
-    opacity:.8;
-}
-
-.status-nav:active{
-    background:rgba(0,0,0,.35);
-}
-
-.status-prev{
-    left:0;
-}
-
-.status-next{
-    right:0;
-}
-
-
-/* =========================================================
-   CONNECTIONS
-========================================================= */
-
-.connections-section{
-    padding:13px;
-    padding-bottom:100px;
-}
-
-.connections-title-row{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    margin-bottom:12px;
-}
-
-.connections-title{
-    font-size:18px;
-    font-weight:700;
-}
-
-.connection-count{
-    color:#7f8da3;
-    font-size:13px;
-}
-
-.connections-list{
-    display:flex;
-    flex-direction:column;
-    gap:10px;
-}
-
-.user-card{
-    width:100%;
-    min-height:76px;
-    border-radius:17px;
-    background:#0d1728;
-    border:1px solid rgba(255,255,255,.06);
-    display:flex;
-    align-items:center;
-    padding:11px;
-    cursor:pointer;
-    transition:background .15s ease,transform .12s ease;
-}
-
-.user-card:active{
-    transform:scale(.985);
-}
-
-.user-card:hover{
-    background:#101d32;
-}
-
-.profile-photo{
-    width:53px;
-    height:53px;
-    min-width:53px;
-    border-radius:50%;
-    background:linear-gradient(145deg,#17345f,#0c1728);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    overflow:hidden;
-    font-size:20px;
-    font-weight:bold;
-    cursor:pointer;
-    border:1px solid rgba(255,255,255,.06);
-}
-
-.profile-photo img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-}
-
-.user-info{
-    flex:1;
-    min-width:0;
-    margin-left:12px;
-}
-
-.user-name{
-    font-size:15px;
-    font-weight:700;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-}
-
-.user-id{
-    margin-top:5px;
-    color:#7f8da3;
-    font-size:12px;
-}
-
-.connected-btn{
-    border:1px solid rgba(23,119,255,.35);
-    background:rgba(23,119,255,.10);
-    color:#63a7ff;
-    border-radius:20px;
-    padding:8px 12px;
-    font-size:12px;
-    font-weight:600;
-    cursor:pointer;
-}
-
-
-/* =========================================================
-   EMPTY / ERROR
-========================================================= */
-
-.empty-box{
-    padding:32px 15px;
-    text-align:center;
-    color:#748198;
-    background:#0d1728;
-    border-radius:17px;
-    border:1px solid rgba(255,255,255,.05);
-}
-
-.empty-icon{
-    font-size:32px;
-    margin-bottom:10px;
-}
-
-.empty-title{
-    color:#c5cedc;
-    font-size:15px;
-    font-weight:600;
-}
-
-.empty-text{
-    margin-top:6px;
-    font-size:12px;
-}
-
-.error-box{
-    padding:20px;
-    text-align:center;
-    border-radius:17px;
-    background:#21121a;
-    border:1px solid rgba(255,70,100,.15);
-}
-
-.error-title{
-    font-size:14px;
-    font-weight:700;
-}
-
-.error-text{
-    margin-top:6px;
-    color:#a88d98;
-    font-size:12px;
-}
-
-
-/* =========================================================
-   DP VIEWER
-========================================================= */
-
-.dp-viewer{
-    position:fixed;
-    inset:0;
-    z-index:1000;
-    display:none;
-    align-items:center;
-    justify-content:center;
-    padding:20px;
-    background:rgba(0,0,0,.88);
-    backdrop-filter:blur(8px);
-    -webkit-backdrop-filter:blur(8px);
-    cursor:pointer;
-}
-
-.dp-viewer.active{
-    display:flex;
-}
-
-.dp-viewer-image{
-    width:min(82vw,360px);
-    height:min(82vw,360px);
-    object-fit:cover;
-    border-radius:50%;
-    border:4px solid rgba(255,255,255,.92);
-}
-
-.dp-viewer-close{
-    position:absolute;
-    top:18px;
-    right:18px;
-    width:43px;
-    height:43px;
-    border:0;
-    border-radius:50%;
-    background:rgba(255,255,255,.13);
-    color:#fff;
-    font-size:27px;
-    cursor:pointer;
-}
-
-.dp-viewer-name{
-    position:absolute;
-    left:20px;
-    right:20px;
-    bottom:25px;
-    text-align:center;
-    color:#fff;
-    font-size:15px;
-    font-weight:600;
-}
-
-
-/* =========================================================
-   BOTTOM NAV
-========================================================= */
-
-.bottom-nav{
-    position:fixed;
-    left:0;
-    right:0;
-    bottom:0;
-    height:70px;
-    z-index:200;
-    display:flex;
-    align-items:center;
-    justify-content:space-around;
-    background:rgba(7,14,28,.98);
-    border-top:1px solid rgba(255,255,255,.07);
-    padding:5px 8px;
-}
-
-.nav-item{
-    width:20%;
-    height:58px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    position:relative;
-    cursor:pointer;
-}
-
-.nav-icon{
-    width:25px;
-    height:25px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    color:#9aa7b9;
-    font-size:23px;
-}
-
-.nav-item.active .nav-icon{
-    color:#fff;
-}
-
-.plus-nav{
-    width:44px;
-    height:44px;
-    border-radius:14px;
-    background:#1677ff;
-    color:#fff;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:27px;
-}
-
-.notification-badge{
-    position:absolute;
-    top:7px;
-    right:25%;
-    min-width:17px;
-    height:17px;
-    padding:0 4px;
-    border-radius:10px;
-    background:#1677ff;
-    color:#fff;
-    font-size:9px;
-    font-weight:bold;
-    display:none;
-    align-items:center;
-    justify-content:center;
-}
-
-
-/* =========================================================
-   MENU
-========================================================= */
-
-.menu-overlay{
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,.55);
-    z-index:300;
-    display:none;
-}
-
-/* IMPORTANT:
-   home.js adds/removes the "active" class.
-   This rule makes the menu visible when active.
-*/
-.menu-overlay.active{
-    display:block;
-}
-
-.menu-panel{
-    position:absolute;
-    top:70px;
-    right:12px;
-    width:235px;
-    border-radius:17px;
-    background:#101b2d;
-    border:1px solid rgba(255,255,255,.09);
-    box-shadow:0 18px 45px rgba(0,0,0,.45);
-    overflow:hidden;
-}
-
-.menu-item{
-    min-height:52px;
-    display:flex;
-    align-items:center;
-    padding:0 15px;
-    gap:12px;
-    color:#dce3ee;
-    font-size:14px;
-    cursor:pointer;
-}
-
-.menu-item:hover{
-    background:#17243a;
-}
-
-.menu-icon{
-    width:27px;
-    min-width:27px;
-    text-align:center;
-}
-
-.menu-label{
-    flex:1;
-}
-
-.menu-arrow{
-    color:#718096;
-    font-size:23px;
-}
-
-.menu-item.logout{
-    color:#ff7388;
-    border-top:1px solid rgba(255,255,255,.07);
-}
-
-
-/* =========================================================
-   TOAST
-========================================================= */
-
-.toast{
-    position:fixed;
-    left:50%;
-    bottom:84px;
-    transform:translateX(-50%);
-    background:#17243a;
-    color:#fff;
-    padding:11px 17px;
-    border-radius:22px;
-    font-size:13px;
-    z-index:1100;
-    display:none;
-    box-shadow:0 8px 30px rgba(0,0,0,.4);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 
@@ -1228,94 +591,203 @@ body{
    STATUS NEW USER HINT
 ========================================================= */
 
-.status-new-user-hint{
-    position:fixed;
-    left:50%;
-    top:82px;
-    transform:translateX(-50%);
-    z-index:150;
-    width:max-content;
-    max-width:90%;
-    padding:9px 14px;
-    border-radius:20px;
-    background:#17243a;
-    border:1px solid rgba(22,133,255,.25);
-    color:#dce9ff;
-    font-size:12px;
-    box-shadow:0 8px 25px rgba(0,0,0,.35);
-    display:none;
-    text-align:center;
+.status-new-user-hint {
+    width: min(1100px, calc(100% - 28px));
+
+    margin: 10px auto 0;
+
+    padding: 10px 13px;
+
+    border-radius: 12px;
+
+    background: rgba(22, 133, 255, 0.07);
+
+    border: 1px solid rgba(22, 133, 255, 0.11);
+
+    color: #91a2ba;
+
+    font-size: 11px;
+
+    line-height: 1.5;
 }
 
 
 /* =========================================================
-   MOBILE
+   CONNECTIONS SECTION
 ========================================================= */
 
-@media(max-width:500px){
+.connections-section {
+    width: min(1100px, calc(100% - 28px));
 
-    .header{
-        padding:10px 11px;
-        gap:8px;
-    }
-
-    .logo-mark{
-        width:42px;
-        height:42px;
-        min-width:42px;
-    }
-
-    .logo-name{
-        font-size:18px;
-        margin-left:7px;
-    }
-
-    .search-box{
-        height:42px;
-    }
-
-    .menu-btn{
-        width:42px;
-        height:42px;
-        min-width:42px;
-    }
-
-    .menu-panel{
-        right:10px;
-        width:230px;
-    }
-
+    margin: 24px auto 110px;
 }
 
+.connections-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 
-@media(max-width:390px){
-
-    .logo-name{
-        display:none;
-    }
-
-    .search-box{
-        margin-left:2px;
-    }
-
+    margin-bottom: 12px;
 }
+
+.connections-title {
+    color: #ffffff;
+
+    font-size: 17px;
+    font-weight: 800;
+}
+
+.connection-count {
+    min-width: 25px;
+    height: 25px;
+
+    padding: 0 7px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 9px;
+
+    background: #0e1a2e;
+
+    color: #8fa0b8;
+
+    font-size: 11px;
+    font-weight: 700;
+}
+
 
 /* =========================================================
-   CONNECTED PEOPLE STATUS RING
+   CONNECTION LIST
+========================================================= */
+
+.connections-list {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fill,
+            minmax(280px, 1fr)
+        );
+
+    gap: 12px;
+}
+
+
+/* =========================================================
+   CONNECTION CARD
+========================================================= */
+
+.connection-card {
+    position: relative;
+
+    min-height: 78px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 11px;
+
+    border-radius: 17px;
+
+    background: #0b1424;
+
+    border: 1px solid rgba(255, 255, 255, 0.06);
+
+    transition:
+        transform 0.15s ease,
+        background 0.18s ease,
+        border-color 0.18s ease;
+}
+
+.connection-card:hover {
+    background: #0e192c;
+
+    border-color:
+        rgba(22, 133, 255, 0.14);
+}
+
+.connection-card:active {
+    transform: scale(0.985);
+}
+
+
+/* =========================================================
+   CONNECTION PROFILE PHOTO
+========================================================= */
+
+.profile-photo {
+    flex: 0 0 auto;
+
+    width: 52px;
+    height: 52px;
+
+    border-radius: 50%;
+
+    overflow: hidden;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background:
+        linear-gradient(
+            145deg,
+            #1a4e89,
+            #0d1728
+        );
+
+    color: #ffffff;
+
+    font-size: 18px;
+    font-weight: 800;
+
+    cursor: pointer;
+
+    border: 2px solid transparent;
+
+    transition:
+        border-color 0.2s ease,
+        padding 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.profile-photo img {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    border-radius: 50%;
+
+    object-fit: cover;
+}
+
+
+/* =========================================================
+   CONNECTION STATUS RING
 ========================================================= */
 
 .profile-photo.connection-status-unseen {
     border: 3px solid #1685ff !important;
+
     padding: 3px !important;
+
     box-sizing: border-box;
+
     box-shadow:
-        0 0 0 1px rgba(22,133,255,.18),
-        0 0 10px rgba(22,133,255,.20);
+        0 0 0 1px rgba(22, 133, 255, 0.18),
+        0 0 10px rgba(22, 133, 255, 0.20);
 }
 
 .profile-photo.connection-status-seen {
     border: 3px solid #586273 !important;
+
     padding: 3px !important;
+
     box-sizing: border-box;
 }
 
@@ -1323,7 +795,9 @@ body{
 .profile-photo.connection-status-seen img {
     width: 100%;
     height: 100%;
+
     border-radius: 50%;
+
     object-fit: cover;
 }
 
@@ -1331,13 +805,1533 @@ body{
 .profile-photo.connection-status-seen span {
     width: 100%;
     height: 100%;
+
     border-radius: 50%;
+
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.profile-photo.connection-status-unseen:active,
-.profile-photo.connection-status-seen:active {
-    transform: scale(.94);
+
+/* =========================================================
+   CONNECTION INFO
+========================================================= */
+
+.connection-info {
+    flex: 1;
+
+    min-width: 0;
+}
+
+.connection-name {
+    color: #ffffff;
+
+    font-size: 14px;
+    font-weight: 750;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.connection-user-id {
+    margin-top: 3px;
+
+    color: #74849a;
+
+    font-size: 11px;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.connection-action {
+    flex: 0 0 auto;
+
+    width: 38px;
+    height: 38px;
+
+    border-radius: 12px;
+
+    background: #101e34;
+
+    color: #1685ff;
+
+    cursor: pointer;
+
+    font-size: 17px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+/* =========================================================
+   EMPTY BOX
+========================================================= */
+
+.empty-box {
+    width: 100%;
+
+    padding: 35px 20px;
+
+    text-align: center;
+
+    border-radius: 18px;
+
+    background: #0b1424;
+
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.empty-icon {
+    color: #4c5b70;
+
+    font-size: 32px;
+
+    margin-bottom: 8px;
+}
+
+.empty-title {
+    color: #ffffff;
+
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.empty-text {
+    margin-top: 5px;
+
+    color: #6f7f95;
+
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   BOTTOM NAVIGATION
+========================================================= */
+
+.bottom-nav {
+    position: fixed;
+
+    left: 50%;
+    bottom: 12px;
+
+    z-index: 900;
+
+    width: min(560px, calc(100% - 24px));
+    height: 62px;
+
+    transform: translateX(-50%);
+
+    display: grid;
+    grid-template-columns:
+        repeat(5, 1fr);
+
+    align-items: center;
+
+    border-radius: 21px;
+
+    background:
+        rgba(10, 20, 36, 0.96);
+
+    border: 1px solid rgba(255, 255, 255, 0.07);
+
+    box-shadow:
+        0 15px 45px rgba(0, 0, 0, 0.45);
+
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+}
+
+.nav-item {
+    position: relative;
+
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+
+    color: #64748a;
+
+    transition:
+        color 0.18s ease,
+        transform 0.15s ease;
+}
+
+.nav-item.active {
+    color: #1685ff;
+}
+
+.nav-item:active {
+    transform: scale(0.9);
+}
+
+.nav-icon {
+    font-size: 23px;
+
+    line-height: 1;
+}
+
+.plus-nav {
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 13px;
+
+    background: #1685ff;
+
+    color: #ffffff;
+
+    font-size: 25px;
+    font-weight: 500;
+
+    box-shadow:
+        0 6px 20px rgba(22, 133, 255, 0.25);
+}
+
+.notification-badge {
+    position: absolute;
+
+    top: 7px;
+    right: calc(50% - 20px);
+
+    min-width: 17px;
+    height: 17px;
+
+    padding: 0 4px;
+
+    display: none;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 20px;
+
+    background: #ff3b5c;
+
+    border: 2px solid #0a1424;
+
+    color: #ffffff;
+
+    font-size: 8px;
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   MENU OVERLAY
+========================================================= */
+
+.menu-overlay {
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 1200;
+
+    display: none;
+
+    background:
+        rgba(0, 0, 0, 0.52);
+
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+
+.menu-overlay.active {
+    display: block;
+}
+
+.menu-panel {
+    position: absolute;
+
+    top: 68px;
+    right: 14px;
+
+    width: min(310px, calc(100% - 28px));
+
+    padding: 8px;
+
+    border-radius: 18px;
+
+    background: #0b1424;
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.menu-item {
+    min-height: 49px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 0 12px;
+
+    border-radius: 12px;
+
+    cursor: pointer;
+
+    color: #dce5f2;
+
+    transition:
+        background 0.18s ease;
+}
+
+.menu-item:hover {
+    background: #111f35;
+}
+
+.menu-icon {
+    width: 25px;
+
+    text-align: center;
+
+    font-size: 17px;
+}
+
+.menu-label {
+    flex: 1;
+
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.menu-arrow {
+    color: #607089;
+
+    font-size: 22px;
+}
+
+.menu-item.logout {
+    margin-top: 5px;
+
+    color: #ff647d;
+
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+
+    border-radius: 0 0 12px 12px;
+}
+
+
+/* =========================================================
+   DP VIEWER
+========================================================= */
+
+.dp-viewer {
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 1800;
+
+    display: none;
+    align-items: center;
+    justify-content: center;
+
+    flex-direction: column;
+
+    padding: 25px;
+
+    background:
+        rgba(0, 0, 0, 0.92);
+
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+}
+
+.dp-viewer.active {
+    display: flex;
+}
+
+.dp-viewer-image {
+    max-width: min(88vw, 420px);
+    max-height: 70vh;
+
+    border-radius: 20px;
+
+    object-fit: contain;
+
+    box-shadow:
+        0 20px 70px rgba(0, 0, 0, 0.55);
+}
+
+.dp-viewer-name {
+    margin-top: 15px;
+
+    color: #ffffff;
+
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.dp-viewer-close {
+    position: absolute;
+
+    top: 20px;
+    right: 20px;
+
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: rgba(255, 255, 255, 0.10);
+
+    color: #ffffff;
+
+    font-size: 27px;
+
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   =========================================================
+   USANEX STATUS VIEWER
+   =========================================================
+========================================================= */
+
+.status-viewer {
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 2000;
+
+    display: none;
+
+    background:
+        #02050b;
+}
+
+.status-viewer.active {
+    display: block;
+}
+
+.status-viewer-shell {
+    position: relative;
+
+    width: 100%;
+    height: 100%;
+
+    max-width: 760px;
+
+    margin: 0 auto;
+
+    overflow: hidden;
+
+    background:
+        radial-gradient(
+            circle at 50% 30%,
+            rgba(22, 133, 255, 0.07),
+            transparent 42%
+        ),
+        #02050b;
+}
+
+
+/* =========================================================
+   VIEWER PROGRESS
+========================================================= */
+
+.status-progress {
+    position: absolute;
+
+    top: 9px;
+    left: 12px;
+    right: 12px;
+
+    z-index: 20;
+
+    height: 3px;
+
+    display: flex;
+
+    gap: 4px;
+
+    pointer-events: none;
+}
+
+.status-progress-segment {
+    position: relative;
+
+    flex: 1;
+
+    min-width: 2px;
+
+    height: 3px;
+
+    overflow: hidden;
+
+    border-radius: 10px;
+
+    background:
+        rgba(255, 255, 255, 0.25);
+}
+
+.status-progress-fill {
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    width: 0;
+    height: 100%;
+
+    border-radius: inherit;
+
+    background: #ffffff;
+}
+
+.status-progress-segment.complete
+.status-progress-fill {
+    width: 100%;
+}
+
+
+/* =========================================================
+   VIEWER TOP BAR
+========================================================= */
+
+.status-topbar {
+    position: absolute;
+
+    top: 0;
+    left: 0;
+    right: 0;
+
+    z-index: 15;
+
+    min-height: 76px;
+
+    padding:
+        22px 14px 10px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    background:
+        linear-gradient(
+            to bottom,
+            rgba(2, 5, 11, 0.86),
+            rgba(2, 5, 11, 0.34),
+            transparent
+        );
+}
+
+.status-user-info {
+    min-width: 0;
+
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+}
+
+.status-viewer-avatar {
+    flex: 0 0 auto;
+
+    width: 39px;
+    height: 39px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+
+    border-radius: 50%;
+
+    border: 2px solid #1685ff;
+
+    background:
+        linear-gradient(
+            145deg,
+            #1b579d,
+            #0d1a30
+        );
+
+    color: #ffffff;
+
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.status-viewer-avatar img {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    object-fit: cover;
+
+    border-radius: 50%;
+}
+
+.status-user-text {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 1px;
+}
+
+.status-viewer-name {
+    max-width: 190px;
+
+    color: #ffffff;
+
+    font-size: 13px;
+    font-weight: 800;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.status-viewer-userid {
+    max-width: 170px;
+
+    color: #aebbd0;
+
+    font-size: 10px;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.status-viewer-time {
+    margin-left: 3px;
+
+    color: #7f8da2;
+
+    font-size: 10px;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   VIEWER CLOSE
+========================================================= */
+
+.status-viewer-close {
+    flex: 0 0 auto;
+
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background:
+        rgba(255, 255, 255, 0.09);
+
+    color: #ffffff;
+
+    font-size: 26px;
+    font-weight: 300;
+
+    line-height: 1;
+
+    cursor: pointer;
+
+    transition:
+        background 0.18s ease,
+        transform 0.15s ease;
+}
+
+.status-viewer-close:hover {
+    background:
+        rgba(255, 255, 255, 0.15);
+}
+
+.status-viewer-close:active {
+    transform: scale(0.9);
+}
+
+
+/* =========================================================
+   VIEWER MEDIA
+========================================================= */
+
+.status-viewer-media {
+    position: absolute;
+
+    inset: 0;
+
+    z-index: 2;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding:
+        88px 12px 190px;
+
+    overflow: hidden;
+}
+
+.status-viewer-media img,
+.status-viewer-media video {
+    display: block;
+
+    max-width: 100%;
+    max-height: 100%;
+
+    width: auto;
+    height: auto;
+
+    object-fit: contain;
+
+    border-radius: 17px;
+
+    box-shadow:
+        0 20px 70px rgba(0, 0, 0, 0.45);
+
+    user-select: none;
+
+    -webkit-user-select: none;
+}
+
+.status-viewer-media video {
+    outline: none;
+
+    background: #000;
+
+    cursor: pointer;
+}
+
+.status-media-error {
+    color: #8998ae;
+
+    font-size: 13px;
+
+    text-align: center;
+}
+
+
+/* =========================================================
+   VIEWER BOTTOM
+========================================================= */
+
+.status-bottom {
+    position: absolute;
+
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    z-index: 15;
+
+    padding:
+        20px 14px calc(18px + env(safe-area-inset-bottom));
+
+    background:
+        linear-gradient(
+            to top,
+            rgba(2, 5, 11, 0.98) 0%,
+            rgba(2, 5, 11, 0.90) 55%,
+            rgba(2, 5, 11, 0.15) 100%
+        );
+}
+
+
+/* =========================================================
+   MINI USER CARD
+========================================================= */
+
+.status-mini-user {
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+
+    margin-bottom: 12px;
+}
+
+.status-mini-avatar {
+    width: 35px;
+    height: 35px;
+
+    flex: 0 0 auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+
+    border-radius: 50%;
+
+    background:
+        linear-gradient(
+            145deg,
+            #1b579d,
+            #0d1a30
+        );
+
+    border: 1px solid rgba(255, 255, 255, 0.15);
+
+    color: #ffffff;
+
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.status-mini-avatar img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    border-radius: 50%;
+}
+
+.status-mini-info {
+    min-width: 0;
+}
+
+.status-mini-name {
+    max-width: 240px;
+
+    color: #ffffff;
+
+    font-size: 12px;
+    font-weight: 750;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.status-mini-id {
+    margin-top: 2px;
+
+    color: #75849a;
+
+    font-size: 9px;
+}
+
+
+/* =========================================================
+   ACTION ROW
+========================================================= */
+
+.status-actions {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+}
+
+
+/* =========================================================
+   LIKE
+========================================================= */
+
+.status-like-btn {
+    flex: 0 0 auto;
+
+    width: 39px;
+    height: 39px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background:
+        rgba(255, 255, 255, 0.08);
+
+    font-size: 19px;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.15s ease,
+        background 0.18s ease;
+}
+
+.status-like-btn:hover {
+    background:
+        rgba(255, 255, 255, 0.13);
+}
+
+.status-like-btn:active {
+    transform: scale(0.88);
+}
+
+
+/* =========================================================
+   COMMENT
+========================================================= */
+
+.status-comment-wrap {
+    flex: 1;
+
+    min-width: 0;
+}
+
+.status-comment-input {
+    width: 100%;
+    height: 39px;
+
+    padding: 0 13px;
+
+    border-radius: 20px;
+
+    border: 1px solid rgba(255, 255, 255, 0.12);
+
+    outline: none;
+
+    background:
+        rgba(255, 255, 255, 0.07);
+
+    color: #ffffff;
+
+    font-size: 12px;
+
+    transition:
+        border-color 0.18s ease,
+        background 0.18s ease;
+}
+
+.status-comment-input::placeholder {
+    color: #718097;
+}
+
+.status-comment-input:focus {
+    background:
+        rgba(255, 255, 255, 0.10);
+
+    border-color:
+        rgba(22, 133, 255, 0.45);
+}
+
+
+/* =========================================================
+   SEEN
+========================================================= */
+
+.status-seen-text {
+    flex: 0 0 auto;
+
+    color: #b4bfce;
+
+    font-size: 11px;
+    font-weight: 600;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   SHARE
+========================================================= */
+
+.status-share-btn {
+    flex: 0 0 auto;
+
+    width: 34px;
+    height: 34px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: transparent;
+
+    color: #ffffff;
+
+    font-size: 21px;
+
+    cursor: pointer;
+
+    border-radius: 50%;
+
+    transition:
+        background 0.18s ease,
+        transform 0.15s ease;
+}
+
+.status-share-btn:hover {
+    background:
+        rgba(255, 255, 255, 0.08);
+}
+
+.status-share-btn:active {
+    transform: scale(0.88);
+}
+
+
+/* =========================================================
+   REPORT
+========================================================= */
+
+.status-report-btn {
+    flex: 0 0 auto;
+
+    width: 34px;
+    height: 34px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: transparent;
+
+    color: #ff435d;
+
+    font-size: 17px;
+
+    cursor: pointer;
+
+    border-radius: 50%;
+
+    transition:
+        background 0.18s ease,
+        transform 0.15s ease;
+}
+
+.status-report-btn:hover {
+    background:
+        rgba(255, 59, 87, 0.09);
+}
+
+.status-report-btn:active {
+    transform: scale(0.88);
+}
+
+
+/* =========================================================
+   MENTION
+========================================================= */
+
+.status-mention-btn {
+    margin-top: 10px;
+
+    min-height: 30px;
+
+    padding: 0 13px;
+
+    border-radius: 15px;
+
+    background:
+        rgba(22, 133, 255, 0.10);
+
+    border: 1px solid
+        rgba(22, 133, 255, 0.18);
+
+    color: #5ca8ff;
+
+    font-size: 10px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background 0.18s ease,
+        transform 0.15s ease;
+}
+
+.status-mention-btn:hover {
+    background:
+        rgba(22, 133, 255, 0.16);
+}
+
+.status-mention-btn:active {
+    transform: scale(0.95);
+}
+
+
+/* =========================================================
+   OWN STATUS
+========================================================= */
+
+.status-viewer.status-viewer-own
+.status-actions {
+    display: none;
+}
+
+.status-viewer.status-viewer-own
+.status-mention-btn {
+    display: none;
+}
+
+.status-viewer.status-viewer-own
+.status-bottom {
+    padding-top: 12px;
+}
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+.toast {
+    position: fixed;
+
+    left: 50%;
+    bottom: 92px;
+
+    z-index: 3000;
+
+    max-width: min(390px, calc(100% - 30px));
+
+    padding: 11px 15px;
+
+    transform:
+        translate(-50%, 20px);
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    border-radius: 13px;
+
+    background:
+        rgba(17, 29, 48, 0.97);
+
+    border:
+        1px solid rgba(255, 255, 255, 0.08);
+
+    color: #ffffff;
+
+    font-size: 12px;
+    line-height: 1.4;
+
+    text-align: center;
+
+    box-shadow:
+        0 12px 35px rgba(0, 0, 0, 0.35);
+
+    transition:
+        opacity 0.22s ease,
+        transform 0.22s ease;
+}
+
+.toast.show {
+    opacity: 1;
+
+    transform:
+        translate(-50%, 0);
+}
+
+
+/* =========================================================
+   SCROLLBAR
+========================================================= */
+
+::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #1c2b42;
+
+    border-radius: 20px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #2b3e5b;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 800px) {
+
+    .header {
+        padding: 0 13px;
+    }
+
+    .logo-name {
+        font-size: 19px;
+    }
+
+    .search-box {
+        margin: 0 10px;
+    }
+
+    .connections-list {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+
+    .header {
+        height: 62px;
+    }
+
+    .logo-mark {
+        width: 36px;
+        height: 36px;
+
+        border-radius: 11px;
+    }
+
+    .logo-u {
+        font-size: 22px;
+    }
+
+    .logo-name {
+        display: none;
+    }
+
+    .search-box {
+        height: 40px;
+
+        margin-left: 10px;
+        margin-right: 8px;
+    }
+
+    .search-input {
+        font-size: 12px;
+    }
+
+    .menu-btn {
+        width: 40px;
+        height: 40px;
+
+        border-radius: 12px;
+    }
+
+
+    /* STATUS */
+
+    .status-section {
+        width: calc(100% - 22px);
+
+        margin-top: 14px;
+    }
+
+    .status-title {
+        font-size: 16px;
+    }
+
+    .status-scroll {
+        gap: 13px;
+    }
+
+    .status-item,
+    .my-status-item {
+        flex-basis: 60px;
+        width: 60px;
+        min-width: 60px;
+    }
+
+    .status-circle {
+        width: 56px;
+        height: 56px;
+    }
+
+    .status-name {
+        font-size: 10px;
+    }
+
+    .status-new-user-hint {
+        width: calc(100% - 22px);
+
+        font-size: 10px;
+    }
+
+
+    /* CONNECTIONS */
+
+    .connections-section {
+        width: calc(100% - 22px);
+
+        margin-top: 21px;
+        margin-bottom: 100px;
+    }
+
+    .connections-list {
+        grid-template-columns: 1fr;
+
+        gap: 9px;
+    }
+
+    .connection-card {
+        min-height: 72px;
+
+        border-radius: 15px;
+    }
+
+
+    /* BOTTOM NAV */
+
+    .bottom-nav {
+        bottom: 8px;
+
+        width: calc(100% - 18px);
+
+        height: 58px;
+
+        border-radius: 19px;
+    }
+
+    .nav-icon {
+        font-size: 21px;
+    }
+
+    .plus-nav {
+        width: 35px;
+        height: 35px;
+
+        border-radius: 12px;
+
+        font-size: 23px;
+    }
+
+
+    /* MENU */
+
+    .menu-panel {
+        top: 61px;
+        right: 9px;
+
+        width: calc(100% - 18px);
+
+        border-radius: 17px;
+    }
+
+
+    /* DP VIEWER */
+
+    .dp-viewer-image {
+        max-width: 92vw;
+        max-height: 68vh;
+
+        border-radius: 17px;
+    }
+
+
+    /* STATUS VIEWER */
+
+    .status-progress {
+        top: 7px;
+
+        left: 8px;
+        right: 8px;
+
+        gap: 3px;
+    }
+
+    .status-topbar {
+        min-height: 72px;
+
+        padding:
+            19px 9px 8px;
+    }
+
+    .status-viewer-avatar {
+        width: 37px;
+        height: 37px;
+    }
+
+    .status-viewer-name {
+        max-width: 150px;
+
+        font-size: 12px;
+    }
+
+    .status-viewer-userid {
+        max-width: 135px;
+
+        font-size: 9px;
+    }
+
+    .status-viewer-time {
+        font-size: 9px;
+    }
+
+    .status-viewer-close {
+        width: 36px;
+        height: 36px;
+
+        font-size: 24px;
+    }
+
+    .status-viewer-media {
+        padding:
+            78px 7px 176px;
+    }
+
+    .status-viewer-media img,
+    .status-viewer-media video {
+        max-width: 100%;
+        max-height: 100%;
+
+        border-radius: 14px;
+    }
+
+    .status-bottom {
+        padding:
+            15px 9px calc(12px + env(safe-area-inset-bottom));
+    }
+
+    .status-mini-user {
+        margin-bottom: 9px;
+    }
+
+    .status-mini-avatar {
+        width: 32px;
+        height: 32px;
+    }
+
+    .status-mini-name {
+        font-size: 11px;
+    }
+
+    .status-mini-id {
+        font-size: 8px;
+    }
+
+    .status-actions {
+        gap: 5px;
+    }
+
+    .status-like-btn {
+        width: 36px;
+        height: 36px;
+
+        font-size: 17px;
+    }
+
+    .status-comment-input {
+        height: 36px;
+
+        padding: 0 11px;
+
+        font-size: 11px;
+    }
+
+    .status-seen-text {
+        font-size: 9px;
+    }
+
+    .status-share-btn,
+    .status-report-btn {
+        width: 31px;
+        height: 31px;
+
+        font-size: 18px;
+    }
+
+    .status-report-btn {
+        font-size: 15px;
+    }
+
+    .status-mention-btn {
+        margin-top: 8px;
+
+        min-height: 28px;
+
+        padding: 0 11px;
+
+        font-size: 9px;
+    }
+
+}
+
+
+/* =========================================================
+   VERY SMALL MOBILE
+========================================================= */
+
+@media (max-width: 380px) {
+
+    .header {
+        padding-left: 9px;
+        padding-right: 9px;
+    }
+
+    .search-box {
+        margin-left: 7px;
+        margin-right: 6px;
+    }
+
+    .search-input {
+        font-size: 11px;
+    }
+
+    .status-viewer-time {
+        display: none;
+    }
+
+    .status-seen-text {
+        display: none;
+    }
+
+    .status-actions {
+        gap: 4px;
+    }
+
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+    }
+
 }
