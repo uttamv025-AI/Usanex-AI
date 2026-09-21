@@ -1,22 +1,18 @@
-// ============================================================
-// USANEX - HOME PAGE JAVASCRIPT
-// ============================================================
+"use strict";
 
-
-// ============================================================
-// GLOBAL USER
-// ============================================================
+/* =========================================================
+   USANEX HOME.JS
+   Uses logged-in user saved by register.html
+========================================================= */
 
 let currentUser = null;
-
-let searchTimeout = null;
-
-let toastTimer = null;
+let searchTimer = null;
+let notificationTimer = null;
 
 
-// ============================================================
-// DOM ELEMENTS
-// ============================================================
+/* =========================================================
+   DOM
+========================================================= */
 
 const searchInput =
     document.getElementById("searchInput");
@@ -31,150 +27,999 @@ const menuOverlay =
     document.getElementById("menuOverlay");
 
 
-// ============================================================
-// USER RESOLUTION
-// ============================================================
+/* =========================================================
+   USER
+========================================================= */
 
-async function resolveCurrentUser() {
+function normalizeUser(value) {
 
-    try {
+    if (!value) {
+        return null;
+    }
 
-        const response =
-            await fetch(
-                "/api/me",
-                {
-                    credentials: "include"
-                }
-            );
+    if (typeof value === "string") {
 
-        if (!response.ok) {
+        const text = value.trim();
+
+        if (!text) {
             return null;
         }
 
-        const data =
-            await response.json();
+        try {
 
-        if (
-            data &&
-            data.ok &&
-            data.user
-        ) {
+            value = JSON.parse(text);
 
-            currentUser =
-                data.user;
+        } catch (error) {
 
-            updateCurrentUserUI();
+            return {
+                user_id: text,
+                name: text,
+                mobile: "",
+                profile_photo: ""
+            };
 
-            return currentUser;
         }
 
-    } catch (error) {
+    }
 
-        console.error(
-            "User resolution error:",
-            error
-        );
+    if (value.user) {
+        value = value.user;
+    }
+
+    const userId =
+        value.user_id ||
+        value.userId ||
+        value.id;
+
+    if (!userId) {
+        return null;
+    }
+
+    return {
+
+        user_id: String(userId),
+
+        name:
+            value.name ||
+            value.full_name ||
+            value.username ||
+            String(userId),
+
+        mobile:
+            value.mobile || "",
+
+        profile_photo:
+            value.profile_photo ||
+            value.profile_picture ||
+            ""
+
+    };
+
+}
+
+
+/* =========================================================
+   GET USER FROM LOCAL STORAGE
+========================================================= */
+
+function getStoredCurrentUser() {
+
+    const keys = [
+
+        "user",
+        "currentUser",
+        "usanexUser",
+        "loggedInUser",
+        "userData",
+        "user_id",
+        "userId"
+
+    ];
+
+    for (const key of keys) {
+
+        const raw =
+            localStorage.getItem(key);
+
+        if (!raw) {
+            continue;
+        }
+
+        const user =
+            normalizeUser(raw);
+
+        if (user) {
+
+            return user;
+
+        }
 
     }
 
     return null;
+
 }
 
 
-// ============================================================
-// UPDATE CURRENT USER UI
-// ============================================================
+/* =========================================================
+   RESOLVE CURRENT USER
+========================================================= */
 
-function updateCurrentUserUI() {
+async function resolveCurrentUser() {
 
-    const youLetter =
-        document.getElementById(
-            "youLetter"
-        );
+    currentUser =
+        getStoredCurrentUser();
 
-    if (!youLetter) {
-        return;
+    if (currentUser) {
+
+        updateYourStatusAvatar();
+
+        return currentUser;
+
     }
 
-    if (!currentUser) {
+    console.error(
+        "Usanex: logged-in user not found in localStorage."
+    );
 
-        youLetter.textContent =
-            "U";
+    return null;
 
+}
+
+
+/* =========================================================
+   YOUR STATUS AVATAR
+========================================================= */
+
+function updateYourStatusAvatar() {
+
+    const letter =
+        document.getElementById("youLetter");
+
+    if (!letter || !currentUser) {
         return;
     }
 
     const name =
         currentUser.name ||
-        currentUser.display_name ||
-        currentUser.username ||
         currentUser.user_id ||
         "U";
 
-    youLetter.textContent =
-        String(name)
-            .charAt(0)
-            .toUpperCase();
+    letter.textContent =
+        name.charAt(0).toUpperCase();
 
 }
 
 
-// ============================================================
-// CONNECTION CHECK
-// ============================================================
+/* =========================================================
+   TOAST
+========================================================= */
 
-async function checkConnection() {
+function showToast(message) {
+
+    const toast =
+        document.getElementById("toast");
+
+    if (!toast) {
+        return;
+    }
+
+    toast.textContent =
+        message;
+
+    toast.classList.add("show");
+
+    clearTimeout(
+        showToast.timer
+    );
+
+    showToast.timer =
+        setTimeout(() => {
+
+            toast.classList.remove("show");
+
+        }, 2200);
+
+}
+
+
+/* =========================================================
+   HTML ESCAPE
+========================================================= */
+
+function escapeHtml(value) {
+
+    return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
+
+
+/* =========================================================
+   LOAD CONNECTIONS
+========================================================= */
+
+async function loadConnections() {
+
+    const list =
+        document.getElementById(
+            "connectionsList"
+        );
+
+    const count =
+        document.getElementById(
+            "connectionCount"
+        );
+
+    if (!list) {
+        return;
+    }
+
+    if (
+        !currentUser ||
+        !currentUser.user_id
+    ) {
+
+        list.innerHTML = `
+
+            <div class="empty-box">
+
+                <div class="empty-icon">
+                    ⚠
+                </div>
+
+                <div class="empty-title">
+                    Login information not found
+                </div>
+
+                <div class="empty-text">
+                    Please login again.
+                </div>
+
+            </div>
+
+        `;
+
+        if (count) {
+            count.textContent = "0";
+        }
+
+        return;
+
+    }
+
+
+    list.innerHTML = `
+
+        <div class="empty-box">
+
+            <div class="empty-icon">
+                ◌
+            </div>
+
+            <div class="empty-title">
+                Loading connections...
+            </div>
+
+            <div class="empty-text">
+                Please wait
+            </div>
+
+        </div>
+
+    `;
+
+
+    const userId =
+        encodeURIComponent(
+            currentUser.user_id
+        );
+
+
+    let data = null;
+
+
+    /* =====================================================
+       PRIMARY API
+    ===================================================== */
 
     try {
 
         const response =
             await fetch(
-                "/api/health",
+                `/api/home/connections?user_id=${userId}`,
                 {
-                    credentials: "include"
+                    cache: "no-store"
                 }
             );
 
-        return response.ok;
+
+        if (response.ok) {
+
+            const result =
+                await response.json();
+
+            if (result.ok !== false) {
+
+                data = result;
+
+            }
+
+        }
 
     } catch (error) {
 
-        return false;
+        console.error(
+            "Home connections API error:",
+            error
+        );
+
+    }
+
+
+    /* =====================================================
+       FALLBACK API
+    ===================================================== */
+
+    if (!data) {
+
+        try {
+
+            const response =
+                await fetch(
+                    `/api/connections?user_id=${userId}`,
+                    {
+                        cache: "no-store"
+                    }
+                );
+
+
+            if (response.ok) {
+
+                const result =
+                    await response.json();
+
+                if (result.ok !== false) {
+
+                    data = result;
+
+                }
+
+            }
+
+        } catch (error) {
+
+            console.error(
+                "Fallback connections API error:",
+                error
+            );
+
+        }
+
+    }
+
+
+    if (!data) {
+
+        list.innerHTML = `
+
+            <div class="empty-box">
+
+                <div class="empty-icon">
+                    ⚠
+                </div>
+
+                <div class="empty-title">
+                    Unable to load connections
+                </div>
+
+                <div class="empty-text">
+                    Please try again.
+                </div>
+
+            </div>
+
+        `;
+
+        if (count) {
+            count.textContent = "0";
+        }
+
+        return;
+
+    }
+
+
+    const users =
+        Array.isArray(data.users)
+            ? data.users
+            : (
+                Array.isArray(data.connections)
+                    ? data.connections
+                    : []
+            );
+
+
+    renderConnections(users);
+
+}
+
+
+/* =========================================================
+   RENDER CONNECTIONS
+========================================================= */
+
+function renderConnections(users) {
+
+    const list =
+        document.getElementById(
+            "connectionsList"
+        );
+
+    const count =
+        document.getElementById(
+            "connectionCount"
+        );
+
+    if (!list) {
+        return;
+    }
+
+
+    if (count) {
+
+        count.textContent =
+            String(users.length);
+
+    }
+
+
+    if (!users.length) {
+
+        list.innerHTML = `
+
+            <div class="empty-box">
+
+                <div class="empty-icon">
+                    👥
+                </div>
+
+                <div class="empty-title">
+                    No connected people
+                </div>
+
+                <div class="empty-text">
+                    Search people and connect with them.
+                </div>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    list.innerHTML =
+        users.map(user => {
+
+            const userId =
+                escapeHtml(
+                    user.user_id || ""
+                );
+
+            const name =
+                escapeHtml(
+                    user.name ||
+                    user.user_id ||
+                    "User"
+                );
+
+            const photo =
+                user.profile_photo ||
+                user.profile_picture ||
+                "";
+
+
+            const firstLetter =
+                (
+                    user.name ||
+                    user.user_id ||
+                    "U"
+                )
+                .charAt(0)
+                .toUpperCase();
+
+
+            return `
+
+                <div
+                    class="connection-card"
+                    data-user-id="${userId}"
+                >
+
+                    <div
+                        class="connection-avatar"
+                        data-photo="${escapeHtml(photo)}"
+                        data-name="${name}"
+                    >
+
+                        ${
+                            photo
+                            ?
+                            `<img
+                                src="${escapeHtml(photo)}"
+                                alt="${name}"
+                                loading="lazy"
+                            >`
+                            :
+                            `<span>${firstLetter}</span>`
+                        }
+
+                    </div>
+
+
+                    <div class="connection-info">
+
+                        <div class="connection-name">
+                            ${name}
+                        </div>
+
+                        <div class="connection-user-id">
+                            @${userId}
+                        </div>
+
+                    </div>
+
+
+                    <div class="connection-actions">
+
+                        <button
+                            type="button"
+                            class="connection-chat-btn"
+                            data-action="chat"
+                            data-user-id="${userId}"
+                        >
+                            Chat
+                        </button>
+
+                        <button
+                            type="button"
+                            class="connection-profile-btn"
+                            data-action="profile"
+                            data-user-id="${userId}"
+                        >
+                            Profile
+                        </button>
+
+                    </div>
+
+                </div>
+
+            `;
+
+        }).join("");
+
+
+    attachConnectionEvents();
+
+}
+
+
+/* =========================================================
+   CONNECTION EVENTS
+========================================================= */
+
+function attachConnectionEvents() {
+
+    const list =
+        document.getElementById(
+            "connectionsList"
+        );
+
+    if (!list) {
+        return;
+    }
+
+
+    list
+    .querySelectorAll(
+        "[data-action='chat']"
+    )
+    .forEach(button => {
+
+        button.addEventListener(
+            "click",
+            function(event) {
+
+                event.stopPropagation();
+
+                openChat(
+                    this.dataset.userId
+                );
+
+            }
+        );
+
+    });
+
+
+    list
+    .querySelectorAll(
+        "[data-action='profile']"
+    )
+    .forEach(button => {
+
+        button.addEventListener(
+            "click",
+            function(event) {
+
+                event.stopPropagation();
+
+                openProfile(
+                    this.dataset.userId
+                );
+
+            }
+        );
+
+    });
+
+
+    list
+    .querySelectorAll(
+        ".connection-avatar"
+    )
+    .forEach(avatar => {
+
+        avatar.addEventListener(
+            "click",
+            function(event) {
+
+                event.stopPropagation();
+
+                const photo =
+                    this.dataset.photo;
+
+                const name =
+                    this.dataset.name;
+
+                if (photo) {
+
+                    openDPViewer(
+                        photo,
+                        name
+                    );
+
+                }
+
+            }
+        );
+
+    });
+
+}
+
+
+/* =========================================================
+   OPEN CHAT
+========================================================= */
+
+function openChat(userId) {
+
+    if (!userId) {
+        return;
+    }
+
+    window.location.href =
+        `/chat?user_id=${encodeURIComponent(
+            userId
+        )}`;
+
+}
+
+
+/* =========================================================
+   OPEN PROFILE
+========================================================= */
+
+function openProfile(userId) {
+
+    if (!userId) {
+        return;
+    }
+
+    window.location.href =
+        `/profile?user_id=${encodeURIComponent(
+            userId
+        )}`;
+
+}
+
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+async function performSearch(query) {
+
+    if (!searchResults) {
+        return;
+    }
+
+
+    query =
+        String(query || "").trim();
+
+
+    if (!query) {
+
+        searchResults.innerHTML = "";
+
+        searchResults.classList.remove(
+            "show"
+        );
+
+        return;
+
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                `/api/search?q=${encodeURIComponent(query)}`,
+                {
+                    cache: "no-store"
+                }
+            );
+
+
+        if (!response.ok) {
+            throw new Error(
+                "Search request failed"
+            );
+        }
+
+
+        const data =
+            await response.json();
+
+
+        const users =
+            Array.isArray(data.users)
+                ? data.users
+                : [];
+
+
+        if (!users.length) {
+
+            searchResults.innerHTML = `
+
+                <div class="search-empty">
+                    No users found
+                </div>
+
+            `;
+
+            searchResults.classList.add(
+                "show"
+            );
+
+            return;
+
+        }
+
+
+        searchResults.innerHTML =
+            users.map(user => {
+
+                const id =
+                    escapeHtml(
+                        user.user_id || ""
+                    );
+
+                const name =
+                    escapeHtml(
+                        user.name ||
+                        user.user_id ||
+                        "User"
+                    );
+
+                const photo =
+                    user.profile_photo ||
+                    user.profile_picture ||
+                    "";
+
+                const letter =
+                    (
+                        user.name ||
+                        user.user_id ||
+                        "U"
+                    )
+                    .charAt(0)
+                    .toUpperCase();
+
+
+                return `
+
+                    <div
+                        class="search-user"
+                        data-user-id="${id}"
+                    >
+
+                        <div class="search-user-avatar">
+
+                            ${
+                                photo
+                                ?
+                                `<img
+                                    src="${escapeHtml(photo)}"
+                                    alt="${name}"
+                                >`
+                                :
+                                `<span>${letter}</span>`
+                            }
+
+                        </div>
+
+
+                        <div class="search-user-info">
+
+                            <div class="search-user-name">
+                                ${name}
+                            </div>
+
+                            <div class="search-user-id">
+                                @${id}
+                            </div>
+
+                        </div>
+
+
+                        <button
+                            type="button"
+                            class="search-follow-btn"
+                            data-follow-id="${id}"
+                        >
+                            Follow
+                        </button>
+
+                    </div>
+
+                `;
+
+            }).join("");
+
+
+        searchResults.classList.add(
+            "show"
+        );
+
+
+        searchResults
+        .querySelectorAll(
+            "[data-follow-id]"
+        )
+        .forEach(button => {
+
+            button.addEventListener(
+                "click",
+                async function(event) {
+
+                    event.stopPropagation();
+
+                    await followUser(
+                        this.dataset.followId,
+                        this
+                    );
+
+                }
+            );
+
+        });
+
+
+        searchResults
+        .querySelectorAll(
+            ".search-user"
+        )
+        .forEach(item => {
+
+            item.addEventListener(
+                "click",
+                function(event) {
+
+                    if (
+                        event.target.closest(
+                            "[data-follow-id]"
+                        )
+                    ) {
+                        return;
+                    }
+
+                    openProfile(
+                        this.dataset.userId
+                    );
+
+                }
+            );
+
+        });
+
+
+    } catch (error) {
+
+        console.error(
+            "Search error:",
+            error
+        );
+
+        searchResults.innerHTML = `
+
+            <div class="search-empty">
+                Search failed
+            </div>
+
+        `;
+
+        searchResults.classList.add(
+            "show"
+        );
 
     }
 
 }
 
 
-// ============================================================
-// SEARCH INPUT
-// ============================================================
+/* =========================================================
+   SEARCH INPUT
+========================================================= */
 
 if (searchInput) {
 
     searchInput.addEventListener(
         "input",
-        function () {
+        function() {
 
             clearTimeout(
-                searchTimeout
+                searchTimer
             );
 
-            const query =
+            const value =
                 this.value.trim();
 
-            if (!query) {
 
-                closeSearchResults();
+            if (!value) {
+
+                if (searchResults) {
+
+                    searchResults.innerHTML = "";
+
+                    searchResults.classList.remove(
+                        "show"
+                    );
+
+                }
 
                 return;
+
             }
 
-            searchTimeout =
-                setTimeout(
-                    function () {
 
-                        searchUsers(query);
+            searchTimer =
+                setTimeout(
+                    () => {
+
+                        performSearch(
+                            value
+                        );
 
                     },
                     300
@@ -186,272 +1031,57 @@ if (searchInput) {
 }
 
 
-// ============================================================
-// SEARCH USERS
-// ============================================================
-
-async function searchUsers(query) {
-
-    if (!searchResults) {
-        return;
-    }
-
-    searchResults.innerHTML = `
-        <div class="search-loading">
-            Searching...
-        </div>
-    `;
-
-    searchResults.classList.add(
-        "show"
-    );
-
-    try {
-
-        const response =
-            await fetch(
-                `/api/search?q=${encodeURIComponent(query)}`,
-                {
-                    credentials: "include"
-                }
-            );
-
-        if (!response.ok) {
-
-            throw new Error(
-                "Search failed"
-            );
-
-        }
-
-        const data =
-            await response.json();
-
-        const users =
-            data.users ||
-            data.results ||
-            [];
-
-        renderSearchResults(
-            users
-        );
-
-    } catch (error) {
-
-        console.error(
-            "Search error:",
-            error
-        );
-
-        searchResults.innerHTML = `
-            <div class="search-error">
-                Unable to search right now.
-            </div>
-        `;
-
-    }
-
-}
-
-
-// ============================================================
-// RENDER SEARCH RESULTS
-// ============================================================
-
-function renderSearchResults(users) {
-
-    if (!searchResults) {
-        return;
-    }
-
-    if (
-        !users ||
-        users.length === 0
-    ) {
-
-        searchResults.innerHTML = `
-            <div class="search-empty">
-                No users found
-            </div>
-        `;
-
-        return;
-    }
-
-    searchResults.innerHTML = "";
-
-    users.forEach(
-        function (user) {
-
-            const card =
-                document.createElement(
-                    "div"
-                );
-
-            card.className =
-                "search-user-card";
-
-            const name =
-                user.name ||
-                user.display_name ||
-                "User";
-
-            const username =
-                user.username ||
-                user.user_id ||
-                "";
-
-            const userId =
-                user.user_id ||
-                user.username ||
-                "";
-
-            const avatar =
-                user.profile_picture ||
-                user.avatar ||
-                "";
-
-            card.innerHTML = `
-
-                <div class="search-user-left">
-
-                    <div class="search-user-avatar">
-
-                        ${
-                            avatar
-                            ?
-                            `
-                            <img
-                                src="${escapeHtml(avatar)}"
-                                alt="Profile">
-                            `
-                            :
-                            `
-                            <span>
-                                ${escapeHtml(
-                                    name
-                                        .charAt(0)
-                                        .toUpperCase()
-                                )}
-                            </span>
-                            `
-                        }
-
-                    </div>
-
-                    <div class="search-user-info">
-
-                        <div class="search-user-name">
-                            ${escapeHtml(name)}
-                        </div>
-
-                        <div class="search-user-username">
-                            @${escapeHtml(username)}
-                        </div>
-
-                        ${
-                            userId
-                            ?
-                            `
-                            <div class="search-user-id">
-                                ID: ${escapeHtml(userId)}
-                            </div>
-                            `
-                            :
-                            ""
-                        }
-
-                    </div>
-
-                </div>
-
-                <button
-                    class="search-profile-btn"
-                    type="button"
-                    onclick="openProfile('${escapeJs(userId)}')">
-
-                    Profile
-
-                </button>
-
-            `;
-
-            searchResults.appendChild(
-                card
-            );
-
-        }
-    );
-
-}
-
-
-// ============================================================
-// CLOSE SEARCH RESULTS
-// ============================================================
-
-function closeSearchResults() {
-
-    if (!searchResults) {
-        return;
-    }
-
-    searchResults.classList.remove(
-        "show"
-    );
-
-    searchResults.innerHTML = "";
-
-}
-
-
-function closeSearch() {
-
-    if (searchInput) {
-
-        searchInput.value = "";
-
-    }
-
-    closeSearchResults();
-
-}
-
-
-// ============================================================
-// CHAT
-// ============================================================
-
-function openChat(userId) {
-
-    if (!userId) {
-        return;
-    }
-
-    window.location.href =
-        `/chat?user_id=${encodeURIComponent(userId)}`;
-
-}
-
-
-// ============================================================
-// FOLLOW
-// ============================================================
+/* =========================================================
+   FOLLOW USER
+========================================================= */
 
 async function followUser(
-    userId,
-    button
+    targetUserId,
+    button = null
 ) {
 
-    if (!userId) {
+    if (
+        !currentUser ||
+        !currentUser.user_id
+    ) {
+
+        showToast(
+            "Please login again."
+        );
+
+        return;
+
+    }
+
+
+    if (!targetUserId) {
         return;
     }
+
+
+    if (
+        String(targetUserId) ===
+        String(currentUser.user_id)
+    ) {
+
+        showToast(
+            "You cannot follow yourself."
+        );
+
+        return;
+
+    }
+
 
     if (button) {
 
         button.disabled = true;
 
+        button.textContent =
+            "Sending...";
+
     }
+
 
     try {
 
@@ -459,50 +1089,61 @@ async function followUser(
             await fetch(
                 "/api/follow",
                 {
+
                     method: "POST",
 
                     headers: {
+
                         "Content-Type":
                             "application/json"
+
                     },
 
-                    credentials: "include",
-
                     body: JSON.stringify({
-                        user_id: userId
+
+                        requester_user_id:
+                            currentUser.user_id,
+
+                        target_user_id:
+                            targetUserId
+
                     })
+
                 }
             );
+
 
         const data =
             await response.json();
 
-        if (data.ok) {
 
-            if (button) {
+        if (!response.ok || !data.ok) {
 
-                button.textContent =
-                    "Unfollow";
-
-                button.classList.add(
-                    "following"
-                );
-
-            }
-
-            showToast(
-                "Follow request sent"
-            );
-
-        } else {
-
-            showToast(
+            throw new Error(
                 data.message ||
-                data.detail ||
-                "Unable to follow"
+                "Unable to follow user."
             );
 
         }
+
+
+        if (button) {
+
+            button.textContent =
+                "Requested";
+
+            button.classList.add(
+                "requested"
+            );
+
+        }
+
+
+        showToast(
+            data.message ||
+            "Follow request sent."
+        );
+
 
     } catch (error) {
 
@@ -511,189 +1152,21 @@ async function followUser(
             error
         );
 
-        showToast(
-            "Something went wrong"
-        );
-
-    } finally {
 
         if (button) {
 
             button.disabled =
                 false;
 
-        }
-
-    }
-
-}
-
-
-// ============================================================
-// CONNECTIONS
-// ============================================================
-
-async function loadConnections() {
-
-    const container =
-        document.getElementById(
-            "connectionsList"
-        );
-
-    if (!container) {
-        return;
-    }
-
-    try {
-
-        // ----------------------------------------------------
-        // Make sure current user is available
-        // ----------------------------------------------------
-
-        if (!currentUser) {
-
-            await resolveCurrentUser();
-
-        }
-
-        if (!currentUser) {
-
-            console.error(
-                "Current user not available"
-            );
-
-            return;
-        }
-
-
-        // ----------------------------------------------------
-        // Get current user ID
-        // ----------------------------------------------------
-
-        const userId =
-            currentUser.user_id ||
-            currentUser.username ||
-            currentUser.id ||
-            "";
-
-
-        if (!userId) {
-
-            console.error(
-                "Current user ID not available"
-            );
-
-            return;
-        }
-
-
-        // ----------------------------------------------------
-        // FIRST:
-        // Original home connections API
-        // ----------------------------------------------------
-
-        let response =
-            await fetch(
-                `/api/home/connections?user_id=${encodeURIComponent(userId)}`,
-                {
-                    credentials: "include"
-                }
-            );
-
-
-        // ----------------------------------------------------
-        // SECOND:
-        // Connections API with user_id
-        // ----------------------------------------------------
-
-        if (!response.ok) {
-
-            response =
-                await fetch(
-                    `/api/connections?user_id=${encodeURIComponent(userId)}`,
-                    {
-                        credentials: "include"
-                    }
-                );
+            button.textContent =
+                "Follow";
 
         }
 
 
-        // ----------------------------------------------------
-        // THIRD:
-        // Existing simple connections API
-        // ----------------------------------------------------
-
-        if (!response.ok) {
-
-            response =
-                await fetch(
-                    "/api/connections",
-                    {
-                        credentials: "include"
-                    }
-                );
-
-        }
-
-
-        // ----------------------------------------------------
-        // API failed
-        // ----------------------------------------------------
-
-        if (!response.ok) {
-
-            console.error(
-                "Connections API failed:",
-                response.status
-            );
-
-            return;
-        }
-
-
-        // ----------------------------------------------------
-        // Read response
-        // ----------------------------------------------------
-
-        const data =
-            await response.json();
-
-
-        // ----------------------------------------------------
-        // Support multiple response formats
-        // ----------------------------------------------------
-
-        const users =
-            data.connections ||
-            data.users ||
-            data.results ||
-            [];
-
-
-        // ----------------------------------------------------
-        // Update count
-        // ----------------------------------------------------
-
-        updateConnectionCount(
-            users.length
-        );
-
-
-        // ----------------------------------------------------
-        // Render
-        // ----------------------------------------------------
-
-        renderConnections(
-            users
-        );
-
-
-    } catch (error) {
-
-        console.error(
-            "Connections error:",
-            error
+        showToast(
+            error.message ||
+            "Unable to send request."
         );
 
     }
@@ -701,248 +1174,9 @@ async function loadConnections() {
 }
 
 
-// ============================================================
-// CONNECTION COUNT
-// ============================================================
-
-function updateConnectionCount(count) {
-
-    const element =
-        document.getElementById(
-            "connectionCount"
-        );
-
-    if (!element) {
-        return;
-    }
-
-    element.textContent =
-        Number(count) || 0;
-
-}
-
-
-// ============================================================
-// RENDER CONNECTIONS
-// ============================================================
-
-function renderConnections(users) {
-
-    const container =
-        document.getElementById(
-            "connectionsList"
-        );
-
-    if (!container) {
-        return;
-    }
-
-    if (
-        !users ||
-        users.length === 0
-    ) {
-
-        container.innerHTML = `
-            <div class="empty-box">
-
-                <div class="empty-icon">
-                    👥
-                </div>
-
-                <div class="empty-title">
-                    No connections yet
-                </div>
-
-                <div class="empty-text">
-                    Connect with people to see them here.
-                </div>
-
-            </div>
-        `;
-
-        return;
-    }
-
-    container.innerHTML = "";
-
-    users.forEach(
-        function (user) {
-
-            const name =
-                user.name ||
-                user.display_name ||
-                "User";
-
-            const userId =
-                user.user_id ||
-                user.username ||
-                "";
-
-            const username =
-                user.username ||
-                user.user_id ||
-                "";
-
-            const avatar =
-                user.profile_picture ||
-                user.avatar ||
-                "";
-
-            const card =
-                document.createElement(
-                    "div"
-                );
-
-            card.className =
-                "connection-card";
-
-            card.innerHTML = `
-
-                <div
-                    class="connection-avatar"
-                    onclick="openDPViewer(
-                        '${escapeJs(userId)}',
-                        '${escapeJs(name)}',
-                        '${escapeJs(avatar)}'
-                    )">
-
-                    ${
-                        avatar
-                        ?
-                        `
-                        <img
-                            src="${escapeHtml(avatar)}"
-                            alt="Profile">
-                        `
-                        :
-                        `
-                        <span>
-                            ${escapeHtml(
-                                name
-                                    .charAt(0)
-                                    .toUpperCase()
-                            )}
-                        </span>
-                        `
-                    }
-
-                </div>
-
-                <div
-                    class="connection-info"
-                    onclick="openProfile(
-                        '${escapeJs(userId)}'
-                    )">
-
-                    <div class="connection-name">
-                        ${escapeHtml(name)}
-                    </div>
-
-                    <div class="connection-username">
-                        @${escapeHtml(username)}
-                    </div>
-
-                </div>
-
-                <button
-                    class="connection-chat-btn"
-                    type="button"
-                    onclick="openChat(
-                        '${escapeJs(userId)}'
-                    )">
-
-                    Chat
-
-                </button>
-
-            `;
-
-            container.appendChild(
-                card
-            );
-
-        }
-    );
-
-}
-
-
-// ============================================================
-// PROFILE
-// ============================================================
-
-function openProfile(userId) {
-
-    if (!userId) {
-        return;
-    }
-
-    window.location.href =
-        `/profile?user_id=${encodeURIComponent(userId)}`;
-
-}
-
-
-function goProfile() {
-
-    window.location.href =
-        "/profile";
-
-}
-
-
-// ============================================================
-// HOME
-// ============================================================
-
-function goHome() {
-
-    window.location.href =
-        "/home";
-
-}
-
-
-// ============================================================
-// REELS
-// ============================================================
-
-function goReels() {
-
-    window.location.href =
-        "/reels";
-
-}
-
-
-// ============================================================
-// CREATE POST
-// ============================================================
-
-function createPost() {
-
-    showToast(
-        "Create post coming soon."
-    );
-
-}
-
-
-// ============================================================
-// NOTIFICATIONS
-// ============================================================
-
-function goNotifications() {
-
-    window.location.href =
-        "/notifications";
-
-}
-
-
-// ============================================================
-// NOTIFICATION COUNT
-// ============================================================
+/* =========================================================
+   NOTIFICATIONS
+========================================================= */
 
 async function loadNotificationCount() {
 
@@ -955,46 +1189,73 @@ async function loadNotificationCount() {
         return;
     }
 
+
+    if (
+        !currentUser ||
+        !currentUser.user_id
+    ) {
+
+        badge.textContent = "0";
+
+        badge.style.display =
+            "none";
+
+        return;
+
+    }
+
+
     try {
 
         const response =
             await fetch(
-                "/api/notifications/unread-count",
+                `/api/notifications?user_id=${encodeURIComponent(
+                    currentUser.user_id
+                )}`,
                 {
-                    credentials: "include"
+                    cache: "no-store"
                 }
             );
+
 
         if (!response.ok) {
             return;
         }
 
+
         const data =
             await response.json();
 
-        const count =
-            Number(
-                data.count ||
-                data.unread ||
-                0
-            );
 
-        if (count > 0) {
+        const notifications =
+            Array.isArray(
+                data.notifications
+            )
+            ? data.notifications
+            : [];
 
-            badge.textContent =
-                count > 99
+
+        const unread =
+            notifications.filter(
+                item =>
+                    !(
+                        item.is_read === true ||
+                        item.read === true
+                    )
+            ).length;
+
+
+        badge.textContent =
+            unread > 99
                 ? "99+"
-                : count;
+                : String(unread);
 
-            badge.style.display =
-                "flex";
 
-        } else {
+        badge.style.display =
+            unread > 0
+                ? "flex"
+                : "none";
 
-            badge.style.display =
-                "none";
-
-        }
 
     } catch (error) {
 
@@ -1008,9 +1269,9 @@ async function loadNotificationCount() {
 }
 
 
-// ============================================================
-// ADD MY STATUS
-// ============================================================
+/* =========================================================
+   STATUS
+========================================================= */
 
 function addMyStatus() {
 
@@ -1020,76 +1281,90 @@ function addMyStatus() {
 }
 
 
-// ============================================================
-// STATUS HINT
-// ============================================================
-
-function showStatusHint() {
-
-    const hint =
-        document.getElementById(
-            "statusNewUserHint"
-        );
-
-    if (!hint) {
-        return;
-    }
-
-    hint.classList.add(
-        "show"
-    );
-
-    setTimeout(
-        function () {
-
-            hint.classList.remove(
-                "show"
-            );
-
-        },
-        5000
-    );
-
-}
-
-
-// ============================================================
-// SHOW ALL STATUSES
-// ============================================================
-
 function showAllStatuses() {
 
     showToast(
-        "All statuses will appear here."
+        "All statuses coming soon."
     );
 
 }
 
 
-// ============================================================
-// OPEN STATUS
-// ============================================================
-
 function openStatus(
-    userId,
-    userName,
+    letter,
+    name,
     seen
 ) {
 
-    if (!userId) {
-        return;
-    }
-
     showToast(
-        "Status viewer coming soon."
+        `${name} status`
     );
 
 }
 
 
-// ============================================================
-// MENU
-// ============================================================
+/* =========================================================
+   BOTTOM NAV
+========================================================= */
+
+function goHome() {
+
+    window.location.href =
+        "/home";
+
+}
+
+
+function goReels() {
+
+    window.location.href =
+        "/reels";
+
+}
+
+
+function createPost() {
+
+    showToast(
+        "Create post coming soon."
+    );
+
+}
+
+
+function goNotifications() {
+
+    window.location.href =
+        "/notifications";
+
+}
+
+
+function goProfile() {
+
+    if (
+        currentUser &&
+        currentUser.user_id
+    ) {
+
+        window.location.href =
+            `/profile?user_id=${encodeURIComponent(
+                currentUser.user_id
+            )}`;
+
+        return;
+
+    }
+
+    window.location.href =
+        "/profile";
+
+}
+
+
+/* =========================================================
+   MENU
+========================================================= */
 
 function openMenu() {
 
@@ -1130,15 +1405,11 @@ function toggleMenu() {
 }
 
 
-// ============================================================
-// MENU BUTTON
-// ============================================================
-
 if (menuBtn) {
 
     menuBtn.addEventListener(
         "click",
-        function (event) {
+        function(event) {
 
             event.stopPropagation();
 
@@ -1150,13 +1421,32 @@ if (menuBtn) {
 }
 
 
-// ============================================================
-// MENU ACTIONS
-// ============================================================
+if (menuOverlay) {
+
+    menuOverlay.addEventListener(
+        "click",
+        function(event) {
+
+            if (
+                event.target ===
+                menuOverlay
+            ) {
+
+                closeMenu();
+
+            }
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   MENU OPTIONS
+========================================================= */
 
 function goMonetization() {
-
-    closeMenu();
 
     showToast(
         "Monetization coming soon."
@@ -1167,8 +1457,6 @@ function goMonetization() {
 
 function goBlocked() {
 
-    closeMenu();
-
     showToast(
         "Blocked users coming soon."
     );
@@ -1177,8 +1465,6 @@ function goBlocked() {
 
 
 function goPrivacy() {
-
-    closeMenu();
 
     showToast(
         "Privacy & Security coming soon."
@@ -1189,8 +1475,6 @@ function goPrivacy() {
 
 function goSettings() {
 
-    closeMenu();
-
     showToast(
         "Settings coming soon."
     );
@@ -1199,8 +1483,6 @@ function goSettings() {
 
 
 function goHelp() {
-
-    closeMenu();
 
     showToast(
         "Help & Support coming soon."
@@ -1211,8 +1493,6 @@ function goHelp() {
 
 function goAbout() {
 
-    closeMenu();
-
     showToast(
         "Usanex"
     );
@@ -1220,68 +1500,74 @@ function goAbout() {
 }
 
 
-// ============================================================
-// LOGOUT
-// ============================================================
+/* =========================================================
+   LOGOUT
+========================================================= */
 
 async function logoutUser() {
 
-    closeMenu();
-
     try {
 
-        const response =
-            await fetch(
-                "/logout",
-                {
-                    method: "POST",
-                    credentials: "include"
-                }
-            );
-
-        /*
-         * Logout endpoint response is not required
-         * for redirect.
-         */
-
-        console.log(
-            "Logout response:",
-            response.status
+        await fetch(
+            "/logout",
+            {
+                method: "POST"
+            }
         );
 
     } catch (error) {
 
-        console.error(
-            "Logout error:",
-            error
+        console.log(
+            "Logout endpoint not available."
         );
 
     }
 
+
+    localStorage.removeItem(
+        "user"
+    );
+
+    localStorage.removeItem(
+        "token"
+    );
+
+    localStorage.removeItem(
+        "currentUser"
+    );
+
+    localStorage.removeItem(
+        "usanexUser"
+    );
+
+    localStorage.removeItem(
+        "loggedInUser"
+    );
+
+    localStorage.removeItem(
+        "userData"
+    );
+
+
     window.location.href =
-        "/";
+        "/?open=login";
 
 }
 
 
-// ============================================================
-// DP VIEWER
-// ============================================================
+/* =========================================================
+   DP VIEWER
+========================================================= */
 
 function openDPViewer(
-    userId,
-    name,
-    avatar
+    photo,
+    name
 ) {
 
     const viewer =
         document.getElementById(
             "dpViewer"
         );
-
-    if (!viewer) {
-        return;
-    }
 
     const image =
         document.getElementById(
@@ -1293,35 +1579,26 @@ function openDPViewer(
             "dpViewerName"
         );
 
-    if (image) {
 
-        if (avatar) {
-
-            image.src =
-                avatar;
-
-            image.style.display =
-                "block";
-
-        } else {
-
-            image.removeAttribute(
-                "src"
-            );
-
-            image.style.display =
-                "none";
-
-        }
-
+    if (
+        !viewer ||
+        !image
+    ) {
+        return;
     }
+
+
+    image.src =
+        photo || "";
+
 
     if (title) {
 
         title.textContent =
-            name || "User";
+            name || "";
 
     }
+
 
     viewer.classList.add(
         "show"
@@ -1332,21 +1609,18 @@ function openDPViewer(
 
 function closeDPViewer(event) {
 
-    /*
-     * Prevent the button click from
-     * bubbling unnecessarily.
-     */
-
     if (event) {
 
         event.stopPropagation();
 
     }
 
+
     const viewer =
         document.getElementById(
             "dpViewer"
         );
+
 
     if (viewer) {
 
@@ -1359,313 +1633,237 @@ function closeDPViewer(event) {
 }
 
 
-// ============================================================
-// TOAST
-// ============================================================
+/* =========================================================
+   STATUS HINT
+========================================================= */
 
-function showToast(message) {
+function showStatusHint() {
 
-    const toast =
+    const hint =
         document.getElementById(
-            "toast"
+            "statusNewUserHint"
         );
 
-    if (!toast) {
+    if (!hint) {
         return;
     }
 
-    toast.textContent =
-        message || "";
-
-    toast.classList.add(
+    hint.classList.add(
         "show"
     );
 
     clearTimeout(
-        toastTimer
+        showStatusHint.timer
     );
 
-    toastTimer =
+    showStatusHint.timer =
         setTimeout(
-            function () {
+            () => {
 
-                toast.classList.remove(
+                hint.classList.remove(
                     "show"
                 );
 
             },
-            2500
+            5000
         );
 
 }
 
 
-// ============================================================
-// CLICK OUTSIDE MENU
-// ============================================================
+/* =========================================================
+   OUTSIDE CLICK
+========================================================= */
 
 document.addEventListener(
     "click",
-    function (event) {
-
-        if (!menuOverlay) {
-            return;
-        }
+    function(event) {
 
         if (
-            !menuOverlay.classList.contains(
-                "show"
-            )
+            searchResults &&
+            searchInput &&
+            !searchResults.contains(event.target) &&
+            !searchInput.contains(event.target)
         ) {
-            return;
-        }
 
-        /*
-         * Menu panel ke andar click karne par
-         * menu automatically close nahi hoga.
-         */
-
-        const panel =
-            menuOverlay.querySelector(
-                ".menu-panel"
+            searchResults.classList.remove(
+                "show"
             );
 
-        if (
-            panel &&
-            panel.contains(
-                event.target
-            )
-        ) {
-
-            return;
-
         }
-
-        if (
-            menuBtn &&
-            menuBtn.contains(
-                event.target
-            )
-        ) {
-
-            return;
-
-        }
-
-        closeMenu();
 
     }
 );
 
 
-// ============================================================
-// CLICK OUTSIDE SEARCH
-// ============================================================
-
-document.addEventListener(
-    "click",
-    function (event) {
-
-        if (!searchResults) {
-            return;
-        }
-
-        if (
-            !searchResults.classList.contains(
-                "show"
-            )
-        ) {
-
-            return;
-
-        }
-
-        if (
-            searchResults.contains(
-                event.target
-            )
-        ) {
-
-            return;
-
-        }
-
-        if (
-            searchInput &&
-            searchInput.contains(
-                event.target
-            )
-        ) {
-
-            return;
-
-        }
-
-        closeSearchResults();
-
-    }
-);
-
-
-// ============================================================
-// ESCAPE KEY
-// ============================================================
+/* =========================================================
+   ESCAPE
+========================================================= */
 
 document.addEventListener(
     "keydown",
-    function (event) {
+    function(event) {
 
         if (
-            event.key !== "Escape"
+            event.key === "Escape"
         ) {
 
-            return;
+            closeMenu();
+
+            if (searchResults) {
+
+                searchResults.classList.remove(
+                    "show"
+                );
+
+            }
+
+            closeDPViewer();
 
         }
 
-        closeSearchResults();
-
-        closeDPViewer();
-
-        closeMenu();
-
     }
 );
 
 
-// ============================================================
-// ESCAPE HTML
-// ============================================================
+/* =========================================================
+   MAKE INLINE FUNCTIONS GLOBAL
+========================================================= */
 
-function escapeHtml(value) {
+window.addMyStatus =
+    addMyStatus;
 
-    if (
-        value === null ||
-        value === undefined
-    ) {
+window.showAllStatuses =
+    showAllStatuses;
 
-        return "";
+window.openStatus =
+    openStatus;
 
-    }
+window.goHome =
+    goHome;
 
-    return String(value)
+window.goReels =
+    goReels;
 
-        .replace(
-            /&/g,
-            "&amp;"
-        )
+window.createPost =
+    createPost;
 
-        .replace(
-            /</g,
-            "&lt;"
-        )
+window.goNotifications =
+    goNotifications;
 
-        .replace(
-            />/g,
-            "&gt;"
-        )
+window.goProfile =
+    goProfile;
 
-        .replace(
-            /"/g,
-            "&quot;"
-        )
+window.goMonetization =
+    goMonetization;
 
-        .replace(
-            /'/g,
-            "&#039;"
-        );
+window.goBlocked =
+    goBlocked;
 
-}
+window.goPrivacy =
+    goPrivacy;
 
+window.goSettings =
+    goSettings;
 
-// ============================================================
-// ESCAPE JAVASCRIPT
-// ============================================================
+window.goHelp =
+    goHelp;
 
-function escapeJs(value) {
+window.goAbout =
+    goAbout;
 
-    if (
-        value === null ||
-        value === undefined
-    ) {
+window.logoutUser =
+    logoutUser;
 
-        return "";
+window.closeDPViewer =
+    closeDPViewer;
 
-    }
+window.openDPViewer =
+    openDPViewer;
 
-    return String(value)
+window.followUser =
+    followUser;
 
-        .replace(
-            /\\/g,
-            "\\\\"
-        )
+window.openProfile =
+    openProfile;
 
-        .replace(
-            /'/g,
-            "\\'"
-        )
-
-        .replace(
-            /"/g,
-            '\\"'
-        )
-
-        .replace(
-            /\n/g,
-            "\\n"
-        )
-
-        .replace(
-            /\r/g,
-            "\\r"
-        );
-
-}
+window.openChat =
+    openChat;
 
 
-// ============================================================
-// INITIALIZE HOME
-// ============================================================
+/* =========================================================
+   INITIALIZATION
+========================================================= */
 
 async function initializeHome() {
 
-    try {
+    console.log(
+        "Usanex Home: initializing..."
+    );
 
+
+    const user =
         await resolveCurrentUser();
 
-    } catch (error) {
 
-        console.error(
-            "Initial user loading error:",
-            error
-        );
+    console.log(
+        "Usanex Home: current user =",
+        user
+    );
+
+
+    if (!user) {
+
+        const list =
+            document.getElementById(
+                "connectionsList"
+            );
+
+        if (list) {
+
+            list.innerHTML = `
+
+                <div class="empty-box">
+
+                    <div class="empty-icon">
+                        ⚠
+                    </div>
+
+                    <div class="empty-title">
+                        Login information not found
+                    </div>
+
+                    <div class="empty-text">
+                        Please login again.
+                    </div>
+
+                </div>
+
+            `;
+
+        }
+
+        return;
 
     }
 
-    loadConnections();
 
-    loadNotificationCount();
+    await loadConnections();
+
+    await loadNotificationCount();
+
+
+    notificationTimer =
+        setInterval(
+            loadNotificationCount,
+            30000
+        );
+
+
+    showStatusHint();
 
 }
 
-
-// ============================================================
-// AUTO REFRESH NOTIFICATIONS
-// ============================================================
-
-setInterval(
-    function () {
-
-        loadNotificationCount();
-
-    },
-    30000
-);
-
-
-// ============================================================
-// START
-// ============================================================
 
 if (
     document.readyState ===
