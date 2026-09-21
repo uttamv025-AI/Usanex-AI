@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
     <meta charset="UTF-8">
@@ -16,6 +17,7 @@
 
 </head>
 
+
 <body>
 
 
@@ -25,11 +27,17 @@
 
 <header class="header">
 
+    <!-- =====================================================
+         USANEX BRAND
+    ====================================================== -->
+
     <div class="brand">
 
         <div class="logo-mark">
 
-            <span class="logo-u">U</span>
+            <span class="logo-u">
+                U
+            </span>
 
             <span class="logo-shine"></span>
 
@@ -42,7 +50,9 @@
     </div>
 
 
-    <!-- SEARCH -->
+    <!-- =====================================================
+         SEARCH
+    ====================================================== -->
 
     <div class="search-box">
 
@@ -61,12 +71,15 @@
     </div>
 
 
-    <!-- MENU -->
+    <!-- =====================================================
+         MENU
+    ====================================================== -->
 
     <button
         class="menu-btn"
         id="menuBtn"
-        type="button">
+        type="button"
+        aria-label="Menu">
 
         ☰
 
@@ -87,10 +100,15 @@
 
 
 <!-- =========================================================
-     STATUS
+     STATUS SECTION
 ========================================================= -->
 
 <section class="status-section">
+
+
+    <!-- =====================================================
+         STATUS TITLE
+    ====================================================== -->
 
     <div class="status-title-row">
 
@@ -111,8 +129,9 @@
 
     <!-- =====================================================
          STATUS ROW
+         
          YOUR STATUS = FIXED
-         OTHER USERS = SCROLL
+         OTHER USERS = HORIZONTAL SCROLL
     ====================================================== -->
 
     <div class="status-row">
@@ -126,9 +145,15 @@
             class="status-item my-status-item"
             id="myStatusItem">
 
+
             <div
                 class="status-circle your-status"
                 id="myStatusCircle">
+
+
+                <!-- =========================================
+                     YOUR AVATAR
+                ========================================== -->
 
                 <div class="status-avatar-inner">
 
@@ -139,19 +164,16 @@
                 </div>
 
 
-                <!--
-                    NO STATUS:
-                    whole card uploads
-
-                    STATUS EXISTS:
-                    + adds another status
-                -->
+                <!-- =========================================
+                     ADD STATUS
+                ========================================== -->
 
                 <button
                     type="button"
                     class="status-plus"
                     id="myStatusPlus"
-                    onclick="addAnotherStatus(event)">
+                    onclick="addAnotherStatus(event)"
+                    aria-label="Add status">
 
                     +
 
@@ -168,8 +190,7 @@
 
 
         <!-- =================================================
-             OTHER USERS
-             JS WILL LOAD ONLY ACTIVE STATUSES
+             OTHER ACTIVE USERS
         ================================================== -->
 
         <div
@@ -198,10 +219,15 @@
 
 
 <!-- =========================================================
-     CONNECTIONS
+     CONNECTED PEOPLE
 ========================================================= -->
 
 <section class="connections-section">
+
+
+    <!-- =====================================================
+         TITLE
+    ====================================================== -->
 
     <div class="connections-title-row">
 
@@ -220,9 +246,14 @@
     </div>
 
 
+    <!-- =====================================================
+         CONNECTION LIST
+    ====================================================== -->
+
     <div
         class="connections-list"
         id="connectionsList">
+
 
         <div class="empty-box">
 
@@ -252,7 +283,9 @@
 <nav class="bottom-nav">
 
 
-    <!-- HOME -->
+    <!-- =====================================================
+         HOME
+    ====================================================== -->
 
     <div
         class="nav-item active"
@@ -266,7 +299,9 @@
     </div>
 
 
-    <!-- REELS -->
+    <!-- =====================================================
+         REELS
+    ====================================================== -->
 
     <div
         class="nav-item"
@@ -279,7 +314,9 @@
     </div>
 
 
-    <!-- CREATE -->
+    <!-- =====================================================
+         CREATE
+    ====================================================== -->
 
     <div
         class="nav-item"
@@ -292,7 +329,9 @@
     </div>
 
 
-    <!-- NOTIFICATIONS -->
+    <!-- =====================================================
+         NOTIFICATIONS
+    ====================================================== -->
 
     <div
         class="nav-item"
@@ -313,7 +352,9 @@
     </div>
 
 
-    <!-- PROFILE -->
+    <!-- =====================================================
+         PROFILE
+    ====================================================== -->
 
     <div
         class="nav-item"
@@ -336,8 +377,11 @@
     class="menu-overlay"
     id="menuOverlay">
 
+
     <div class="menu-panel">
 
+
+        <!-- MONETIZATION -->
 
         <div
             class="menu-item"
@@ -358,6 +402,8 @@
         </div>
 
 
+        <!-- BLOCKED -->
+
         <div
             class="menu-item"
             onclick="goBlocked()">
@@ -376,6 +422,8 @@
 
         </div>
 
+
+        <!-- PRIVACY -->
 
         <div
             class="menu-item"
@@ -396,6 +444,8 @@
         </div>
 
 
+        <!-- SETTINGS -->
+
         <div
             class="menu-item"
             onclick="goSettings()">
@@ -414,6 +464,8 @@
 
         </div>
 
+
+        <!-- HELP -->
 
         <div
             class="menu-item"
@@ -434,6 +486,8 @@
         </div>
 
 
+        <!-- ABOUT -->
+
         <div
             class="menu-item"
             onclick="goAbout()">
@@ -452,6 +506,8 @@
 
         </div>
 
+
+        <!-- LOGOUT -->
 
         <div
             class="menu-item logout"
@@ -473,7 +529,7 @@
 
 
 <!-- =========================================================
-     DP VIEWER
+     PROFILE DP VIEWER
 ========================================================= -->
 
 <div
@@ -481,10 +537,12 @@
     id="dpViewer"
     onclick="closeDPViewer()">
 
+
     <button
         class="dp-viewer-close"
         type="button"
-        onclick="closeDPViewer(event)">
+        onclick="closeDPViewer(event)"
+        aria-label="Close">
 
         ×
 
@@ -508,7 +566,7 @@
 
 
 <!-- =========================================================
-     STATUS VIEWER
+     USANEX STATUS VIEWER
 ========================================================= -->
 
 <div
@@ -516,62 +574,259 @@
     id="statusViewer">
 
 
-    <!-- CLOSE -->
-
-    <button
-        type="button"
-        class="status-viewer-close"
-        onclick="closeStatusViewer()">
-
-        ×
-
-    </button>
+    <div class="status-viewer-shell">
 
 
-    <!-- TOP USER -->
-
-    <div class="status-viewer-header">
+        <!-- =================================================
+             STATUS PROGRESS BARS
+        ================================================== -->
 
         <div
-            class="status-viewer-name"
-            id="statusViewerName">
+            class="status-progress"
+            id="statusProgress">
+
+        </div>
+
+
+        <!-- =================================================
+             TOP USER BAR
+        ================================================== -->
+
+        <div class="status-topbar">
+
+
+            <div class="status-user-info">
+
+
+                <!-- USER DP -->
+
+                <div
+                    class="status-viewer-avatar"
+                    id="statusViewerAvatar">
+
+                    <span
+                        id="statusViewerAvatarLetter">
+
+                        U
+
+                    </span>
+
+                </div>
+
+
+                <!-- USER TEXT -->
+
+                <div class="status-user-text">
+
+
+                    <div
+                        class="status-viewer-name"
+                        id="statusViewerName">
+
+                        User
+
+                    </div>
+
+
+                    <div
+                        class="status-viewer-userid"
+                        id="statusViewerUserId">
+
+                        @user
+
+                    </div>
+
+                </div>
+
+
+                <!-- STATUS TIME -->
+
+                <div
+                    class="status-viewer-time"
+                    id="statusViewerTime">
+
+                    now
+
+                </div>
+
+            </div>
+
+
+            <!-- CLOSE -->
+
+            <button
+                type="button"
+                class="status-viewer-close"
+                onclick="closeStatusViewer()"
+                aria-label="Close status">
+
+                ×
+
+            </button>
+
+        </div>
+
+
+        <!-- =================================================
+             STATUS MEDIA
+        ================================================== -->
+
+        <div
+            class="status-viewer-media"
+            id="statusViewerMedia">
+
+        </div>
+
+
+        <!-- =================================================
+             BOTTOM STATUS AREA
+        ================================================== -->
+
+        <div class="status-bottom">
+
+
+            <!-- =================================================
+                 MINI USER CARD
+            ================================================== -->
+
+            <div class="status-mini-user">
+
+
+                <div
+                    class="status-mini-avatar"
+                    id="statusMiniAvatar">
+
+                    U
+
+                </div>
+
+
+                <div class="status-mini-info">
+
+
+                    <div
+                        class="status-mini-name"
+                        id="statusMiniName">
+
+                        User
+
+                    </div>
+
+
+                    <div
+                        class="status-mini-id"
+                        id="statusMiniId">
+
+                        @user
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 STATUS ACTIONS
+            ================================================== -->
+
+            <div class="status-actions">
+
+
+                <!-- =================================================
+                     LIKE
+                ================================================== -->
+
+                <button
+                    type="button"
+                    class="status-like-btn"
+                    id="statusLikeBtn"
+                    onclick="likeCurrentStatus()"
+                    aria-label="Like">
+
+                    ❤️
+
+                </button>
+
+
+                <!-- =================================================
+                     COMMENT
+                ================================================== -->
+
+                <div class="status-comment-wrap">
+
+                    <input
+                        type="text"
+                        id="statusCommentInput"
+                        class="status-comment-input"
+                        placeholder="Comment..."
+                        maxlength="500"
+                        autocomplete="off">
+
+                </div>
+
+
+                <!-- =================================================
+                     SEEN
+                ================================================== -->
+
+                <div
+                    class="status-seen-text"
+                    id="statusSeenText">
+
+                    Seen
+
+                </div>
+
+
+                <!-- =================================================
+                     SHARE
+                ================================================== -->
+
+                <button
+                    type="button"
+                    class="status-share-btn"
+                    onclick="shareCurrentStatus()"
+                    aria-label="Share">
+
+                    ↗
+
+                </button>
+
+
+                <!-- =================================================
+                     REPORT
+                ================================================== -->
+
+                <button
+                    type="button"
+                    class="status-report-btn"
+                    onclick="reportCurrentStatus()"
+                    aria-label="Report">
+
+                    🚩
+
+                </button>
+
+            </div>
+
+
+            <!-- =================================================
+                 MENTION
+            ================================================== -->
+
+            <button
+                type="button"
+                class="status-mention-btn"
+                onclick="mentionCurrentStatus()">
+
+                Mention
+
+            </button>
 
         </div>
 
     </div>
-
-
-    <!-- MEDIA -->
-
-    <div
-        class="status-viewer-media"
-        id="statusViewerMedia">
-
-    </div>
-
-
-    <!-- PREVIOUS -->
-
-    <button
-        type="button"
-        class="status-nav status-prev"
-        onclick="previousStatus()">
-
-        ‹
-
-    </button>
-
-
-    <!-- NEXT -->
-
-    <button
-        type="button"
-        class="status-nav status-next"
-        onclick="nextStatus()">
-
-        ›
-
-    </button>
 
 </div>
 
@@ -598,4 +853,5 @@
 
 
 </body>
+
 </html>
