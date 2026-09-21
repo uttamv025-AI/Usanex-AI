@@ -114,15 +114,6 @@ function normalizeUser(value) {
 
 function getStoredCurrentUser() {
 
-    /*
-       register.html saves user as:
-
-       localStorage.setItem(
-           "user",
-           JSON.stringify(loggedInUser)
-       );
-    */
-
     const keys = [
 
         "user",
@@ -892,6 +883,8 @@ function openProfile(userId) {
 
 /* =========================================================
    SEARCH
+   Connected user stays on HOME.
+   Non-connected user goes to SEARCH PAGE.
 ========================================================= */
 
 async function performSearch(query) {
@@ -907,6 +900,24 @@ async function performSearch(query) {
 
 
     if (!query) {
+
+        searchResults.innerHTML =
+            "";
+
+        searchResults.classList.remove(
+            "active"
+        );
+
+        return;
+
+    }
+
+
+    /* =====================================================
+       Minimum 2 characters
+    ===================================================== */
+
+    if (query.length < 2) {
 
         searchResults.innerHTML =
             "";
@@ -940,6 +951,10 @@ async function performSearch(query) {
 
     try {
 
+        /* =================================================
+           SEARCH API
+        ================================================= */
+
         const response =
             await fetch(
                 `/api/search?q=${encodeURIComponent(query)}`,
@@ -970,23 +985,260 @@ async function performSearch(query) {
 
 
         /* =================================================
-           NO USERS
+           NO SEARCH RESULT
+           OPEN SEARCH PAGE
         ================================================= */
 
         if (!users.length) {
 
-            searchResults.innerHTML = `
+            window.location.href =
+                `/search.html?q=${encodeURIComponent(query)}`;
 
-                <div class="search-empty">
-                    No users found
-                </div>
+            return;
 
-            `;
+        }
+
+
+        /* =================================================
+           LOAD CURRENT CONNECTIONS
+        ================================================= */
+
+        let connectedUsers = [];
+
+
+        if (
+            currentUser &&
+            currentUser.user_id
+        ) {
+
+            try {
+
+                const connectionResponse =
+                    await fetch(
+                        `/api/home/connections?user_id=${encodeURIComponent(
+                            currentUser.user_id
+                        )}`,
+                        {
+                            method: "GET",
+                            cache: "no-store"
+                        }
+                    );
+
+
+                if (connectionResponse.ok) {
+
+                    const connectionData =
+                        await connectionResponse.json();
+
+
+                    if (
+                        Array.isArray(
+                            connectionData.users
+                        )
+                    ) {
+
+                        connectedUsers =
+                            connectionData.users;
+
+                    } else if (
+                        Array.isArray(
+                            connectionData.connections
+                        )
+                    ) {
+
+                        connectedUsers =
+                            connectionData.connections;
+
+                    }
+
+                }
+
+            } catch (connectionError) {
+
+                console.error(
+                    "SEARCH CONNECTION CHECK ERROR:",
+                    connectionError
+                );
+
+            }
+
+        }
+
+
+        /* =================================================
+           CONNECTED USER IDS
+        ================================================= */
+
+        const connectedIds =
+            connectedUsers.map(function(user) {
+
+                return String(
+                    user.user_id || ""
+                )
+                .trim()
+                .toLowerCase();
+
+            });
+
+
+        /* =================================================
+           FIND CONNECTED SEARCH RESULTS
+        ================================================= */
+
+        const connectedResults =
+            users.filter(function(user) {
+
+                const userId =
+                    String(
+                        user.user_id || ""
+                    )
+                    .trim()
+                    .toLowerCase();
+
+
+                return connectedIds.includes(
+                    userId
+                );
+
+            });
+
+
+        /* =================================================
+           CONNECTED USER
+           SHOW ON HOME
+        ================================================= */
+
+        if (connectedResults.length) {
+
+            searchResults.innerHTML =
+                connectedResults.map(function(user) {
+
+
+                    const id =
+                        escapeHtml(
+                            user.user_id || ""
+                        );
+
+
+                    const name =
+                        escapeHtml(
+                            user.name ||
+                            user.user_id ||
+                            "User"
+                        );
+
+
+                    const photo =
+                        user.profile_photo ||
+                        user.profile_picture ||
+                        "";
+
+
+                    const letter =
+                        (
+                            user.name ||
+                            user.user_id ||
+                            "U"
+                        )
+                        .charAt(0)
+                        .toUpperCase();
+
+
+                    return `
+
+                        <div
+                            class="search-result-card"
+                            data-user-id="${id}"
+                        >
+
+                            <div class="search-result-photo">
+
+                                ${
+                                    photo
+                                    ?
+                                    `
+                                    <img
+                                        src="${escapeHtml(photo)}"
+                                        alt="${name}"
+                                    >
+                                    `
+                                    :
+                                    `
+                                    <span>
+                                        ${letter}
+                                    </span>
+                                    `
+                                }
+
+                            </div>
+
+
+                            <div class="search-result-info">
+
+                                <div class="search-result-name">
+                                    ${name}
+                                </div>
+
+                                <div class="search-result-id">
+                                    @${id}
+                                </div>
+
+                            </div>
+
+
+                            <button
+                                type="button"
+                                class="search-follow-btn connected"
+                                disabled
+                            >
+                                Connected
+                            </button>
+
+                        </div>
+
+                    `;
+
+                }).join("");
 
 
             searchResults.classList.add(
                 "active"
             );
+
+
+            /* =================================================
+               CONNECTED USER CLICK
+            ================================================= */
+
+            searchResults
+            .querySelectorAll(
+                ".search-result-card"
+            )
+            .forEach(function(card) {
+
+                card.addEventListener(
+                    "click",
+                    function(event) {
+
+                        if (
+                            event.target.closest(
+                                ".search-follow-btn"
+                            )
+                        ) {
+
+                            return;
+
+                        }
+
+
+                        openProfile(
+                            this.dataset.userId
+                        );
+
+                    }
+                );
+
+            });
 
 
             return;
@@ -995,184 +1247,12 @@ async function performSearch(query) {
 
 
         /* =================================================
-           RESULTS
+           NOT CONNECTED
+           OPEN SEARCH PAGE AUTOMATICALLY
         ================================================= */
 
-        searchResults.innerHTML =
-            users.map(function(user) {
-
-
-                const id =
-                    escapeHtml(
-                        user.user_id || ""
-                    );
-
-
-                const name =
-                    escapeHtml(
-                        user.name ||
-                        user.user_id ||
-                        "User"
-                    );
-
-
-                const mobile =
-                    escapeHtml(
-                        user.mobile || ""
-                    );
-
-
-                const photo =
-                    user.profile_photo ||
-                    user.profile_picture ||
-                    "";
-
-
-                const letter =
-                    (
-                        user.name ||
-                        user.user_id ||
-                        "U"
-                    )
-                    .charAt(0)
-                    .toUpperCase();
-
-
-                return `
-
-                    <div
-                        class="search-result-card"
-                        data-user-id="${id}"
-                    >
-
-                        <div class="search-result-photo">
-
-                            ${
-                                photo
-                                ?
-                                `
-                                <img
-                                    src="${escapeHtml(photo)}"
-                                    alt="${name}"
-                                >
-                                `
-                                :
-                                `
-                                <span>
-                                    ${letter}
-                                </span>
-                                `
-                            }
-
-                        </div>
-
-
-                        <div class="search-result-info">
-
-                            <div class="search-result-name">
-                                ${name}
-                            </div>
-
-                            <div class="search-result-id">
-                                @${id}
-                            </div>
-
-                            ${
-                                mobile
-                                ?
-                                `
-                                <div class="search-result-mobile">
-                                    ${mobile}
-                                </div>
-                                `
-                                :
-                                ""
-                            }
-
-                        </div>
-
-
-                        <button
-                            type="button"
-                            class="search-follow-btn"
-                            data-follow-id="${id}"
-                        >
-                            Follow
-                        </button>
-
-                    </div>
-
-                `;
-
-            }).join("");
-
-
-        searchResults.classList.add(
-            "active"
-        );
-
-
-        /* =================================================
-           FOLLOW BUTTONS
-        ================================================= */
-
-        searchResults
-        .querySelectorAll(
-            "[data-follow-id]"
-        )
-        .forEach(function(button) {
-
-            button.addEventListener(
-                "click",
-                async function(event) {
-
-                    event.stopPropagation();
-
-
-                    await followUser(
-                        this.dataset.followId,
-                        this
-                    );
-
-                }
-            );
-
-        });
-
-
-        /* =================================================
-           RESULT CARD
-        ================================================= */
-
-        searchResults
-        .querySelectorAll(
-            ".search-result-card"
-        )
-        .forEach(function(card) {
-
-            card.addEventListener(
-                "click",
-                function(event) {
-
-                    if (
-                        event.target.closest(
-                            ".search-follow-btn"
-                        )
-                    ) {
-
-                        return;
-
-                    }
-
-
-                    openProfile(
-                        this.dataset.userId
-                    );
-
-                }
-            );
-
-        });
+        window.location.href =
+            `/search.html?q=${encodeURIComponent(query)}`;
 
 
     } catch (error) {
@@ -1182,6 +1262,9 @@ async function performSearch(query) {
             error
         );
 
+
+        /* Search API problem ko existing
+           search-result area me hi show karenge */
 
         searchResults.innerHTML = `
 
@@ -1203,6 +1286,7 @@ async function performSearch(query) {
 
 /* =========================================================
    SEARCH INPUT
+   NO SUBMIT / ENTER REQUIRED
 ========================================================= */
 
 if (searchInput) {
@@ -1243,7 +1327,7 @@ if (searchInput) {
                         );
 
                     },
-                    300
+                    500
                 );
 
         }
