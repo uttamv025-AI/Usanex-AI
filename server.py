@@ -88,6 +88,7 @@ from database import (
     Connection,
     ChatMessage,
     Status,
+    StatusView,
 )
 
 
@@ -3630,6 +3631,141 @@ async def get_active_statuses(
     return {
         "ok": True,
         "users": list(grouped.values()),
+    }
+
+
+# ============================================================
+# STATUS VIEW TRACKING
+# ============================================================
+
+@app.post("/api/status/view")
+async def record_status_view(
+    status_id: int,
+    viewer_user_id: str,
+    db: Session = Depends(get_db),
+):
+    viewer_user_id = viewer_user_id.strip()
+
+    if not viewer_user_id:
+        raise HTTPException(
+            status_code=400,
+            detail="Viewer User ID is required",
+        )
+
+    # --------------------------------------------------------
+    # CHECK VIEWER
+    # --------------------------------------------------------
+
+    viewer = (
+        db.query(User)
+        .filter(
+            User.user_id == viewer_user_id
+        )
+        .first()
+    )
+
+    if not viewer:
+        raise HTTPException(
+            status_code=404,
+            detail="Viewer user not found",
+        )
+
+    # --------------------------------------------------------
+    # FIND ACTIVE STATUS
+    # --------------------------------------------------------
+
+    now = datetime.utcnow()
+
+    status = (
+        db.query(Status)
+        .filter(
+            Status.id == status_id,
+            Status.expires_at > now,
+        )
+        .first()
+    )
+
+    if not status:
+        raise HTTPException(
+            status_code=404,
+            detail="Status not found or expired",
+        )
+
+    # --------------------------------------------------------
+    # OWNER CANNOT BE A VIEWER OF OWN STATUS
+    # --------------------------------------------------------
+
+    if status.user_id == viewer_user_id:
+        return {
+            "ok": True,
+            "already_viewed": False,
+            "message": "Own status view is not tracked",
+        }
+
+    # --------------------------------------------------------
+    # CHECK EXISTING VIEW
+    # --------------------------------------------------------
+
+    existing_view = (
+        db.query(StatusView)
+        .filter(
+            StatusView.status_id == status_id,
+            StatusView.viewer_user_id == viewer_user_id,
+        )
+        .first()
+    )
+
+    if existing_view:
+        return {
+            "ok": True,
+            "already_viewed": True,
+            "message": "Status already viewed",
+            "viewed_at": (
+                existing_view.viewed_at.isoformat()
+            ),
+        }
+
+    # --------------------------------------------------------
+    # SAVE NEW VIEW
+    # --------------------------------------------------------
+
+    new_view = StatusView(
+        status_id=status_id,
+        viewer_user_id=viewer_user_id,
+        viewed_at=now,
+    )
+
+    try:
+
+        db.add(new_view)
+        db.commit()
+        db.refresh(new_view)
+
+    except IntegrityError:
+
+        db.rollback()
+
+        # Another request may have created
+        # the same view at the same time.
+
+        return {
+            "ok": True,
+            "already_viewed": True,
+            "message": "Status already viewed",
+        }
+
+    return {
+        "ok": True,
+        "already_viewed": False,
+        "message": "Status view recorded",
+        "view": {
+            "id": new_view.id,
+            "status_id": new_view.status_id,
+            "viewer_user_id": new_view.viewer_user_id,
+            "viewed_at": (
+                new_view.viewed_at.isoformat()
+            ),
+        },
     }
 
 # ============================================================
