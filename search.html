@@ -2246,56 +2246,6 @@ function createUserCard(user){
 
 
     /* =====================================================
-       CARD CLICK
-    ===================================================== */
-
-    card.addEventListener(
-        "click",
-        function(){
-
-            if(isMe){
-
-                return;
-
-            }
-
-
-            /*
-               Accepted request hai to
-               card par click karte hi Verify popup.
-            */
-
-            const button =
-                card.querySelector(
-                    ".follow-btn"
-                );
-
-
-            if(
-                button &&
-                button.classList.contains(
-                    "accepted"
-                )
-            ){
-
-                openVerify(
-                    user
-                );
-
-                return;
-
-            }
-
-
-            openIncomingForUser(
-                user
-            );
-
-        }
-    );
-
-
-    /* =====================================================
        FOLLOW CLICK
     ===================================================== */
 
