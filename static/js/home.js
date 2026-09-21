@@ -2676,6 +2676,25 @@ document.addEventListener(
 window.addMyStatus =
     addMyStatus;
 
+window.addAnotherStatus =
+    addAnotherStatus;
+
+window.openMyStatus =
+    openMyStatus;
+
+window.openUserStatus =
+    openUserStatus;
+
+window.nextStatus =
+    nextStatus;
+
+window.previousStatus =
+    previousStatus;
+
+window.closeStatusViewer =
+    closeStatusViewer;
+
+
 window.showAllStatuses =
     showAllStatuses;
 
@@ -2831,14 +2850,20 @@ async function initializeHome() {
         );
 
 
-    /* =====================================================
-       STATUS HINT
-    ===================================================== */
+/* =====================================================
+   LOAD STATUSES
+===================================================== */
 
-    showStatusHint();
+await loadMyStatuses();
 
-}
+await loadActiveStatuses();
 
+
+/* =====================================================
+   STATUS HINT
+===================================================== */
+
+showStatusHint();
 
 /* =========================================================
    START
