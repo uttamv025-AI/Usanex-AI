@@ -416,6 +416,47 @@ class ChatMessage(Base):
         nullable=False
     )
 
+# ============================================================
+# STATUS
+# ============================================================
+
+class Status(Base):
+    __tablename__ = "statuses"
+
+    id: Mapped[int] = mapped_column(
+        primary_key=True,
+        autoincrement=True
+    )
+
+    user_id: Mapped[str] = mapped_column(
+        String(20),
+        index=True,
+        nullable=False
+    )
+
+    media_url: Mapped[str] = mapped_column(
+        String(500),
+        nullable=False
+    )
+
+    media_type: Mapped[str] = mapped_column(
+        String(20),
+        nullable=False
+    )
+
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime,
+        default=datetime.utcnow,
+        index=True,
+        nullable=False
+    )
+
+    expires_at: Mapped[datetime] = mapped_column(
+        DateTime,
+        index=True,
+        nullable=False
+    )
+
 
 # ============================================================
 # CREATE ALL TABLES
