@@ -3,6 +3,19 @@
 /* =========================================================
    USANEX HOME.JS
    Compatible with current home.html + home.css
+
+   STATUS FEATURES:
+   - Your Status fixed on left
+   - Other active statuses horizontally scroll
+   - Unseen = Blue border
+   - Seen = Grey border
+   - Seen users automatically move to end
+   - Seen state survives refresh
+   - New status becomes unseen automatically
+   - Multiple statuses tracked individually
+   - User becomes fully seen only after all active statuses
+     have been viewed
+   - Expired status IDs are removed from localStorage
 ========================================================= */
 
 
@@ -68,22 +81,18 @@ function normalizeUser(value) {
 
     }
 
-
     if (value.user) {
         value = value.user;
     }
-
 
     const userId =
         value.user_id ||
         value.userId ||
         value.id;
 
-
     if (!userId) {
         return null;
     }
-
 
     return {
 
@@ -126,7 +135,6 @@ function getStoredCurrentUser() {
 
     ];
 
-
     for (const key of keys) {
 
         const raw =
@@ -136,10 +144,8 @@ function getStoredCurrentUser() {
             continue;
         }
 
-
         const user =
             normalizeUser(raw);
-
 
         if (user) {
 
@@ -148,7 +154,6 @@ function getStoredCurrentUser() {
         }
 
     }
-
 
     return null;
 
@@ -164,7 +169,6 @@ async function resolveCurrentUser() {
     currentUser =
         getStoredCurrentUser();
 
-
     if (currentUser) {
 
         console.log(
@@ -178,11 +182,9 @@ async function resolveCurrentUser() {
 
     }
 
-
     console.error(
         "USANEX: User not found in localStorage."
     );
-
 
     return null;
 
@@ -200,11 +202,9 @@ function updateYourStatusLetter() {
             "youLetter"
         );
 
-
     if (!element) {
         return;
     }
-
 
     if (!currentUser) {
 
@@ -215,12 +215,10 @@ function updateYourStatusLetter() {
 
     }
 
-
     const name =
         currentUser.name ||
         currentUser.user_id ||
         "U";
-
 
     element.textContent =
         name.charAt(0).toUpperCase();
@@ -260,22 +258,17 @@ function showToast(message) {
             "toast"
         );
 
-
     if (!toast) {
         return;
     }
 
-
     clearTimeout(toastTimer);
-
 
     toast.textContent =
         message;
 
-
     toast.style.display =
         "block";
-
 
     toastTimer =
         setTimeout(
@@ -302,17 +295,14 @@ async function loadConnections() {
             "connectionsList"
         );
 
-
     const count =
         document.getElementById(
             "connectionCount"
         );
 
-
     if (!list) {
         return;
     }
-
 
     /* -----------------------------------------------
        USER CHECK
@@ -343,14 +333,12 @@ async function loadConnections() {
 
         `;
 
-
         if (count) {
 
             count.textContent =
                 "0";
 
         }
-
 
         return;
 
@@ -387,7 +375,6 @@ async function loadConnections() {
             currentUser.user_id
         );
 
-
     let data = null;
 
 
@@ -406,24 +393,20 @@ async function loadConnections() {
                 }
             );
 
-
         console.log(
             "HOME CONNECTION RESPONSE:",
             response.status
         );
-
 
         if (response.ok) {
 
             const result =
                 await response.json();
 
-
             console.log(
                 "HOME CONNECTION DATA:",
                 result
             );
-
 
             if (result.ok !== false) {
 
@@ -460,12 +443,10 @@ async function loadConnections() {
                     }
                 );
 
-
             if (response.ok) {
 
                 const result =
                     await response.json();
-
 
                 if (result.ok !== false) {
 
@@ -509,14 +490,12 @@ async function loadConnections() {
 
         `;
 
-
         if (count) {
 
             count.textContent =
                 "0";
 
         }
-
 
         return;
 
@@ -528,7 +507,6 @@ async function loadConnections() {
     ================================================= */
 
     let users = [];
-
 
     if (Array.isArray(data.users)) {
 
@@ -543,7 +521,6 @@ async function loadConnections() {
             data.connections;
 
     }
-
 
     renderConnections(users);
 
@@ -561,17 +538,14 @@ function renderConnections(users) {
             "connectionsList"
         );
 
-
     const count =
         document.getElementById(
             "connectionCount"
         );
 
-
     if (!list) {
         return;
     }
-
 
     if (count) {
 
@@ -607,7 +581,6 @@ function renderConnections(users) {
 
         `;
 
-
         return;
 
     }
@@ -620,12 +593,10 @@ function renderConnections(users) {
     list.innerHTML =
         users.map(function(user) {
 
-
             const userId =
                 escapeHtml(
                     user.user_id || ""
                 );
-
 
             const name =
                 escapeHtml(
@@ -634,12 +605,10 @@ function renderConnections(users) {
                     "User"
                 );
 
-
             const photo =
                 user.profile_photo ||
                 user.profile_picture ||
                 "";
-
 
             const firstLetter =
                 (
@@ -649,7 +618,6 @@ function renderConnections(users) {
                 )
                 .charAt(0)
                 .toUpperCase();
-
 
             return `
 
@@ -713,7 +681,6 @@ function renderConnections(users) {
 
         }).join("");
 
-
     attachConnectionEvents();
 
 }
@@ -729,7 +696,6 @@ function attachConnectionEvents() {
         document.getElementById(
             "connectionsList"
         );
-
 
     if (!list) {
         return;
@@ -751,7 +717,6 @@ function attachConnectionEvents() {
             function(event) {
 
                 event.stopPropagation();
-
 
                 openChat(
                     this.dataset.userId
@@ -779,14 +744,11 @@ function attachConnectionEvents() {
 
                 event.stopPropagation();
 
-
                 const photo =
                     this.dataset.photo;
 
-
                 const name =
                     this.dataset.name;
-
 
                 if (photo) {
 
@@ -830,7 +792,6 @@ function attachConnectionEvents() {
 
                 }
 
-
                 openProfile(
                     this.dataset.userId
                 );
@@ -853,7 +814,6 @@ function openChat(userId) {
         return;
     }
 
-
     window.location.href =
         `/chat?user_id=${encodeURIComponent(
             userId
@@ -871,7 +831,6 @@ function openProfile(userId) {
     if (!userId) {
         return;
     }
-
 
     window.location.href =
         `/profile?user_id=${encodeURIComponent(
@@ -893,11 +852,9 @@ async function performSearch(query) {
         return;
     }
 
-
     query =
         String(query || "")
         .trim();
-
 
     if (!query) {
 
@@ -943,7 +900,6 @@ async function performSearch(query) {
 
     `;
 
-
     searchResults.classList.add(
         "active"
     );
@@ -964,7 +920,6 @@ async function performSearch(query) {
                 }
             );
 
-
         if (!response.ok) {
 
             throw new Error(
@@ -973,10 +928,8 @@ async function performSearch(query) {
 
         }
 
-
         const data =
             await response.json();
-
 
         const users =
             Array.isArray(data.users)
@@ -1005,7 +958,6 @@ async function performSearch(query) {
 
         let connectedUsers = [];
 
-
         if (
             currentUser &&
             currentUser.user_id
@@ -1024,12 +976,10 @@ async function performSearch(query) {
                         }
                     );
 
-
                 if (connectionResponse.ok) {
 
                     const connectionData =
                         await connectionResponse.json();
-
 
                     if (
                         Array.isArray(
@@ -1095,7 +1045,6 @@ async function performSearch(query) {
                     .trim()
                     .toLowerCase();
 
-
                 return connectedIds.includes(
                     userId
                 );
@@ -1113,12 +1062,10 @@ async function performSearch(query) {
             searchResults.innerHTML =
                 connectedResults.map(function(user) {
 
-
                     const id =
                         escapeHtml(
                             user.user_id || ""
                         );
-
 
                     const name =
                         escapeHtml(
@@ -1127,12 +1074,10 @@ async function performSearch(query) {
                             "User"
                         );
 
-
                     const photo =
                         user.profile_photo ||
                         user.profile_picture ||
                         "";
-
 
                     const letter =
                         (
@@ -1142,7 +1087,6 @@ async function performSearch(query) {
                         )
                         .charAt(0)
                         .toUpperCase();
-
 
                     return `
 
@@ -1200,7 +1144,6 @@ async function performSearch(query) {
 
                 }).join("");
 
-
             searchResults.classList.add(
                 "active"
             );
@@ -1230,7 +1173,6 @@ async function performSearch(query) {
 
                         }
 
-
                         openProfile(
                             this.dataset.userId
                         );
@@ -1239,7 +1181,6 @@ async function performSearch(query) {
                 );
 
             });
-
 
             return;
 
@@ -1262,10 +1203,6 @@ async function performSearch(query) {
             error
         );
 
-
-        /* Search API problem ko existing
-           search-result area me hi show karenge */
-
         searchResults.innerHTML = `
 
             <div class="search-empty">
@@ -1273,7 +1210,6 @@ async function performSearch(query) {
             </div>
 
         `;
-
 
         searchResults.classList.add(
             "active"
@@ -1299,10 +1235,8 @@ if (searchInput) {
                 searchTimer
             );
 
-
             const value =
                 this.value.trim();
-
 
             if (!value) {
 
@@ -1316,7 +1250,6 @@ if (searchInput) {
                 return;
 
             }
-
 
             searchTimer =
                 setTimeout(
@@ -1358,11 +1291,9 @@ async function followUser(
 
     }
 
-
     if (!targetUserId) {
         return;
     }
-
 
     if (
         String(targetUserId) ===
@@ -1377,7 +1308,6 @@ async function followUser(
 
     }
 
-
     if (button) {
 
         button.disabled =
@@ -1387,7 +1317,6 @@ async function followUser(
             "Sending...";
 
     }
-
 
     try {
 
@@ -1418,10 +1347,8 @@ async function followUser(
                 }
             );
 
-
         const data =
             await response.json();
-
 
         if (
             !response.ok ||
@@ -1435,7 +1362,6 @@ async function followUser(
 
         }
 
-
         if (button) {
 
             button.textContent =
@@ -1446,7 +1372,6 @@ async function followUser(
             );
 
         }
-
 
         showToast(
             data.message ||
@@ -1461,7 +1386,6 @@ async function followUser(
             error
         );
 
-
         if (button) {
 
             button.disabled =
@@ -1471,7 +1395,6 @@ async function followUser(
                 "Follow";
 
         }
-
 
         showToast(
             error.message ||
@@ -1494,11 +1417,9 @@ async function loadNotificationCount() {
             "notificationBadge"
         );
 
-
     if (!badge) {
         return;
     }
-
 
     if (
         !currentUser ||
@@ -1515,7 +1436,6 @@ async function loadNotificationCount() {
 
     }
 
-
     try {
 
         const response =
@@ -1529,15 +1449,12 @@ async function loadNotificationCount() {
                 }
             );
 
-
         if (!response.ok) {
             return;
         }
 
-
         const data =
             await response.json();
-
 
         const notifications =
             Array.isArray(
@@ -1545,7 +1462,6 @@ async function loadNotificationCount() {
             )
             ? data.notifications
             : [];
-
 
         const unread =
             notifications.filter(
@@ -1558,7 +1474,6 @@ async function loadNotificationCount() {
 
                 }
             ).length;
-
 
         if (unread <= 0) {
 
@@ -1579,7 +1494,6 @@ async function loadNotificationCount() {
                 "flex";
 
         }
-
 
     } catch (error) {
 
@@ -1604,6 +1518,357 @@ let currentStatusIndex = 0;
 
 
 /* =========================================================
+   STATUS SEEN STORAGE
+=========================================================
+
+   Important:
+   Storage current user ke according alag rahega.
+
+   Example:
+   usanex_seen_statuses_UX12345
+
+   Isse agar ek hi phone/browser par multiple users login
+   karein to unki seen state mix nahi hogi.
+========================================================= */
+
+function getStatusSeenStorageKey() {
+
+    if (
+        !currentUser ||
+        !currentUser.user_id
+    ) {
+
+        return "usanex_seen_statuses_unknown";
+
+    }
+
+    return (
+        "usanex_seen_statuses_" +
+        String(
+            currentUser.user_id
+        )
+    );
+
+}
+
+
+/* =========================================================
+   GET SEEN STATUS IDS
+========================================================= */
+
+function getSeenStatusIds() {
+
+    try {
+
+        const key =
+            getStatusSeenStorageKey();
+
+        const raw =
+            localStorage.getItem(
+                key
+            );
+
+        if (!raw) {
+
+            return {};
+
+        }
+
+        const parsed =
+            JSON.parse(raw);
+
+        if (
+            !parsed ||
+            typeof parsed !== "object" ||
+            Array.isArray(parsed)
+        ) {
+
+            return {};
+
+        }
+
+        return parsed;
+
+    } catch (error) {
+
+        console.error(
+            "STATUS SEEN READ ERROR:",
+            error
+        );
+
+        return {};
+
+    }
+
+}
+
+
+/* =========================================================
+   SAVE SEEN STATUS IDS
+========================================================= */
+
+function saveSeenStatusIds(data) {
+
+    try {
+
+        const key =
+            getStatusSeenStorageKey();
+
+        localStorage.setItem(
+            key,
+            JSON.stringify(data)
+        );
+
+    } catch (error) {
+
+        console.error(
+            "STATUS SEEN SAVE ERROR:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   IS STATUS SEEN
+========================================================= */
+
+function isStatusSeen(statusId) {
+
+    if (
+        statusId === null ||
+        statusId === undefined
+    ) {
+
+        return false;
+
+    }
+
+    const seen =
+        getSeenStatusIds();
+
+    return Boolean(
+        seen[String(statusId)]
+    );
+
+}
+
+
+/* =========================================================
+   MARK ONE STATUS AS SEEN
+========================================================= */
+
+function markStatusAsSeen(statusId) {
+
+    if (
+        statusId === null ||
+        statusId === undefined
+    ) {
+
+        return;
+
+    }
+
+    const seen =
+        getSeenStatusIds();
+
+    seen[String(statusId)] =
+        Date.now();
+
+    saveSeenStatusIds(
+        seen
+    );
+
+}
+
+
+/* =========================================================
+   GET ALL CURRENT ACTIVE STATUS IDS
+========================================================= */
+
+function getCurrentActiveStatusIds() {
+
+    const activeIds =
+        new Set();
+
+
+    /* =====================================================
+       MY STATUS
+    ===================================================== */
+
+    myStatuses.forEach(
+        function(status) {
+
+            if (
+                status &&
+                status.id !== null &&
+                status.id !== undefined
+            ) {
+
+                activeIds.add(
+                    String(status.id)
+                );
+
+            }
+
+        }
+    );
+
+
+    /* =====================================================
+       OTHER USERS
+    ===================================================== */
+
+    activeStatusUsers.forEach(
+        function(user) {
+
+            if (
+                !user ||
+                !Array.isArray(
+                    user.statuses
+                )
+            ) {
+
+                return;
+
+            }
+
+            user.statuses.forEach(
+                function(status) {
+
+                    if (
+                        status &&
+                        status.id !== null &&
+                        status.id !== undefined
+                    ) {
+
+                        activeIds.add(
+                            String(status.id)
+                        );
+
+                    }
+
+                }
+            );
+
+        }
+    );
+
+
+    return activeIds;
+
+}
+
+
+/* =========================================================
+   CLEANUP EXPIRED / OLD SEEN STATUS IDS
+=========================================================
+
+   API se jo statuses ab active nahi hain unki IDs ko
+   localStorage se remove kar diya jayega.
+
+   Isse localStorage unnecessary grow nahi karega.
+========================================================= */
+
+function cleanupSeenStatusIds() {
+
+    const seen =
+        getSeenStatusIds();
+
+    const activeIds =
+        getCurrentActiveStatusIds();
+
+    let changed =
+        false;
+
+
+    Object.keys(
+        seen
+    ).forEach(
+        function(statusId) {
+
+            if (
+                !activeIds.has(
+                    String(statusId)
+                )
+            ) {
+
+                delete seen[statusId];
+
+                changed =
+                    true;
+
+            }
+
+        }
+    );
+
+
+    if (changed) {
+
+        saveSeenStatusIds(
+            seen
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   CHECK IF USER IS FULLY SEEN
+=========================================================
+
+   User tabhi fully seen hai jab uske saare CURRENT active
+   statuses seen ho chuke hon.
+
+   Agar user ke 3 statuses hain:
+   - 1 seen
+   - 2 unseen
+
+   to user BLUE rahega.
+
+   Jab 3/3 seen:
+   - GREY
+   - list ke end mein
+========================================================= */
+
+function isUserFullySeen(user) {
+
+    if (
+        !user ||
+        !Array.isArray(
+            user.statuses
+        ) ||
+        !user.statuses.length
+    ) {
+
+        return false;
+
+    }
+
+
+    return user.statuses.every(
+        function(status) {
+
+            return (
+                status &&
+                status.id !== null &&
+                status.id !== undefined &&
+                isStatusSeen(
+                    status.id
+                )
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
    LOAD ALL HOME STATUSES
    ONE API REQUEST
 ========================================================= */
@@ -1614,9 +1879,10 @@ async function loadHomeStatuses() {
         !currentUser ||
         !currentUser.user_id
     ) {
-        return;
-    }
 
+        return;
+
+    }
 
     try {
 
@@ -1670,6 +1936,13 @@ async function loadHomeStatuses() {
 
 
         /* =================================================
+           CLEANUP OLD SEEN STATUS IDS
+        ================================================= */
+
+        cleanupSeenStatusIds();
+
+
+        /* =================================================
            UPDATE UI
         ================================================= */
 
@@ -1685,11 +1958,9 @@ async function loadHomeStatuses() {
             error
         );
 
-
         myStatuses = [];
 
         activeStatusUsers = [];
-
 
         updateMyStatusUI();
 
@@ -1711,21 +1982,23 @@ async function loadMyStatuses() {
         !currentUser ||
         !currentUser.user_id
     ) {
-        return;
-    }
 
+        return;
+
+    }
 
     try {
 
-        const response = await fetch(
-            `/api/status/my?user_id=${encodeURIComponent(
-                currentUser.user_id
-            )}`,
-            {
-                method: "GET",
-                cache: "no-store"
-            }
-        );
+        const response =
+            await fetch(
+                `/api/status/my?user_id=${encodeURIComponent(
+                    currentUser.user_id
+                )}`,
+                {
+                    method: "GET",
+                    cache: "no-store"
+                }
+            );
 
 
         if (!response.ok) {
@@ -1759,7 +2032,6 @@ async function loadMyStatuses() {
             error
         );
 
-
         myStatuses = [];
 
         updateMyStatusUI();
@@ -1780,21 +2052,23 @@ async function loadActiveStatuses() {
         !currentUser ||
         !currentUser.user_id
     ) {
-        return;
-    }
 
+        return;
+
+    }
 
     try {
 
-        const response = await fetch(
-            `/api/status/active?user_id=${encodeURIComponent(
-                currentUser.user_id
-            )}`,
-            {
-                method: "GET",
-                cache: "no-store"
-            }
-        );
+        const response =
+            await fetch(
+                `/api/status/active?user_id=${encodeURIComponent(
+                    currentUser.user_id
+                )}`,
+                {
+                    method: "GET",
+                    cache: "no-store"
+                }
+            );
 
 
         if (!response.ok) {
@@ -1818,6 +2092,8 @@ async function loadActiveStatuses() {
             : [];
 
 
+        cleanupSeenStatusIds();
+
         renderActiveStatusUsers();
 
 
@@ -1827,7 +2103,6 @@ async function loadActiveStatuses() {
             "ACTIVE STATUS ERROR:",
             error
         );
-
 
         activeStatusUsers = [];
 
@@ -1848,7 +2123,6 @@ function updateMyStatusUI() {
         document.getElementById(
             "myStatusItem"
         );
-
 
     const plus =
         document.getElementById(
@@ -1891,7 +2165,6 @@ function updateMyStatusUI() {
                     return;
 
                 }
-
 
                 openMyStatus();
 
@@ -1948,7 +2221,6 @@ function addAnotherStatus(event) {
 
     }
 
-
     window.location.href =
         "/status";
 
@@ -1999,6 +2271,18 @@ function openMyStatus() {
 
 /* =========================================================
    RENDER OTHER ACTIVE STATUS USERS
+=========================================================
+
+   IMPORTANT ORDER:
+
+   1. UNSEEN USERS
+   2. SEEN USERS
+
+   Within each group latest data order maintained.
+
+   Isse:
+   BLUE users -> pehle
+   GREY users -> end
 ========================================================= */
 
 function renderActiveStatusUsers() {
@@ -2024,8 +2308,64 @@ function renderActiveStatusUsers() {
     }
 
 
+    /* =====================================================
+       REMOVE INVALID USERS
+    ===================================================== */
+
+    const validUsers =
+        activeStatusUsers.filter(
+            function(user) {
+
+                return (
+                    user &&
+                    user.user_id &&
+                    Array.isArray(
+                        user.statuses
+                    ) &&
+                    user.statuses.length
+                );
+
+            }
+        );
+
+
+    /* =====================================================
+       SORT:
+
+       UNSEEN FIRST
+       SEEN LAST
+    ===================================================== */
+
+    const sortedUsers =
+        [...validUsers].sort(
+            function(a, b) {
+
+                const aSeen =
+                    isUserFullySeen(a);
+
+                const bSeen =
+                    isUserFullySeen(b);
+
+
+                if (
+                    aSeen === bSeen
+                ) {
+
+                    return 0;
+
+                }
+
+
+                return aSeen
+                    ? 1
+                    : -1;
+
+            }
+        );
+
+
     container.innerHTML =
-        activeStatusUsers
+        sortedUsers
             .map(function(user) {
 
                 const name =
@@ -2037,9 +2377,15 @@ function renderActiveStatusUsers() {
 
 
                 const userId =
-                    escapeHtml(
+                    String(
                         user.user_id ||
                         ""
+                    );
+
+
+                const safeUserId =
+                    escapeHtml(
+                        userId
                     );
 
 
@@ -2058,15 +2404,28 @@ function renderActiveStatusUsers() {
                     .toUpperCase();
 
 
+                const fullySeen =
+                    isUserFullySeen(
+                        user
+                    );
+
+
+                const borderClass =
+                    fullySeen
+                        ? "seen"
+                        : "unseen";
+
+
                 return `
 
                     <div
                         class="status-item"
-                        data-status-user="${userId}"
-                        onclick="openUserStatus('${userId}')"
+                        data-status-user="${safeUserId}"
                     >
 
-                        <div class="status-circle unseen">
+                        <div
+                            class="status-circle ${borderClass}"
+                        >
 
                             <div class="status-avatar-inner">
 
@@ -2078,6 +2437,7 @@ function renderActiveStatusUsers() {
                                         src="${escapeHtml(photo)}"
                                         alt="${name}"
                                         class="status-avatar-image"
+                                        loading="lazy"
                                     >
                                     `
                                     :
@@ -2103,6 +2463,32 @@ function renderActiveStatusUsers() {
 
             })
             .join("");
+
+
+    /* =====================================================
+       ATTACH CLICK EVENTS
+    ===================================================== */
+
+    container
+    .querySelectorAll(
+        ".status-item[data-status-user]"
+    )
+    .forEach(
+        function(item) {
+
+            item.addEventListener(
+                "click",
+                function() {
+
+                    openUserStatus(
+                        this.dataset.statusUser
+                    );
+
+                }
+            );
+
+        }
+    );
 
 }
 
@@ -2144,6 +2530,129 @@ function openUserStatus(userId) {
 
 
 /* =========================================================
+   MARK CURRENT VIEWED STATUS
+========================================================= */
+
+function markCurrentStatusAsSeen() {
+
+    if (!currentStatusUser) {
+        return;
+    }
+
+
+    /* =====================================================
+       CURRENT USER KI APNI STATUS KO "SEEN" TRACK NAHI
+       KARNA HAI
+    ===================================================== */
+
+    if (
+        currentUser &&
+        currentStatusUser.user_id &&
+        String(
+            currentStatusUser.user_id
+        ) === String(
+            currentUser.user_id
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    if (
+        !Array.isArray(
+            currentStatusUser.statuses
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    const status =
+        currentStatusUser.statuses[
+            currentStatusIndex
+        ];
+
+
+    if (!status) {
+        return;
+    }
+
+
+    if (
+        status.id === null ||
+        status.id === undefined
+    ) {
+
+        return;
+
+    }
+
+
+    markStatusAsSeen(
+        status.id
+    );
+
+
+    /* =====================================================
+       CHECK IF ALL CURRENT STATUSES ARE SEEN
+    ===================================================== */
+
+    const fullySeen =
+        isUserFullySeen(
+            currentStatusUser
+        );
+
+
+    if (fullySeen) {
+
+        /*
+         * Viewer ke andar current user object same
+         * reference ho sakta hai, isliye main array se
+         * fresh user find karke UI render karenge.
+         */
+
+        const freshUser =
+            activeStatusUsers.find(
+                function(item) {
+
+                    return String(
+                        item.user_id
+                    ) === String(
+                        currentStatusUser.user_id
+                    );
+
+                }
+            );
+
+
+        if (freshUser) {
+
+            currentStatusUser =
+                freshUser;
+
+        }
+
+        renderActiveStatusUsers();
+
+    } else {
+
+        /*
+         * Agar abhi kuch statuses unseen hain,
+         * blue state maintain rahegi.
+         */
+
+        renderActiveStatusUsers();
+
+    }
+
+}
+
+
+/* =========================================================
    STATUS VIEWER
 ========================================================= */
 
@@ -2162,10 +2671,50 @@ function showStatusViewer() {
     }
 
 
+    /* =====================================================
+       INDEX SAFETY
+    ===================================================== */
+
+    if (
+        currentStatusIndex < 0
+    ) {
+
+        currentStatusIndex =
+            0;
+
+    }
+
+
+    if (
+        currentStatusIndex >=
+        currentStatusUser.statuses.length
+    ) {
+
+        currentStatusIndex =
+            currentStatusUser.statuses.length - 1;
+
+    }
+
+
     const status =
         currentStatusUser.statuses[
             currentStatusIndex
         ];
+
+
+    if (!status) {
+        return;
+    }
+
+
+    /* =====================================================
+       MARK CURRENT STATUS AS SEEN
+
+       Status ko actual viewer mein show karne ke baad
+       seen mark kiya ja raha hai.
+    ===================================================== */
+
+    markCurrentStatusAsSeen();
 
 
     const viewer =
@@ -2208,6 +2757,10 @@ function showStatusViewer() {
 
     if (mediaContainer) {
 
+        /* =================================================
+           VIDEO
+        ================================================= */
+
         if (
             status.media_type ===
             "video"
@@ -2225,7 +2778,13 @@ function showStatusViewer() {
 
             `;
 
-        } else {
+        }
+
+        /* =================================================
+           IMAGE
+        ================================================= */
+
+        else {
 
             mediaContainer.innerHTML = `
 
@@ -2273,6 +2832,15 @@ function nextStatus() {
         currentStatusIndex++;
 
         showStatusViewer();
+
+    } else {
+
+        /*
+         * Last status already viewed.
+         * User remains in viewer.
+         *
+         * Next button ko silently ignore karenge.
+         */
 
     }
 
@@ -2342,6 +2910,18 @@ function closeStatusViewer() {
 
     }
 
+
+    /*
+     * Viewer close hone ke baad bhi seen state
+     * localStorage mein already saved hoti hai.
+     */
+
+    currentStatusUser =
+        null;
+
+    currentStatusIndex =
+        0;
+
 }
 
 
@@ -2355,11 +2935,47 @@ function showAllStatuses() {
         activeStatusUsers.length
     ) {
 
-        openUserStatus(
-            activeStatusUsers[0].user_id
-        );
+        /*
+         * Render order mein first user unseen ko priority
+         * milegi because renderActiveStatusUsers()
+         * unseen users ko upar rakhta hai.
+         */
 
-        return;
+        const sortedUsers =
+            [...activeStatusUsers].sort(
+                function(a, b) {
+
+                    const aSeen =
+                        isUserFullySeen(a);
+
+                    const bSeen =
+                        isUserFullySeen(b);
+
+                    if (
+                        aSeen === bSeen
+                    ) {
+
+                        return 0;
+
+                    }
+
+                    return aSeen
+                        ? 1
+                        : -1;
+
+                }
+            );
+
+
+        if (sortedUsers.length) {
+
+            openUserStatus(
+                sortedUsers[0].user_id
+            );
+
+            return;
+
+        }
 
     }
 
@@ -2834,6 +3450,8 @@ document.addEventListener(
             }
 
             closeDPViewer();
+
+            closeStatusViewer();
 
         }
 
