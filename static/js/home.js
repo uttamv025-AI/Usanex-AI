@@ -1122,30 +1122,80 @@ function isStatusSeen(statusId) {
     );
 }
 
+async function saveStatusViewToServer(statusId) {
+    const viewerUserId = getCurrentUserId();
+
+    if (!viewerUserId || statusId == null) {
+        return;
+    }
+
+    try {
+        const response = await fetch(
+            `/api/status/view?status_id=${encodeURIComponent(statusId)}&viewer_user_id=${encodeURIComponent(viewerUserId)}`,
+            {
+                method: "POST"
+            }
+        );
+
+        if (!response.ok) {
+            const data = await response.json().catch(() => ({}));
+
+            console.error(
+                "Status view save failed:",
+                data.detail || response.status
+            );
+
+            return;
+        }
+
+        const data = await response.json();
+
+        console.log(
+            "Status view saved:",
+            data
+        );
+
+    } catch (error) {
+        console.error(
+            "Status view network error:",
+            error
+        );
+    }
+}
+
+
 
 /* =========================================================
    MARK STATUS SEEN
 ========================================================= */
 
 function markStatusAsSeen(statusId) {
-
-    if (
-        statusId === null ||
-        statusId === undefined
-    ) {
+    if (statusId === null || statusId === undefined) {
         return;
     }
 
-    const seen =
-        getSeenStatusIds();
+    const seen = getSeenStatusIds();
+    const id = String(statusId);
 
-    seen.add(
-        String(statusId)
-    );
+    const wasAlreadySeen = seen.has(id);
 
-    saveSeenStatusIds(seen);
+    if (!wasAlreadySeen) {
+        // 1. Local storage me immediately save
+        seen.add(id);
+        saveSeenStatusIds(seen);
+
+        // 2. UI immediately update
+        renderActiveStatusUsers();
+
+        // 3. Connected People ke DP rings bhi immediately update
+        refreshConnectionStatusRings();
+    }
+
+    // 4. Database me background save
+    if (!wasAlreadySeen) {
+        saveStatusViewToServer(statusId);
+    }
 }
-
 
 /* =========================================================
    ACTIVE STATUS IDS
