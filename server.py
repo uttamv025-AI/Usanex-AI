@@ -3533,6 +3533,123 @@ async def get_home_statuses(
             "expires_at": status.expires_at.isoformat(),
         })
 
+    # =====================================================
+    # GET SEEN STATUS IDs FROM DATABASE
+    # =====================================================
+
+    active_status_ids = [
+        status.id
+        for status, user in rows
+    ]
+
+    seen_status_ids = set()
+
+    if active_status_ids:
+
+        seen_rows = (
+            db.query(StatusView.status_id)
+            .filter(
+                StatusView.viewer_user_id == user_id,
+                StatusView.status_id.in_(
+                    active_status_ids
+                ),
+            )
+            .all()
+        )
+
+        seen_status_ids = {
+            row[0]
+            for row in seen_rows
+        }
+
+    # =====================================================
+    # RESPONSE
+    # =====================================================
+
+    return {
+        "ok": True,
+
+        "my_statuses": my_statuses,
+
+        "has_my_status": bool(
+            my_statuses
+        ),
+
+        "users": list(
+            grouped.values()
+        ),
+
+        # PostgreSQL se viewed status IDs
+        "seen_status_ids": list(
+            seen_status_ids
+        ),
+    }
+    
+    # =====================================================
+    # MY ACTIVE STATUSES
+    # =====================================================
+
+    my_rows = (
+        db.query(Status)
+        .filter(
+            Status.user_id == user_id,
+            Status.expires_at > now,
+        )
+        .order_by(Status.created_at.asc())
+        .all()
+    )
+
+    my_statuses = [
+        {
+            "id": status.id,
+            "user_id": status.user_id,
+            "media_url": status.media_url,
+            "media_type": status.media_type,
+            "created_at": status.created_at.isoformat(),
+            "expires_at": status.expires_at.isoformat(),
+        }
+        for status in my_rows
+    ]
+
+    # =====================================================
+    # OTHER ACTIVE STATUSES
+    # =====================================================
+
+    rows = (
+        db.query(Status, User)
+        .join(
+            User,
+            User.user_id == Status.user_id,
+        )
+        .filter(
+            Status.expires_at > now,
+            Status.user_id != user_id,
+        )
+        .order_by(Status.created_at.desc())
+        .limit(500)
+        .all()
+    )
+
+    grouped = {}
+
+    for status, user in rows:
+
+        if user.user_id not in grouped:
+            grouped[user.user_id] = {
+                "user_id": user.user_id,
+                "name": user.name,
+                "profile_photo": user.profile_photo,
+                "statuses": [],
+            }
+
+        grouped[user.user_id]["statuses"].append({
+            "id": status.id,
+            "media_url": status.media_url,
+            "media_type": status.media_type,
+            "created_at": status.created_at.isoformat(),
+            "expires_at": status.expires_at.isoformat(),
+        })
+
     return {
         "ok": True,
         "my_statuses": my_statuses,
