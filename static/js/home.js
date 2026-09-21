@@ -1592,24 +1592,628 @@ async function loadNotificationCount() {
 
 }
 
-
 /* =========================================================
    STATUS
 ========================================================= */
 
-function addMyStatus() {
+let myStatuses = [];
+let activeStatusUsers = [];
+let currentStatusUser = null;
+let currentStatusIndex = 0;
+
+
+/* =========================================================
+   LOAD MY STATUS
+========================================================= */
+
+async function loadMyStatuses() {
+
+    if (
+        !currentUser ||
+        !currentUser.user_id
+    ) {
+        return;
+    }
+
+    try {
+
+        const response = await fetch(
+            `/api/status/my?user_id=${encodeURIComponent(
+                currentUser.user_id
+            )}`,
+            {
+                method: "GET",
+                cache: "no-store"
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error("Unable to load my status");
+        }
+
+        const data = await response.json();
+
+        myStatuses =
+            Array.isArray(data.statuses)
+                ? data.statuses
+                : [];
+
+        updateMyStatusUI();
+
+    } catch (error) {
+
+        console.error(
+            "MY STATUS ERROR:",
+            error
+        );
+
+        myStatuses = [];
+
+        updateMyStatusUI();
+    }
+}
+
+
+/* =========================================================
+   LOAD ACTIVE STATUS USERS
+========================================================= */
+
+async function loadActiveStatuses() {
+
+    if (
+        !currentUser ||
+        !currentUser.user_id
+    ) {
+        return;
+    }
+
+    try {
+
+        const response = await fetch(
+            `/api/status/active?user_id=${encodeURIComponent(
+                currentUser.user_id
+            )}`,
+            {
+                method: "GET",
+                cache: "no-store"
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error(
+                "Unable to load active statuses"
+            );
+        }
+
+        const data =
+            await response.json();
+
+        activeStatusUsers =
+            Array.isArray(data.users)
+                ? data.users
+                : [];
+
+        renderActiveStatusUsers();
+
+    } catch (error) {
+
+        console.error(
+            "ACTIVE STATUS ERROR:",
+            error
+        );
+
+        activeStatusUsers = [];
+
+        renderActiveStatusUsers();
+    }
+}
+
+
+/* =========================================================
+   UPDATE YOUR STATUS UI
+========================================================= */
+
+function updateMyStatusUI() {
+
+    const item =
+        document.getElementById(
+            "myStatusItem"
+        );
+
+    const plus =
+        document.getElementById(
+            "myStatusPlus"
+        );
+
+    if (!item) {
+        return;
+    }
+
+    const hasStatus =
+        myStatuses.length > 0;
+
+    item.classList.toggle(
+        "has-status",
+        hasStatus
+    );
+
+
+    /*
+       STATUS EXISTS
+       Main card = View status
+       Plus = Add another status
+    */
+
+    if (hasStatus) {
+
+        item.onclick =
+            function(event) {
+
+                if (
+                    event.target.closest(
+                        ".status-plus"
+                    )
+                ) {
+                    return;
+                }
+
+                openMyStatus();
+            };
+
+
+        if (plus) {
+
+            plus.style.display =
+                "flex";
+
+        }
+
+    }
+
+
+    /*
+       NO STATUS
+       Entire card = Upload status
+    */
+
+    else {
+
+        item.onclick =
+            function() {
+
+                window.location.href =
+                    "/status";
+
+            };
+
+
+        if (plus) {
+
+            plus.style.display =
+                "flex";
+
+        }
+
+    }
+}
+
+
+/* =========================================================
+   ADD ANOTHER STATUS
+========================================================= */
+
+function addAnotherStatus(event) {
+
+    if (event) {
+
+        event.stopPropagation();
+
+    }
 
     window.location.href =
         "/status";
+}
+
+
+/* =========================================================
+   OPEN MY STATUS
+========================================================= */
+
+function openMyStatus() {
+
+    if (!myStatuses.length) {
+
+        window.location.href =
+            "/status";
+
+        return;
+    }
+
+    currentStatusUser = {
+        user_id: currentUser.user_id,
+        name: currentUser.name,
+        profile_photo:
+            currentUser.profile_photo,
+        statuses: myStatuses
+    };
+
+    currentStatusIndex = 0;
+
+    showStatusViewer();
+}
+
+
+/* =========================================================
+   RENDER OTHER ACTIVE STATUS USERS
+========================================================= */
+
+function renderActiveStatusUsers() {
+
+    const container =
+        document.getElementById(
+            "otherStatusScroll"
+        );
+
+    if (!container) {
+        return;
+    }
+
+
+    if (!activeStatusUsers.length) {
+
+        container.innerHTML = "";
+
+        return;
+    }
+
+
+    container.innerHTML =
+        activeStatusUsers
+            .map(function(user) {
+
+                const name =
+                    escapeHtml(
+                        user.name ||
+                        user.user_id ||
+                        "User"
+                    );
+
+                const userId =
+                    escapeHtml(
+                        user.user_id ||
+                        ""
+                    );
+
+                const photo =
+                    user.profile_photo ||
+                    "";
+
+                const letter =
+                    (
+                        user.name ||
+                        user.user_id ||
+                        "U"
+                    )
+                    .charAt(0)
+                    .toUpperCase();
+
+
+                return `
+
+                    <div
+                        class="status-item"
+                        data-status-user="${userId}"
+                        onclick="openUserStatus('${userId}')"
+                    >
+
+                        <div class="status-circle unseen">
+
+                            <div class="status-avatar-inner">
+
+                                ${
+                                    photo
+                                    ?
+                                    `
+                                    <img
+                                        src="${escapeHtml(photo)}"
+                                        alt="${name}"
+                                        class="status-avatar-image"
+                                    >
+                                    `
+                                    :
+                                    `
+                                    <span>
+                                        ${escapeHtml(letter)}
+                                    </span>
+                                    `
+                                }
+
+                            </div>
+
+                        </div>
+
+                        <div class="status-name">
+                            ${name}
+                        </div>
+
+                    </div>
+
+                `;
+
+            })
+            .join("");
+}
+
+
+/* =========================================================
+   OPEN OTHER USER STATUS
+========================================================= */
+
+function openUserStatus(userId) {
+
+    const user =
+        activeStatusUsers.find(
+            function(item) {
+
+                return String(
+                    item.user_id
+                ) === String(userId);
+
+            }
+        );
+
+
+    if (!user) {
+        return;
+    }
+
+
+    currentStatusUser =
+        user;
+
+    currentStatusIndex = 0;
+
+    showStatusViewer();
+}
+
+
+/* =========================================================
+   STATUS VIEWER
+========================================================= */
+
+function showStatusViewer() {
+
+    if (
+        !currentStatusUser ||
+        !Array.isArray(
+            currentStatusUser.statuses
+        ) ||
+        !currentStatusUser.statuses.length
+    ) {
+        return;
+    }
+
+
+    const status =
+        currentStatusUser.statuses[
+            currentStatusIndex
+        ];
+
+
+    /*
+       Agar home.html me viewer abhi nahi hai,
+       temporarily toast show hoga.
+    */
+
+    const viewer =
+        document.getElementById(
+            "statusViewer"
+        );
+
+
+    if (!viewer) {
+
+        showToast(
+            `${currentStatusUser.name || "User"} status`
+        );
+
+        return;
+    }
+
+
+    const mediaContainer =
+        document.getElementById(
+            "statusViewerMedia"
+        );
+
+
+    const nameElement =
+        document.getElementById(
+            "statusViewerName"
+        );
+
+
+    if (nameElement) {
+
+        nameElement.textContent =
+            currentStatusUser.name ||
+            "User";
+
+    }
+
+
+    if (mediaContainer) {
+
+        if (
+            status.media_type ===
+            "video"
+        ) {
+
+            mediaContainer.innerHTML = `
+
+                <video
+                    src="${escapeHtml(status.media_url)}"
+                    controls
+                    autoplay
+                    playsinline
+                    class="status-viewer-video"
+                ></video>
+
+            `;
+
+        } else {
+
+            mediaContainer.innerHTML = `
+
+                <img
+                    src="${escapeHtml(status.media_url)}"
+                    alt="Status"
+                    class="status-viewer-image"
+                >
+
+            `;
+
+        }
+
+    }
+
+
+    viewer.classList.add(
+        "active"
+    );
+}
+
+
+/* =========================================================
+   NEXT STATUS
+========================================================= */
+
+function nextStatus() {
+
+    if (
+        !currentStatusUser ||
+        !currentStatusUser.statuses
+    ) {
+        return;
+    }
+
+
+    if (
+        currentStatusIndex <
+        currentStatusUser.statuses.length - 1
+    ) {
+
+        currentStatusIndex++;
+
+        showStatusViewer();
+
+    }
 
 }
 
 
+/* =========================================================
+   PREVIOUS STATUS
+========================================================= */
+
+function previousStatus() {
+
+    if (
+        !currentStatusUser ||
+        !currentStatusUser.statuses
+    ) {
+        return;
+    }
+
+
+    if (
+        currentStatusIndex > 0
+    ) {
+
+        currentStatusIndex--;
+
+        showStatusViewer();
+
+    }
+
+}
+
+
+/* =========================================================
+   CLOSE STATUS VIEWER
+========================================================= */
+
+function closeStatusViewer() {
+
+    const viewer =
+        document.getElementById(
+            "statusViewer"
+        );
+
+    if (viewer) {
+
+        viewer.classList.remove(
+            "active"
+        );
+
+    }
+
+
+    const mediaContainer =
+        document.getElementById(
+            "statusViewerMedia"
+        );
+
+    if (mediaContainer) {
+
+        mediaContainer.innerHTML =
+            "";
+
+    }
+
+}
+
+
+/* =========================================================
+   SEE ALL
+========================================================= */
+
 function showAllStatuses() {
 
+    if (
+        activeStatusUsers.length
+    ) {
+
+        openUserStatus(
+            activeStatusUsers[0].user_id
+        );
+
+        return;
+    }
+
+
     showToast(
-        "All statuses coming soon."
+        "No active statuses"
     );
+}
+
+
+/* =========================================================
+   OLD FUNCTION COMPATIBILITY
+========================================================= */
+
+function addMyStatus() {
+
+    if (myStatuses.length) {
+
+        openMyStatus();
+
+    } else {
+
+        window.location.href =
+            "/status";
+
+    }
 
 }
 
