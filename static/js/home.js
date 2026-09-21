@@ -2854,9 +2854,10 @@ async function initializeHome() {
    LOAD STATUSES
 ===================================================== */
 
-await loadMyStatuses();
-
-await loadActiveStatuses();
+await Promise.all([
+    loadMyStatuses(),
+    loadActiveStatuses()
+]);
 
 
 /* =====================================================
