@@ -9,33 +9,107 @@
 
 let currentUser = null;
 
+let searchTimeout = null;
+
+let toastTimer = null;
+
+
+// ============================================================
+// DOM ELEMENTS
+// ============================================================
+
+const searchInput =
+    document.getElementById("searchInput");
+
+const searchResults =
+    document.getElementById("searchResults");
+
+const menuBtn =
+    document.getElementById("menuBtn");
+
+const menuOverlay =
+    document.getElementById("menuOverlay");
+
 
 // ============================================================
 // USER RESOLUTION
 // ============================================================
 
 async function resolveCurrentUser() {
+
     try {
-        const response = await fetch("/api/me", {
-            credentials: "include"
-        });
+
+        const response = await fetch(
+            "/api/me",
+            {
+                credentials: "include"
+            }
+        );
 
         if (!response.ok) {
             return null;
         }
 
-        const data = await response.json();
+        const data =
+            await response.json();
 
-        if (data && data.ok && data.user) {
-            currentUser = data.user;
+        if (
+            data &&
+            data.ok &&
+            data.user
+        ) {
+
+            currentUser =
+                data.user;
+
+            updateCurrentUserUI();
+
             return currentUser;
         }
 
     } catch (error) {
-        console.error("User resolution error:", error);
+
+        console.error(
+            "User resolution error:",
+            error
+        );
+
     }
 
     return null;
+}
+
+
+// ============================================================
+// UPDATE CURRENT USER UI
+// ============================================================
+
+function updateCurrentUserUI() {
+
+    const youLetter =
+        document.getElementById("youLetter");
+
+    if (!youLetter) {
+        return;
+    }
+
+    if (!currentUser) {
+        youLetter.textContent = "U";
+        return;
+    }
+
+    const name =
+        currentUser.name ||
+        currentUser.display_name ||
+        currentUser.username ||
+        currentUser.user_id ||
+        "U";
+
+    youLetter.textContent =
+        String(name)
+            .charAt(0)
+            .toUpperCase();
+
 }
 
 
@@ -44,47 +118,62 @@ async function resolveCurrentUser() {
 // ============================================================
 
 async function checkConnection() {
+
     try {
-        const response = await fetch("/api/health", {
-            credentials: "include"
-        });
+
+        const response =
+            await fetch(
+                "/api/health",
+                {
+                    credentials: "include"
+                }
+            );
 
         return response.ok;
 
     } catch (error) {
+
         return false;
+
     }
+
 }
 
 
 // ============================================================
-// SEARCH
+// SEARCH INPUT
 // ============================================================
-
-let searchTimeout = null;
-
-const searchInput = document.getElementById("searchInput");
-const searchResults = document.getElementById("searchResults");
-
 
 if (searchInput) {
 
-    searchInput.addEventListener("input", function () {
+    searchInput.addEventListener(
+        "input",
+        function () {
 
-        clearTimeout(searchTimeout);
+            clearTimeout(searchTimeout);
 
-        const query = this.value.trim();
+            const query =
+                this.value.trim();
 
-        if (!query) {
-            closeSearchResults();
-            return;
+            if (!query) {
+
+                closeSearchResults();
+
+                return;
+            }
+
+            searchTimeout =
+                setTimeout(
+                    function () {
+
+                        searchUsers(query);
+
+                    },
+                    300
+                );
+
         }
-
-        searchTimeout = setTimeout(() => {
-            searchUsers(query);
-        }, 300);
-
-    });
+    );
 
 }
 
@@ -109,33 +198,47 @@ async function searchUsers(query) {
 
     try {
 
-        const response = await fetch(
-            `/api/search?q=${encodeURIComponent(query)}`,
-            {
-                credentials: "include"
-            }
-        );
+        const response =
+            await fetch(
+                `/api/search?q=${encodeURIComponent(query)}`,
+                {
+                    credentials: "include"
+                }
+            );
 
         if (!response.ok) {
-            throw new Error("Search failed");
+
+            throw new Error(
+                "Search failed"
+            );
+
         }
 
-        const data = await response.json();
+        const data =
+            await response.json();
 
-        const users = data.users || data.results || [];
+        const users =
+            data.users ||
+            data.results ||
+            [];
 
         renderSearchResults(users);
 
     } catch (error) {
 
-        console.error("Search error:", error);
+        console.error(
+            "Search error:",
+            error
+        );
 
         searchResults.innerHTML = `
             <div class="search-error">
                 Unable to search right now.
             </div>
         `;
+
     }
+
 }
 
 
@@ -149,7 +252,10 @@ function renderSearchResults(users) {
         return;
     }
 
-    if (!users || users.length === 0) {
+    if (
+        !users ||
+        users.length === 0
+    ) {
 
         searchResults.innerHTML = `
             <div class="search-empty">
@@ -162,82 +268,135 @@ function renderSearchResults(users) {
 
     searchResults.innerHTML = "";
 
-    users.forEach(user => {
+    users.forEach(
+        function (user) {
 
-        const card = document.createElement("div");
+            const card =
+                document.createElement("div");
 
-        card.className = "search-user-card";
+            card.className =
+                "search-user-card";
 
-        const name =
-            user.name ||
-            user.display_name ||
-            "User";
+            const name =
+                user.name ||
+                user.display_name ||
+                "User";
 
-        const username =
-            user.username ||
-            user.user_id ||
-            "";
+            const username =
+                user.username ||
+                user.user_id ||
+                "";
 
-        const userId =
-            user.user_id ||
-            user.username ||
-            "";
+            const userId =
+                user.user_id ||
+                user.username ||
+                "";
 
-        const avatar =
-            user.profile_picture ||
-            user.avatar ||
-            "";
+            const avatar =
+                user.profile_picture ||
+                user.avatar ||
+                "";
 
-        card.innerHTML = `
+            card.innerHTML = `
 
-            <div class="search-user-left">
+                <div class="search-user-left">
 
-                <div class="search-user-avatar">
+                    <div class="search-user-avatar">
 
-                    ${
-                        avatar
-                        ? `<img src="${avatar}" alt="">`
-                        : `<span>${escapeHtml(name.charAt(0).toUpperCase())}</span>`
-                    }
+                        ${
+                            avatar
+                            ?
+                            `
+                            <img
+                                src="${escapeHtml(avatar)}"
+                                alt="Profile">
+                            `
+                            :
+                            `
+                            <span>
+                                ${escapeHtml(
+                                    name
+                                        .charAt(0)
+                                        .toUpperCase()
+                                )}
+                            </span>
+                            `
+                        }
 
-                </div>
-
-                <div class="search-user-info">
-
-                    <div class="search-user-name">
-                        ${escapeHtml(name)}
                     </div>
 
-                    <div class="search-user-username">
-                        @${escapeHtml(username)}
-                    </div>
+                    <div class="search-user-info">
 
-                    ${
-                        userId
-                        ? `
-                        <div class="search-user-id">
-                            ID: ${escapeHtml(userId)}
+                        <div class="search-user-name">
+                            ${escapeHtml(name)}
                         </div>
-                        `
-                        : ""
-                    }
+
+                        <div class="search-user-username">
+                            @${escapeHtml(username)}
+                        </div>
+
+                        ${
+                            userId
+                            ?
+                            `
+                            <div class="search-user-id">
+                                ID: ${escapeHtml(userId)}
+                            </div>
+                            `
+                            :
+                            ""
+                        }
+
+                    </div>
 
                 </div>
 
-            </div>
+                <button
+                    class="search-profile-btn"
+                    type="button"
+                    onclick="openProfile('${escapeJs(userId)}')">
 
-            <button
-                class="search-profile-btn"
-                onclick="openProfile('${escapeJs(userId)}')"
-            >
-                Profile
-            </button>
+                    Profile
 
-        `;
+                </button>
 
-        searchResults.appendChild(card);
+            `;
 
-    });
+            searchResults.appendChild(card);
+
+        }
+    );
+
+}
+
+
+// ============================================================
+// CLOSE SEARCH RESULTS
+// ============================================================
+
+function closeSearchResults() {
+
+    if (!searchResults) {
+        return;
+    }
+
+    searchResults.classList.remove("show");
+
+    searchResults.innerHTML = "";
+
+}
+
+
+function closeSearch() {
+
+    if (searchInput) {
+
+        searchInput.value = "";
+
+    }
+
+    closeSearchResults();
+
 }
 
 
@@ -253,6 +412,7 @@ function openChat(userId) {
 
     window.location.href =
         `/chat?user_id=${encodeURIComponent(userId)}`;
+
 }
 
 
@@ -260,7 +420,10 @@ function openChat(userId) {
 // FOLLOW
 // ============================================================
 
-async function followUser(userId, button) {
+async function followUser(
+    userId,
+    button
+) {
 
     if (!userId) {
         return;
@@ -272,32 +435,44 @@ async function followUser(userId, button) {
 
     try {
 
-        const response = await fetch("/api/follow", {
+        const response =
+            await fetch(
+                "/api/follow",
+                {
+                    method: "POST",
 
-            method: "POST",
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
 
-            headers: {
-                "Content-Type": "application/json"
-            },
+                    credentials: "include",
 
-            credentials: "include",
+                    body: JSON.stringify({
+                        user_id: userId
+                    })
+                }
+            );
 
-            body: JSON.stringify({
-                user_id: userId
-            })
-
-        });
-
-        const data = await response.json();
+        const data =
+            await response.json();
 
         if (data.ok) {
 
             if (button) {
-                button.textContent = "Unfollow";
-                button.classList.add("following");
+
+                button.textContent =
+                    "Unfollow";
+
+                button.classList.add(
+                    "following"
+                );
+
             }
 
-            showToast("Follow request sent");
+            showToast(
+                "Follow request sent"
+            );
 
         } else {
 
@@ -306,13 +481,19 @@ async function followUser(userId, button) {
                 data.detail ||
                 "Unable to follow"
             );
+
         }
 
     } catch (error) {
 
-        console.error("Follow error:", error);
+        console.error(
+            "Follow error:",
+            error
+        );
 
-        showToast("Something went wrong");
+        showToast(
+            "Something went wrong"
+        );
 
     } finally {
 
@@ -321,32 +502,6 @@ async function followUser(userId, button) {
         }
 
     }
-}
-
-
-// ============================================================
-// CLOSE SEARCH
-// ============================================================
-
-function closeSearchResults() {
-
-    if (!searchResults) {
-        return;
-    }
-
-    searchResults.classList.remove("show");
-    searchResults.innerHTML = "";
-
-}
-
-
-function closeSearch() {
-
-    if (searchInput) {
-        searchInput.value = "";
-    }
-
-    closeSearchResults();
 
 }
 
@@ -358,7 +513,9 @@ function closeSearch() {
 async function loadConnections() {
 
     const container =
-        document.getElementById("connectionsList");
+        document.getElementById(
+            "connectionsList"
+        );
 
     if (!container) {
         return;
@@ -366,23 +523,29 @@ async function loadConnections() {
 
     try {
 
-        const response = await fetch(
-            "/api/connections",
-            {
-                credentials: "include"
-            }
-        );
+        const response =
+            await fetch(
+                "/api/connections",
+                {
+                    credentials: "include"
+                }
+            );
 
         if (!response.ok) {
             return;
         }
 
-        const data = await response.json();
+        const data =
+            await response.json();
 
         const users =
             data.connections ||
             data.users ||
             [];
+
+        updateConnectionCount(
+            users.length
+        );
 
         renderConnections(users);
 
@@ -394,24 +557,66 @@ async function loadConnections() {
         );
 
     }
+
 }
 
+
+// ============================================================
+// CONNECTION COUNT
+// ============================================================
+
+function updateConnectionCount(count) {
+
+    const element =
+        document.getElementById(
+            "connectionCount"
+        );
+
+    if (!element) {
+        return;
+    }
+
+    element.textContent =
+        Number(count) || 0;
+
+}
+
+
+// ============================================================
+// RENDER CONNECTIONS
+// ============================================================
 
 function renderConnections(users) {
 
     const container =
-        document.getElementById("connectionsList");
+        document.getElementById(
+            "connectionsList"
+        );
 
     if (!container) {
         return;
     }
 
-    if (!users || users.length === 0) {
+    if (
+        !users ||
+        users.length === 0
+    ) {
 
         container.innerHTML = `
-            <div class="empty-state">
-                <div class="empty-icon">👥</div>
-                <div>No connections yet</div>
+            <div class="empty-box">
+
+                <div class="empty-icon">
+                    👥
+                </div>
+
+                <div class="empty-title">
+                    No connections yet
+                </div>
+
+                <div class="empty-text">
+                    Connect with people to see them here.
+                </div>
+
             </div>
         `;
 
@@ -420,75 +625,101 @@ function renderConnections(users) {
 
     container.innerHTML = "";
 
-    users.forEach(user => {
+    users.forEach(
+        function (user) {
 
-        const name =
-            user.name ||
-            user.display_name ||
-            "User";
+            const name =
+                user.name ||
+                user.display_name ||
+                "User";
 
-        const userId =
-            user.user_id ||
-            user.username ||
-            "";
+            const userId =
+                user.user_id ||
+                user.username ||
+                "";
 
-        const avatar =
-            user.profile_picture ||
-            user.avatar ||
-            "";
+            const username =
+                user.username ||
+                user.user_id ||
+                "";
 
-        const card =
-            document.createElement("div");
+            const avatar =
+                user.profile_picture ||
+                user.avatar ||
+                "";
 
-        card.className =
-            "connection-card";
+            const card =
+                document.createElement("div");
 
-        card.innerHTML = `
+            card.className =
+                "connection-card";
 
-            <div
-                class="connection-avatar"
-                onclick="openDPViewer(
-                    '${escapeJs(userId)}',
-                    '${escapeJs(name)}',
-                    '${escapeJs(avatar)}'
-                )"
-            >
+            card.innerHTML = `
 
-                ${
-                    avatar
-                    ? `<img src="${avatar}" alt="">`
-                    : `<span>${escapeHtml(name.charAt(0).toUpperCase())}</span>`
-                }
+                <div
+                    class="connection-avatar"
+                    onclick="openDPViewer(
+                        '${escapeJs(userId)}',
+                        '${escapeJs(name)}',
+                        '${escapeJs(avatar)}'
+                    )">
 
-            </div>
+                    ${
+                        avatar
+                        ?
+                        `
+                        <img
+                            src="${escapeHtml(avatar)}"
+                            alt="Profile">
+                        `
+                        :
+                        `
+                        <span>
+                            ${escapeHtml(
+                                name
+                                    .charAt(0)
+                                    .toUpperCase()
+                            )}
+                        </span>
+                        `
+                    }
 
-            <div
-                class="connection-info"
-                onclick="openProfile('${escapeJs(userId)}')"
-            >
-
-                <div class="connection-name">
-                    ${escapeHtml(name)}
                 </div>
 
-                <div class="connection-username">
-                    @${escapeHtml(user.username || userId)}
+                <div
+                    class="connection-info"
+                    onclick="openProfile(
+                        '${escapeJs(userId)}'
+                    )">
+
+                    <div class="connection-name">
+                        ${escapeHtml(name)}
+                    </div>
+
+                    <div class="connection-username">
+                        @${escapeHtml(username)}
+                    </div>
+
                 </div>
 
-            </div>
+                <button
+                    class="connection-chat-btn"
+                    type="button"
+                    onclick="openChat(
+                        '${escapeJs(userId)}'
+                    )">
 
-            <button
-                class="connection-chat-btn"
-                onclick="openChat('${escapeJs(userId)}')"
-            >
-                Chat
-            </button>
+                    Chat
 
-        `;
+                </button>
 
-        container.appendChild(card);
+            `;
 
-    });
+            container.appendChild(card);
+
+        }
+    );
+
 }
 
 
@@ -504,60 +735,63 @@ function openProfile(userId) {
 
     window.location.href =
         `/profile?user_id=${encodeURIComponent(userId)}`;
-}
-
-
-// ============================================================
-// DP VIEWER
-// ============================================================
-
-function openDPViewer(userId, name, avatar) {
-
-    const viewer =
-        document.getElementById("dpViewer");
-
-    if (!viewer) {
-        return;
-    }
-
-    const image =
-        document.getElementById("dpViewerImage");
-
-    const title =
-        document.getElementById("dpViewerName");
-
-    if (image) {
-
-        if (avatar) {
-
-            image.src = avatar;
-            image.style.display = "block";
-
-        } else {
-
-            image.removeAttribute("src");
-            image.style.display = "none";
-
-        }
-    }
-
-    if (title) {
-        title.textContent = name || "User";
-    }
-
-    viewer.classList.add("show");
 
 }
 
 
-function closeDPViewer() {
+function goProfile() {
 
-    const viewer =
-        document.getElementById("dpViewer");
+    window.location.href =
+        "/profile";
 
-    if (viewer) {
-        viewer.classList.remove("show");
-    }
+}
+
+
+// ============================================================
+// HOME
+// ============================================================
+
+function goHome() {
+
+    window.location.href =
+        "/home";
+
+}
+
+
+// ============================================================
+// REELS
+// ============================================================
+
+function goReels() {
+
+    window.location.href =
+        "/reels";
+
+}
+
+
+// ============================================================
+// CREATE POST
+// ============================================================
+
+function createPost() {
+
+    showToast(
+        "Create post coming soon."
+    );
+
+}
+
+
+// ============================================================
+// NOTIFICATIONS
+// ============================================================
+
+function goNotifications() {
+
+    window.location.href =
+        "/notifications";
 
 }
 
@@ -569,7 +803,9 @@ function closeDPViewer() {
 async function loadNotificationCount() {
 
     const badge =
-        document.getElementById("notificationBadge");
+        document.getElementById(
+            "notificationBadge"
+        );
 
     if (!badge) {
         return;
@@ -577,18 +813,20 @@ async function loadNotificationCount() {
 
     try {
 
-        const response = await fetch(
-            "/api/notifications/unread-count",
-            {
-                credentials: "include"
-            }
-        );
+        const response =
+            await fetch(
+                "/api/notifications/unread-count",
+                {
+                    credentials: "include"
+                }
+            );
 
         if (!response.ok) {
             return;
         }
 
-        const data = await response.json();
+        const data =
+            await response.json();
 
         const count =
             Number(
@@ -600,13 +838,17 @@ async function loadNotificationCount() {
         if (count > 0) {
 
             badge.textContent =
-                count > 99 ? "99+" : count;
+                count > 99
+                ? "99+"
+                : count;
 
-            badge.style.display = "flex";
+            badge.style.display =
+                "flex";
 
         } else {
 
-            badge.style.display = "none";
+            badge.style.display =
+                "none";
 
         }
 
@@ -618,6 +860,7 @@ async function loadNotificationCount() {
         );
 
     }
+
 }
 
 
@@ -627,11 +870,9 @@ async function loadNotificationCount() {
 
 function addMyStatus() {
 
-    /*
-     * Status editor is now a separate page.
-     */
+    window.location.href =
+        "/status";
 
-    window.location.href = "/status";
 }
 
 
@@ -642,7 +883,9 @@ function addMyStatus() {
 function showStatusHint() {
 
     const hint =
-        document.getElementById("statusHint");
+        document.getElementById(
+            "statusNewUserHint"
+        );
 
     if (!hint) {
         return;
@@ -650,11 +893,15 @@ function showStatusHint() {
 
     hint.classList.add("show");
 
-    setTimeout(() => {
+    setTimeout(
+        function () {
 
-        hint.classList.remove("show");
+            hint.classList.remove("show");
 
-    }, 5000);
+        },
+        5000
+    );
+
 }
 
 
@@ -675,7 +922,11 @@ function showAllStatuses() {
 // OPEN STATUS
 // ============================================================
 
-function openStatus(userId) {
+function openStatus(
+    userId,
+    userName,
+    seen
+) {
 
     if (!userId) {
         return;
@@ -689,87 +940,64 @@ function openStatus(userId) {
 
 
 // ============================================================
-// NAVIGATION
-// ============================================================
-
-function navigateTo(page) {
-
-    if (!page) {
-        return;
-    }
-
-    switch (page) {
-
-        case "home":
-            window.location.href = "/home";
-            break;
-
-        case "reels":
-            window.location.href = "/reels";
-            break;
-
-        case "coll":
-            window.location.href = "/search";
-            break;
-
-        case "profile":
-            window.location.href = "/profile";
-            break;
-
-        case "notifications":
-            window.location.href =
-                "/notifications";
-            break;
-
-        default:
-            console.warn(
-                "Unknown navigation:",
-                page
-            );
-
-    }
-
-}
-
-
-// ============================================================
 // MENU
 // ============================================================
 
-function toggleMenu() {
+function openMenu() {
 
-    const menu =
-        document.getElementById("sideMenu");
-
-    if (!menu) {
+    if (!menuOverlay) {
         return;
     }
 
-    menu.classList.toggle("show");
-
-}
-
-
-function openMenu() {
-
-    const menu =
-        document.getElementById("sideMenu");
-
-    if (menu) {
-        menu.classList.add("show");
-    }
+    menuOverlay.classList.add(
+        "show"
+    );
 
 }
 
 
 function closeMenu() {
 
-    const menu =
-        document.getElementById("sideMenu");
-
-    if (menu) {
-        menu.classList.remove("show");
+    if (!menuOverlay) {
+        return;
     }
+
+    menuOverlay.classList.remove(
+        "show"
+    );
+
+}
+
+
+function toggleMenu() {
+
+    if (!menuOverlay) {
+        return;
+    }
+
+    menuOverlay.classList.toggle(
+        "show"
+    );
+
+}
+
+
+// ============================================================
+// MENU BUTTON
+// ============================================================
+
+if (menuBtn) {
+
+    menuBtn.addEventListener(
+        "click",
+        function (event) {
+
+            event.stopPropagation();
+
+            toggleMenu();
+
+        }
+    );
 
 }
 
@@ -778,61 +1006,68 @@ function closeMenu() {
 // MENU ACTIONS
 // ============================================================
 
-function openNotifications() {
+function goMonetization() {
 
     closeMenu();
 
-    window.location.href =
-        "/notifications";
+    showToast(
+        "Monetization coming soon."
+    );
+
 }
 
 
-function openSearchPage() {
+function goBlocked() {
 
     closeMenu();
 
-    window.location.href =
-        "/search";
+    showToast(
+        "Blocked users coming soon."
+    );
+
 }
 
 
-function openProfilePage() {
+function goPrivacy() {
 
     closeMenu();
 
-    window.location.href =
-        "/profile";
+    showToast(
+        "Privacy & Security coming soon."
+    );
+
 }
 
 
-// ============================================================
-// TOAST
-// ============================================================
+function goSettings() {
 
-let toastTimer = null;
+    closeMenu();
+
+    showToast(
+        "Settings coming soon."
+    );
+
+}
 
 
-function showToast(message) {
+function goHelp() {
 
-    const toast =
-        document.getElementById("toast");
+    closeMenu();
 
-    if (!toast) {
-        return;
-    }
+    showToast(
+        "Help & Support coming soon."
+    );
 
-    toast.textContent =
-        message || "";
+}
 
-    toast.classList.add("show");
 
-    clearTimeout(toastTimer);
+function goAbout() {
 
-    toastTimer = setTimeout(() => {
+    closeMenu();
 
-        toast.classList.remove("show");
-
-    }, 2500);
+    showToast(
+        "Usanex"
+    );
 
 }
 
@@ -841,16 +1076,29 @@ function showToast(message) {
 // LOGOUT
 // ============================================================
 
-async function logout() {
+async function logoutUser() {
+
+    closeMenu();
 
     try {
 
-        await fetch(
-            "/logout",
-            {
-                method: "POST",
-                credentials: "include"
-            }
+        const response =
+            await fetch(
+                "/logout",
+                {
+                    method: "POST",
+                    credentials: "include"
+                }
+            );
+
+        /*
+         * Logout endpoint response is not required
+         * for redirect.
+         */
+
+        console.log(
+            "Logout response:",
+            response.status
         );
 
     } catch (error) {
@@ -862,44 +1110,142 @@ async function logout() {
 
     }
 
-    window.location.href = "/";
+    window.location.href =
+        "/";
 
 }
 
 
 // ============================================================
-// ESCAPE HTML
+// DP VIEWER
 // ============================================================
 
-function escapeHtml(value) {
+function openDPViewer(
+    userId,
+    name,
+    avatar
+) {
 
-    if (value === null ||
-        value === undefined) {
-        return "";
+    const viewer =
+        document.getElementById(
+            "dpViewer"
+        );
+
+    if (!viewer) {
+        return;
     }
 
-    return String(value)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+    const image =
+        document.getElementById(
+            "dpViewerImage"
+        );
+
+    const title =
+        document.getElementById(
+            "dpViewerName"
+        );
+
+    if (image) {
+
+        if (avatar) {
+
+            image.src =
+                avatar;
+
+            image.style.display =
+                "block";
+
+        } else {
+
+            image.removeAttribute(
+                "src"
+            );
+
+            image.style.display =
+                "none";
+
+        }
+
+    }
+
+    if (title) {
+
+        title.textContent =
+            name || "User";
+
+    }
+
+    viewer.classList.add(
+        "show"
+    );
+
 }
 
 
-function escapeJs(value) {
+function closeDPViewer(event) {
 
-    if (value === null ||
-        value === undefined) {
-        return "";
+    /*
+     * Prevent the button click from
+     * bubbling unnecessarily.
+     */
+
+    if (event) {
+        event.stopPropagation();
     }
 
-    return String(value)
-        .replace(/\\/g, "\\\\")
-        .replace(/'/g, "\\'")
-        .replace(/"/g, '\\"')
-        .replace(/\n/g, "\\n")
-        .replace(/\r/g, "\\r");
+    const viewer =
+        document.getElementById(
+            "dpViewer"
+        );
+
+    if (viewer) {
+
+        viewer.classList.remove(
+            "show"
+        );
+
+    }
+
+}
+
+
+// ============================================================
+// TOAST
+// ============================================================
+
+function showToast(message) {
+
+    const toast =
+        document.getElementById(
+            "toast"
+        );
+
+    if (!toast) {
+        return;
+    }
+
+    toast.textContent =
+        message || "";
+
+    toast.classList.add(
+        "show"
+    );
+
+    clearTimeout(
+        toastTimer
+    );
+
+    toastTimer =
+        setTimeout(
+            function () {
+
+                toast.classList.remove(
+                    "show"
+                );
+
+            },
+            2500
+        );
 
 }
 
@@ -912,26 +1258,43 @@ document.addEventListener(
     "click",
     function (event) {
 
-        const menu =
-            document.getElementById("sideMenu");
-
-        const menuButton =
-            document.getElementById("menuButton");
-
-        if (!menu ||
-            !menu.classList.contains("show")) {
+        if (!menuOverlay) {
             return;
         }
 
         if (
-            !menu.contains(event.target) &&
-            (!menuButton ||
-             !menuButton.contains(event.target))
+            !menuOverlay.classList.contains(
+                "show"
+            )
         ) {
-
-            closeMenu();
-
+            return;
         }
+
+        /*
+         * Menu panel ke andar click karne par
+         * menu automatically close nahi hoga.
+         */
+
+        const panel =
+            menuOverlay.querySelector(
+                ".menu-panel"
+            );
+
+        if (
+            panel &&
+            panel.contains(event.target)
+        ) {
+            return;
+        }
+
+        if (
+            menuBtn &&
+            menuBtn.contains(event.target)
+        ) {
+            return;
+        }
+
+        closeMenu();
 
     }
 );
@@ -945,27 +1308,143 @@ document.addEventListener(
     "click",
     function (event) {
 
-        if (!searchResults ||
-            !searchResults.classList.contains("show")) {
+        if (!searchResults) {
             return;
         }
 
         if (
-            !searchResults.contains(event.target) &&
-            (!searchInput ||
-             !searchInput.contains(event.target))
+            !searchResults.classList.contains(
+                "show"
+            )
         ) {
-
-            closeSearchResults();
-
+            return;
         }
+
+        if (
+            searchResults.contains(
+                event.target
+            )
+        ) {
+            return;
+        }
+
+        if (
+            searchInput &&
+            searchInput.contains(
+                event.target
+            )
+        ) {
+            return;
+        }
+
+        closeSearchResults();
 
     }
 );
 
 
 // ============================================================
-// INITIAL LOAD
+// ESCAPE KEY
+// ============================================================
+
+document.addEventListener(
+    "keydown",
+    function (event) {
+
+        if (
+            event.key !== "Escape"
+        ) {
+            return;
+        }
+
+        closeSearchResults();
+
+        closeDPViewer();
+
+        closeMenu();
+
+    }
+);
+
+
+// ============================================================
+// ESCAPE HTML
+// ============================================================
+
+function escapeHtml(value) {
+
+    if (
+        value === null ||
+        value === undefined
+    ) {
+        return "";
+    }
+
+    return String(value)
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+
+// ============================================================
+// ESCAPE JAVASCRIPT
+// ============================================================
+
+function escapeJs(value) {
+
+    if (
+        value === null ||
+        value === undefined
+    ) {
+        return "";
+    }
+
+    return String(value)
+        .replace(
+            /\\/g,
+            "\\\\"
+        )
+        .replace(
+            /'/g,
+            "\\'"
+        )
+        .replace(
+            /"/g,
+            '\\"'
+        )
+        .replace(
+            /\n/g,
+            "\\n"
+        )
+        .replace(
+            /\r/g,
+            "\\r"
+        );
+
+}
+
+
+// ============================================================
+// INITIALIZE HOME
 // ============================================================
 
 async function initializeHome() {
@@ -984,23 +1463,18 @@ async function initializeHome() {
     }
 
     loadConnections();
-    loadNotificationCount();
 
-    /*
-     * Optional status hint.
-     * It does not open the editor automatically.
-     */
-    // showStatusHint();
+    loadNotificationCount();
 
 }
 
 
 // ============================================================
-// AUTO REFRESH
+// AUTO REFRESH NOTIFICATIONS
 // ============================================================
 
 setInterval(
-    () => {
+    function () {
 
         loadNotificationCount();
 
@@ -1010,31 +1484,12 @@ setInterval(
 
 
 // ============================================================
-// ESCAPE KEY
-// ============================================================
-
-document.addEventListener(
-    "keydown",
-    function (event) {
-
-        if (event.key !== "Escape") {
-            return;
-        }
-
-        closeSearchResults();
-        closeDPViewer();
-        closeMenu();
-
-    }
-);
-
-
-// ============================================================
 // START
 // ============================================================
 
 if (
-    document.readyState === "loading"
+    document.readyState ===
+    "loading"
 ) {
 
     document.addEventListener(
