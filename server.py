@@ -3255,6 +3255,22 @@ async def reels_page():
     return FileResponse(
         reels_file
     )
+# ============================================================
+# STATUS PAGE
+# ============================================================
+
+@app.get("/status")
+async def status_page():
+    return FileResponse(
+        os.path.join(BASE_DIR, "status.html")
+    )
+
+
+@app.get("/status.html")
+async def status_html_page():
+    return FileResponse(
+        os.path.join(BASE_DIR, "status.html")
+    )
 
 
 # ============================================================
