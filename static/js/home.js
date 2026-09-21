@@ -39,12 +39,13 @@ async function resolveCurrentUser() {
 
     try {
 
-        const response = await fetch(
-            "/api/me",
-            {
-                credentials: "include"
-            }
-        );
+        const response =
+            await fetch(
+                "/api/me",
+                {
+                    credentials: "include"
+                }
+            );
 
         if (!response.ok) {
             return null;
@@ -87,14 +88,19 @@ async function resolveCurrentUser() {
 function updateCurrentUserUI() {
 
     const youLetter =
-        document.getElementById("youLetter");
+        document.getElementById(
+            "youLetter"
+        );
 
     if (!youLetter) {
         return;
     }
 
     if (!currentUser) {
-        youLetter.textContent = "U";
+
+        youLetter.textContent =
+            "U";
+
         return;
     }
 
@@ -150,7 +156,9 @@ if (searchInput) {
         "input",
         function () {
 
-            clearTimeout(searchTimeout);
+            clearTimeout(
+                searchTimeout
+            );
 
             const query =
                 this.value.trim();
@@ -194,7 +202,9 @@ async function searchUsers(query) {
         </div>
     `;
 
-    searchResults.classList.add("show");
+    searchResults.classList.add(
+        "show"
+    );
 
     try {
 
@@ -222,7 +232,9 @@ async function searchUsers(query) {
             data.results ||
             [];
 
-        renderSearchResults(users);
+        renderSearchResults(
+            users
+        );
 
     } catch (error) {
 
@@ -272,7 +284,9 @@ function renderSearchResults(users) {
         function (user) {
 
             const card =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
 
             card.className =
                 "search-user-card";
@@ -362,7 +376,9 @@ function renderSearchResults(users) {
 
             `;
 
-            searchResults.appendChild(card);
+            searchResults.appendChild(
+                card
+            );
 
         }
     );
@@ -380,7 +396,9 @@ function closeSearchResults() {
         return;
     }
 
-    searchResults.classList.remove("show");
+    searchResults.classList.remove(
+        "show"
+    );
 
     searchResults.innerHTML = "";
 
@@ -430,7 +448,9 @@ async function followUser(
     }
 
     if (button) {
+
         button.disabled = true;
+
     }
 
     try {
@@ -498,7 +518,10 @@ async function followUser(
     } finally {
 
         if (button) {
-            button.disabled = false;
+
+            button.disabled =
+                false;
+
         }
 
     }
@@ -523,31 +546,148 @@ async function loadConnections() {
 
     try {
 
-        const response =
+        // ----------------------------------------------------
+        // Make sure current user is available
+        // ----------------------------------------------------
+
+        if (!currentUser) {
+
+            await resolveCurrentUser();
+
+        }
+
+        if (!currentUser) {
+
+            console.error(
+                "Current user not available"
+            );
+
+            return;
+        }
+
+
+        // ----------------------------------------------------
+        // Get current user ID
+        // ----------------------------------------------------
+
+        const userId =
+            currentUser.user_id ||
+            currentUser.username ||
+            currentUser.id ||
+            "";
+
+
+        if (!userId) {
+
+            console.error(
+                "Current user ID not available"
+            );
+
+            return;
+        }
+
+
+        // ----------------------------------------------------
+        // FIRST:
+        // Original home connections API
+        // ----------------------------------------------------
+
+        let response =
             await fetch(
-                "/api/connections",
+                `/api/home/connections?user_id=${encodeURIComponent(userId)}`,
                 {
                     credentials: "include"
                 }
             );
 
+
+        // ----------------------------------------------------
+        // SECOND:
+        // Connections API with user_id
+        // ----------------------------------------------------
+
         if (!response.ok) {
+
+            response =
+                await fetch(
+                    `/api/connections?user_id=${encodeURIComponent(userId)}`,
+                    {
+                        credentials: "include"
+                    }
+                );
+
+        }
+
+
+        // ----------------------------------------------------
+        // THIRD:
+        // Existing simple connections API
+        // ----------------------------------------------------
+
+        if (!response.ok) {
+
+            response =
+                await fetch(
+                    "/api/connections",
+                    {
+                        credentials: "include"
+                    }
+                );
+
+        }
+
+
+        // ----------------------------------------------------
+        // API failed
+        // ----------------------------------------------------
+
+        if (!response.ok) {
+
+            console.error(
+                "Connections API failed:",
+                response.status
+            );
+
             return;
         }
+
+
+        // ----------------------------------------------------
+        // Read response
+        // ----------------------------------------------------
 
         const data =
             await response.json();
 
+
+        // ----------------------------------------------------
+        // Support multiple response formats
+        // ----------------------------------------------------
+
         const users =
             data.connections ||
             data.users ||
+            data.results ||
             [];
+
+
+        // ----------------------------------------------------
+        // Update count
+        // ----------------------------------------------------
 
         updateConnectionCount(
             users.length
         );
 
-        renderConnections(users);
+
+        // ----------------------------------------------------
+        // Render
+        // ----------------------------------------------------
+
+        renderConnections(
+            users
+        );
+
 
     } catch (error) {
 
@@ -649,7 +789,9 @@ function renderConnections(users) {
                 "";
 
             const card =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
 
             card.className =
                 "connection-card";
@@ -715,7 +857,9 @@ function renderConnections(users) {
 
             `;
 
-            container.appendChild(card);
+            container.appendChild(
+                card
+            );
 
         }
     );
@@ -891,12 +1035,16 @@ function showStatusHint() {
         return;
     }
 
-    hint.classList.add("show");
+    hint.classList.add(
+        "show"
+    );
 
     setTimeout(
         function () {
 
-            hint.classList.remove("show");
+            hint.classList.remove(
+                "show"
+            );
 
         },
         5000
@@ -1190,7 +1338,9 @@ function closeDPViewer(event) {
      */
 
     if (event) {
+
         event.stopPropagation();
+
     }
 
     const viewer =
@@ -1282,16 +1432,24 @@ document.addEventListener(
 
         if (
             panel &&
-            panel.contains(event.target)
+            panel.contains(
+                event.target
+            )
         ) {
+
             return;
+
         }
 
         if (
             menuBtn &&
-            menuBtn.contains(event.target)
+            menuBtn.contains(
+                event.target
+            )
         ) {
+
             return;
+
         }
 
         closeMenu();
@@ -1317,7 +1475,9 @@ document.addEventListener(
                 "show"
             )
         ) {
+
             return;
+
         }
 
         if (
@@ -1325,7 +1485,9 @@ document.addEventListener(
                 event.target
             )
         ) {
+
             return;
+
         }
 
         if (
@@ -1334,7 +1496,9 @@ document.addEventListener(
                 event.target
             )
         ) {
+
             return;
+
         }
 
         closeSearchResults();
@@ -1354,7 +1518,9 @@ document.addEventListener(
         if (
             event.key !== "Escape"
         ) {
+
             return;
+
         }
 
         closeSearchResults();
@@ -1377,26 +1543,33 @@ function escapeHtml(value) {
         value === null ||
         value === undefined
     ) {
+
         return "";
+
     }
 
     return String(value)
+
         .replace(
             /&/g,
             "&amp;"
         )
+
         .replace(
             /</g,
             "&lt;"
         )
+
         .replace(
             />/g,
             "&gt;"
         )
+
         .replace(
             /"/g,
             "&quot;"
         )
+
         .replace(
             /'/g,
             "&#039;"
@@ -1415,26 +1588,33 @@ function escapeJs(value) {
         value === null ||
         value === undefined
     ) {
+
         return "";
+
     }
 
     return String(value)
+
         .replace(
             /\\/g,
             "\\\\"
         )
+
         .replace(
             /'/g,
             "\\'"
         )
+
         .replace(
             /"/g,
             '\\"'
         )
+
         .replace(
             /\n/g,
             "\\n"
         )
+
         .replace(
             /\r/g,
             "\\r"
