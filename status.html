@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    >
+
+    <meta
+        name="theme-color"
+        content="#000000"
+    >
+
+    <title>Usanex Status</title>
+
+    <!-- Status stylesheet -->
+    <link
+        rel="stylesheet"
+        href="/static/css/status.css"
+    >
+</head>
+
+<body>
+
+    <main
+        class="status-app"
+        id="statusApp"
+    >
+
+        <!-- =========================================
+             STATUS MEDIA VIEWER
+        ========================================== -->
+
+        <section
+            class="status-viewer"
+            id="statusViewer"
+            aria-label="Status media viewer"
+        >
+
+            <div
+                class="status-media-container"
+                id="statusMediaContainer"
+            ></div>
+
+        </section>
+
+
+        <!-- =========================================
+             TOP HEADER
+        ========================================== -->
+
+        <header class="status-header">
+
+            <button
+                type="button"
+                class="status-back-btn"
+                id="statusBackBtn"
+                aria-label="Go back"
+            >
+                <span aria-hidden="true">‹</span>
+            </button>
+
+
+            <div class="status-user-info">
+
+                <div class="status-user-avatar">
+                    U
+                </div>
+
+                <div class="status-user-text">
+
+                    <h1>
+                        My Status
+                    </h1>
+
+                    <p id="statusMediaInfo">
+                        Add photos or videos
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div
+                class="status-counter"
+                id="statusCounter"
+            >
+                0 / 50
+            </div>
+
+        </header>
+
+
+        <!-- =========================================
+             MEDIA THUMBNAILS
+        ========================================== -->
+
+        <section
+            class="status-thumbnails-wrapper"
+            aria-label="Selected media"
+        >
+
+            <div
+                class="status-thumbnails"
+                id="statusThumbnails"
+            ></div>
+
+        </section>
+
+
+        <!-- =========================================
+             EMPTY STATUS
+        ========================================== -->
+
+        <section
+            class="status-empty"
+            id="statusEmpty"
+        >
+
+            <div class="status-empty-icon">
+                +
+            </div>
+
+            <h2>
+                Create your status
+            </h2>
+
+            <p>
+                Select photos or videos from your device
+                to create a status.
+            </p>
+
+            <button
+                type="button"
+                class="empty-select-btn"
+                id="emptySelectBtn"
+            >
+                Select Media
+            </button>
+
+        </section>
+
+
+        <!-- =========================================
+             EDITING TOOLBAR
+        ========================================== -->
+
+        <nav
+            class="status-editor-toolbar"
+            id="statusEditorToolbar"
+            aria-label="Status editing tools"
+        >
+
+            <button
+                type="button"
+                class="status-tool"
+                data-tool="text"
+                aria-label="Add text"
+            >
+                <span class="tool-icon">T</span>
+                <span class="tool-label">Text</span>
+            </button>
+
+
+            <button
+                type="button"
+                class="status-tool"
+                data-tool="emoji"
+                aria-label="Add emoji"
+            >
+                <span class="tool-icon">😊</span>
+                <span class="tool-label">Emoji</span>
+            </button>
+
+
+            <button
+                type="button"
+                class="status-tool"
+                data-tool="draw"
+                aria-label="Draw"
+            >
+                <span class="tool-icon">✎</span>
+                <span class="tool-label">Draw</span>
+            </button>
+
+
+            <button
+                type="button"
+                class="status-tool"
+                data-tool="filter"
+                aria-label="Apply filter"
+            >
+                <span class="tool-icon">◐</span>
+                <span class="tool-label">Filter</span>
+            </button>
+
+
+            <button
+                type="button"
+                class="status-tool"
+                data-tool="crop"
+                aria-label="Crop"
+            >
+                <span class="tool-icon">⌗</span>
+                <span class="tool-label">Crop</span>
+            </button>
+
+
+            <button
+                type="button"
+                class="status-tool"
+                data-tool="rotate"
+                aria-label="Rotate"
+            >
+                <span class="tool-icon">↻</span>
+                <span class="tool-label">Rotate</span>
+            </button>
+
+        </nav>
+
+
+        <!-- =========================================
+             BOTTOM ACTION
+        ========================================== -->
+
+        <footer class="status-footer">
+
+            <button
+                type="button"
+                class="status-upload-btn"
+                id="statusUploadBtn"
+            >
+                Upload
+            </button>
+
+        </footer>
+
+
+        <!-- =========================================
+             FILE INPUT
+        ========================================== -->
+
+        <input
+            type="file"
+            id="statusMediaInput"
+            accept="image/*,video/*"
+            multiple
+            hidden
+        >
+
+
+        <!-- =========================================
+             TEXT EDITOR
+        ========================================== -->
+
+        <section
+            class="status-modal"
+            id="textEditorModal"
+            hidden
+        >
+
+            <div
+                class="status-modal-backdrop"
+                data-close-text-editor
+            ></div>
+
+
+            <div
+                class="status-modal-card"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="textEditorTitle"
+            >
+
+                <div class="modal-header">
+
+                    <h2 id="textEditorTitle">
+                        Add Text
+                    </h2>
+
+                    <button
+                        type="button"
+                        class="modal-close-btn"
+                        id="closeTextEditorBtn"
+                        aria-label="Close"
+                    >
+                        ×
+                    </button>
+
+                </div>
+
+
+                <textarea
+                    id="statusTextInput"
+                    class="status-text-input"
+                    maxlength="300"
+                    placeholder="Write something..."
+                ></textarea>
+
+
+                <div class="modal-actions">
+
+                    <button
+                        type="button"
+                        class="modal-cancel-btn"
+                        id="cancelTextBtn"
+                    >
+                        Cancel
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="modal-apply-btn"
+                        id="applyTextBtn"
+                    >
+                        Apply
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================================
+             EMOJI PICKER
+        ========================================== -->
+
+        <section
+            class="status-modal"
+            id="emojiPickerModal"
+            hidden
+        >
+
+            <div
+                class="status-modal-backdrop"
+                data-close-emoji
+            ></div>
+
+
+            <div
+                class="emoji-picker-card"
+                role="dialog"
+                aria-modal="true"
+                aria-label="Emoji picker"
+            >
+
+                <div class="modal-header">
+
+                    <h2>
+                        Emoji
+                    </h2>
+
+                    <button
+                        type="button"
+                        class="modal-close-btn"
+                        id="closeEmojiBtn"
+                        aria-label="Close"
+                    >
+                        ×
+                    </button>
+
+                </div>
+
+
+                <div
+                    class="emoji-grid"
+                    id="emojiGrid"
+                >
+
+                    <button type="button" data-emoji="❤️">❤️</button>
+                    <button type="button" data-emoji="🔥">🔥</button>
+                    <button type="button" data-emoji="😍">😍</button>
+                    <button type="button" data-emoji="😂">😂</button>
+                    <button type="button" data-emoji="🥰">🥰</button>
+                    <button type="button" data-emoji="😎">😎</button>
+                    <button type="button" data-emoji="✨">✨</button>
+                    <button type="button" data-emoji="🎉">🎉</button>
+                    <button type="button" data-emoji="👍">👍</button>
+                    <button type="button" data-emoji="💙">💙</button>
+                    <button type="button" data-emoji="🤩">🤩</button>
+                    <button type="button" data-emoji="🥳">🥳</button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================================
+             TOAST
+        ========================================== -->
+
+        <div
+            class="status-toast"
+            id="statusToast"
+            role="status"
+            aria-live="polite"
+        ></div>
+
+    </main>
+
+
+    <!-- Status JavaScript -->
+    <script
+        src="/static/js/status.js"
+        defer
+    ></script>
+
+</body>
+
+</html>
