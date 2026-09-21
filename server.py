@@ -3451,7 +3451,97 @@ async def upload_status(
             ),
         },
     }
+    
+@app.get("/api/status/my")
+async def get_my_statuses(
+    user_id: str,
+    db: Session = Depends(get_db),
+):
+    user_id = user_id.strip()
 
+    if not user_id:
+        raise HTTPException(
+            status_code=400,
+            detail="User ID is required",
+        )
+
+    now = datetime.utcnow()
+
+    statuses = (
+        db.query(Status)
+        .filter(
+            Status.user_id == user_id,
+            Status.expires_at > now,
+        )
+        .order_by(Status.created_at.asc())
+        .all()
+    )
+
+    return {
+        "ok": True,
+        "has_status": bool(statuses),
+        "statuses": [
+            {
+                "id": status.id,
+                "user_id": status.user_id,
+                "media_url": status.media_url,
+                "media_type": status.media_type,
+                "created_at": status.created_at.isoformat(),
+                "expires_at": status.expires_at.isoformat(),
+            }
+            for status in statuses
+        ],
+    }
+
+
+@app.get("/api/status/active")
+async def get_active_statuses(
+    user_id: str = "",
+    db: Session = Depends(get_db),
+):
+    current_user_id = user_id.strip()
+    now = datetime.utcnow()
+
+    rows = (
+        db.query(Status, User)
+        .join(
+            User,
+            User.user_id == Status.user_id,
+        )
+        .filter(
+            Status.expires_at > now,
+        )
+        .order_by(Status.created_at.desc())
+        .all()
+    )
+
+    grouped = {}
+
+    for status, user in rows:
+
+        if current_user_id and user.user_id == current_user_id:
+            continue
+
+        if user.user_id not in grouped:
+            grouped[user.user_id] = {
+                "user_id": user.user_id,
+                "name": user.name,
+                "profile_photo": user.profile_photo,
+                "statuses": [],
+            }
+
+        grouped[user.user_id]["statuses"].append({
+            "id": status.id,
+            "media_url": status.media_url,
+            "media_type": status.media_type,
+            "created_at": status.created_at.isoformat(),
+            "expires_at": status.expires_at.isoformat(),
+        })
+
+    return {
+        "ok": True,
+        "users": list(grouped.values()),
+    }
 
 # ============================================================
 # HEALTH CHECK
@@ -3466,6 +3556,7 @@ async def health():
         "app": "Usanex",
         "realtime": "websocket",
     }
+
 
 
 # ============================================================
