@@ -2,12 +2,18 @@
 
 /* =========================================================
    USANEX HOME.JS
-   Uses logged-in user saved by register.html
+   Compatible with current home.html + home.css
+========================================================= */
+
+
+/* =========================================================
+   GLOBAL STATE
 ========================================================= */
 
 let currentUser = null;
 let searchTimer = null;
 let notificationTimer = null;
+let toastTimer = null;
 
 
 /* =========================================================
@@ -28,7 +34,7 @@ const menuOverlay =
 
 
 /* =========================================================
-   USER
+   USER HELPERS
 ========================================================= */
 
 function normalizeUser(value) {
@@ -62,18 +68,22 @@ function normalizeUser(value) {
 
     }
 
+
     if (value.user) {
         value = value.user;
     }
+
 
     const userId =
         value.user_id ||
         value.userId ||
         value.id;
 
+
     if (!userId) {
         return null;
     }
+
 
     return {
 
@@ -99,10 +109,19 @@ function normalizeUser(value) {
 
 
 /* =========================================================
-   GET USER FROM LOCAL STORAGE
+   GET CURRENT USER
 ========================================================= */
 
 function getStoredCurrentUser() {
+
+    /*
+       register.html saves user as:
+
+       localStorage.setItem(
+           "user",
+           JSON.stringify(loggedInUser)
+       );
+    */
 
     const keys = [
 
@@ -116,6 +135,7 @@ function getStoredCurrentUser() {
 
     ];
 
+
     for (const key of keys) {
 
         const raw =
@@ -125,8 +145,10 @@ function getStoredCurrentUser() {
             continue;
         }
 
+
         const user =
             normalizeUser(raw);
+
 
         if (user) {
 
@@ -136,13 +158,14 @@ function getStoredCurrentUser() {
 
     }
 
+
     return null;
 
 }
 
 
 /* =========================================================
-   RESOLVE CURRENT USER
+   RESOLVE USER
 ========================================================= */
 
 async function resolveCurrentUser() {
@@ -150,17 +173,25 @@ async function resolveCurrentUser() {
     currentUser =
         getStoredCurrentUser();
 
+
     if (currentUser) {
 
-        updateYourStatusAvatar();
+        console.log(
+            "USANEX CURRENT USER:",
+            currentUser
+        );
+
+        updateYourStatusLetter();
 
         return currentUser;
 
     }
 
+
     console.error(
-        "Usanex: logged-in user not found in localStorage."
+        "USANEX: User not found in localStorage."
     );
+
 
     return null;
 
@@ -168,25 +199,61 @@ async function resolveCurrentUser() {
 
 
 /* =========================================================
-   YOUR STATUS AVATAR
+   YOUR STATUS LETTER
 ========================================================= */
 
-function updateYourStatusAvatar() {
+function updateYourStatusLetter() {
 
-    const letter =
-        document.getElementById("youLetter");
+    const element =
+        document.getElementById(
+            "youLetter"
+        );
 
-    if (!letter || !currentUser) {
+
+    if (!element) {
         return;
     }
+
+
+    if (!currentUser) {
+
+        element.textContent =
+            "U";
+
+        return;
+
+    }
+
 
     const name =
         currentUser.name ||
         currentUser.user_id ||
         "U";
 
-    letter.textContent =
+
+    element.textContent =
         name.charAt(0).toUpperCase();
+
+}
+
+
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
+
+function escapeHtml(value) {
+
+    return String(value || "")
+
+        .replace(/&/g, "&amp;")
+
+        .replace(/</g, "&lt;")
+
+        .replace(/>/g, "&gt;")
+
+        .replace(/"/g, "&quot;")
+
+        .replace(/'/g, "&#039;");
 
 }
 
@@ -198,43 +265,37 @@ function updateYourStatusAvatar() {
 function showToast(message) {
 
     const toast =
-        document.getElementById("toast");
+        document.getElementById(
+            "toast"
+        );
+
 
     if (!toast) {
         return;
     }
 
+
+    clearTimeout(toastTimer);
+
+
     toast.textContent =
         message;
 
-    toast.classList.add("show");
 
-    clearTimeout(
-        showToast.timer
-    );
-
-    showToast.timer =
-        setTimeout(() => {
-
-            toast.classList.remove("show");
-
-        }, 2200);
-
-}
+    toast.style.display =
+        "block";
 
 
-/* =========================================================
-   HTML ESCAPE
-========================================================= */
+    toastTimer =
+        setTimeout(
+            function() {
 
-function escapeHtml(value) {
+                toast.style.display =
+                    "none";
 
-    return String(value || "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+            },
+            2200
+        );
 
 }
 
@@ -250,14 +311,21 @@ async function loadConnections() {
             "connectionsList"
         );
 
+
     const count =
         document.getElementById(
             "connectionCount"
         );
 
+
     if (!list) {
         return;
     }
+
+
+    /* -----------------------------------------------
+       USER CHECK
+    ------------------------------------------------ */
 
     if (
         !currentUser ||
@@ -284,14 +352,23 @@ async function loadConnections() {
 
         `;
 
+
         if (count) {
-            count.textContent = "0";
+
+            count.textContent =
+                "0";
+
         }
+
 
         return;
 
     }
 
+
+    /* -----------------------------------------------
+       LOADING
+    ------------------------------------------------ */
 
     list.innerHTML = `
 
@@ -323,9 +400,9 @@ async function loadConnections() {
     let data = null;
 
 
-    /* =====================================================
+    /* =================================================
        PRIMARY API
-    ===================================================== */
+    ================================================= */
 
     try {
 
@@ -333,15 +410,29 @@ async function loadConnections() {
             await fetch(
                 `/api/home/connections?user_id=${userId}`,
                 {
+                    method: "GET",
                     cache: "no-store"
                 }
             );
+
+
+        console.log(
+            "HOME CONNECTION RESPONSE:",
+            response.status
+        );
 
 
         if (response.ok) {
 
             const result =
                 await response.json();
+
+
+            console.log(
+                "HOME CONNECTION DATA:",
+                result
+            );
+
 
             if (result.ok !== false) {
 
@@ -354,16 +445,16 @@ async function loadConnections() {
     } catch (error) {
 
         console.error(
-            "Home connections API error:",
+            "Primary connections error:",
             error
         );
 
     }
 
 
-    /* =====================================================
+    /* =================================================
        FALLBACK API
-    ===================================================== */
+    ================================================= */
 
     if (!data) {
 
@@ -373,6 +464,7 @@ async function loadConnections() {
                 await fetch(
                     `/api/connections?user_id=${userId}`,
                     {
+                        method: "GET",
                         cache: "no-store"
                     }
                 );
@@ -382,6 +474,7 @@ async function loadConnections() {
 
                 const result =
                     await response.json();
+
 
                 if (result.ok !== false) {
 
@@ -394,7 +487,7 @@ async function loadConnections() {
         } catch (error) {
 
             console.error(
-                "Fallback connections API error:",
+                "Fallback connections error:",
                 error
             );
 
@@ -403,21 +496,21 @@ async function loadConnections() {
     }
 
 
+    /* =================================================
+       API FAILED
+    ================================================= */
+
     if (!data) {
 
         list.innerHTML = `
 
-            <div class="empty-box">
+            <div class="error-box">
 
-                <div class="empty-icon">
-                    ⚠
-                </div>
-
-                <div class="empty-title">
+                <div class="error-title">
                     Unable to load connections
                 </div>
 
-                <div class="empty-text">
+                <div class="error-text">
                     Please try again.
                 </div>
 
@@ -425,23 +518,40 @@ async function loadConnections() {
 
         `;
 
+
         if (count) {
-            count.textContent = "0";
+
+            count.textContent =
+                "0";
+
         }
+
 
         return;
 
     }
 
 
-    const users =
-        Array.isArray(data.users)
-            ? data.users
-            : (
-                Array.isArray(data.connections)
-                    ? data.connections
-                    : []
-            );
+    /* =================================================
+       RESPONSE ARRAY
+    ================================================= */
+
+    let users = [];
+
+
+    if (Array.isArray(data.users)) {
+
+        users =
+            data.users;
+
+    } else if (
+        Array.isArray(data.connections)
+    ) {
+
+        users =
+            data.connections;
+
+    }
 
 
     renderConnections(users);
@@ -460,10 +570,12 @@ function renderConnections(users) {
             "connectionsList"
         );
 
+
     const count =
         document.getElementById(
             "connectionCount"
         );
+
 
     if (!list) {
         return;
@@ -477,6 +589,10 @@ function renderConnections(users) {
 
     }
 
+
+    /* =====================================================
+       NO CONNECTIONS
+    ===================================================== */
 
     if (!users.length) {
 
@@ -500,18 +616,25 @@ function renderConnections(users) {
 
         `;
 
+
         return;
 
     }
 
 
+    /* =====================================================
+       USERS
+    ===================================================== */
+
     list.innerHTML =
-        users.map(user => {
+        users.map(function(user) {
+
 
             const userId =
                 escapeHtml(
                     user.user_id || ""
                 );
+
 
             const name =
                 escapeHtml(
@@ -519,6 +642,7 @@ function renderConnections(users) {
                     user.user_id ||
                     "User"
                 );
+
 
             const photo =
                 user.profile_photo ||
@@ -539,12 +663,12 @@ function renderConnections(users) {
             return `
 
                 <div
-                    class="connection-card"
+                    class="user-card"
                     data-user-id="${userId}"
                 >
 
                     <div
-                        class="connection-avatar"
+                        class="profile-photo"
                         data-photo="${escapeHtml(photo)}"
                         data-name="${name}"
                     >
@@ -552,52 +676,45 @@ function renderConnections(users) {
                         ${
                             photo
                             ?
-                            `<img
+                            `
+                            <img
                                 src="${escapeHtml(photo)}"
                                 alt="${name}"
                                 loading="lazy"
-                            >`
+                            >
+                            `
                             :
-                            `<span>${firstLetter}</span>`
+                            `
+                            <span>
+                                ${firstLetter}
+                            </span>
+                            `
                         }
 
                     </div>
 
 
-                    <div class="connection-info">
+                    <div class="user-info">
 
-                        <div class="connection-name">
+                        <div class="user-name">
                             ${name}
                         </div>
 
-                        <div class="connection-user-id">
+                        <div class="user-id">
                             @${userId}
                         </div>
 
                     </div>
 
 
-                    <div class="connection-actions">
-
-                        <button
-                            type="button"
-                            class="connection-chat-btn"
-                            data-action="chat"
-                            data-user-id="${userId}"
-                        >
-                            Chat
-                        </button>
-
-                        <button
-                            type="button"
-                            class="connection-profile-btn"
-                            data-action="profile"
-                            data-user-id="${userId}"
-                        >
-                            Profile
-                        </button>
-
-                    </div>
+                    <button
+                        type="button"
+                        class="connected-btn"
+                        data-action="chat"
+                        data-user-id="${userId}"
+                    >
+                        Chat
+                    </button>
 
                 </div>
 
@@ -622,22 +739,28 @@ function attachConnectionEvents() {
             "connectionsList"
         );
 
+
     if (!list) {
         return;
     }
 
 
+    /* =====================================================
+       CHAT BUTTON
+    ===================================================== */
+
     list
     .querySelectorAll(
         "[data-action='chat']"
     )
-    .forEach(button => {
+    .forEach(function(button) {
 
         button.addEventListener(
             "click",
             function(event) {
 
                 event.stopPropagation();
+
 
                 openChat(
                     this.dataset.userId
@@ -649,45 +772,30 @@ function attachConnectionEvents() {
     });
 
 
+    /* =====================================================
+       PROFILE PHOTO
+    ===================================================== */
+
     list
     .querySelectorAll(
-        "[data-action='profile']"
+        ".profile-photo"
     )
-    .forEach(button => {
+    .forEach(function(photoElement) {
 
-        button.addEventListener(
+        photoElement.addEventListener(
             "click",
             function(event) {
 
                 event.stopPropagation();
 
-                openProfile(
-                    this.dataset.userId
-                );
-
-            }
-        );
-
-    });
-
-
-    list
-    .querySelectorAll(
-        ".connection-avatar"
-    )
-    .forEach(avatar => {
-
-        avatar.addEventListener(
-            "click",
-            function(event) {
-
-                event.stopPropagation();
 
                 const photo =
                     this.dataset.photo;
 
+
                 const name =
                     this.dataset.name;
+
 
                 if (photo) {
 
@@ -697,6 +805,44 @@ function attachConnectionEvents() {
                     );
 
                 }
+
+            }
+        );
+
+    });
+
+
+    /* =====================================================
+       WHOLE USER CARD
+    ===================================================== */
+
+    list
+    .querySelectorAll(
+        ".user-card"
+    )
+    .forEach(function(card) {
+
+        card.addEventListener(
+            "click",
+            function(event) {
+
+                if (
+                    event.target.closest(
+                        ".connected-btn"
+                    ) ||
+                    event.target.closest(
+                        ".profile-photo"
+                    )
+                ) {
+
+                    return;
+
+                }
+
+
+                openProfile(
+                    this.dataset.userId
+                );
 
             }
         );
@@ -716,6 +862,7 @@ function openChat(userId) {
         return;
     }
 
+
     window.location.href =
         `/chat?user_id=${encodeURIComponent(
             userId
@@ -733,6 +880,7 @@ function openProfile(userId) {
     if (!userId) {
         return;
     }
+
 
     window.location.href =
         `/profile?user_id=${encodeURIComponent(
@@ -754,20 +902,40 @@ async function performSearch(query) {
 
 
     query =
-        String(query || "").trim();
+        String(query || "")
+        .trim();
 
 
     if (!query) {
 
-        searchResults.innerHTML = "";
+        searchResults.innerHTML =
+            "";
 
         searchResults.classList.remove(
-            "show"
+            "active"
         );
 
         return;
 
     }
+
+
+    /* =====================================================
+       LOADING
+    ===================================================== */
+
+    searchResults.innerHTML = `
+
+        <div class="search-loading">
+            Searching...
+        </div>
+
+    `;
+
+
+    searchResults.classList.add(
+        "active"
+    );
 
 
     try {
@@ -776,15 +944,18 @@ async function performSearch(query) {
             await fetch(
                 `/api/search?q=${encodeURIComponent(query)}`,
                 {
+                    method: "GET",
                     cache: "no-store"
                 }
             );
 
 
         if (!response.ok) {
+
             throw new Error(
-                "Search request failed"
+                "Search failed"
             );
+
         }
 
 
@@ -798,6 +969,10 @@ async function performSearch(query) {
                 : [];
 
 
+        /* =================================================
+           NO USERS
+        ================================================= */
+
         if (!users.length) {
 
             searchResults.innerHTML = `
@@ -808,22 +983,30 @@ async function performSearch(query) {
 
             `;
 
+
             searchResults.classList.add(
-                "show"
+                "active"
             );
+
 
             return;
 
         }
 
 
+        /* =================================================
+           RESULTS
+        ================================================= */
+
         searchResults.innerHTML =
-            users.map(user => {
+            users.map(function(user) {
+
 
                 const id =
                     escapeHtml(
                         user.user_id || ""
                     );
+
 
                 const name =
                     escapeHtml(
@@ -832,10 +1015,18 @@ async function performSearch(query) {
                         "User"
                     );
 
+
+                const mobile =
+                    escapeHtml(
+                        user.mobile || ""
+                    );
+
+
                 const photo =
                     user.profile_photo ||
                     user.profile_picture ||
                     "";
+
 
                 const letter =
                     (
@@ -850,35 +1041,53 @@ async function performSearch(query) {
                 return `
 
                     <div
-                        class="search-user"
+                        class="search-result-card"
                         data-user-id="${id}"
                     >
 
-                        <div class="search-user-avatar">
+                        <div class="search-result-photo">
 
                             ${
                                 photo
                                 ?
-                                `<img
+                                `
+                                <img
                                     src="${escapeHtml(photo)}"
                                     alt="${name}"
-                                >`
+                                >
+                                `
                                 :
-                                `<span>${letter}</span>`
+                                `
+                                <span>
+                                    ${letter}
+                                </span>
+                                `
                             }
 
                         </div>
 
 
-                        <div class="search-user-info">
+                        <div class="search-result-info">
 
-                            <div class="search-user-name">
+                            <div class="search-result-name">
                                 ${name}
                             </div>
 
-                            <div class="search-user-id">
+                            <div class="search-result-id">
                                 @${id}
                             </div>
+
+                            ${
+                                mobile
+                                ?
+                                `
+                                <div class="search-result-mobile">
+                                    ${mobile}
+                                </div>
+                                `
+                                :
+                                ""
+                            }
 
                         </div>
 
@@ -899,21 +1108,26 @@ async function performSearch(query) {
 
 
         searchResults.classList.add(
-            "show"
+            "active"
         );
 
+
+        /* =================================================
+           FOLLOW BUTTONS
+        ================================================= */
 
         searchResults
         .querySelectorAll(
             "[data-follow-id]"
         )
-        .forEach(button => {
+        .forEach(function(button) {
 
             button.addEventListener(
                 "click",
                 async function(event) {
 
                     event.stopPropagation();
+
 
                     await followUser(
                         this.dataset.followId,
@@ -926,23 +1140,30 @@ async function performSearch(query) {
         });
 
 
+        /* =================================================
+           RESULT CARD
+        ================================================= */
+
         searchResults
         .querySelectorAll(
-            ".search-user"
+            ".search-result-card"
         )
-        .forEach(item => {
+        .forEach(function(card) {
 
-            item.addEventListener(
+            card.addEventListener(
                 "click",
                 function(event) {
 
                     if (
                         event.target.closest(
-                            "[data-follow-id]"
+                            ".search-follow-btn"
                         )
                     ) {
+
                         return;
+
                     }
+
 
                     openProfile(
                         this.dataset.userId
@@ -957,9 +1178,10 @@ async function performSearch(query) {
     } catch (error) {
 
         console.error(
-            "Search error:",
+            "SEARCH ERROR:",
             error
         );
+
 
         searchResults.innerHTML = `
 
@@ -969,8 +1191,9 @@ async function performSearch(query) {
 
         `;
 
+
         searchResults.classList.add(
-            "show"
+            "active"
         );
 
     }
@@ -992,21 +1215,19 @@ if (searchInput) {
                 searchTimer
             );
 
+
             const value =
                 this.value.trim();
 
 
             if (!value) {
 
-                if (searchResults) {
+                searchResults.innerHTML =
+                    "";
 
-                    searchResults.innerHTML = "";
-
-                    searchResults.classList.remove(
-                        "show"
-                    );
-
-                }
+                searchResults.classList.remove(
+                    "active"
+                );
 
                 return;
 
@@ -1015,7 +1236,7 @@ if (searchInput) {
 
             searchTimer =
                 setTimeout(
-                    () => {
+                    function() {
 
                         performSearch(
                             value
@@ -1037,7 +1258,7 @@ if (searchInput) {
 
 async function followUser(
     targetUserId,
-    button = null
+    button
 ) {
 
     if (
@@ -1075,7 +1296,8 @@ async function followUser(
 
     if (button) {
 
-        button.disabled = true;
+        button.disabled =
+            true;
 
         button.textContent =
             "Sending...";
@@ -1117,11 +1339,14 @@ async function followUser(
             await response.json();
 
 
-        if (!response.ok || !data.ok) {
+        if (
+            !response.ok ||
+            !data.ok
+        ) {
 
             throw new Error(
                 data.message ||
-                "Unable to follow user."
+                "Unable to send follow request."
             );
 
         }
@@ -1133,7 +1358,7 @@ async function followUser(
                 "Requested";
 
             button.classList.add(
-                "requested"
+                "following"
             );
 
         }
@@ -1148,7 +1373,7 @@ async function followUser(
     } catch (error) {
 
         console.error(
-            "Follow error:",
+            "FOLLOW ERROR:",
             error
         );
 
@@ -1175,7 +1400,7 @@ async function followUser(
 
 
 /* =========================================================
-   NOTIFICATIONS
+   NOTIFICATION COUNT
 ========================================================= */
 
 async function loadNotificationCount() {
@@ -1184,6 +1409,7 @@ async function loadNotificationCount() {
         document.getElementById(
             "notificationBadge"
         );
+
 
     if (!badge) {
         return;
@@ -1195,7 +1421,8 @@ async function loadNotificationCount() {
         !currentUser.user_id
     ) {
 
-        badge.textContent = "0";
+        badge.textContent =
+            "0";
 
         badge.style.display =
             "none";
@@ -1213,6 +1440,7 @@ async function loadNotificationCount() {
                     currentUser.user_id
                 )}`,
                 {
+                    method: "GET",
                     cache: "no-store"
                 }
             );
@@ -1237,30 +1465,42 @@ async function loadNotificationCount() {
 
         const unread =
             notifications.filter(
-                item =>
-                    !(
+                function(item) {
+
+                    return !(
                         item.is_read === true ||
                         item.read === true
-                    )
+                    );
+
+                }
             ).length;
 
 
-        badge.textContent =
-            unread > 99
-                ? "99+"
-                : String(unread);
+        if (unread <= 0) {
 
+            badge.textContent =
+                "0";
 
-        badge.style.display =
-            unread > 0
-                ? "flex"
-                : "none";
+            badge.style.display =
+                "none";
+
+        } else {
+
+            badge.textContent =
+                unread > 99
+                    ? "99+"
+                    : String(unread);
+
+            badge.style.display =
+                "flex";
+
+        }
 
 
     } catch (error) {
 
         console.error(
-            "Notification count error:",
+            "NOTIFICATION ERROR:",
             error
         );
 
@@ -1304,7 +1544,7 @@ function openStatus(
 
 
 /* =========================================================
-   BOTTOM NAV
+   BOTTOM NAVIGATION
 ========================================================= */
 
 function goHome() {
@@ -1356,6 +1596,7 @@ function goProfile() {
 
     }
 
+
     window.location.href =
         "/profile";
 
@@ -1372,8 +1613,9 @@ function openMenu() {
         return;
     }
 
+
     menuOverlay.classList.add(
-        "show"
+        "active"
     );
 
 }
@@ -1385,8 +1627,9 @@ function closeMenu() {
         return;
     }
 
+
     menuOverlay.classList.remove(
-        "show"
+        "active"
     );
 
 }
@@ -1398,8 +1641,9 @@ function toggleMenu() {
         return;
     }
 
+
     menuOverlay.classList.toggle(
-        "show"
+        "active"
     );
 
 }
@@ -1443,7 +1687,7 @@ if (menuOverlay) {
 
 
 /* =========================================================
-   MENU OPTIONS
+   MENU ITEMS
 ========================================================= */
 
 function goMonetization() {
@@ -1518,7 +1762,7 @@ async function logoutUser() {
     } catch (error) {
 
         console.log(
-            "Logout endpoint not available."
+            "Logout API not available."
         );
 
     }
@@ -1569,10 +1813,12 @@ function openDPViewer(
             "dpViewer"
         );
 
+
     const image =
         document.getElementById(
             "dpViewerImage"
         );
+
 
     const title =
         document.getElementById(
@@ -1584,7 +1830,9 @@ function openDPViewer(
         !viewer ||
         !image
     ) {
+
         return;
+
     }
 
 
@@ -1601,7 +1849,7 @@ function openDPViewer(
 
 
     viewer.classList.add(
-        "show"
+        "active"
     );
 
 }
@@ -1625,7 +1873,7 @@ function closeDPViewer(event) {
     if (viewer) {
 
         viewer.classList.remove(
-            "show"
+            "active"
         );
 
     }
@@ -1644,25 +1892,27 @@ function showStatusHint() {
             "statusNewUserHint"
         );
 
+
     if (!hint) {
         return;
     }
 
-    hint.classList.add(
-        "show"
-    );
+
+    hint.style.display =
+        "block";
+
 
     clearTimeout(
         showStatusHint.timer
     );
 
+
     showStatusHint.timer =
         setTimeout(
-            () => {
+            function() {
 
-                hint.classList.remove(
-                    "show"
-                );
+                hint.style.display =
+                    "none";
 
             },
             5000
@@ -1672,7 +1922,7 @@ function showStatusHint() {
 
 
 /* =========================================================
-   OUTSIDE CLICK
+   OUTSIDE SEARCH CLICK
 ========================================================= */
 
 document.addEventListener(
@@ -1682,12 +1932,16 @@ document.addEventListener(
         if (
             searchResults &&
             searchInput &&
-            !searchResults.contains(event.target) &&
-            !searchInput.contains(event.target)
+            !searchResults.contains(
+                event.target
+            ) &&
+            !searchInput.contains(
+                event.target
+            )
         ) {
 
             searchResults.classList.remove(
-                "show"
+                "active"
             );
 
         }
@@ -1697,7 +1951,7 @@ document.addEventListener(
 
 
 /* =========================================================
-   ESCAPE
+   ESCAPE KEY
 ========================================================= */
 
 document.addEventListener(
@@ -1713,7 +1967,7 @@ document.addEventListener(
             if (searchResults) {
 
                 searchResults.classList.remove(
-                    "show"
+                    "active"
                 );
 
             }
@@ -1727,7 +1981,8 @@ document.addEventListener(
 
 
 /* =========================================================
-   MAKE INLINE FUNCTIONS GLOBAL
+   GLOBAL FUNCTIONS
+   Required because home.html uses onclick=""
 ========================================================= */
 
 window.addMyStatus =
@@ -1775,11 +2030,11 @@ window.goAbout =
 window.logoutUser =
     logoutUser;
 
-window.closeDPViewer =
-    closeDPViewer;
-
 window.openDPViewer =
     openDPViewer;
+
+window.closeDPViewer =
+    closeDPViewer;
 
 window.followUser =
     followUser;
@@ -1798,7 +2053,15 @@ window.openChat =
 async function initializeHome() {
 
     console.log(
-        "Usanex Home: initializing..."
+        "================================"
+    );
+
+    console.log(
+        "USANEX HOME INITIALIZING"
+    );
+
+    console.log(
+        "================================"
     );
 
 
@@ -1807,7 +2070,7 @@ async function initializeHome() {
 
 
     console.log(
-        "Usanex Home: current user =",
+        "CURRENT USER:",
         user
     );
 
@@ -1818,6 +2081,7 @@ async function initializeHome() {
             document.getElementById(
                 "connectionsList"
             );
+
 
         if (list) {
 
@@ -1843,14 +2107,33 @@ async function initializeHome() {
 
         }
 
+
         return;
 
     }
 
 
+    /* =====================================================
+       LOAD CONNECTIONS
+    ===================================================== */
+
     await loadConnections();
 
+
+    /* =====================================================
+       LOAD NOTIFICATION COUNT
+    ===================================================== */
+
     await loadNotificationCount();
+
+
+    /* =====================================================
+       REFRESH NOTIFICATIONS
+    ===================================================== */
+
+    clearInterval(
+        notificationTimer
+    );
 
 
     notificationTimer =
@@ -1860,10 +2143,18 @@ async function initializeHome() {
         );
 
 
+    /* =====================================================
+       STATUS HINT
+    ===================================================== */
+
     showStatusHint();
 
 }
 
+
+/* =========================================================
+   START
+========================================================= */
 
 if (
     document.readyState ===
