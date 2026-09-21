@@ -2,25 +2,7 @@
 
 /* =========================================================
    USANEX HOME.JS
-   Compatible with current home.html + home.css
-
-   INCLUDED:
-   - Connections
-   - Search
-   - Follow
-   - Notifications
-   - Menu
-   - Chat
-   - Profile
-   - Logout
-   - Status upload/view
-   - Status seen/unseen
-   - Seen users move to end
-   - Seen state survives refresh
-   - New status becomes unseen
-   - Multiple status tracking
-   - Connected People DP also shows status ring
-   - Connected People DP click opens status
+   Existing Home functionality + New Automatic Status Viewer
 ========================================================= */
 
 
@@ -29,11 +11,11 @@
 ========================================================= */
 
 let currentUser = null;
+
 let searchTimer = null;
 let notificationTimer = null;
 let toastTimer = null;
 
-/* Connected People data */
 let connectedUsersData = [];
 
 
@@ -55,175 +37,102 @@ const menuOverlay =
 
 
 /* =========================================================
-   USER HELPERS
+   BASIC HELPERS
 ========================================================= */
 
-function normalizeUser(value) {
+function normalizeUser(user) {
 
-    if (!value) {
+    if (!user) {
         return null;
     }
 
-    if (typeof value === "string") {
-
-        const text = value.trim();
-
-        if (!text) {
-            return null;
-        }
-
-        try {
-
-            value = JSON.parse(text);
-
-        } catch (error) {
-
-            return {
-                user_id: text,
-                name: text,
-                mobile: "",
-                profile_photo: ""
-            };
-
-        }
-
+    if (typeof user === "string") {
+        return {
+            user_id: user,
+            name: user
+        };
     }
 
-    if (value.user) {
-        value = value.user;
-    }
-
-    const userId =
-        value.user_id ||
-        value.userId ||
-        value.id;
-
-    if (!userId) {
-        return null;
-    }
-
-    return {
-
-        user_id: String(userId),
-
-        name:
-            value.name ||
-            value.full_name ||
-            value.username ||
-            String(userId),
-
-        mobile:
-            value.mobile || "",
-
-        profile_photo:
-            value.profile_photo ||
-            value.profile_picture ||
-            ""
-
-    };
-
+    return user;
 }
 
-
-/* =========================================================
-   GET CURRENT USER
-========================================================= */
 
 function getStoredCurrentUser() {
 
-    const keys = [
-        "user",
+    const possibleKeys = [
         "currentUser",
-        "usanexUser",
-        "loggedInUser",
-        "userData",
-        "user_id",
-        "userId"
+        "user",
+        "usanex_user",
+        "loggedInUser"
     ];
 
-    for (const key of keys) {
+    for (const key of possibleKeys) {
 
-        const raw =
-            localStorage.getItem(key);
+        try {
 
-        if (!raw) {
-            continue;
+            const raw =
+                localStorage.getItem(key);
+
+            if (!raw) {
+                continue;
+            }
+
+            const parsed =
+                JSON.parse(raw);
+
+            if (parsed) {
+                return normalizeUser(parsed);
+            }
+
+        } catch (error) {
+
+            const raw =
+                localStorage.getItem(key);
+
+            if (raw) {
+
+                return {
+                    user_id: raw,
+                    name: raw
+                };
+
+            }
         }
-
-        const user =
-            normalizeUser(raw);
-
-        if (user) {
-            return user;
-        }
-
     }
 
     return null;
-
 }
 
 
-/* =========================================================
-   RESOLVE USER
-========================================================= */
+function resolveCurrentUser() {
 
-async function resolveCurrentUser() {
-
-    currentUser =
+    const stored =
         getStoredCurrentUser();
 
-    if (currentUser) {
+    if (stored) {
 
-        console.log(
-            "USANEX CURRENT USER:",
-            currentUser
-        );
-
-        updateYourStatusLetter();
+        currentUser =
+            normalizeUser(stored);
 
         return currentUser;
-
     }
 
-    console.error(
-        "USANEX: User not found in localStorage."
-    );
-
     return null;
-
 }
 
 
-/* =========================================================
-   YOUR STATUS LETTER
-========================================================= */
-
-function updateYourStatusLetter() {
-
-    const element =
-        document.getElementById("youLetter");
-
-    if (!element) {
-        return;
-    }
+function getCurrentUserId() {
 
     if (!currentUser) {
-
-        element.textContent = "U";
-
-        return;
-
+        return "";
     }
 
-    const name =
-        currentUser.name ||
+    return String(
         currentUser.user_id ||
-        "U";
-
-    element.textContent =
-        name.charAt(0).toUpperCase();
-
+        currentUser.username ||
+        currentUser.id ||
+        ""
+    ).trim();
 }
 
 
@@ -233,13 +142,16 @@ function updateYourStatusLetter() {
 
 function escapeHtml(value) {
 
-    return String(value || "")
+    if (value === null || value === undefined) {
+        return "";
+    }
+
+    return String(value)
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
-
 }
 
 
@@ -261,254 +173,133 @@ function showToast(message) {
     toast.textContent =
         message;
 
-    toast.style.display =
-        "block";
+    toast.classList.add("show");
 
     toastTimer =
-        setTimeout(
-            function() {
+        setTimeout(() => {
 
-                toast.style.display =
-                    "none";
+            toast.classList.remove("show");
 
-            },
-            2200
-        );
-
+        }, 2500);
 }
 
 
 /* =========================================================
-   LOAD CONNECTIONS
+   YOUR STATUS LETTER / AVATAR
+========================================================= */
+
+function updateYourStatusLetter() {
+
+    const letter =
+        document.getElementById("youLetter");
+
+    const avatarInner =
+        document.querySelector(
+            "#myStatusCircle .status-avatar-inner"
+        );
+
+    if (!currentUser) {
+        return;
+    }
+
+    const name =
+        currentUser.name ||
+        currentUser.user_id ||
+        "U";
+
+    const firstLetter =
+        String(name)
+            .trim()
+            .charAt(0)
+            .toUpperCase() || "U";
+
+    if (avatarInner) {
+
+        const photo =
+            currentUser.profile_photo ||
+            currentUser.profilePhoto ||
+            "";
+
+        if (photo) {
+
+            avatarInner.innerHTML =
+                `<img src="${escapeHtml(photo)}"
+                      alt="Your profile photo">`;
+
+        } else {
+
+            avatarInner.innerHTML =
+                `<span id="youLetter">
+                    ${escapeHtml(firstLetter)}
+                 </span>`;
+        }
+
+    } else if (letter) {
+
+        letter.textContent =
+            firstLetter;
+    }
+}
+
+
+/* =========================================================
+   =========================================================
+   CONNECTIONS
+   =========================================================
 ========================================================= */
 
 async function loadConnections() {
 
-    const list =
-        document.getElementById(
-            "connectionsList"
-        );
-
-    const count =
-        document.getElementById(
-            "connectionCount"
-        );
-
-    if (!list) {
-        return;
-    }
-
-
-    /* =====================================================
-       USER CHECK
-    ===================================================== */
-
-    if (
-        !currentUser ||
-        !currentUser.user_id
-    ) {
-
-        list.innerHTML = `
-
-            <div class="empty-box">
-
-                <div class="empty-icon">
-                    ⚠
-                </div>
-
-                <div class="empty-title">
-                    Login information not found
-                </div>
-
-                <div class="empty-text">
-                    Please login again.
-                </div>
-
-            </div>
-
-        `;
-
-        if (count) {
-            count.textContent = "0";
-        }
-
-        return;
-
-    }
-
-
-    /* =====================================================
-       LOADING
-    ===================================================== */
-
-    list.innerHTML = `
-
-        <div class="empty-box">
-
-            <div class="empty-icon">
-                ◌
-            </div>
-
-            <div class="empty-title">
-                Loading connections...
-            </div>
-
-            <div class="empty-text">
-                Please wait
-            </div>
-
-        </div>
-
-    `;
-
-
     const userId =
-        encodeURIComponent(
-            currentUser.user_id
-        );
+        getCurrentUserId();
 
-    let data = null;
-
-
-    /* =====================================================
-       PRIMARY API
-    ===================================================== */
+    if (!userId) {
+        return;
+    }
 
     try {
 
-        const response =
+        let response =
             await fetch(
-                `/api/home/connections?user_id=${userId}`,
-                {
-                    method: "GET",
-                    cache: "no-store"
-                }
+                `/api/home/connections?user_id=${encodeURIComponent(userId)}`
             );
 
-        console.log(
-            "HOME CONNECTION RESPONSE:",
-            response.status
-        );
+        if (!response.ok) {
 
-        if (response.ok) {
-
-            const result =
-                await response.json();
-
-            console.log(
-                "HOME CONNECTION DATA:",
-                result
-            );
-
-            if (result.ok !== false) {
-                data = result;
-            }
-
+            response =
+                await fetch(
+                    `/api/connections?user_id=${encodeURIComponent(userId)}`
+                );
         }
+
+        if (!response.ok) {
+            throw new Error("Connections request failed");
+        }
+
+        const data =
+            await response.json();
+
+        let users =
+            data.users ||
+            data.connections ||
+            data.data ||
+            [];
+
+        if (!Array.isArray(users)) {
+            users = [];
+        }
+
+        renderConnections(users);
 
     } catch (error) {
 
         console.error(
-            "Primary connections error:",
+            "Connection loading error:",
             error
         );
 
+        renderConnections([]);
     }
-
-
-    /* =====================================================
-       FALLBACK API
-    ===================================================== */
-
-    if (!data) {
-
-        try {
-
-            const response =
-                await fetch(
-                    `/api/connections?user_id=${userId}`,
-                    {
-                        method: "GET",
-                        cache: "no-store"
-                    }
-                );
-
-            if (response.ok) {
-
-                const result =
-                    await response.json();
-
-                if (result.ok !== false) {
-                    data = result;
-                }
-
-            }
-
-        } catch (error) {
-
-            console.error(
-                "Fallback connections error:",
-                error
-            );
-
-        }
-
-    }
-
-
-    /* =====================================================
-       API FAILED
-    ===================================================== */
-
-    if (!data) {
-
-        list.innerHTML = `
-
-            <div class="error-box">
-
-                <div class="error-title">
-                    Unable to load connections
-                </div>
-
-                <div class="error-text">
-                    Please try again.
-                </div>
-
-            </div>
-
-        `;
-
-        if (count) {
-            count.textContent = "0";
-        }
-
-        return;
-
-    }
-
-
-    /* =====================================================
-       RESPONSE ARRAY
-    ===================================================== */
-
-    let users = [];
-
-    if (Array.isArray(data.users)) {
-
-        users =
-            data.users;
-
-    } else if (
-        Array.isArray(data.connections)
-    ) {
-
-        users =
-            data.connections;
-
-    }
-
-    renderConnections(users);
-
 }
 
 
@@ -519,53 +310,33 @@ async function loadConnections() {
 function renderConnections(users) {
 
     const list =
-        document.getElementById(
-            "connectionsList"
-        );
+        document.getElementById("connectionsList");
 
     const count =
-        document.getElementById(
-            "connectionCount"
-        );
+        document.getElementById("connectionCount");
 
     if (!list) {
         return;
     }
-
-
-    /* =====================================================
-       SAVE CONNECTION DATA
-       Used for status ring refresh
-    ===================================================== */
 
     connectedUsersData =
         Array.isArray(users)
             ? users
             : [];
 
-
     if (count) {
 
         count.textContent =
-            String(
-                connectedUsersData.length
-            );
-
+            connectedUsersData.length;
     }
-
-
-    /* =====================================================
-       NO CONNECTIONS
-    ===================================================== */
 
     if (!connectedUsersData.length) {
 
         list.innerHTML = `
-
             <div class="empty-box">
 
                 <div class="empty-icon">
-                    👥
+                    ◌
                 </div>
 
                 <div class="empty-title">
@@ -573,145 +344,122 @@ function renderConnections(users) {
                 </div>
 
                 <div class="empty-text">
-                    Search people and connect with them.
+                    Connect with people to see them here.
                 </div>
 
             </div>
-
         `;
 
         return;
-
     }
 
 
-    /* =====================================================
-       USERS
-    ===================================================== */
-
     list.innerHTML =
         connectedUsersData
-            .map(function(user) {
+            .map((user, index) => {
+
+                const normalized =
+                    normalizeUser(user);
 
                 const userId =
-                    escapeHtml(
-                        user.user_id || ""
+                    String(
+                        normalized.user_id ||
+                        normalized.username ||
+                        normalized.id ||
+                        ""
                     );
 
                 const name =
-                    escapeHtml(
-                        user.name ||
-                        user.user_id ||
-                        "User"
-                    );
+                    normalized.name ||
+                    normalized.full_name ||
+                    userId ||
+                    "User";
 
                 const photo =
-                    user.profile_photo ||
-                    user.profile_picture ||
+                    normalized.profile_photo ||
+                    normalized.profilePhoto ||
                     "";
 
                 const letter =
-                    (
-                        user.name ||
-                        user.user_id ||
-                        "U"
-                    )
-                    .charAt(0)
-                    .toUpperCase();
+                    name
+                        .trim()
+                        .charAt(0)
+                        .toUpperCase() || "U";
 
-
-                /* =========================================
-                   CHECK ACTIVE STATUS
-                ========================================= */
 
                 const statusUser =
                     activeStatusUsers.find(
-                        function(statusUser) {
-
-                            return (
-                                String(
-                                    statusUser.user_id
-                                ) ===
-                                String(
-                                    user.user_id
-                                )
-                            );
-
-                        }
+                        item =>
+                            String(item.user_id) ===
+                            String(userId)
                     );
 
 
-                const hasActiveStatus =
-                    Boolean(
-                        statusUser
+                const hasStatus =
+                    !!(
+                        statusUser &&
+                        Array.isArray(statusUser.statuses) &&
+                        statusUser.statuses.length
                     );
 
 
                 const fullySeen =
-                    hasActiveStatus
-                        ? isUserFullySeen(
-                            statusUser
-                        )
-                        : false;
+                    hasStatus &&
+                    isUserFullySeen(statusUser);
 
 
-                const statusClass =
-                    !hasActiveStatus
-                        ? ""
-                        : (
-                            fullySeen
-                                ? "connection-status-seen"
-                                : "connection-status-unseen"
-                        );
+                let statusClass = "";
+
+                if (hasStatus) {
+
+                    statusClass =
+                        fullySeen
+                            ? "connection-status-seen"
+                            : "connection-status-unseen";
+                }
+
+
+                const photoHtml =
+                    photo
+                        ? `
+                            <img
+                                src="${escapeHtml(photo)}"
+                                alt="${escapeHtml(name)}">
+                          `
+                        : `
+                            <span>
+                                ${escapeHtml(letter)}
+                            </span>
+                          `;
 
 
                 return `
-
                     <div
-                        class="user-card"
-                        data-user-id="${userId}"
-                    >
+                        class="connection-card"
+                        data-user-id="${escapeHtml(userId)}">
 
                         <div
-                            class="
-                                profile-photo
-                                ${statusClass}
-                            "
+                            class="profile-photo ${statusClass}"
                             data-photo="${escapeHtml(photo)}"
-                            data-name="${name}"
-                            data-user-id="${userId}"
-                            data-has-status="${hasActiveStatus ? "true" : "false"}"
-                        >
+                            data-name="${escapeHtml(name)}"
+                            data-user-id="${escapeHtml(userId)}"
+                            data-has-status="${hasStatus ? "1" : "0"}">
 
-                            ${
-                                photo
-                                ?
-                                `
-                                <img
-                                    src="${escapeHtml(photo)}"
-                                    alt="${name}"
-                                    loading="lazy"
-                                >
-                                `
-                                :
-                                `
-                                <span>
-                                    ${letter}
-                                </span>
-                                `
-                            }
+                            ${photoHtml}
 
                         </div>
 
 
-                        <div class="user-info">
+                        <div
+                            class="connection-info"
+                            onclick="openUserProfile('${escapeHtml(userId)}')">
 
-                            <div class="user-name">
-                                ${name}
+                            <div class="connection-name">
+                                ${escapeHtml(name)}
                             </div>
 
-                            <div class="user-id">
-                                @${userId}
+                            <div class="connection-user-id">
+                                @${escapeHtml(userId)}
                             </div>
 
                         </div>
@@ -719,15 +467,15 @@ function renderConnections(users) {
 
                         <button
                             type="button"
-                            class="connected-btn"
-                            data-action="chat"
-                            data-user-id="${userId}"
-                        >
-                            Chat
+                            class="connection-action"
+                            onclick="openChat('${escapeHtml(userId)}')"
+                            aria-label="Chat">
+
+                            💬
+
                         </button>
 
                     </div>
-
                 `;
 
             })
@@ -735,26 +483,6 @@ function renderConnections(users) {
 
 
     attachConnectionEvents();
-
-}
-
-
-/* =========================================================
-   REFRESH CONNECTION STATUS RINGS
-========================================================= */
-
-function refreshConnectionStatusRings() {
-
-    if (
-        !connectedUsersData.length
-    ) {
-        return;
-    }
-
-    renderConnections(
-        connectedUsersData
-    );
-
 }
 
 
@@ -764,153 +492,72 @@ function refreshConnectionStatusRings() {
 
 function attachConnectionEvents() {
 
-    const list =
-        document.getElementById(
-            "connectionsList"
+    const photos =
+        document.querySelectorAll(
+            ".profile-photo"
         );
 
-    if (!list) {
-        return;
-    }
-
-
-    /* =====================================================
-       CHAT BUTTON
-    ===================================================== */
-
-    list
-    .querySelectorAll(
-        "[data-action='chat']"
-    )
-    .forEach(function(button) {
-
-        button.addEventListener(
-            "click",
-            function(event) {
-
-                event.stopPropagation();
-
-                openChat(
-                    this.dataset.userId
-                );
-
-            }
-        );
-
-    });
-
-
-    /* =====================================================
-       PROFILE / STATUS DP
-    ===================================================== */
-
-    list
-    .querySelectorAll(
-        ".profile-photo"
-    )
-    .forEach(function(photoElement) {
+    photos.forEach(photoElement => {
 
         photoElement.addEventListener(
             "click",
-            function(event) {
+            function (event) {
 
                 event.stopPropagation();
-
 
                 const userId =
                     this.dataset.userId;
 
                 const hasStatus =
-                    this.dataset.hasStatus ===
-                    "true";
-
-
-                /* =========================================
-                   ACTIVE STATUS
-                   DP CLICK -> STATUS
-                ========================================= */
+                    this.dataset.hasStatus === "1";
 
                 if (
                     hasStatus &&
                     userId
                 ) {
 
-                    openUserStatus(
-                        userId
-                    );
+                    openUserStatus(userId);
 
                     return;
-
                 }
 
-
-                /* =========================================
-                   NO STATUS
-                   DP CLICK -> NORMAL DP VIEWER
-                ========================================= */
 
                 const photo =
-                    this.dataset.photo;
+                    this.dataset.photo || "";
 
                 const name =
-                    this.dataset.name;
+                    this.dataset.name ||
+                    "User";
 
-                if (photo) {
-
-                    openDPViewer(
-                        photo,
-                        name
-                    );
-
-                }
-
-            }
-        );
-
-    });
-
-
-    /* =====================================================
-       WHOLE USER CARD
-    ===================================================== */
-
-    list
-    .querySelectorAll(
-        ".user-card"
-    )
-    .forEach(function(card) {
-
-        card.addEventListener(
-            "click",
-            function(event) {
-
-                if (
-                    event.target.closest(
-                        ".connected-btn"
-                    ) ||
-                    event.target.closest(
-                        ".profile-photo"
-                    )
-                ) {
-
-                    return;
-
-                }
-
-                openProfile(
-                    this.dataset.userId
+                openDPViewer(
+                    photo,
+                    name
                 );
 
             }
         );
 
     });
-
 }
 
 
 /* =========================================================
-   OPEN CHAT
+   OPEN USER PROFILE
+========================================================= */
+
+function openUserProfile(userId) {
+
+    if (!userId) {
+        return;
+    }
+
+    window.location.href =
+        `/profile.html?user_id=${encodeURIComponent(userId)}`;
+}
+
+
+/* =========================================================
+   CHAT
 ========================================================= */
 
 function openChat(userId) {
@@ -920,28 +567,7 @@ function openChat(userId) {
     }
 
     window.location.href =
-        `/chat?user_id=${encodeURIComponent(
-            userId
-        )}`;
-
-}
-
-
-/* =========================================================
-   OPEN PROFILE
-========================================================= */
-
-function openProfile(userId) {
-
-    if (!userId) {
-        return;
-    }
-
-    window.location.href =
-        `/profile?user_id=${encodeURIComponent(
-            userId
-        )}`;
-
+        `/chat.html?user_id=${encodeURIComponent(userId)}`;
 }
 
 
@@ -949,450 +575,294 @@ function openProfile(userId) {
    SEARCH
 ========================================================= */
 
-async function performSearch(query) {
+if (searchInput) {
 
-    if (!searchResults) {
-        return;
-    }
+    searchInput.addEventListener(
+        "input",
+        function () {
 
-    query =
-        String(query || "")
-        .trim();
+            clearTimeout(searchTimer);
 
+            const query =
+                this.value.trim();
 
-    if (!query) {
+            if (!query) {
 
-        searchResults.innerHTML =
-            "";
+                hideSearchResults();
 
-        searchResults.classList.remove(
-            "active"
-        );
+                return;
+            }
 
-        return;
-
-    }
-
-
-    if (query.length < 2) {
-
-        searchResults.innerHTML =
-            "";
-
-        searchResults.classList.remove(
-            "active"
-        );
-
-        return;
-
-    }
-
-
-    searchResults.innerHTML = `
-
-        <div class="search-loading">
-            Searching...
-        </div>
-
-    `;
-
-    searchResults.classList.add(
-        "active"
+            searchTimer =
+                setTimeout(
+                    () => searchUsers(query),
+                    300
+                );
+        }
     );
 
+    searchInput.addEventListener(
+        "keydown",
+        function (event) {
+
+            if (event.key === "Escape") {
+
+                this.value = "";
+
+                hideSearchResults();
+            }
+        }
+    );
+}
+
+
+/* =========================================================
+   SEARCH USERS
+========================================================= */
+
+async function searchUsers(query) {
+
+    const currentId =
+        getCurrentUserId();
 
     try {
 
         const response =
             await fetch(
-                `/api/search?q=${encodeURIComponent(query)}`,
-                {
-                    method: "GET",
-                    cache: "no-store"
-                }
+                `/api/search?q=${encodeURIComponent(query)}&user_id=${encodeURIComponent(currentId)}`
             );
-
 
         if (!response.ok) {
-
-            throw new Error(
-                "Search failed"
-            );
-
+            throw new Error("Search failed");
         }
-
 
         const data =
             await response.json();
 
-
         const users =
-            Array.isArray(data.users)
-                ? data.users
-                : [];
-
-
-        if (!users.length) {
-
-            window.location.href =
-                `/search.html?q=${encodeURIComponent(query)}`;
-
-            return;
-
-        }
-
-
-        let connectedUsers = [];
-
-
-        if (
-            currentUser &&
-            currentUser.user_id
-        ) {
-
-            try {
-
-                const connectionResponse =
-                    await fetch(
-                        `/api/home/connections?user_id=${encodeURIComponent(
-                            currentUser.user_id
-                        )}`,
-                        {
-                            method: "GET",
-                            cache: "no-store"
-                        }
-                    );
-
-
-                if (connectionResponse.ok) {
-
-                    const connectionData =
-                        await connectionResponse.json();
-
-
-                    if (
-                        Array.isArray(
-                            connectionData.users
-                        )
-                    ) {
-
-                        connectedUsers =
-                            connectionData.users;
-
-                    } else if (
-                        Array.isArray(
-                            connectionData.connections
-                        )
-                    ) {
-
-                        connectedUsers =
-                            connectionData.connections;
-
-                    }
-
-                }
-
-            } catch (connectionError) {
-
-                console.error(
-                    "SEARCH CONNECTION CHECK ERROR:",
-                    connectionError
-                );
-
-            }
-
-        }
-
-
-        const connectedIds =
-            connectedUsers.map(function(user) {
-
-                return String(
-                    user.user_id || ""
-                )
-                .trim()
-                .toLowerCase();
-
-            });
-
-
-        const connectedResults =
-            users.filter(function(user) {
-
-                const userId =
-                    String(
-                        user.user_id || ""
-                    )
-                    .trim()
-                    .toLowerCase();
-
-                return connectedIds.includes(
-                    userId
-                );
-
-            });
-
-
-        if (connectedResults.length) {
-
-            searchResults.innerHTML =
-                connectedResults
-                    .map(function(user) {
-
-                        const id =
-                            escapeHtml(
-                                user.user_id || ""
-                            );
-
-                        const name =
-                            escapeHtml(
-                                user.name ||
-                                user.user_id ||
-                                "User"
-                            );
-
-                        const photo =
-                            user.profile_photo ||
-                            user.profile_picture ||
-                            "";
-
-                        const letter =
-                            (
-                                user.name ||
-                                user.user_id ||
-                                "U"
-                            )
-                            .charAt(0)
-                            .toUpperCase();
-
-                        return `
-
-                            <div
-                                class="search-result-card"
-                                data-user-id="${id}"
-                            >
-
-                                <div class="search-result-photo">
-
-                                    ${
-                                        photo
-                                        ?
-                                        `
-                                        <img
-                                            src="${escapeHtml(photo)}"
-                                            alt="${name}"
-                                        >
-                                        `
-                                        :
-                                        `
-                                        <span>
-                                            ${letter}
-                                        </span>
-                                        `
-                                    }
-
-                                </div>
-
-
-                                <div class="search-result-info">
-
-                                    <div class="search-result-name">
-                                        ${name}
-                                    </div>
-
-                                    <div class="search-result-id">
-                                        @${id}
-                                    </div>
-
-                                </div>
-
-
-                                <button
-                                    type="button"
-                                    class="search-follow-btn connected"
-                                    disabled
-                                >
-                                    Connected
-                                </button>
-
-                            </div>
-
-                        `;
-
-                    })
-                    .join("");
-
-
-            searchResults.classList.add(
-                "active"
-            );
-
-
-            searchResults
-            .querySelectorAll(
-                ".search-result-card"
-            )
-            .forEach(function(card) {
-
-                card.addEventListener(
-                    "click",
-                    function(event) {
-
-                        if (
-                            event.target.closest(
-                                ".search-follow-btn"
-                            )
-                        ) {
-                            return;
-                        }
-
-                        openProfile(
-                            this.dataset.userId
-                        );
-
-                    }
-                );
-
-            });
-
-
-            return;
-
-        }
-
-
-        window.location.href =
-            `/search.html?q=${encodeURIComponent(query)}`;
-
+            data.users ||
+            data.results ||
+            data.data ||
+            [];
+
+        renderSearchResults(
+            Array.isArray(users)
+                ? users
+                : []
+        );
 
     } catch (error) {
 
         console.error(
-            "SEARCH ERROR:",
+            "Search error:",
             error
         );
 
+        renderSearchResults([]);
+    }
+}
+
+
+/* =========================================================
+   SEARCH RESULTS
+========================================================= */
+
+function renderSearchResults(users) {
+
+    if (!searchResults) {
+        return;
+    }
+
+    if (!users.length) {
 
         searchResults.innerHTML = `
-
-            <div class="search-empty">
-                Search failed
+            <div style="
+                padding:20px;
+                color:#8190a5;
+                text-align:center;
+                font-size:13px;
+            ">
+                No users found
             </div>
-
         `;
 
-        searchResults.classList.add(
-            "active"
-        );
+        searchResults.classList.add("active");
 
+        return;
     }
 
-}
 
+    searchResults.innerHTML =
+        users
+            .map(user => {
 
-/* =========================================================
-   SEARCH INPUT
-========================================================= */
+                const userId =
+                    String(
+                        user.user_id ||
+                        user.username ||
+                        user.id ||
+                        ""
+                    );
 
-if (searchInput) {
+                const name =
+                    user.name ||
+                    user.full_name ||
+                    userId ||
+                    "User";
 
-    searchInput.addEventListener(
-        "input",
-        function() {
-
-            clearTimeout(
-                searchTimer
-            );
-
-
-            const value =
-                this.value.trim();
-
-
-            if (!value) {
-
-                searchResults.innerHTML =
+                const photo =
+                    user.profile_photo ||
+                    user.profilePhoto ||
                     "";
 
-                searchResults.classList.remove(
-                    "active"
-                );
-
-                return;
-
-            }
+                const letter =
+                    name
+                        .trim()
+                        .charAt(0)
+                        .toUpperCase() || "U";
 
 
-            searchTimer =
-                setTimeout(
-                    function() {
+                return `
+                    <div
+                        style="
+                            display:flex;
+                            align-items:center;
+                            gap:11px;
+                            padding:11px 13px;
+                            border-bottom:1px solid rgba(255,255,255,.05);
+                            cursor:pointer;
+                        "
+                        onclick="openSearchUser('${escapeHtml(userId)}')">
 
-                        performSearch(
-                            value
-                        );
+                        <div
+                            style="
+                                width:42px;
+                                height:42px;
+                                border-radius:50%;
+                                overflow:hidden;
+                                flex:0 0 auto;
+                                display:flex;
+                                align-items:center;
+                                justify-content:center;
+                                background:#142743;
+                                color:#fff;
+                                font-weight:800;
+                            ">
 
-                    },
-                    500
-                );
+                            ${
+                                photo
+                                    ? `
+                                        <img
+                                            src="${escapeHtml(photo)}"
+                                            style="
+                                                width:100%;
+                                                height:100%;
+                                                object-fit:cover;
+                                            "
+                                            alt="${escapeHtml(name)}">
+                                      `
+                                    : escapeHtml(letter)
+                            }
 
-        }
-    );
+                        </div>
 
+
+                        <div style="
+                            min-width:0;
+                            flex:1;
+                        ">
+
+                            <div style="
+                                color:#fff;
+                                font-size:13px;
+                                font-weight:700;
+                                white-space:nowrap;
+                                overflow:hidden;
+                                text-overflow:ellipsis;
+                            ">
+                                ${escapeHtml(name)}
+                            </div>
+
+                            <div style="
+                                color:#718096;
+                                font-size:10px;
+                                margin-top:3px;
+                            ">
+                                @${escapeHtml(userId)}
+                            </div>
+
+                        </div>
+
+
+                        <button
+                            type="button"
+                            style="
+                                background:#1685ff;
+                                color:#fff;
+                                border:0;
+                                border-radius:9px;
+                                padding:7px 10px;
+                                font-size:10px;
+                                font-weight:700;
+                            "
+                            onclick="event.stopPropagation(); followUser('${escapeHtml(userId)}')">
+
+                            Follow
+
+                        </button>
+
+                    </div>
+                `;
+
+            })
+            .join("");
+
+
+    searchResults.classList.add("active");
 }
 
 
 /* =========================================================
-   FOLLOW USER
+   OPEN SEARCH USER
 ========================================================= */
 
-async function followUser(
-    targetUserId,
-    button
-) {
+function openSearchUser(userId) {
 
-    if (
-        !currentUser ||
-        !currentUser.user_id
-    ) {
-
-        showToast(
-            "Please login again."
-        );
-
-        return;
-
-    }
-
-
-    if (!targetUserId) {
+    if (!userId) {
         return;
     }
 
+    window.location.href =
+        `/profile.html?user_id=${encodeURIComponent(userId)}`;
+}
 
-    if (
-        String(targetUserId) ===
-        String(currentUser.user_id)
-    ) {
 
-        showToast(
-            "You cannot follow yourself."
-        );
+/* =========================================================
+   HIDE SEARCH
+========================================================= */
 
+function hideSearchResults() {
+
+    if (!searchResults) {
         return;
-
     }
 
+    searchResults.classList.remove("active");
+}
 
-    if (button) {
 
-        button.disabled =
-            true;
+/* =========================================================
+   FOLLOW
+========================================================= */
 
-        button.textContent =
-            "Sending...";
+async function followUser(userId) {
 
+    const currentId =
+        getCurrentUserId();
+
+    if (!currentId || !userId) {
+        return;
     }
-
 
     try {
 
@@ -1400,7 +870,6 @@ async function followUser(
             await fetch(
                 "/api/follow",
                 {
-
                     method: "POST",
 
                     headers: {
@@ -1409,315 +878,232 @@ async function followUser(
                     },
 
                     body: JSON.stringify({
-
-                        requester_user_id:
-                            currentUser.user_id,
-
-                        target_user_id:
-                            targetUserId
-
+                        user_id: currentId,
+                        target_user_id: userId
                     })
-
                 }
             );
 
 
         const data =
-            await response.json();
+            await response.json()
+                .catch(() => ({}));
 
 
-        if (
-            !response.ok ||
-            !data.ok
-        ) {
+        if (!response.ok) {
 
-            throw new Error(
+            showToast(
+                data.detail ||
                 data.message ||
-                "Unable to send follow request."
+                "Follow request failed"
             );
 
-        }
-
-
-        if (button) {
-
-            button.textContent =
-                "Requested";
-
-            button.classList.add(
-                "following"
-            );
-
+            return;
         }
 
 
         showToast(
             data.message ||
-            "Follow request sent."
+            "Follow request sent"
         );
-
 
     } catch (error) {
 
         console.error(
-            "FOLLOW ERROR:",
+            "Follow error:",
             error
         );
 
-
-        if (button) {
-
-            button.disabled =
-                false;
-
-            button.textContent =
-                "Follow";
-
-        }
-
-
         showToast(
-            error.message ||
-            "Unable to send request."
+            "Network error"
         );
-
     }
-
 }
 
 
 /* =========================================================
-   NOTIFICATION COUNT
+   =========================================================
+   NOTIFICATIONS
+   =========================================================
 ========================================================= */
 
 async function loadNotificationCount() {
 
-    const badge =
-        document.getElementById(
-            "notificationBadge"
-        );
+    const userId =
+        getCurrentUserId();
 
-
-    if (!badge) {
+    if (!userId) {
         return;
     }
-
-
-    if (
-        !currentUser ||
-        !currentUser.user_id
-    ) {
-
-        badge.textContent =
-            "0";
-
-        badge.style.display =
-            "none";
-
-        return;
-
-    }
-
 
     try {
 
         const response =
             await fetch(
-                `/api/notifications?user_id=${encodeURIComponent(
-                    currentUser.user_id
-                )}`,
-                {
-                    method: "GET",
-                    cache: "no-store"
-                }
+                `/api/notifications?user_id=${encodeURIComponent(userId)}`
             );
-
 
         if (!response.ok) {
             return;
         }
 
-
         const data =
             await response.json();
 
-
         const notifications =
-            Array.isArray(
-                data.notifications
-            )
-            ? data.notifications
-            : [];
-
+            data.notifications ||
+            data.data ||
+            [];
 
         const unread =
-            notifications.filter(
-                function(item) {
+            Array.isArray(notifications)
+                ? notifications.filter(
+                    item =>
+                        !item.is_read &&
+                        !item.read
+                ).length
+                : (
+                    data.unread_count ||
+                    data.count ||
+                    0
+                );
 
-                    return !(
-                        item.is_read === true ||
-                        item.read === true
-                    );
 
-                }
-            ).length;
+        const badge =
+            document.getElementById(
+                "notificationBadge"
+            );
+
+        if (!badge) {
+            return;
+        }
 
 
-        if (unread <= 0) {
-
-            badge.textContent =
-                "0";
-
-            badge.style.display =
-                "none";
-
-        } else {
+        if (unread > 0) {
 
             badge.textContent =
                 unread > 99
                     ? "99+"
-                    : String(unread);
+                    : unread;
 
             badge.style.display =
                 "flex";
 
-        }
+        } else {
 
+            badge.style.display =
+                "none";
+        }
 
     } catch (error) {
 
         console.error(
-            "NOTIFICATION ERROR:",
+            "Notification count error:",
             error
         );
-
     }
-
 }
 
 
 /* =========================================================
+   =========================================================
    STATUS STATE
+   =========================================================
 ========================================================= */
 
 let myStatuses = [];
+
 let activeStatusUsers = [];
+
 let currentStatusUser = null;
+
 let currentStatusIndex = 0;
 
 
 /* =========================================================
-   STATUS SEEN STORAGE
+   STATUS VIEWER STATE
 ========================================================= */
 
-function getStatusSeenStorageKey() {
+let statusViewerQueue = [];
 
-    if (
-        !currentUser ||
-        !currentUser.user_id
-    ) {
+let statusViewerUserIndex = -1;
 
-        return "usanex_seen_statuses_unknown";
+let statusAdvanceTimer = null;
 
-    }
+let statusViewerToken = 0;
 
+
+/* =========================================================
+   SEEN STORAGE
+========================================================= */
+
+function getSeenStorageKey() {
+
+    const userId =
+        getCurrentUserId();
 
     return (
         "usanex_seen_statuses_" +
-        String(
-            currentUser.user_id
-        )
+        userId
     );
-
 }
 
-
-/* =========================================================
-   GET SEEN STATUS IDS
-========================================================= */
 
 function getSeenStatusIds() {
 
+    const key =
+        getSeenStorageKey();
+
     try {
 
-        const key =
-            getStatusSeenStorageKey();
-
         const raw =
-            localStorage.getItem(
-                key
-            );
-
+            localStorage.getItem(key);
 
         if (!raw) {
-            return {};
+            return new Set();
         }
 
-
-        const parsed =
+        const data =
             JSON.parse(raw);
 
-
-        if (
-            !parsed ||
-            typeof parsed !== "object" ||
-            Array.isArray(parsed)
-        ) {
-
-            return {};
-
+        if (!Array.isArray(data)) {
+            return new Set();
         }
 
-
-        return parsed;
-
+        return new Set(
+            data.map(String)
+        );
 
     } catch (error) {
 
-        console.error(
-            "STATUS SEEN READ ERROR:",
-            error
-        );
-
-        return {};
-
+        return new Set();
     }
-
 }
 
 
-/* =========================================================
-   SAVE SEEN STATUS IDS
-========================================================= */
+function saveSeenStatusIds(set) {
 
-function saveSeenStatusIds(data) {
+    const key =
+        getSeenStorageKey();
 
     try {
-
-        const key =
-            getStatusSeenStorageKey();
 
         localStorage.setItem(
             key,
-            JSON.stringify(data)
+            JSON.stringify(
+                Array.from(set)
+            )
         );
-
 
     } catch (error) {
 
         console.error(
-            "STATUS SEEN SAVE ERROR:",
+            "Seen status storage error:",
             error
         );
-
     }
-
 }
 
-
-/* =========================================================
-   IS STATUS SEEN
-========================================================= */
 
 function isStatusSeen(statusId) {
 
@@ -1725,20 +1111,15 @@ function isStatusSeen(statusId) {
         statusId === null ||
         statusId === undefined
     ) {
-
         return false;
-
     }
-
 
     const seen =
         getSeenStatusIds();
 
-
-    return Boolean(
-        seen[String(statusId)]
+    return seen.has(
+        String(statusId)
     );
-
 }
 
 
@@ -1752,417 +1133,339 @@ function markStatusAsSeen(statusId) {
         statusId === null ||
         statusId === undefined
     ) {
-
         return;
-
     }
-
 
     const seen =
         getSeenStatusIds();
 
-
-    seen[String(statusId)] =
-        Date.now();
-
-
-    saveSeenStatusIds(
-        seen
+    seen.add(
+        String(statusId)
     );
 
+    saveSeenStatusIds(seen);
 }
 
 
 /* =========================================================
-   GET CURRENT ACTIVE STATUS IDS
+   ACTIVE STATUS IDS
 ========================================================= */
 
 function getCurrentActiveStatusIds() {
 
-    const activeIds =
-        new Set();
+    const ids = [];
+
+    myStatuses.forEach(status => {
+
+        if (status && status.id !== undefined) {
+
+            ids.push(
+                String(status.id)
+            );
+        }
+
+    });
 
 
-    myStatuses.forEach(
-        function(status) {
+    activeStatusUsers.forEach(user => {
+
+        if (
+            !user ||
+            !Array.isArray(user.statuses)
+        ) {
+            return;
+        }
+
+        user.statuses.forEach(status => {
 
             if (
                 status &&
-                status.id !== null &&
                 status.id !== undefined
             ) {
 
-                activeIds.add(
+                ids.push(
                     String(status.id)
                 );
-
             }
 
-        }
-    );
+        });
+
+    });
 
 
-    activeStatusUsers.forEach(
-        function(user) {
-
-            if (
-                !user ||
-                !Array.isArray(
-                    user.statuses
-                )
-            ) {
-
-                return;
-
-            }
-
-
-            user.statuses.forEach(
-                function(status) {
-
-                    if (
-                        status &&
-                        status.id !== null &&
-                        status.id !== undefined
-                    ) {
-
-                        activeIds.add(
-                            String(status.id)
-                        );
-
-                    }
-
-                }
-            );
-
-        }
-    );
-
-
-    return activeIds;
-
+    return ids;
 }
 
 
 /* =========================================================
-   CLEANUP OLD SEEN IDS
+   CLEAN EXPIRED / OLD SEEN IDS
 ========================================================= */
 
 function cleanupSeenStatusIds() {
 
+    const activeIds =
+        new Set(
+            getCurrentActiveStatusIds()
+        );
+
     const seen =
         getSeenStatusIds();
 
-    const activeIds =
-        getCurrentActiveStatusIds();
+    const cleaned =
+        new Set();
 
-    let changed =
-        false;
+    seen.forEach(id => {
 
+        if (activeIds.has(id)) {
 
-    Object.keys(
-        seen
-    ).forEach(
-        function(statusId) {
-
-            if (
-                !activeIds.has(
-                    String(statusId)
-                )
-            ) {
-
-                delete seen[statusId];
-
-                changed =
-                    true;
-
-            }
-
+            cleaned.add(id);
         }
-    );
 
+    });
 
-    if (changed) {
-
-        saveSeenStatusIds(
-            seen
-        );
-
-    }
-
+    saveSeenStatusIds(cleaned);
 }
 
 
 /* =========================================================
-   CHECK USER FULLY SEEN
+   USER FULLY SEEN
 ========================================================= */
 
 function isUserFullySeen(user) {
 
     if (
         !user ||
-        !Array.isArray(
-            user.statuses
-        ) ||
+        !Array.isArray(user.statuses) ||
         !user.statuses.length
     ) {
-
         return false;
-
     }
 
-
     return user.statuses.every(
-        function(status) {
-
-            return (
-                status &&
-                status.id !== null &&
-                status.id !== undefined &&
-                isStatusSeen(
-                    status.id
-                )
-            );
-
-        }
+        status =>
+            isStatusSeen(status.id)
     );
-
 }
 
 
 /* =========================================================
+   ORDER USER STATUSES
+========================================================= */
+
+function getOrderedStatuses(user) {
+
+    if (
+        !user ||
+        !Array.isArray(user.statuses)
+    ) {
+        return [];
+    }
+
+    return [...user.statuses]
+        .filter(status => status)
+        .sort(
+            (a, b) => {
+
+                const aTime =
+                    new Date(
+                        a.created_at || 0
+                    ).getTime();
+
+                const bTime =
+                    new Date(
+                        b.created_at || 0
+                    ).getTime();
+
+                return aTime - bTime;
+            }
+        );
+}
+
+
+/* =========================================================
+   =========================================================
    LOAD HOME STATUSES
-   ONE API REQUEST
+   =========================================================
 ========================================================= */
 
 async function loadHomeStatuses() {
 
-    if (
-        !currentUser ||
-        !currentUser.user_id
-    ) {
+    const userId =
+        getCurrentUserId();
 
+    if (!userId) {
         return;
-
     }
-
 
     try {
 
         const response =
             await fetch(
-                `/api/status/home?user_id=${encodeURIComponent(
-                    currentUser.user_id
-                )}`,
-                {
-                    method: "GET",
-                    cache: "no-store"
-                }
+                `/api/status/home?user_id=${encodeURIComponent(userId)}`
             );
-
 
         if (!response.ok) {
-
             throw new Error(
-                "Unable to load home statuses"
+                "Status home request failed"
             );
-
         }
-
 
         const data =
             await response.json();
 
 
-        /* =================================================
+        /* ================================================
            MY STATUS
         ================================================= */
 
         myStatuses =
-            Array.isArray(
-                data.my_statuses
-            )
-            ? data.my_statuses
-            : [];
+            Array.isArray(data.my_statuses)
+                ? data.my_statuses
+                : [];
 
 
-        /* =================================================
+        /* ================================================
            OTHER USERS
         ================================================= */
 
+        const users =
+            Array.isArray(data.users)
+                ? data.users
+                : [];
+
+
         activeStatusUsers =
-            Array.isArray(
-                data.users
-            )
-            ? data.users
-            : [];
+            users
+                .map(user => {
 
+                    return {
+                        ...user,
 
-        /* =================================================
-           CLEAN OLD STATUS IDs
-        ================================================= */
+                        statuses:
+                            getOrderedStatuses(user)
+                    };
+
+                })
+                .filter(
+                    user =>
+                        user.statuses.length > 0
+                );
+
 
         cleanupSeenStatusIds();
-
-
-        /* =================================================
-           UPDATE STATUS UI
-        ================================================= */
 
         updateMyStatusUI();
 
         renderActiveStatusUsers();
 
-
-        /* =================================================
-           IMPORTANT:
-
-           Connected People ke DP ko bhi update karo.
-        ================================================= */
-
         refreshConnectionStatusRings();
-
 
     } catch (error) {
 
         console.error(
-            "HOME STATUS ERROR:",
+            "Home status loading error:",
             error
         );
-
-
-        myStatuses = [];
-
-        activeStatusUsers = [];
-
-
-        updateMyStatusUI();
-
-        renderActiveStatusUsers();
-
-        refreshConnectionStatusRings();
-
     }
-
 }
 
 
 /* =========================================================
-   OLD STATUS API
+   COMPATIBILITY: MY STATUS
 ========================================================= */
 
 async function loadMyStatuses() {
 
-    if (
-        !currentUser ||
-        !currentUser.user_id
-    ) {
+    const userId =
+        getCurrentUserId();
+
+    if (!userId) {
         return;
     }
-
 
     try {
 
         const response =
             await fetch(
-                `/api/status/my?user_id=${encodeURIComponent(
-                    currentUser.user_id
-                )}`,
-                {
-                    method: "GET",
-                    cache: "no-store"
-                }
+                `/api/status/my?user_id=${encodeURIComponent(userId)}`
             );
-
 
         if (!response.ok) {
-
-            throw new Error(
-                "Unable to load my status"
-            );
-
+            return;
         }
-
 
         const data =
             await response.json();
 
-
         myStatuses =
-            Array.isArray(
-                data.statuses
-            )
-            ? data.statuses
-            : [];
-
+            Array.isArray(data.statuses)
+                ? data.statuses
+                : (
+                    Array.isArray(data)
+                        ? data
+                        : []
+                );
 
         updateMyStatusUI();
-
 
     } catch (error) {
 
         console.error(
-            "MY STATUS ERROR:",
+            "My status loading error:",
             error
         );
-
-
-        myStatuses = [];
-
-        updateMyStatusUI();
-
     }
-
 }
 
 
 /* =========================================================
-   OLD ACTIVE STATUS API
+   COMPATIBILITY: ACTIVE STATUS
 ========================================================= */
 
 async function loadActiveStatuses() {
 
-    if (
-        !currentUser ||
-        !currentUser.user_id
-    ) {
+    const userId =
+        getCurrentUserId();
+
+    if (!userId) {
         return;
     }
-
 
     try {
 
         const response =
             await fetch(
-                `/api/status/active?user_id=${encodeURIComponent(
-                    currentUser.user_id
-                )}`,
-                {
-                    method: "GET",
-                    cache: "no-store"
-                }
+                `/api/status/active?user_id=${encodeURIComponent(userId)}`
             );
-
 
         if (!response.ok) {
-
-            throw new Error(
-                "Unable to load active statuses"
-            );
-
+            return;
         }
-
 
         const data =
             await response.json();
 
+        const users =
+            Array.isArray(data.users)
+                ? data.users
+                : (
+                    Array.isArray(data)
+                        ? data
+                        : []
+                );
+
 
         activeStatusUsers =
-            Array.isArray(
-                data.users
-            )
-            ? data.users
-            : [];
+            users
+                .map(user => ({
+                    ...user,
+                    statuses:
+                        getOrderedStatuses(user)
+                }))
+                .filter(
+                    user =>
+                        user.statuses.length
+                );
 
 
         cleanupSeenStatusIds();
@@ -2171,28 +1474,20 @@ async function loadActiveStatuses() {
 
         refreshConnectionStatusRings();
 
-
     } catch (error) {
 
         console.error(
-            "ACTIVE STATUS ERROR:",
+            "Active status loading error:",
             error
         );
-
-
-        activeStatusUsers = [];
-
-        renderActiveStatusUsers();
-
-        refreshConnectionStatusRings();
-
     }
-
 }
 
 
 /* =========================================================
-   UPDATE YOUR STATUS UI
+   =========================================================
+   YOUR STATUS UI
+   =========================================================
 ========================================================= */
 
 function updateMyStatusUI() {
@@ -2202,15 +1497,12 @@ function updateMyStatusUI() {
             "myStatusItem"
         );
 
-    const plus =
-        document.getElementById(
-            "myStatusPlus"
-        );
-
-
     if (!item) {
         return;
     }
+
+
+    updateYourStatusLetter();
 
 
     const hasStatus =
@@ -2223,70 +1515,38 @@ function updateMyStatusUI() {
     );
 
 
-    /* =====================================================
-       STATUS EXISTS
+    /*
+       NO STATUS:
+       Whole card opens upload.
 
-       Main area -> View
-       Plus -> Add another
-    ===================================================== */
+       HAS STATUS:
+       Main card opens own status.
 
-    if (hasStatus) {
+       PLUS:
+       Always opens upload/add status.
+    */
 
-        item.onclick =
-            function(event) {
+    item.onclick =
+        function (event) {
 
-                if (
-                    event.target.closest(
-                        ".status-plus"
-                    )
-                ) {
+            if (
+                event.target.closest(
+                    "#myStatusPlus"
+                )
+            ) {
+                return;
+            }
 
-                    return;
-
-                }
-
+            if (myStatuses.length > 0) {
 
                 openMyStatus();
 
-            };
-
-
-        if (plus) {
-
-            plus.style.display =
-                "flex";
-
-        }
-
-    }
-
-
-    /* =====================================================
-       NO STATUS
-
-       Entire card -> Upload
-    ===================================================== */
-
-    else {
-
-        item.onclick =
-            function() {
+            } else {
 
                 window.location.href =
                     "/status";
-
-            };
-
-
-        if (plus) {
-
-            plus.style.display =
-                "flex";
-
-        }
-
-    }
-
+            }
+        };
 }
 
 
@@ -2297,15 +1557,11 @@ function updateMyStatusUI() {
 function addAnotherStatus(event) {
 
     if (event) {
-
         event.stopPropagation();
-
     }
-
 
     window.location.href =
         "/status";
-
 }
 
 
@@ -2321,38 +1577,46 @@ function openMyStatus() {
             "/status";
 
         return;
-
     }
 
 
     currentStatusUser = {
 
         user_id:
-            currentUser.user_id,
+            getCurrentUserId(),
 
         name:
-            currentUser.name,
+            currentUser?.name ||
+            "You",
 
         profile_photo:
-            currentUser.profile_photo,
+            currentUser?.profile_photo ||
+            currentUser?.profilePhoto ||
+            "",
 
         statuses:
-            myStatuses
-
+            getOrderedStatuses({
+                statuses:
+                    myStatuses
+            })
     };
 
 
-    currentStatusIndex =
-        0;
+    currentStatusIndex = 0;
 
+    statusViewerQueue =
+        [currentStatusUser];
+
+    statusViewerUserIndex = 0;
 
     showStatusViewer();
-
 }
 
 
 /* =========================================================
-   RENDER OTHER ACTIVE STATUS USERS
+   =========================================================
+   RENDER OTHER STATUS USERS
+   =========================================================
 ========================================================= */
 
 function renderActiveStatusUsers() {
@@ -2362,155 +1626,136 @@ function renderActiveStatusUsers() {
             "otherStatusScroll"
         );
 
-
     if (!container) {
         return;
     }
 
 
-    if (!activeStatusUsers.length) {
+    const users =
+        activeStatusUsers
+            .filter(
+                user =>
+                    user &&
+                    Array.isArray(user.statuses) &&
+                    user.statuses.length > 0
+            )
+            .sort(
+                (a, b) => {
 
-        container.innerHTML =
-            "";
+                    const aSeen =
+                        isUserFullySeen(a);
+
+                    const bSeen =
+                        isUserFullySeen(b);
+
+
+                    if (
+                        aSeen !== bSeen
+                    ) {
+
+                        return aSeen
+                            ? 1
+                            : -1;
+                    }
+
+
+                    const aLatest =
+                        Math.max(
+                            ...a.statuses.map(
+                                s =>
+                                    new Date(
+                                        s.created_at || 0
+                                    ).getTime()
+                            )
+                        );
+
+
+                    const bLatest =
+                        Math.max(
+                            ...b.statuses.map(
+                                s =>
+                                    new Date(
+                                        s.created_at || 0
+                                    ).getTime()
+                            )
+                        );
+
+
+                    return bLatest - aLatest;
+                }
+            );
+
+
+    if (!users.length) {
+
+        container.innerHTML = "";
 
         return;
-
     }
 
 
-    const validUsers =
-        activeStatusUsers.filter(
-            function(user) {
-
-                return (
-                    user &&
-                    user.user_id &&
-                    Array.isArray(
-                        user.statuses
-                    ) &&
-                    user.statuses.length
-                );
-
-            }
-        );
-
-
-    /* =====================================================
-       UNSEEN FIRST
-       SEEN LAST
-    ===================================================== */
-
-    const sortedUsers =
-        [...validUsers].sort(
-            function(a, b) {
-
-                const aSeen =
-                    isUserFullySeen(a);
-
-                const bSeen =
-                    isUserFullySeen(b);
-
-
-                if (
-                    aSeen === bSeen
-                ) {
-
-                    return 0;
-
-                }
-
-
-                return aSeen
-                    ? 1
-                    : -1;
-
-            }
-        );
-
-
     container.innerHTML =
-        sortedUsers
-            .map(function(user) {
+        users
+            .map(user => {
 
                 const name =
-                    escapeHtml(
-                        user.name ||
-                        user.user_id ||
-                        "User"
-                    );
-
+                    user.name ||
+                    user.user_id ||
+                    "User";
 
                 const userId =
                     String(
-                        user.user_id ||
-                        ""
+                        user.user_id || ""
                     );
-
-
-                const safeUserId =
-                    escapeHtml(
-                        userId
-                    );
-
 
                 const photo =
                     user.profile_photo ||
+                    user.profilePhoto ||
                     "";
 
-
                 const letter =
-                    (
-                        user.name ||
-                        user.user_id ||
-                        "U"
-                    )
-                    .charAt(0)
-                    .toUpperCase();
+                    name
+                        .trim()
+                        .charAt(0)
+                        .toUpperCase() || "U";
 
 
                 const fullySeen =
-                    isUserFullySeen(
-                        user
-                    );
+                    isUserFullySeen(user);
 
 
-                const borderClass =
+                const statusClass =
                     fullySeen
                         ? "seen"
                         : "unseen";
 
 
-                return `
+                const avatar =
+                    photo
+                        ? `
+                            <img
+                                src="${escapeHtml(photo)}"
+                                alt="${escapeHtml(name)}">
+                          `
+                        : `
+                            <span>
+                                ${escapeHtml(letter)}
+                            </span>
+                          `;
 
+
+                return `
                     <div
                         class="status-item"
-                        data-status-user="${safeUserId}"
-                    >
+                        data-user-id="${escapeHtml(userId)}">
 
                         <div
-                            class="status-circle ${borderClass}"
-                        >
+                            class="status-circle ${statusClass}">
 
-                            <div class="status-avatar-inner">
+                            <div
+                                class="status-avatar-inner">
 
-                                ${
-                                    photo
-                                    ?
-                                    `
-                                    <img
-                                        src="${escapeHtml(photo)}"
-                                        alt="${name}"
-                                        class="status-avatar-image"
-                                        loading="lazy"
-                                    >
-                                    `
-                                    :
-                                    `
-                                    <span>
-                                        ${escapeHtml(letter)}
-                                    </span>
-                                    `
-                                }
+                                ${avatar}
 
                             </div>
 
@@ -2518,65 +1763,69 @@ function renderActiveStatusUsers() {
 
 
                         <div class="status-name">
-                            ${name}
+                            ${escapeHtml(name)}
                         </div>
 
                     </div>
-
                 `;
 
             })
             .join("");
 
 
-    /* =====================================================
-       CLICK EVENTS
-    ===================================================== */
-
     container
-    .querySelectorAll(
-        ".status-item[data-status-user]"
-    )
-    .forEach(
-        function(item) {
+        .querySelectorAll(".status-item")
+        .forEach(item => {
 
             item.addEventListener(
                 "click",
-                function() {
+                () => {
 
                     openUserStatus(
-                        this.dataset.statusUser
+                        item.dataset.userId
                     );
 
                 }
             );
 
-        }
-    );
-
+        });
 }
 
 
 /* =========================================================
+   REFRESH CONNECTION STATUS RINGS
+========================================================= */
+
+function refreshConnectionStatusRings() {
+
+    if (!connectedUsersData.length) {
+        return;
+    }
+
+    renderConnections(
+        connectedUsersData
+    );
+}
+
+
+/* =========================================================
+   =========================================================
    OPEN OTHER USER STATUS
+   =========================================================
 ========================================================= */
 
 function openUserStatus(userId) {
 
+    if (!userId) {
+        return;
+    }
+
+
     const user =
         activeStatusUsers.find(
-            function(item) {
-
-                return (
-                    String(
-                        item.user_id
-                    ) ===
-                    String(
-                        userId
-                    )
-                );
-
-            }
+            item =>
+                String(item.user_id) ===
+                String(userId)
         );
 
 
@@ -2585,167 +1834,663 @@ function openUserStatus(userId) {
     }
 
 
+    const statuses =
+        getOrderedStatuses(user);
+
+
+    if (!statuses.length) {
+        return;
+    }
+
+
+    currentStatusUser = {
+
+        ...user,
+
+        statuses:
+            statuses
+    };
+
+
+    /*
+       Viewer starts from clicked user.
+
+       After this user's statuses,
+       it continues to next active users.
+    */
+
+    const sortedUsers =
+        [...activeStatusUsers]
+            .filter(
+                item =>
+                    item &&
+                    Array.isArray(item.statuses) &&
+                    item.statuses.length
+            )
+            .sort(
+                (a, b) => {
+
+                    const aSeen =
+                        isUserFullySeen(a);
+
+                    const bSeen =
+                        isUserFullySeen(b);
+
+                    if (
+                        aSeen !== bSeen
+                    ) {
+                        return aSeen
+                            ? 1
+                            : -1;
+                    }
+
+                    return 0;
+                }
+            );
+
+
+    const clickedIndex =
+        sortedUsers.findIndex(
+            item =>
+                String(item.user_id) ===
+                String(userId)
+        );
+
+
+    if (clickedIndex >= 0) {
+
+        statusViewerQueue = [
+            ...sortedUsers.slice(clickedIndex),
+            ...sortedUsers.slice(0, clickedIndex)
+        ];
+
+    } else {
+
+        statusViewerQueue =
+            sortedUsers;
+    }
+
+
+    /*
+       Make clicked user first.
+    */
+
+    if (
+        statusViewerQueue.length &&
+        String(
+            statusViewerQueue[0].user_id
+        ) !== String(userId)
+    ) {
+
+        statusViewerQueue =
+            [
+                currentStatusUser,
+                ...statusViewerQueue.filter(
+                    item =>
+                        String(item.user_id) !==
+                        String(userId)
+                )
+            ];
+    }
+
+
+    statusViewerUserIndex = 0;
+
     currentStatusUser =
-        user;
+        statusViewerQueue[0];
 
-
-    currentStatusIndex =
-        0;
-
+    currentStatusIndex = 0;
 
     showStatusViewer();
-
 }
 
 
 /* =========================================================
-   MARK CURRENT STATUS AS SEEN
+   =========================================================
+   STATUS VIEWER HELPERS
+   =========================================================
 ========================================================= */
 
-function markCurrentStatusAsSeen() {
+function clearStatusAdvanceTimer() {
 
-    if (!currentStatusUser) {
+    if (statusAdvanceTimer) {
+
+        clearTimeout(
+            statusAdvanceTimer
+        );
+
+        statusAdvanceTimer = null;
+    }
+}
+
+
+/* =========================================================
+   FORMAT STATUS TIME
+========================================================= */
+
+function formatStatusTime(dateValue) {
+
+    if (!dateValue) {
+        return "now";
+    }
+
+    const time =
+        new Date(dateValue).getTime();
+
+    if (Number.isNaN(time)) {
+        return "now";
+    }
+
+
+    const diff =
+        Math.max(
+            0,
+            Date.now() - time
+        );
+
+
+    const seconds =
+        Math.floor(
+            diff / 1000
+        );
+
+    if (seconds < 60) {
+        return "now";
+    }
+
+
+    const minutes =
+        Math.floor(
+            seconds / 60
+        );
+
+    if (minutes < 60) {
+        return `${minutes}m`;
+    }
+
+
+    const hours =
+        Math.floor(
+            minutes / 60
+        );
+
+    if (hours < 24) {
+        return `${hours}h`;
+    }
+
+
+    const days =
+        Math.floor(
+            hours / 24
+        );
+
+    return `${days}d`;
+}
+
+
+/* =========================================================
+   SET VIEWER AVATAR
+========================================================= */
+
+function setViewerAvatar(
+    element,
+    photo,
+    name
+) {
+
+    if (!element) {
         return;
     }
 
 
-    /* =====================================================
-       APNI STATUS KO SEEN TRACK NAHI KARNA
-    ===================================================== */
-
-    if (
-        currentUser &&
-        currentStatusUser.user_id &&
+    const letter =
         String(
-            currentStatusUser.user_id
-        ) ===
-        String(
-            currentUser.user_id
+            name ||
+            "U"
         )
+            .trim()
+            .charAt(0)
+            .toUpperCase() || "U";
+
+
+    if (photo) {
+
+        element.innerHTML =
+            `
+                <img
+                    src="${escapeHtml(photo)}"
+                    alt="${escapeHtml(name || "User")}">
+            `;
+
+    } else {
+
+        element.innerHTML =
+            escapeHtml(letter);
+    }
+}
+
+
+/* =========================================================
+   RENDER PROGRESS
+========================================================= */
+
+function renderStatusProgress(
+    total,
+    currentIndex
+) {
+
+    const progress =
+        document.getElementById(
+            "statusProgress"
+        );
+
+    if (!progress) {
+        return;
+    }
+
+
+    progress.innerHTML = "";
+
+
+    for (
+        let i = 0;
+        i < total;
+        i++
     ) {
 
-        return;
+        const segment =
+            document.createElement("div");
 
+        segment.className =
+            "status-progress-segment";
+
+
+        const fill =
+            document.createElement("div");
+
+        fill.className =
+            "status-progress-fill";
+
+
+        if (i < currentIndex) {
+
+            fill.style.width =
+                "100%";
+
+        } else {
+
+            fill.style.width =
+                "0%";
+        }
+
+
+        segment.appendChild(fill);
+
+        progress.appendChild(segment);
     }
+}
+
+
+/* =========================================================
+   CURRENT PROGRESS FILL
+========================================================= */
+
+function getCurrentProgressFill() {
+
+    const progress =
+        document.getElementById(
+            "statusProgress"
+        );
+
+    if (!progress) {
+        return null;
+    }
+
+
+    const segments =
+        progress.querySelectorAll(
+            ".status-progress-segment"
+        );
 
 
     if (
-        !Array.isArray(
-            currentStatusUser.statuses
-        )
+        currentStatusIndex < 0 ||
+        currentStatusIndex >= segments.length
     ) {
-
-        return;
-
+        return null;
     }
 
 
-    const status =
-        currentStatusUser.statuses[
-            currentStatusIndex
-        ];
+    return segments[
+        currentStatusIndex
+    ].querySelector(
+        ".status-progress-fill"
+    );
+}
 
 
-    if (!status) {
+/* =========================================================
+   IMAGE AUTO PROGRESS
+========================================================= */
+
+function startImageProgress(
+    token
+) {
+
+    const fill =
+        getCurrentProgressFill();
+
+    if (!fill) {
         return;
     }
 
 
-    if (
-        status.id === null ||
-        status.id === undefined
-    ) {
+    const duration =
+        5000;
 
+
+    fill.style.transition =
+        "none";
+
+    fill.style.width =
+        "0%";
+
+
+    requestAnimationFrame(() => {
+
+        if (
+            token !==
+            statusViewerToken
+        ) {
+            return;
+        }
+
+
+        fill.style.transition =
+            `width ${duration}ms linear`;
+
+        fill.style.width =
+            "100%";
+
+    });
+
+
+    statusAdvanceTimer =
+        setTimeout(
+            () => {
+
+                if (
+                    token !==
+                    statusViewerToken
+                ) {
+                    return;
+                }
+
+                advanceStatus();
+
+            },
+            duration
+        );
+}
+
+
+/* =========================================================
+   VIDEO PROGRESS
+========================================================= */
+
+function setupVideoStatus(
+    video,
+    token
+) {
+
+    if (!video) {
         return;
-
     }
 
 
-    /* =====================================================
-       SAVE SEEN
-    ===================================================== */
+    video.addEventListener(
+        "timeupdate",
+        () => {
 
-    markStatusAsSeen(
-        status.id
+            if (
+                token !==
+                statusViewerToken
+            ) {
+                return;
+            }
+
+
+            if (
+                !Number.isFinite(
+                    video.duration
+                ) ||
+                video.duration <= 0
+            ) {
+                return;
+            }
+
+
+            const percentage =
+                (
+                    video.currentTime /
+                    video.duration
+                ) * 100;
+
+
+            const fill =
+                getCurrentProgressFill();
+
+
+            if (fill) {
+
+                fill.style.transition =
+                    "none";
+
+                fill.style.width =
+                    `${Math.min(
+                        100,
+                        Math.max(
+                            0,
+                            percentage
+                        )
+                    )}%`;
+            }
+
+        }
     );
 
 
-    /* =====================================================
-       REFRESH STATUS LIST
-    ===================================================== */
+    video.addEventListener(
+        "ended",
+        () => {
 
-    renderActiveStatusUsers();
+            if (
+                token !==
+                statusViewerToken
+            ) {
+                return;
+            }
+
+            advanceStatus();
+
+        }
+    );
 
 
-    /* =====================================================
-       REFRESH CONNECTED PEOPLE DP
-    ===================================================== */
+    video.addEventListener(
+        "error",
+        () => {
 
-    refreshConnectionStatusRings();
+            if (
+                token !==
+                statusViewerToken
+            ) {
+                return;
+            }
 
+
+            /*
+               If video cannot load,
+               move forward instead of
+               leaving viewer stuck.
+            */
+
+            statusAdvanceTimer =
+                setTimeout(
+                    () => {
+
+                        advanceStatus();
+
+                    },
+                    3000
+                );
+
+        }
+    );
+
+
+    video.addEventListener(
+        "click",
+        () => {
+
+            try {
+
+                if (video.paused) {
+
+                    video.muted = false;
+
+                    video.play();
+
+                } else {
+
+                    video.pause();
+                }
+
+            } catch (error) {
+
+                console.error(
+                    "Video control error:",
+                    error
+                );
+            }
+
+        }
+    );
+
+
+    /*
+       Try normal autoplay first.
+    */
+
+    const playPromise =
+        video.play();
+
+
+    if (
+        playPromise &&
+        typeof playPromise.catch ===
+        "function"
+    ) {
+
+        playPromise.catch(() => {
+
+            /*
+               Browser may block
+               autoplay with sound.
+
+               Retry muted so the
+               automatic viewer does
+               not get stuck.
+            */
+
+            try {
+
+                video.muted = true;
+
+                video.play();
+
+            } catch (error) {
+
+                console.error(
+                    "Video autoplay error:",
+                    error
+                );
+            }
+
+        });
+    }
 }
 
 
 /* =========================================================
-   STATUS VIEWER
+   =========================================================
+   SHOW STATUS VIEWER
+   =========================================================
 ========================================================= */
 
 function showStatusViewer() {
+
+    clearStatusAdvanceTimer();
+
+    statusViewerToken++;
+
+
+    const token =
+        statusViewerToken;
+
 
     if (
         !currentStatusUser ||
         !Array.isArray(
             currentStatusUser.statuses
-        ) ||
-        !currentStatusUser.statuses.length
+        )
     ) {
+
+        closeStatusViewer();
 
         return;
-
     }
 
 
-    /* =====================================================
-       INDEX SAFETY
-    ===================================================== */
+    const statuses =
+        getOrderedStatuses(
+            currentStatusUser
+        );
 
-    if (
-        currentStatusIndex < 0
-    ) {
 
-        currentStatusIndex =
-            0;
+    currentStatusUser.statuses =
+        statuses;
 
+
+    if (!statuses.length) {
+
+        closeStatusViewer();
+
+        return;
     }
 
 
     if (
-        currentStatusIndex >=
-        currentStatusUser.statuses.length
+        currentStatusIndex < 0 ||
+        currentStatusIndex >= statuses.length
     ) {
 
-        currentStatusIndex =
-            currentStatusUser.statuses.length - 1;
-
+        currentStatusIndex = 0;
     }
 
 
     const status =
-        currentStatusUser.statuses[
+        statuses[
             currentStatusIndex
         ];
 
 
     if (!status) {
+
+        closeStatusViewer();
+
         return;
     }
-
-
-    /* =====================================================
-       MARK AS SEEN
-    ===================================================== */
-
-    markCurrentStatusAsSeen();
 
 
     const viewer =
@@ -2754,18 +2499,7 @@ function showStatusViewer() {
         );
 
 
-    if (!viewer) {
-
-        showToast(
-            `${currentStatusUser.name || "User"} status`
-        );
-
-        return;
-
-    }
-
-
-    const mediaContainer =
+    const media =
         document.getElementById(
             "statusViewerMedia"
         );
@@ -2777,111 +2511,503 @@ function showStatusViewer() {
         );
 
 
+    const userIdElement =
+        document.getElementById(
+            "statusViewerUserId"
+        );
+
+
+    const timeElement =
+        document.getElementById(
+            "statusViewerTime"
+        );
+
+
+    const avatarElement =
+        document.getElementById(
+            "statusViewerAvatar"
+        );
+
+
+    const miniAvatar =
+        document.getElementById(
+            "statusMiniAvatar"
+        );
+
+
+    const miniName =
+        document.getElementById(
+            "statusMiniName"
+        );
+
+
+    const miniId =
+        document.getElementById(
+            "statusMiniId"
+        );
+
+
+    if (!viewer || !media) {
+        return;
+    }
+
+
+    const userName =
+        currentStatusUser.name ||
+        currentStatusUser.user_id ||
+        "User";
+
+
+    const userId =
+        String(
+            currentStatusUser.user_id ||
+            ""
+        );
+
+
+    const photo =
+        currentStatusUser.profile_photo ||
+        currentStatusUser.profilePhoto ||
+        "";
+
+
+    const isOwnStatus =
+        String(userId) ===
+        String(getCurrentUserId());
+
+
+    /* ================================================
+       VIEWER OPEN
+    ================================================= */
+
+    viewer.classList.add("active");
+
+    viewer.classList.toggle(
+        "status-viewer-own",
+        isOwnStatus
+    );
+
+
+    viewer.setAttribute(
+        "aria-hidden",
+        "false"
+    );
+
+
+    document.body.style.overflow =
+        "hidden";
+
+
+    /* ================================================
+       USER DATA
+    ================================================= */
+
     if (nameElement) {
 
         nameElement.textContent =
-            currentStatusUser.name ||
-            "User";
-
+            userName;
     }
 
 
-    if (mediaContainer) {
+    if (userIdElement) {
 
-        /* =================================================
-           VIDEO
-        ================================================= */
-
-        if (
-            status.media_type ===
-            "video"
-        ) {
-
-            mediaContainer.innerHTML = `
-
-                <video
-                    src="${escapeHtml(status.media_url)}"
-                    controls
-                    autoplay
-                    playsinline
-                    class="status-viewer-video"
-                ></video>
-
-            `;
-
-        }
-
-        /* =================================================
-           IMAGE
-        ================================================= */
-
-        else {
-
-            mediaContainer.innerHTML = `
-
-                <img
-                    src="${escapeHtml(status.media_url)}"
-                    alt="Status"
-                    class="status-viewer-image"
-                >
-
-            `;
-
-        }
-
+        userIdElement.textContent =
+            userId
+                ? `@${userId}`
+                : "";
     }
 
 
-    viewer.classList.add(
-        "active"
+    if (timeElement) {
+
+        timeElement.textContent =
+            formatStatusTime(
+                status.created_at
+            );
+    }
+
+
+    setViewerAvatar(
+        avatarElement,
+        photo,
+        userName
     );
 
+
+    setViewerAvatar(
+        miniAvatar,
+        photo,
+        userName
+    );
+
+
+    if (miniName) {
+
+        miniName.textContent =
+            userName;
+    }
+
+
+    if (miniId) {
+
+        miniId.textContent =
+            userId
+                ? `@${userId}`
+                : "";
+    }
+
+
+    /* ================================================
+       PROGRESS
+    ================================================= */
+
+    renderStatusProgress(
+        statuses.length,
+        currentStatusIndex
+    );
+
+
+    /* ================================================
+       CLEAR MEDIA
+    ================================================= */
+
+    media.innerHTML = "";
+
+
+    /* ================================================
+       MARK SEEN
+       Only OTHER users' status.
+    ================================================= */
+
+    if (!isOwnStatus) {
+
+        markStatusAsSeen(
+            status.id
+        );
+
+        /*
+           Re-render circles after marking
+           the current status as seen.
+        */
+
+        setTimeout(
+            () => {
+
+                renderActiveStatusUsers();
+
+                refreshConnectionStatusRings();
+
+            },
+            0
+        );
+    }
+
+
+    /* ================================================
+       IMAGE
+    ================================================= */
+
+    const mediaType =
+        String(
+            status.media_type ||
+            ""
+        ).toLowerCase();
+
+
+    const isVideo =
+        mediaType.includes(
+            "video"
+        );
+
+
+    if (!isVideo) {
+
+        const image =
+            document.createElement("img");
+
+
+        image.src =
+            status.media_url;
+
+
+        image.alt =
+            `${userName} status`;
+
+
+        image.draggable =
+            false;
+
+
+        image.addEventListener(
+            "error",
+            () => {
+
+                media.innerHTML = `
+                    <div class="status-media-error">
+                        Status media load nahi ho paya.
+                    </div>
+                `;
+
+            }
+        );
+
+
+        media.appendChild(
+            image
+        );
+
+
+        startImageProgress(
+            token
+        );
+
+    } else {
+
+        /* ==========================================
+           VIDEO
+        ========================================== */
+
+        const video =
+            document.createElement("video");
+
+
+        video.src =
+            status.media_url;
+
+
+        video.playsInline =
+            true;
+
+
+        video.autoplay =
+            true;
+
+
+        video.preload =
+            "auto";
+
+
+        video.controls =
+            false;
+
+
+        video.setAttribute(
+            "playsinline",
+            ""
+        );
+
+
+        video.setAttribute(
+            "webkit-playsinline",
+            ""
+        );
+
+
+        video.addEventListener(
+            "loadedmetadata",
+            () => {
+
+                if (
+                    token !==
+                    statusViewerToken
+                ) {
+                    return;
+                }
+
+
+                const fill =
+                    getCurrentProgressFill();
+
+
+                if (
+                    fill &&
+                    video.duration > 0
+                ) {
+
+                    fill.style.width =
+                        "0%";
+                }
+
+            }
+        );
+
+
+        media.appendChild(
+            video
+        );
+
+
+        setupVideoStatus(
+            video,
+            token
+        );
+
+    }
+
+
+    /* ================================================
+       COMMENT INPUT
+    ================================================= */
+
+    const commentInput =
+        document.getElementById(
+            "statusCommentInput"
+        );
+
+
+    if (commentInput) {
+
+        commentInput.value =
+            "";
+
+
+        commentInput.onkeydown =
+            function (event) {
+
+                if (
+                    event.key ===
+                    "Enter"
+                ) {
+
+                    event.preventDefault();
+
+                    submitStatusComment();
+                }
+
+            };
+    }
 }
 
 
 /* =========================================================
-   NEXT STATUS
+   =========================================================
+   AUTOMATIC NEXT STATUS
+   =========================================================
 ========================================================= */
 
-function nextStatus() {
+function advanceStatus() {
+
+    clearStatusAdvanceTimer();
+
 
     if (
-        !currentStatusUser ||
-        !currentStatusUser.statuses
+        !currentStatusUser
     ) {
 
-        return;
+        closeStatusViewer();
 
+        return;
     }
 
 
+    const statuses =
+        getOrderedStatuses(
+            currentStatusUser
+        );
+
+
+    currentStatusUser.statuses =
+        statuses;
+
+
+    /* ================================================
+       NEXT STATUS OF SAME USER
+    ================================================= */
+
     if (
         currentStatusIndex <
-        currentStatusUser.statuses.length - 1
+        statuses.length - 1
     ) {
 
         currentStatusIndex++;
 
         showStatusViewer();
 
+        return;
     }
 
+
+    /* ================================================
+       NEXT USER
+    ================================================= */
+
+    const nextUserIndex =
+        statusViewerUserIndex + 1;
+
+
+    if (
+        nextUserIndex <
+        statusViewerQueue.length
+    ) {
+
+        const nextUser =
+            statusViewerQueue[
+                nextUserIndex
+            ];
+
+
+        const nextStatuses =
+            getOrderedStatuses(
+                nextUser
+            );
+
+
+        if (nextStatuses.length) {
+
+            statusViewerUserIndex =
+                nextUserIndex;
+
+            currentStatusUser = {
+                ...nextUser,
+
+                statuses:
+                    nextStatuses
+            };
+
+            currentStatusIndex =
+                0;
+
+            showStatusViewer();
+
+            return;
+        }
+
+    }
+
+
+    /* ================================================
+       EVERYTHING FINISHED
+    ================================================= */
+
+    closeStatusViewer();
+}
+
+
+/* =========================================================
+   COMPATIBILITY NEXT STATUS
+========================================================= */
+
+function nextStatus() {
+
+    advanceStatus();
 }
 
 
 /* =========================================================
    PREVIOUS STATUS
+   No UI arrow.
+   Kept only for compatibility.
 ========================================================= */
 
 function previousStatus() {
 
+    clearStatusAdvanceTimer();
+
+
     if (
-        !currentStatusUser ||
-        !currentStatusUser.statuses
+        !currentStatusUser
     ) {
-
         return;
-
     }
 
 
@@ -2893,21 +3019,90 @@ function previousStatus() {
 
         showStatusViewer();
 
+        return;
     }
 
+
+    if (
+        statusViewerUserIndex > 0
+    ) {
+
+        statusViewerUserIndex--;
+
+        const previousUser =
+            statusViewerQueue[
+                statusViewerUserIndex
+            ];
+
+
+        const statuses =
+            getOrderedStatuses(
+                previousUser
+            );
+
+
+        if (statuses.length) {
+
+            currentStatusUser = {
+                ...previousUser,
+
+                statuses:
+                    statuses
+            };
+
+            currentStatusIndex =
+                statuses.length - 1;
+
+            showStatusViewer();
+        }
+    }
 }
 
 
 /* =========================================================
+   =========================================================
    CLOSE STATUS VIEWER
+   =========================================================
 ========================================================= */
 
 function closeStatusViewer() {
+
+    clearStatusAdvanceTimer();
+
+    statusViewerToken++;
+
 
     const viewer =
         document.getElementById(
             "statusViewer"
         );
+
+
+    const media =
+        document.getElementById(
+            "statusViewerMedia"
+        );
+
+
+    if (media) {
+
+        const video =
+            media.querySelector(
+                "video"
+            );
+
+        if (video) {
+
+            try {
+                video.pause();
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+
+        media.innerHTML = "";
+    }
 
 
     if (viewer) {
@@ -2916,21 +3111,19 @@ function closeStatusViewer() {
             "active"
         );
 
-    }
-
-
-    const mediaContainer =
-        document.getElementById(
-            "statusViewerMedia"
+        viewer.classList.remove(
+            "status-viewer-own"
         );
 
-
-    if (mediaContainer) {
-
-        mediaContainer.innerHTML =
-            "";
-
+        viewer.setAttribute(
+            "aria-hidden",
+            "true"
+        );
     }
+
+
+    document.body.style.overflow =
+        "";
 
 
     currentStatusUser =
@@ -2939,22 +3132,215 @@ function closeStatusViewer() {
     currentStatusIndex =
         0;
 
+    statusViewerQueue =
+        [];
+
+    statusViewerUserIndex =
+        -1;
 }
 
 
 /* =========================================================
-   SEE ALL
+   =========================================================
+   STATUS INTERACTIONS
+   =========================================================
+========================================================= */
+
+function likeCurrentStatus() {
+
+    /*
+       UI is ready.
+       Backend like endpoint can be
+       connected later without changing
+       the viewer structure.
+    */
+
+    showToast(
+        "Like feature backend se connect karna baaki hai."
+    );
+}
+
+
+function submitStatusComment() {
+
+    const input =
+        document.getElementById(
+            "statusCommentInput"
+        );
+
+    if (!input) {
+        return;
+    }
+
+
+    const text =
+        input.value.trim();
+
+
+    if (!text) {
+        return;
+    }
+
+
+    /*
+       Backend comment endpoint abhi
+       existing status API mein nahi hai.
+    */
+
+    showToast(
+        "Comment feature backend se connect karna baaki hai."
+    );
+}
+
+
+function shareCurrentStatus() {
+
+    if (
+        !currentStatusUser
+    ) {
+        return;
+    }
+
+
+    const userId =
+        currentStatusUser.user_id ||
+        "";
+
+
+    const shareUrl =
+        `${window.location.origin}/profile.html?user_id=${encodeURIComponent(userId)}`;
+
+
+    if (
+        navigator.share
+    ) {
+
+        navigator.share({
+
+            title:
+                `${currentStatusUser.name || "User"} • Usanex`,
+
+            text:
+                `Usanex par ${currentStatusUser.name || "User"} ka profile dekhein.`,
+
+            url:
+                shareUrl
+
+        }).catch(() => {});
+
+        return;
+    }
+
+
+    if (
+        navigator.clipboard &&
+        navigator.clipboard.writeText
+    ) {
+
+        navigator.clipboard
+            .writeText(shareUrl)
+            .then(() => {
+
+                showToast(
+                    "Profile link copied."
+                );
+
+            })
+            .catch(() => {
+
+                showToast(
+                    "Share link copy nahi ho paya."
+                );
+
+            });
+
+        return;
+    }
+
+
+    showToast(
+        "Share supported nahi hai."
+    );
+}
+
+
+function reportCurrentStatus() {
+
+    showToast(
+        "Report feature backend se connect karna baaki hai."
+    );
+}
+
+
+function mentionCurrentStatus() {
+
+    if (
+        !currentStatusUser
+    ) {
+        return;
+    }
+
+
+    const input =
+        document.getElementById(
+            "statusCommentInput"
+        );
+
+
+    if (!input) {
+        return;
+    }
+
+
+    const userId =
+        currentStatusUser.user_id ||
+        "";
+
+
+    const mention =
+        userId
+            ? `@${userId} `
+            : "";
+
+
+    if (
+        !input.value.startsWith(
+            mention
+        )
+    ) {
+
+        input.value =
+            mention +
+            input.value;
+    }
+
+
+    input.focus();
+}
+
+
+/* =========================================================
+   SHOW ALL STATUSES
 ========================================================= */
 
 function showAllStatuses() {
 
     if (
-        activeStatusUsers.length
+        !activeStatusUsers.length
     ) {
 
-        const sortedUsers =
-            [...activeStatusUsers].sort(
-                function(a, b) {
+        showToast(
+            "Abhi koi active status nahi hai."
+        );
+
+        return;
+    }
+
+
+    const sorted =
+        [...activeStatusUsers]
+            .sort(
+                (a, b) => {
 
                     const aSeen =
                         isUserFullySeen(a);
@@ -2964,330 +3350,33 @@ function showAllStatuses() {
 
 
                     if (
-                        aSeen === bSeen
+                        aSeen !== bSeen
                     ) {
 
-                        return 0;
-
+                        return aSeen
+                            ? 1
+                            : -1;
                     }
 
 
-                    return aSeen
-                        ? 1
-                        : -1;
-
+                    return 0;
                 }
             );
 
 
-        if (sortedUsers.length) {
+    if (sorted.length) {
 
-            openUserStatus(
-                sortedUsers[0].user_id
-            );
-
-            return;
-
-        }
-
-    }
-
-
-    showToast(
-        "No active statuses"
-    );
-
-}
-
-
-/* =========================================================
-   OLD STATUS COMPATIBILITY
-========================================================= */
-
-function addMyStatus() {
-
-    if (myStatuses.length) {
-
-        openMyStatus();
-
-    } else {
-
-        window.location.href =
-            "/status";
-
-    }
-
-}
-
-
-function openStatus(
-    letter,
-    name,
-    seen
-) {
-
-    showToast(
-        `${name} status`
-    );
-
-}
-
-
-/* =========================================================
-   BOTTOM NAVIGATION
-========================================================= */
-
-function goHome() {
-
-    window.location.href =
-        "/home";
-
-}
-
-
-function goReels() {
-
-    window.location.href =
-        "/reels";
-
-}
-
-
-function createPost() {
-
-    showToast(
-        "Create post coming soon."
-    );
-
-}
-
-
-function goNotifications() {
-
-    window.location.href =
-        "/notifications";
-
-}
-
-
-function goProfile() {
-
-    if (
-        currentUser &&
-        currentUser.user_id
-    ) {
-
-        window.location.href =
-            `/profile?user_id=${encodeURIComponent(
-                currentUser.user_id
-            )}`;
-
-        return;
-
-    }
-
-
-    window.location.href =
-        "/profile";
-
-}
-
-
-/* =========================================================
-   MENU
-========================================================= */
-
-function openMenu() {
-
-    if (!menuOverlay) {
-        return;
-    }
-
-    menuOverlay.classList.add(
-        "active"
-    );
-
-}
-
-
-function closeMenu() {
-
-    if (!menuOverlay) {
-        return;
-    }
-
-    menuOverlay.classList.remove(
-        "active"
-    );
-
-}
-
-
-function toggleMenu() {
-
-    if (!menuOverlay) {
-        return;
-    }
-
-    menuOverlay.classList.toggle(
-        "active"
-    );
-
-}
-
-
-if (menuBtn) {
-
-    menuBtn.addEventListener(
-        "click",
-        function(event) {
-
-            event.stopPropagation();
-
-            toggleMenu();
-
-        }
-    );
-
-}
-
-
-if (menuOverlay) {
-
-    menuOverlay.addEventListener(
-        "click",
-        function(event) {
-
-            if (
-                event.target ===
-                menuOverlay
-            ) {
-
-                closeMenu();
-
-            }
-
-        }
-    );
-
-}
-
-
-/* =========================================================
-   MENU ITEMS
-========================================================= */
-
-function goMonetization() {
-
-    showToast(
-        "Monetization coming soon."
-    );
-
-}
-
-
-function goBlocked() {
-
-    showToast(
-        "Blocked users coming soon."
-    );
-
-}
-
-
-function goPrivacy() {
-
-    showToast(
-        "Privacy & Security coming soon."
-    );
-
-}
-
-
-function goSettings() {
-
-    showToast(
-        "Settings coming soon."
-    );
-
-}
-
-
-function goHelp() {
-
-    showToast(
-        "Help & Support coming soon."
-    );
-
-}
-
-
-function goAbout() {
-
-    showToast(
-        "Usanex"
-    );
-
-}
-
-
-/* =========================================================
-   LOGOUT
-========================================================= */
-
-async function logoutUser() {
-
-    try {
-
-        await fetch(
-            "/logout",
-            {
-                method: "POST"
-            }
+        openUserStatus(
+            sorted[0].user_id
         );
-
-    } catch (error) {
-
-        console.log(
-            "Logout API not available."
-        );
-
     }
-
-
-    localStorage.removeItem(
-        "user"
-    );
-
-    localStorage.removeItem(
-        "token"
-    );
-
-    localStorage.removeItem(
-        "currentUser"
-    );
-
-    localStorage.removeItem(
-        "usanexUser"
-    );
-
-    localStorage.removeItem(
-        "loggedInUser"
-    );
-
-    localStorage.removeItem(
-        "userData"
-    );
-
-
-    window.location.href =
-        "/?open=login";
-
 }
 
 
 /* =========================================================
+   =========================================================
    DP VIEWER
+   =========================================================
 ========================================================= */
 
 function openDPViewer(
@@ -3305,31 +3394,28 @@ function openDPViewer(
             "dpViewerImage"
         );
 
-    const title =
+    const nameElement =
         document.getElementById(
             "dpViewerName"
         );
 
 
-    if (
-        !viewer ||
-        !image
-    ) {
-
+    if (!viewer) {
         return;
-
     }
 
 
-    image.src =
-        photo || "";
+    if (image) {
+
+        image.src =
+            photo || "";
+    }
 
 
-    if (title) {
+    if (nameElement) {
 
-        title.textContent =
-            name || "";
-
+        nameElement.textContent =
+            name || "User";
     }
 
 
@@ -3337,15 +3423,19 @@ function openDPViewer(
         "active"
     );
 
+    document.body.style.overflow =
+        "hidden";
 }
 
 
 function closeDPViewer(event) {
 
-    if (event) {
+    if (
+        event &&
+        event.stopPropagation
+    ) {
 
         event.stopPropagation();
-
     }
 
 
@@ -3355,82 +3445,228 @@ function closeDPViewer(event) {
         );
 
 
-    if (viewer) {
-
-        viewer.classList.remove(
-            "active"
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   STATUS HINT
-========================================================= */
-
-function showStatusHint() {
-
-    const hint =
-        document.getElementById(
-            "statusNewUserHint"
-        );
-
-
-    if (!hint) {
+    if (!viewer) {
         return;
     }
 
 
-    hint.style.display =
-        "block";
-
-
-    clearTimeout(
-        showStatusHint.timer
+    viewer.classList.remove(
+        "active"
     );
 
-
-    showStatusHint.timer =
-        setTimeout(
-            function() {
-
-                hint.style.display =
-                    "none";
-
-            },
-            5000
-        );
-
+    document.body.style.overflow =
+        "";
 }
 
 
 /* =========================================================
-   OUTSIDE SEARCH CLICK
+   =========================================================
+   NAVIGATION
+   =========================================================
+========================================================= */
+
+function goHome() {
+
+    window.location.href =
+        "/home.html";
+}
+
+
+function goReels() {
+
+    window.location.href =
+        "/reels.html";
+}
+
+
+function createPost() {
+
+    /*
+       Existing project can later route
+       this to post/status creation.
+    */
+
+    window.location.href =
+        "/status";
+}
+
+
+function goNotifications() {
+
+    window.location.href =
+        "/notifications.html";
+}
+
+
+function goProfile() {
+
+    const userId =
+        getCurrentUserId();
+
+
+    if (userId) {
+
+        window.location.href =
+            `/profile.html?user_id=${encodeURIComponent(userId)}`;
+
+    } else {
+
+        window.location.href =
+            "/profile.html";
+    }
+}
+
+
+/* =========================================================
+   MENU NAVIGATION
+========================================================= */
+
+function goMonetization() {
+
+    window.location.href =
+        "/monetization.html";
+}
+
+
+function goBlocked() {
+
+    window.location.href =
+        "/blocked.html";
+}
+
+
+function goPrivacy() {
+
+    window.location.href =
+        "/privacy.html";
+}
+
+
+function goSettings() {
+
+    window.location.href =
+        "/settings.html";
+}
+
+
+function goHelp() {
+
+    window.location.href =
+        "/help.html";
+}
+
+
+function goAbout() {
+
+    window.location.href =
+        "/about.html";
+}
+
+
+/* =========================================================
+   LOGOUT
+========================================================= */
+
+function logoutUser() {
+
+    const confirmed =
+        window.confirm(
+            "Logout from Usanex?"
+        );
+
+
+    if (!confirmed) {
+        return;
+    }
+
+
+    const keys = [
+        "currentUser",
+        "user",
+        "usanex_user",
+        "loggedInUser"
+    ];
+
+
+    keys.forEach(key => {
+
+        localStorage.removeItem(
+            key
+        );
+
+    });
+
+
+    sessionStorage.clear();
+
+
+    window.location.href =
+        "/login.html";
+}
+
+
+/* =========================================================
+   =========================================================
+   MENU
+   =========================================================
+========================================================= */
+
+if (menuBtn) {
+
+    menuBtn.addEventListener(
+        "click",
+        function (event) {
+
+            event.stopPropagation();
+
+            if (menuOverlay) {
+
+                menuOverlay.classList.toggle(
+                    "active"
+                );
+            }
+        }
+    );
+}
+
+
+if (menuOverlay) {
+
+    menuOverlay.addEventListener(
+        "click",
+        function (event) {
+
+            if (
+                event.target ===
+                menuOverlay
+            ) {
+
+                menuOverlay.classList.remove(
+                    "active"
+                );
+            }
+        }
+    );
+}
+
+
+/* =========================================================
+   SEARCH OUTSIDE CLICK
 ========================================================= */
 
 document.addEventListener(
     "click",
-    function(event) {
+    function (event) {
 
         if (
             searchResults &&
             searchInput &&
-            !searchResults.contains(
-                event.target
-            ) &&
-            !searchInput.contains(
-                event.target
-            )
+            !searchResults.contains(event.target) &&
+            !searchInput.contains(event.target)
         ) {
 
-            searchResults.classList.remove(
-                "active"
-            );
-
+            hideSearchResults();
         }
-
     }
 );
 
@@ -3441,38 +3677,196 @@ document.addEventListener(
 
 document.addEventListener(
     "keydown",
-    function(event) {
+    function (event) {
 
         if (
-            event.key === "Escape"
+            event.key !== "Escape"
         ) {
+            return;
+        }
 
-            closeMenu();
 
-            if (searchResults) {
+        const statusViewer =
+            document.getElementById(
+                "statusViewer"
+            );
 
-                searchResults.classList.remove(
-                    "active"
-                );
 
-            }
+        const dpViewer =
+            document.getElementById(
+                "dpViewer"
+            );
 
-            closeDPViewer();
+
+        if (
+            statusViewer &&
+            statusViewer.classList.contains(
+                "active"
+            )
+        ) {
 
             closeStatusViewer();
 
+            return;
         }
 
+
+        if (
+            dpViewer &&
+            dpViewer.classList.contains(
+                "active"
+            )
+        ) {
+
+            closeDPViewer();
+
+            return;
+        }
+
+
+        if (menuOverlay) {
+
+            menuOverlay.classList.remove(
+                "active"
+            );
+        }
+
+
+        hideSearchResults();
     }
 );
 
 
 /* =========================================================
-   GLOBAL FUNCTIONS
+   =========================================================
+   INITIALIZE HOME
+   =========================================================
 ========================================================= */
 
-window.addMyStatus =
-    addMyStatus;
+async function initializeHome() {
+
+    const user =
+        resolveCurrentUser();
+
+
+    if (!user) {
+
+        /*
+           Existing login system should normally
+           provide currentUser.
+
+           Do not redirect aggressively here,
+           because some existing login flows
+           may initialize storage asynchronously.
+        */
+
+        console.warn(
+            "Usanex: current user not found."
+        );
+    }
+
+
+    updateYourStatusLetter();
+
+
+    /*
+       Keep existing loading order:
+       Connections first,
+       then Status data refreshes
+       connection status rings.
+    */
+
+    await loadConnections();
+
+    await loadNotificationCount();
+
+    await loadHomeStatuses();
+
+
+    /*
+       Notification refresh.
+    */
+
+    clearInterval(
+        notificationTimer
+    );
+
+
+    notificationTimer =
+        setInterval(
+            () => {
+
+                loadNotificationCount();
+
+            },
+            30000
+        );
+
+
+    /*
+       Status refresh every 30 seconds.
+       This helps remove expired statuses
+       without requiring page refresh.
+    */
+
+    setInterval(
+        () => {
+
+            loadHomeStatuses();
+
+        },
+        30000
+    );
+
+
+    /*
+       New user hint.
+    */
+
+    const hint =
+        document.getElementById(
+            "statusNewUserHint"
+        );
+
+
+    if (hint) {
+
+        const hintShown =
+            localStorage.getItem(
+                "usanex_status_hint_seen"
+            );
+
+
+        if (hintShown) {
+
+            hint.style.display =
+                "none";
+
+        } else {
+
+            setTimeout(
+                () => {
+
+                    hint.style.display =
+                        "none";
+
+                    localStorage.setItem(
+                        "usanex_status_hint_seen",
+                        "1"
+                    );
+
+                },
+                7000
+            );
+        }
+    }
+}
+
+
+/* =========================================================
+   GLOBAL FUNCTIONS
+   Required by HTML onclick handlers
+========================================================= */
 
 window.addAnotherStatus =
     addAnotherStatus;
@@ -3483,6 +3877,9 @@ window.openMyStatus =
 window.openUserStatus =
     openUserStatus;
 
+window.showAllStatuses =
+    showAllStatuses;
+
 window.nextStatus =
     nextStatus;
 
@@ -3492,11 +3889,26 @@ window.previousStatus =
 window.closeStatusViewer =
     closeStatusViewer;
 
-window.showAllStatuses =
-    showAllStatuses;
+window.likeCurrentStatus =
+    likeCurrentStatus;
 
-window.openStatus =
-    openStatus;
+window.submitStatusComment =
+    submitStatusComment;
+
+window.shareCurrentStatus =
+    shareCurrentStatus;
+
+window.reportCurrentStatus =
+    reportCurrentStatus;
+
+window.mentionCurrentStatus =
+    mentionCurrentStatus;
+
+window.openDPViewer =
+    openDPViewer;
+
+window.closeDPViewer =
+    closeDPViewer;
 
 window.goHome =
     goHome;
@@ -3534,133 +3946,17 @@ window.goAbout =
 window.logoutUser =
     logoutUser;
 
-window.openDPViewer =
-    openDPViewer;
-
-window.closeDPViewer =
-    closeDPViewer;
-
-window.followUser =
-    followUser;
-
-window.openProfile =
-    openProfile;
+window.openUserProfile =
+    openUserProfile;
 
 window.openChat =
     openChat;
 
+window.openSearchUser =
+    openSearchUser;
 
-/* =========================================================
-   INITIALIZATION
-========================================================= */
-
-async function initializeHome() {
-
-    console.log(
-        "================================"
-    );
-
-    console.log(
-        "USANEX HOME INITIALIZING"
-    );
-
-    console.log(
-        "================================"
-    );
-
-
-    const user =
-        await resolveCurrentUser();
-
-
-    console.log(
-        "CURRENT USER:",
-        user
-    );
-
-
-    if (!user) {
-
-        const list =
-            document.getElementById(
-                "connectionsList"
-            );
-
-
-        if (list) {
-
-            list.innerHTML = `
-
-                <div class="empty-box">
-
-                    <div class="empty-icon">
-                        ⚠
-                    </div>
-
-                    <div class="empty-title">
-                        Login information not found
-                    </div>
-
-                    <div class="empty-text">
-                        Please login again.
-                    </div>
-
-                </div>
-
-            `;
-
-        }
-
-
-        return;
-
-    }
-
-
-    /* =====================================================
-       CONNECTIONS
-    ===================================================== */
-
-    await loadConnections();
-
-
-    /* =====================================================
-       NOTIFICATION COUNT
-    ===================================================== */
-
-    await loadNotificationCount();
-
-
-    /* =====================================================
-       NOTIFICATION REFRESH
-    ===================================================== */
-
-    clearInterval(
-        notificationTimer
-    );
-
-
-    notificationTimer =
-        setInterval(
-            loadNotificationCount,
-            30000
-        );
-
-
-    /* =====================================================
-       STATUS
-    ===================================================== */
-
-    await loadHomeStatuses();
-
-
-    /* =====================================================
-       STATUS HINT
-    ===================================================== */
-
-    showStatusHint();
-
-}
+window.followUser =
+    followUser;
 
 
 /* =========================================================
@@ -3680,5 +3976,4 @@ if (
 } else {
 
     initializeHome();
-
 }
