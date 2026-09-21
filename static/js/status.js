@@ -7,6 +7,13 @@
 
 
 /* =========================================================
+   API
+========================================================= */
+
+const API = "https://usanex-ai.onrender.com";
+
+
+/* =========================================================
    DOM
 ========================================================= */
 
@@ -151,17 +158,53 @@ function showToast(message) {
         return;
     }
 
-    statusToast.textContent = message;
+    statusToast.textContent =
+        message;
 
-    statusToast.classList.add("show");
+    statusToast.classList.add(
+        "show"
+    );
 
     clearTimeout(toastTimer);
 
-    toastTimer = setTimeout(() => {
+    toastTimer =
+        setTimeout(() => {
 
-        statusToast.classList.remove("show");
+            statusToast.classList.remove(
+                "show"
+            );
 
-    }, 2200);
+        }, 2200);
+
+}
+
+
+/* =========================================================
+   CURRENT USER
+========================================================= */
+
+function getCurrentUser() {
+
+    try {
+
+        const user =
+            JSON.parse(
+                localStorage.getItem("user") || "null"
+            );
+
+        return user;
+
+    } catch (error) {
+
+        console.error(
+            "Unable to read user:",
+            error
+        );
+
+        return null;
+
+    }
+
 }
 
 
@@ -175,7 +218,11 @@ function getCurrentMedia() {
         return null;
     }
 
-    return state.media[state.currentIndex] || null;
+    return (
+        state.media[state.currentIndex] ||
+        null
+    );
+
 }
 
 
@@ -190,10 +237,13 @@ function getMediaType(file) {
         typeof file.type === "string" &&
         file.type.startsWith("video/")
     ) {
+
         return "video";
+
     }
 
     return "image";
+
 }
 
 
@@ -210,8 +260,11 @@ function addFiles(fileList) {
         return;
     }
 
+
     const remaining =
-        MAX_MEDIA - state.media.length;
+        MAX_MEDIA -
+        state.media.length;
+
 
     if (remaining <= 0) {
 
@@ -220,64 +273,95 @@ function addFiles(fileList) {
         );
 
         return;
+
     }
 
+
     const selected =
-        files.slice(0, remaining);
+        files.slice(
+            0,
+            remaining
+        );
+
 
     let addedCount = 0;
 
-    selected.forEach(file => {
 
-        if (
-            !file.type.startsWith("image/") &&
-            !file.type.startsWith("video/")
-        ) {
-            return;
+    selected.forEach(
+        file => {
+
+            if (
+                !file.type.startsWith("image/") &&
+                !file.type.startsWith("video/")
+            ) {
+
+                return;
+
+            }
+
+
+            const item = {
+
+                id:
+                    `${Date.now()}-${Math.random()
+                        .toString(36)
+                        .slice(2)}`,
+
+                file:
+                    file,
+
+                url:
+                    URL.createObjectURL(
+                        file
+                    ),
+
+                type:
+                    getMediaType(
+                        file
+                    ),
+
+                text:
+                    "",
+
+                emojis:
+                    [],
+
+                filterIndex:
+                    0,
+
+                rotation:
+                    0,
+
+                scale:
+                    1,
+
+                crop: {
+
+                    enabled:
+                        false,
+
+                    scale:
+                        1
+
+                },
+
+                drawing:
+                    null,
+
+                uploaded:
+                    false
+
+            };
+
+
+            state.media.push(
+                item
+            );
+
+            addedCount++;
+
         }
-
-        const item = {
-
-            id:
-                `${Date.now()}-${Math.random()
-                    .toString(36)
-                    .slice(2)}`,
-
-            file: file,
-
-            url:
-                URL.createObjectURL(file),
-
-            type:
-                getMediaType(file),
-
-            text: "",
-
-            emojis: [],
-
-            filterIndex: 0,
-
-            rotation: 0,
-
-            scale: 1,
-
-            crop: {
-
-                enabled: false,
-
-                scale: 1
-
-            },
-
-            drawing: null
-
-        };
-
-        state.media.push(item);
-
-        addedCount++;
-
-    });
+    );
 
 
     if (!addedCount) {
@@ -287,17 +371,23 @@ function addFiles(fileList) {
         );
 
         return;
+
     }
 
 
-    if (state.media.length === addedCount) {
+    if (
+        state.media.length ===
+        addedCount
+    ) {
 
-        state.currentIndex = 0;
+        state.currentIndex =
+            0;
 
     } else {
 
         state.currentIndex =
-            state.media.length - addedCount;
+            state.media.length -
+            addedCount;
 
     }
 
@@ -317,14 +407,12 @@ if (statusMediaInput) {
         "change",
         event => {
 
-            addFiles(event.target.files);
+            addFiles(
+                event.target.files
+            );
 
-            /*
-             * Reset input so the same file can
-             * be selected again later.
-             */
-
-            event.target.value = "";
+            event.target.value =
+                "";
 
         }
     );
@@ -358,33 +446,407 @@ if (emptySelectBtn) {
 
 
 /* =========================================================
-   UPLOAD BUTTON
+   STATUS UPLOAD
 ========================================================= */
+
+let isUploading = false;
+
+
+/* =========================================================
+   UPLOAD SINGLE STATUS
+========================================================= */
+
+async function uploadSingleStatus(
+    item,
+    index,
+    total
+) {
+
+    const currentUser =
+        getCurrentUser();
+
+
+    if (
+        !currentUser ||
+        !currentUser.user_id
+    ) {
+
+        throw new Error(
+            "User login information not found."
+        );
+
+    }
+
+
+    if (!item.file) {
+
+        throw new Error(
+            "Media file not found."
+        );
+
+    }
+
+
+    showToast(
+        `Uploading ${index} / ${total}...`
+    );
+
+
+    const formData =
+        new FormData();
+
+
+    formData.append(
+        "file",
+        item.file
+    );
+
+
+    const url =
+        `${API}/api/status/upload?user_id=` +
+        encodeURIComponent(
+            currentUser.user_id
+        );
+
+
+    const response =
+        await fetch(
+            url,
+            {
+                method:
+                    "POST",
+
+                body:
+                    formData
+            }
+        );
+
+
+    let data =
+        null;
+
+
+    try {
+
+        data =
+            await response.json();
+
+    } catch (error) {
+
+        data =
+            null;
+
+    }
+
+
+    if (!response.ok) {
+
+        throw new Error(
+            data?.detail ||
+            `Upload failed (${response.status})`
+        );
+
+    }
+
+
+    if (!data?.ok) {
+
+        throw new Error(
+            data?.message ||
+            "Status upload failed."
+        );
+
+    }
+
+
+    return data;
+
+}
+
+
+/* =========================================================
+   UPLOAD ALL STATUSES
+========================================================= */
+
+async function uploadAllStatuses() {
+
+    if (isUploading) {
+        return;
+    }
+
+
+    if (!state.media.length) {
+
+        openMediaPicker();
+
+        return;
+
+    }
+
+
+    const currentUser =
+        getCurrentUser();
+
+
+    if (
+        !currentUser ||
+        !currentUser.user_id
+    ) {
+
+        showToast(
+            "Please login again."
+        );
+
+
+        setTimeout(
+            () => {
+
+                window.location.href =
+                    "/?open=login";
+
+            },
+            1000
+        );
+
+
+        return;
+
+    }
+
+
+    isUploading =
+        true;
+
+
+    if (statusUploadBtn) {
+
+        statusUploadBtn.disabled =
+            true;
+
+        statusUploadBtn.textContent =
+            "Uploading...";
+
+    }
+
+
+    let successCount =
+        0;
+
+    let failedCount =
+        0;
+
+
+    try {
+
+        const total =
+            state.media.length;
+
+
+        for (
+            let i = 0;
+            i < total;
+            i++
+        ) {
+
+            const item =
+                state.media[i];
+
+
+            try {
+
+                await uploadSingleStatus(
+                    item,
+                    i + 1,
+                    total
+                );
+
+
+                item.uploaded =
+                    true;
+
+
+                successCount++;
+
+
+            } catch (error) {
+
+                failedCount++;
+
+
+                item.uploaded =
+                    false;
+
+
+                console.error(
+                    `Status ${i + 1} upload failed:`,
+                    error
+                );
+
+            }
+
+        }
+
+
+        /* =================================================
+           ALL SUCCESS
+        ================================================= */
+
+        if (
+            successCount ===
+            total
+        ) {
+
+            showToast(
+                `${successCount} status uploaded successfully.`
+            );
+
+
+            cleanupMediaUrls();
+
+
+            state.media =
+                [];
+
+
+            state.currentIndex =
+                0;
+
+
+            state.drawingCanvas =
+                null;
+
+
+            state.drawingContext =
+                null;
+
+
+            render();
+
+
+            setTimeout(
+                () => {
+
+                    window.location.href =
+                        "/home";
+
+                },
+                1000
+            );
+
+
+            return;
+
+        }
+
+
+        /* =================================================
+           PARTIAL SUCCESS
+        ================================================= */
+
+        if (
+            successCount > 0
+        ) {
+
+            showToast(
+                `${successCount} uploaded, ${failedCount} failed.`
+            );
+
+
+            const failedMedia =
+                state.media.filter(
+                    item =>
+                        !item.uploaded
+                );
+
+
+            /*
+             * Release URLs of successfully
+             * uploaded files only.
+             */
+
+            state.media
+                .filter(
+                    item =>
+                        item.uploaded
+                )
+                .forEach(
+                    item => {
+
+                        if (item.url) {
+
+                            try {
+
+                                URL.revokeObjectURL(
+                                    item.url
+                                );
+
+                            } catch (error) {
+                                /* Ignore */
+                            }
+
+                        }
+
+                    }
+                );
+
+
+            state.media =
+                failedMedia;
+
+
+            state.currentIndex =
+                Math.min(
+                    state.currentIndex,
+                    Math.max(
+                        0,
+                        state.media.length - 1
+                    )
+                );
+
+
+            render();
+
+
+            return;
+
+        }
+
+
+        /* =================================================
+           COMPLETE FAILURE
+        ================================================= */
+
+        showToast(
+            "Status upload failed. Please try again."
+        );
+
+
+    } finally {
+
+        isUploading =
+            false;
+
+
+        if (statusUploadBtn) {
+
+            statusUploadBtn.disabled =
+                false;
+
+            statusUploadBtn.textContent =
+                "Upload";
+
+        }
+
+    }
+
+}
+
 
 if (statusUploadBtn) {
 
     statusUploadBtn.addEventListener(
         "click",
-        () => {
-
-            if (!state.media.length) {
-
-                openMediaPicker();
-
-                return;
-            }
-
-            /*
-             * Backend upload API is not connected yet.
-             * Keep the selected media ready for the
-             * future upload endpoint.
-             */
-
-            showToast(
-                `${state.media.length} media ready to upload.`
-            );
-
-        }
+        uploadAllStatuses
     );
 
 }
@@ -415,24 +877,26 @@ function renderMedia() {
         return;
     }
 
-    /*
-     * Stop old videos before replacing DOM.
-     */
 
     statusMediaContainer
         .querySelectorAll("video")
-        .forEach(video => {
+        .forEach(
+            video => {
 
-            try {
-                video.pause();
-            } catch (error) {
-                /* Ignore */
+                try {
+
+                    video.pause();
+
+                } catch (error) {
+                    /* Ignore */
+                }
+
             }
+        );
 
-        });
 
-
-    statusMediaContainer.innerHTML = "";
+    statusMediaContainer.innerHTML =
+        "";
 
 
     state.media.forEach(
@@ -440,27 +904,44 @@ function renderMedia() {
 
             let element;
 
-            if (item.type === "video") {
+
+            if (
+                item.type ===
+                "video"
+            ) {
 
                 element =
-                    document.createElement("video");
+                    document.createElement(
+                        "video"
+                    );
 
-                element.autoplay = true;
 
-                element.muted = true;
+                element.autoplay =
+                    true;
 
-                element.loop = true;
+                element.muted =
+                    true;
 
-                element.playsInline = true;
+                element.loop =
+                    true;
 
-                element.preload = "metadata";
+                element.playsInline =
+                    true;
 
-                element.controls = false;
+                element.preload =
+                    "metadata";
+
+                element.controls =
+                    false;
+
 
             } else {
 
                 element =
-                    document.createElement("img");
+                    document.createElement(
+                        "img"
+                    );
+
 
                 element.alt =
                     `Status media ${index + 1}`;
@@ -486,35 +967,29 @@ function renderMedia() {
             );
 
 
-            /*
-             * Active media.
-             */
+            if (
+                index ===
+                state.currentIndex
+            ) {
 
-            if (index === state.currentIndex) {
-
-                element.classList.add("active");
+                element.classList.add(
+                    "active"
+                );
 
             }
 
 
-            statusMediaContainer.appendChild(
-                element
-            );
+            statusMediaContainer
+                .appendChild(
+                    element
+                );
 
-
-            /*
-             * Add text/emoji overlays.
-             */
 
             renderOverlays(
                 element,
                 item
             );
 
-
-            /*
-             * Video starts muted automatically.
-             */
 
             if (
                 item.type === "video" &&
@@ -526,11 +1001,14 @@ function renderMedia() {
                     () => {
 
                         element.play()
-                            .catch(() => {});
+                            .catch(
+                                () => {}
+                            );
 
                     },
                     {
-                        once: true
+                        once:
+                            true
                     }
                 );
 
@@ -552,19 +1030,30 @@ function applyMediaStyle(
 ) {
 
     const filter =
-        FILTERS[item.filterIndex]
-            ? FILTERS[item.filterIndex].value
-            : "none";
+        FILTERS[
+            item.filterIndex
+        ]
+        ? FILTERS[
+            item.filterIndex
+        ].value
+        : "none";
 
 
     let scale =
-        Number(item.scale) || 1;
+        Number(
+            item.scale
+        ) || 1;
 
 
-    if (item.crop && item.crop.enabled) {
+    if (
+        item.crop &&
+        item.crop.enabled
+    ) {
 
         scale *=
-            Number(item.crop.scale) || 1;
+            Number(
+                item.crop.scale
+            ) || 1;
 
     }
 
@@ -589,70 +1078,88 @@ function renderOverlays(
 ) {
 
     const wrapper =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
+
 
     wrapper.className =
         "status-overlay-container";
 
+
     wrapper.style.position =
         "absolute";
+
 
     wrapper.style.inset =
         "0";
 
+
     wrapper.style.pointerEvents =
         "none";
+
 
     wrapper.style.zIndex =
         "16";
 
 
-    /*
-     * Text
-     */
-
     if (item.text) {
 
         const text =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
+
 
         text.className =
             "status-text-overlay";
 
+
         text.textContent =
             item.text;
 
-        wrapper.appendChild(text);
+
+        wrapper.appendChild(
+            text
+        );
 
     }
 
 
-    /*
-     * Emojis
-     */
-
     if (
-        Array.isArray(item.emojis) &&
+        Array.isArray(
+            item.emojis
+        ) &&
         item.emojis.length
     ) {
 
         item.emojis.forEach(
-            (emoji, index) => {
+            (
+                emoji,
+                index
+            ) => {
 
                 const emojiElement =
-                    document.createElement("div");
+                    document.createElement(
+                        "div"
+                    );
+
 
                 emojiElement.className =
                     "status-text-overlay";
 
+
                 emojiElement.textContent =
                     emoji;
+
 
                 emojiElement.style.top =
                     `${35 + (index * 13)}%`;
 
+
                 emojiElement.style.fontSize =
                     "42px";
+
 
                 wrapper.appendChild(
                     emojiElement
@@ -665,7 +1172,9 @@ function renderOverlays(
 
 
     mediaElement.parentNode
-        .appendChild(wrapper);
+        .appendChild(
+            wrapper
+        );
 
 }
 
@@ -680,27 +1189,36 @@ function renderThumbnails() {
         return;
     }
 
-    statusThumbnails.innerHTML = "";
+
+    statusThumbnails.innerHTML =
+        "";
 
 
     state.media.forEach(
         (item, index) => {
 
             const button =
-                document.createElement("button");
+                document.createElement(
+                    "button"
+                );
+
 
             button.type =
                 "button";
+
 
             button.className =
                 "status-thumbnail";
 
 
             if (
-                index === state.currentIndex
+                index ===
+                state.currentIndex
             ) {
 
-                button.classList.add("active");
+                button.classList.add(
+                    "active"
+                );
 
             }
 
@@ -712,30 +1230,44 @@ function renderThumbnails() {
             let preview;
 
 
-            if (item.type === "video") {
+            if (
+                item.type ===
+                "video"
+            ) {
 
                 preview =
-                    document.createElement("video");
+                    document.createElement(
+                        "video"
+                    );
+
 
                 preview.src =
                     item.url;
+
 
                 preview.muted =
                     true;
 
+
                 preview.playsInline =
                     true;
+
 
                 preview.preload =
                     "metadata";
 
+
             } else {
 
                 preview =
-                    document.createElement("img");
+                    document.createElement(
+                        "img"
+                    );
+
 
                 preview.src =
                     item.url;
+
 
                 preview.alt =
                     `Thumbnail ${index + 1}`;
@@ -743,21 +1275,33 @@ function renderThumbnails() {
             }
 
 
-            button.appendChild(preview);
+            button.appendChild(
+                preview
+            );
 
 
-            if (item.type === "video") {
+            if (
+                item.type ===
+                "video"
+            ) {
 
                 const icon =
-                    document.createElement("span");
+                    document.createElement(
+                        "span"
+                    );
+
 
                 icon.className =
                     "status-video-icon";
 
+
                 icon.textContent =
                     "▶";
 
-                button.appendChild(icon);
+
+                button.appendChild(
+                    icon
+                );
 
             }
 
@@ -768,7 +1312,8 @@ function renderThumbnails() {
 
                     selectMedia(
                         index,
-                        index > state.currentIndex
+                        index >
+                            state.currentIndex
                             ? "left"
                             : "right"
                     );
@@ -777,29 +1322,32 @@ function renderThumbnails() {
             );
 
 
-            statusThumbnails.appendChild(
-                button
-            );
+            statusThumbnails
+                .appendChild(
+                    button
+                );
 
         }
     );
 
-
-    /*
-     * Keep selected thumbnail visible.
-     */
 
     const active =
         statusThumbnails.querySelector(
             ".status-thumbnail.active"
         );
 
+
     if (active) {
 
         active.scrollIntoView({
-            behavior: "smooth",
-            block: "nearest",
-            inline: "center"
+            behavior:
+                "smooth",
+
+            block:
+                "nearest",
+
+            inline:
+                "center"
         });
 
     }
@@ -837,10 +1385,14 @@ function updateUI() {
             const current =
                 getCurrentMedia();
 
+
             const type =
-                current && current.type === "video"
+                current &&
+                current.type ===
+                "video"
                     ? "Video"
                     : "Photo";
+
 
             statusMediaInfo.textContent =
                 `${type} • ${count} selected`;
@@ -853,7 +1405,9 @@ function updateUI() {
     if (statusEmpty) {
 
         statusEmpty.style.display =
-            count ? "none" : "flex";
+            count
+                ? "none"
+                : "flex";
 
     }
 
@@ -861,7 +1415,9 @@ function updateUI() {
     if (statusEditorToolbar) {
 
         statusEditorToolbar.style.display =
-            count ? "flex" : "none";
+            count
+                ? "flex"
+                : "none";
 
     }
 
@@ -882,7 +1438,9 @@ function selectMedia(
         index >= state.media.length ||
         index === state.currentIndex
     ) {
+
         return;
+
     }
 
 
@@ -896,10 +1454,6 @@ function selectMedia(
 
     render();
 
-
-    /*
-     * Liquid Slide + Zoom/Blur effect.
-     */
 
     const active =
         statusMediaContainer
@@ -926,18 +1480,21 @@ function selectMedia(
         );
 
 
-        requestAnimationFrame(() => {
+        requestAnimationFrame(
+            () => {
 
-            active.classList.remove(
-                "enter-left",
-                "enter-right"
-            );
+                active.classList.remove(
+                    "enter-left",
+                    "enter-right"
+                );
 
-            active.classList.add(
-                "active"
-            );
 
-        });
+                active.classList.add(
+                    "active"
+                );
+
+            }
+        );
 
     }
 
@@ -991,19 +1548,24 @@ if (statusViewer) {
         "touchstart",
         event => {
 
-            if (!event.touches.length) {
+            if (
+                !event.touches.length
+            ) {
                 return;
             }
 
+
             state.touchStartX =
                 event.touches[0].clientX;
+
 
             state.touchStartY =
                 event.touches[0].clientY;
 
         },
         {
-            passive: true
+            passive:
+                true
         }
     );
 
@@ -1012,7 +1574,9 @@ if (statusViewer) {
         "touchend",
         event => {
 
-            if (!event.changedTouches.length) {
+            if (
+                !event.changedTouches.length
+            ) {
                 return;
             }
 
@@ -1020,26 +1584,28 @@ if (statusViewer) {
             const endX =
                 event.changedTouches[0].clientX;
 
+
             const endY =
                 event.changedTouches[0].clientY;
 
 
             const deltaX =
-                endX - state.touchStartX;
+                endX -
+                state.touchStartX;
+
 
             const deltaY =
-                endY - state.touchStartY;
+                endY -
+                state.touchStartY;
 
-
-            /*
-             * Ignore vertical scrolling gesture.
-             */
 
             if (
                 Math.abs(deltaX) <
                 SWIPE_DISTANCE
             ) {
+
                 return;
+
             }
 
 
@@ -1047,7 +1613,9 @@ if (statusViewer) {
                 Math.abs(deltaX) <=
                 Math.abs(deltaY)
             ) {
+
                 return;
+
             }
 
 
@@ -1063,7 +1631,8 @@ if (statusViewer) {
 
         },
         {
-            passive: true
+            passive:
+                true
         }
     );
 
@@ -1079,6 +1648,7 @@ function openTextEditor() {
     const current =
         getCurrentMedia();
 
+
     if (!current) {
 
         showToast(
@@ -1086,6 +1656,7 @@ function openTextEditor() {
         );
 
         return;
+
     }
 
 
@@ -1097,11 +1668,14 @@ function openTextEditor() {
         false;
 
 
-    setTimeout(() => {
+    setTimeout(
+        () => {
 
-        statusTextInput.focus();
+            statusTextInput.focus();
 
-    }, 50);
+        },
+        50
+    );
 
 }
 
@@ -1143,6 +1717,7 @@ if (applyTextBtn) {
             const current =
                 getCurrentMedia();
 
+
             if (!current) {
                 return;
             }
@@ -1155,6 +1730,7 @@ if (applyTextBtn) {
             closeTextEditor();
 
             render();
+
 
             showToast(
                 "Text saved."
@@ -1174,14 +1750,16 @@ document
     .querySelectorAll(
         "[data-close-text-editor]"
     )
-    .forEach(element => {
+    .forEach(
+        element => {
 
-        element.addEventListener(
-            "click",
-            closeTextEditor
-        );
+            element.addEventListener(
+                "click",
+                closeTextEditor
+            );
 
-    });
+        }
+    );
 
 
 /* =========================================================
@@ -1193,6 +1771,7 @@ function openEmojiPicker() {
     const current =
         getCurrentMedia();
 
+
     if (!current) {
 
         showToast(
@@ -1200,6 +1779,7 @@ function openEmojiPicker() {
         );
 
         return;
+
     }
 
 
@@ -1231,14 +1811,16 @@ document
     .querySelectorAll(
         "[data-close-emoji]"
     )
-    .forEach(element => {
+    .forEach(
+        element => {
 
-        element.addEventListener(
-            "click",
-            closeEmojiPicker
-        );
+            element.addEventListener(
+                "click",
+                closeEmojiPicker
+            );
 
-    });
+        }
+    );
 
 
 if (emojiGrid) {
@@ -1247,37 +1829,41 @@ if (emojiGrid) {
         .querySelectorAll(
             "[data-emoji]"
         )
-        .forEach(button => {
+        .forEach(
+            button => {
 
-            button.addEventListener(
-                "click",
-                () => {
+                button.addEventListener(
+                    "click",
+                    () => {
 
-                    const current =
-                        getCurrentMedia();
+                        const current =
+                            getCurrentMedia();
 
-                    if (!current) {
-                        return;
+
+                        if (!current) {
+                            return;
+                        }
+
+
+                        current.emojis.push(
+                            button.dataset.emoji
+                        );
+
+
+                        closeEmojiPicker();
+
+                        render();
+
+
+                        showToast(
+                            "Emoji added."
+                        );
+
                     }
+                );
 
-
-                    current.emojis.push(
-                        button.dataset.emoji
-                    );
-
-
-                    closeEmojiPicker();
-
-                    render();
-
-                    showToast(
-                        "Emoji added."
-                    );
-
-                }
-            );
-
-        });
+            }
+        );
 
 }
 
@@ -1306,7 +1892,9 @@ function createDrawingCanvas() {
 
 
     canvas =
-        document.createElement("canvas");
+        document.createElement(
+            "canvas"
+        );
 
 
     canvas.className =
@@ -1318,7 +1906,9 @@ function createDrawingCanvas() {
     );
 
 
-    resizeDrawingCanvas(canvas);
+    resizeDrawingCanvas(
+        canvas
+    );
 
 
     canvas.addEventListener(
@@ -1350,10 +1940,13 @@ function createDrawingCanvas() {
 }
 
 
-function resizeDrawingCanvas(canvas) {
+function resizeDrawingCanvas(
+    canvas
+) {
 
     const rect =
-        statusMediaContainer.getBoundingClientRect();
+        statusMediaContainer
+            .getBoundingClientRect();
 
 
     const ratio =
@@ -1364,14 +1957,22 @@ function resizeDrawingCanvas(canvas) {
 
 
     canvas.width =
-        Math.round(rect.width * ratio);
+        Math.round(
+            rect.width *
+            ratio
+        );
+
 
     canvas.height =
-        Math.round(rect.height * ratio);
+        Math.round(
+            rect.height *
+            ratio
+        );
 
 
     canvas.style.width =
         `${rect.width}px`;
+
 
     canvas.style.height =
         `${rect.height}px`;
@@ -1390,11 +1991,14 @@ function resizeDrawingCanvas(canvas) {
     context.lineCap =
         "round";
 
+
     context.lineJoin =
         "round";
 
+
     context.strokeStyle =
         state.drawColor;
+
 
     context.lineWidth =
         state.drawSize;
@@ -1414,20 +2018,28 @@ function getCanvasPoint(
     return {
 
         x:
-            event.clientX - rect.left,
+            event.clientX -
+            rect.left,
 
         y:
-            event.clientY - rect.top
+            event.clientY -
+            rect.top
 
     };
 
 }
 
 
-function startDrawing(event) {
+function startDrawing(
+    event
+) {
 
-    if (!state.drawingContext) {
+    if (
+        !state.drawingContext
+    ) {
+
         return;
+
     }
 
 
@@ -1444,26 +2056,32 @@ function startDrawing(event) {
 
     state.drawingContext.beginPath();
 
+
     state.drawingContext.moveTo(
         point.x,
         point.y
     );
 
 
-    state.drawingCanvas.setPointerCapture?.(
-        event.pointerId
-    );
+    state.drawingCanvas
+        .setPointerCapture?.(
+            event.pointerId
+        );
 
 }
 
 
-function drawMove(event) {
+function drawMove(
+    event
+) {
 
     if (
         !state.isDrawing ||
         !state.drawingContext
     ) {
+
         return;
+
     }
 
 
@@ -1487,8 +2105,12 @@ function drawMove(event) {
 
 function stopDrawing() {
 
-    if (!state.isDrawing) {
+    if (
+        !state.isDrawing
+    ) {
+
         return;
+
     }
 
 
@@ -1506,11 +2128,14 @@ function saveDrawing() {
     const current =
         getCurrentMedia();
 
+
     if (
         !current ||
         !state.drawingCanvas
     ) {
+
         return;
+
     }
 
 
@@ -1538,12 +2163,15 @@ function loadDrawing() {
     const current =
         getCurrentMedia();
 
+
     if (
         !current ||
         !current.drawing ||
         !state.drawingContext
     ) {
+
         return;
+
     }
 
 
@@ -1551,33 +2179,34 @@ function loadDrawing() {
         new Image();
 
 
-    image.onload = () => {
+    image.onload =
+        () => {
 
-        const canvas =
-            state.drawingCanvas;
-
-
-        const rect =
-            canvas.getBoundingClientRect();
+            const canvas =
+                state.drawingCanvas;
 
 
-        state.drawingContext.clearRect(
-            0,
-            0,
-            rect.width,
-            rect.height
-        );
+            const rect =
+                canvas.getBoundingClientRect();
 
 
-        state.drawingContext.drawImage(
-            image,
-            0,
-            0,
-            rect.width,
-            rect.height
-        );
+            state.drawingContext.clearRect(
+                0,
+                0,
+                rect.width,
+                rect.height
+            );
 
-    };
+
+            state.drawingContext.drawImage(
+                image,
+                0,
+                0,
+                rect.width,
+                rect.height
+            );
+
+        };
 
 
     image.src =
@@ -1595,6 +2224,7 @@ function activateDraw() {
     const current =
         getCurrentMedia();
 
+
     if (!current) {
 
         showToast(
@@ -1602,6 +2232,7 @@ function activateDraw() {
         );
 
         return;
+
     }
 
 
@@ -1617,12 +2248,14 @@ function activateDraw() {
     state.drawingCanvas =
         canvas;
 
+
     state.drawingContext =
         canvas.getContext("2d");
 
 
     state.drawingContext.strokeStyle =
         state.drawColor;
+
 
     state.drawingContext.lineWidth =
         state.drawSize;
@@ -1652,6 +2285,7 @@ function applyNextFilter() {
     const current =
         getCurrentMedia();
 
+
     if (!current) {
 
         showToast(
@@ -1659,17 +2293,20 @@ function applyNextFilter() {
         );
 
         return;
+
     }
 
 
     current.filterIndex++;
+
 
     if (
         current.filterIndex >=
         FILTERS.length
     ) {
 
-        current.filterIndex = 0;
+        current.filterIndex =
+            0;
 
     }
 
@@ -1707,6 +2344,7 @@ function rotateCurrent() {
     const current =
         getCurrentMedia();
 
+
     if (!current) {
 
         showToast(
@@ -1714,17 +2352,21 @@ function rotateCurrent() {
         );
 
         return;
+
     }
 
 
-    current.rotation += 90;
+    current.rotation +=
+        90;
 
 
     if (
-        current.rotation >= 360
+        current.rotation >=
+        360
     ) {
 
-        current.rotation = 0;
+        current.rotation =
+            0;
 
     }
 
@@ -1762,6 +2404,7 @@ function cropCurrent() {
     const current =
         getCurrentMedia();
 
+
     if (!current) {
 
         showToast(
@@ -1769,13 +2412,9 @@ function cropCurrent() {
         );
 
         return;
+
     }
 
-
-    /*
-     * Simple non-destructive crop/zoom.
-     * Full crop handles can be added later.
-     */
 
     current.crop.enabled =
         !current.crop.enabled;
@@ -1788,6 +2427,7 @@ function cropCurrent() {
         current.crop.scale =
             1.18;
 
+
         showToast(
             "Crop mode applied."
         );
@@ -1796,6 +2436,7 @@ function cropCurrent() {
 
         current.crop.scale =
             1;
+
 
         showToast(
             "Crop reset."
@@ -1833,94 +2474,92 @@ if (statusEditorToolbar) {
         .querySelectorAll(
             ".status-tool"
         )
-        .forEach(button => {
+        .forEach(
+            button => {
 
-            button.addEventListener(
-                "click",
-                () => {
+                button.addEventListener(
+                    "click",
+                    () => {
 
-                    const tool =
-                        button.dataset.tool;
+                        const tool =
+                            button.dataset.tool;
 
 
-                    /*
-                     * Visual active state.
-                     */
+                        statusEditorToolbar
+                            .querySelectorAll(
+                                ".status-tool"
+                            )
+                            .forEach(
+                                item => {
 
-                    statusEditorToolbar
-                        .querySelectorAll(
-                            ".status-tool"
-                        )
-                        .forEach(
-                            item => {
+                                    item.classList.remove(
+                                        "active"
+                                    );
 
-                                item.classList.remove(
-                                    "active"
-                                );
+                                }
+                            );
 
-                            }
+
+                        button.classList.add(
+                            "active"
                         );
 
 
-                    button.classList.add(
-                        "active"
-                    );
+                        switch (tool) {
+
+                            case "text":
+
+                                openTextEditor();
+
+                                break;
 
 
-                    switch (tool) {
+                            case "emoji":
 
-                        case "text":
+                                openEmojiPicker();
 
-                            openTextEditor();
-
-                            break;
+                                break;
 
 
-                        case "emoji":
+                            case "draw":
 
-                            openEmojiPicker();
+                                activateDraw();
 
-                            break;
-
-
-                        case "draw":
-
-                            activateDraw();
-
-                            break;
+                                break;
 
 
-                        case "filter":
+                            case "filter":
 
-                            applyNextFilter();
+                                applyNextFilter();
 
-                            break;
-
-
-                        case "crop":
-
-                            cropCurrent();
-
-                            break;
+                                break;
 
 
-                        case "rotate":
+                            case "crop":
 
-                            rotateCurrent();
+                                cropCurrent();
 
-                            break;
+                                break;
 
 
-                        default:
+                            case "rotate":
 
-                            break;
+                                rotateCurrent();
+
+                                break;
+
+
+                            default:
+
+                                break;
+
+                        }
 
                     }
+                );
 
-                }
-            );
-
-        });
+            }
+        );
 
 }
 
@@ -1934,10 +2573,6 @@ if (statusBackBtn) {
     statusBackBtn.addEventListener(
         "click",
         () => {
-
-            /*
-             * Release object URLs.
-             */
 
             cleanupMediaUrls();
 
@@ -1988,18 +2623,17 @@ document.addEventListener(
     "keydown",
     event => {
 
-        /*
-         * Don't intercept typing.
-         */
-
         const tag =
             document.activeElement?.tagName;
+
 
         if (
             tag === "INPUT" ||
             tag === "TEXTAREA"
         ) {
+
             return;
+
         }
 
 
@@ -2036,12 +2670,15 @@ document.addEventListener(
         if (
             !state.media.length
         ) {
+
             return;
+
         }
 
 
         if (
-            event.key === "ArrowRight"
+            event.key ===
+            "ArrowRight"
         ) {
 
             nextMedia();
@@ -2050,7 +2687,8 @@ document.addEventListener(
 
 
         if (
-            event.key === "ArrowLeft"
+            event.key ===
+            "ArrowLeft"
         ) {
 
             previousMedia();
