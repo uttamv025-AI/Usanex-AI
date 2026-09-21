@@ -3451,6 +3451,94 @@ async def upload_status(
             ),
         },
     }
+
+@app.get("/api/status/home")
+async def get_home_statuses(
+    user_id: str,
+    db: Session = Depends(get_db),
+):
+    user_id = user_id.strip()
+
+    if not user_id:
+        raise HTTPException(
+            status_code=400,
+            detail="User ID is required",
+        )
+
+    now = datetime.utcnow()
+
+    # =====================================================
+    # MY ACTIVE STATUSES
+    # =====================================================
+
+    my_rows = (
+        db.query(Status)
+        .filter(
+            Status.user_id == user_id,
+            Status.expires_at > now,
+        )
+        .order_by(Status.created_at.asc())
+        .all()
+    )
+
+    my_statuses = [
+        {
+            "id": status.id,
+            "user_id": status.user_id,
+            "media_url": status.media_url,
+            "media_type": status.media_type,
+            "created_at": status.created_at.isoformat(),
+            "expires_at": status.expires_at.isoformat(),
+        }
+        for status in my_rows
+    ]
+
+    # =====================================================
+    # OTHER ACTIVE STATUSES
+    # =====================================================
+
+    rows = (
+        db.query(Status, User)
+        .join(
+            User,
+            User.user_id == Status.user_id,
+        )
+        .filter(
+            Status.expires_at > now,
+            Status.user_id != user_id,
+        )
+        .order_by(Status.created_at.desc())
+        .limit(500)
+        .all()
+    )
+
+    grouped = {}
+
+    for status, user in rows:
+
+        if user.user_id not in grouped:
+            grouped[user.user_id] = {
+                "user_id": user.user_id,
+                "name": user.name,
+                "profile_photo": user.profile_photo,
+                "statuses": [],
+            }
+
+        grouped[user.user_id]["statuses"].append({
+            "id": status.id,
+            "media_url": status.media_url,
+            "media_type": status.media_type,
+            "created_at": status.created_at.isoformat(),
+            "expires_at": status.expires_at.isoformat(),
+        })
+
+    return {
+        "ok": True,
+        "my_statuses": my_statuses,
+        "has_my_status": bool(my_statuses),
+        "users": list(grouped.values()),
+    }
+    
     
 @app.get("/api/status/my")
 async def get_my_statuses(
