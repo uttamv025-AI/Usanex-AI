@@ -10,7 +10,6 @@
 
     <title>Usanex</title>
 
-    <!-- HOME CSS -->
     <link
         rel="stylesheet"
         href="/static/css/home.css">
@@ -110,16 +109,26 @@
     </div>
 
 
-    <div class="status-scroll">
+    <!-- =====================================================
+         STATUS ROW
+         YOUR STATUS = FIXED
+         OTHER USERS = SCROLL
+    ====================================================== -->
+
+    <div class="status-row">
 
 
-        <!-- YOUR STATUS -->
+        <!-- =================================================
+             YOUR STATUS
+        ================================================== -->
 
         <div
-            class="status-item"
-            onclick="addMyStatus()">
+            class="status-item my-status-item"
+            id="myStatusItem">
 
-            <div class="status-circle your-status">
+            <div
+                class="status-circle your-status"
+                id="myStatusCircle">
 
                 <div class="status-avatar-inner">
 
@@ -129,11 +138,27 @@
 
                 </div>
 
-                <div class="status-plus">
+
+                <!--
+                    NO STATUS:
+                    whole card uploads
+
+                    STATUS EXISTS:
+                    + adds another status
+                -->
+
+                <button
+                    type="button"
+                    class="status-plus"
+                    id="myStatusPlus"
+                    onclick="addAnotherStatus(event)">
+
                     +
-                </div>
+
+                </button>
 
             </div>
+
 
             <div class="status-name">
                 Your status
@@ -142,107 +167,14 @@
         </div>
 
 
-        <!-- SHIVAM -->
+        <!-- =================================================
+             OTHER USERS
+             JS WILL LOAD ONLY ACTIVE STATUSES
+        ================================================== -->
 
         <div
-            class="status-item"
-            onclick="openStatus('S','Shivam',false)">
-
-            <div class="status-circle unseen">
-
-                <div class="status-avatar-inner">
-                    S
-                </div>
-
-            </div>
-
-            <div class="status-name">
-                Shivam
-            </div>
-
-        </div>
-
-
-        <!-- KARAN -->
-
-        <div
-            class="status-item"
-            onclick="openStatus('K','Karan',false)">
-
-            <div class="status-circle unseen">
-
-                <div class="status-avatar-inner">
-                    K
-                </div>
-
-            </div>
-
-            <div class="status-name">
-                Karan
-            </div>
-
-        </div>
-
-
-        <!-- ANKIT -->
-
-        <div
-            class="status-item"
-            onclick="openStatus('A','Ankit',true)">
-
-            <div class="status-circle seen">
-
-                <div class="status-avatar-inner">
-                    A
-                </div>
-
-            </div>
-
-            <div class="status-name">
-                Ankit
-            </div>
-
-        </div>
-
-
-        <!-- RAHUL -->
-
-        <div
-            class="status-item"
-            onclick="openStatus('R','Rahul',false)">
-
-            <div class="status-circle unseen">
-
-                <div class="status-avatar-inner">
-                    R
-                </div>
-
-            </div>
-
-            <div class="status-name">
-                Rahul
-            </div>
-
-        </div>
-
-
-        <!-- PRIYA -->
-
-        <div
-            class="status-item"
-            onclick="openStatus('P','Priya',true)">
-
-            <div class="status-circle seen">
-
-                <div class="status-avatar-inner">
-                    P
-                </div>
-
-            </div>
-
-            <div class="status-name">
-                Priya
-            </div>
+            class="status-scroll"
+            id="otherStatusScroll">
 
         </div>
 
@@ -404,11 +336,8 @@
     class="menu-overlay"
     id="menuOverlay">
 
-
     <div class="menu-panel">
 
-
-        <!-- MONETIZATION -->
 
         <div
             class="menu-item"
@@ -429,8 +358,6 @@
         </div>
 
 
-        <!-- BLOCKED -->
-
         <div
             class="menu-item"
             onclick="goBlocked()">
@@ -449,8 +376,6 @@
 
         </div>
 
-
-        <!-- PRIVACY -->
 
         <div
             class="menu-item"
@@ -471,8 +396,6 @@
         </div>
 
 
-        <!-- SETTINGS -->
-
         <div
             class="menu-item"
             onclick="goSettings()">
@@ -491,8 +414,6 @@
 
         </div>
 
-
-        <!-- HELP -->
 
         <div
             class="menu-item"
@@ -513,8 +434,6 @@
         </div>
 
 
-        <!-- ABOUT -->
-
         <div
             class="menu-item"
             onclick="goAbout()">
@@ -533,8 +452,6 @@
 
         </div>
 
-
-        <!-- LOGOUT -->
 
         <div
             class="menu-item logout"
@@ -564,7 +481,6 @@
     id="dpViewer"
     onclick="closeDPViewer()">
 
-
     <button
         class="dp-viewer-close"
         type="button"
@@ -587,6 +503,75 @@
         id="dpViewerName">
 
     </div>
+
+</div>
+
+
+<!-- =========================================================
+     STATUS VIEWER
+========================================================= -->
+
+<div
+    class="status-viewer"
+    id="statusViewer">
+
+
+    <!-- CLOSE -->
+
+    <button
+        type="button"
+        class="status-viewer-close"
+        onclick="closeStatusViewer()">
+
+        ×
+
+    </button>
+
+
+    <!-- TOP USER -->
+
+    <div class="status-viewer-header">
+
+        <div
+            class="status-viewer-name"
+            id="statusViewerName">
+
+        </div>
+
+    </div>
+
+
+    <!-- MEDIA -->
+
+    <div
+        class="status-viewer-media"
+        id="statusViewerMedia">
+
+    </div>
+
+
+    <!-- PREVIOUS -->
+
+    <button
+        type="button"
+        class="status-nav status-prev"
+        onclick="previousStatus()">
+
+        ‹
+
+    </button>
+
+
+    <!-- NEXT -->
+
+    <button
+        type="button"
+        class="status-nav status-next"
+        onclick="nextStatus()">
+
+        ›
+
+    </button>
 
 </div>
 
