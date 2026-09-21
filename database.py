@@ -428,6 +428,14 @@ class Status(Base):
         primary_key=True,
         autoincrement=True
     )
+        __table_args__ = (
+        Index(
+            "ix_status_user_expires_created",
+            "user_id",
+            "expires_at",
+            "created_at",
+        ),
+        )
 
     user_id: Mapped[str] = mapped_column(
         String(20),
