@@ -4,18 +4,23 @@
    USANEX HOME.JS
    Compatible with current home.html + home.css
 
-   STATUS FEATURES:
-   - Your Status fixed on left
-   - Other active statuses horizontally scroll
-   - Unseen = Blue border
-   - Seen = Grey border
-   - Seen users automatically move to end
+   INCLUDED:
+   - Connections
+   - Search
+   - Follow
+   - Notifications
+   - Menu
+   - Chat
+   - Profile
+   - Logout
+   - Status upload/view
+   - Status seen/unseen
+   - Seen users move to end
    - Seen state survives refresh
-   - New status becomes unseen automatically
-   - Multiple statuses tracked individually
-   - User becomes fully seen only after all active statuses
-     have been viewed
-   - Expired status IDs are removed from localStorage
+   - New status becomes unseen
+   - Multiple status tracking
+   - Connected People DP also shows status ring
+   - Connected People DP click opens status
 ========================================================= */
 
 
@@ -27,6 +32,9 @@ let currentUser = null;
 let searchTimer = null;
 let notificationTimer = null;
 let toastTimer = null;
+
+/* Connected People data */
+let connectedUsersData = [];
 
 
 /* =========================================================
@@ -124,7 +132,6 @@ function normalizeUser(value) {
 function getStoredCurrentUser() {
 
     const keys = [
-
         "user",
         "currentUser",
         "usanexUser",
@@ -132,7 +139,6 @@ function getStoredCurrentUser() {
         "userData",
         "user_id",
         "userId"
-
     ];
 
     for (const key of keys) {
@@ -148,9 +154,7 @@ function getStoredCurrentUser() {
             normalizeUser(raw);
 
         if (user) {
-
             return user;
-
         }
 
     }
@@ -198,9 +202,7 @@ async function resolveCurrentUser() {
 function updateYourStatusLetter() {
 
     const element =
-        document.getElementById(
-            "youLetter"
-        );
+        document.getElementById("youLetter");
 
     if (!element) {
         return;
@@ -208,8 +210,7 @@ function updateYourStatusLetter() {
 
     if (!currentUser) {
 
-        element.textContent =
-            "U";
+        element.textContent = "U";
 
         return;
 
@@ -233,15 +234,10 @@ function updateYourStatusLetter() {
 function escapeHtml(value) {
 
     return String(value || "")
-
         .replace(/&/g, "&amp;")
-
         .replace(/</g, "&lt;")
-
         .replace(/>/g, "&gt;")
-
         .replace(/"/g, "&quot;")
-
         .replace(/'/g, "&#039;");
 
 }
@@ -254,9 +250,7 @@ function escapeHtml(value) {
 function showToast(message) {
 
     const toast =
-        document.getElementById(
-            "toast"
-        );
+        document.getElementById("toast");
 
     if (!toast) {
         return;
@@ -304,9 +298,10 @@ async function loadConnections() {
         return;
     }
 
-    /* -----------------------------------------------
+
+    /* =====================================================
        USER CHECK
-    ------------------------------------------------ */
+    ===================================================== */
 
     if (
         !currentUser ||
@@ -334,10 +329,7 @@ async function loadConnections() {
         `;
 
         if (count) {
-
-            count.textContent =
-                "0";
-
+            count.textContent = "0";
         }
 
         return;
@@ -345,9 +337,9 @@ async function loadConnections() {
     }
 
 
-    /* -----------------------------------------------
+    /* =====================================================
        LOADING
-    ------------------------------------------------ */
+    ===================================================== */
 
     list.innerHTML = `
 
@@ -378,9 +370,9 @@ async function loadConnections() {
     let data = null;
 
 
-    /* =================================================
+    /* =====================================================
        PRIMARY API
-    ================================================= */
+    ===================================================== */
 
     try {
 
@@ -409,9 +401,7 @@ async function loadConnections() {
             );
 
             if (result.ok !== false) {
-
                 data = result;
-
             }
 
         }
@@ -426,9 +416,9 @@ async function loadConnections() {
     }
 
 
-    /* =================================================
+    /* =====================================================
        FALLBACK API
-    ================================================= */
+    ===================================================== */
 
     if (!data) {
 
@@ -449,9 +439,7 @@ async function loadConnections() {
                     await response.json();
 
                 if (result.ok !== false) {
-
                     data = result;
-
                 }
 
             }
@@ -468,9 +456,9 @@ async function loadConnections() {
     }
 
 
-    /* =================================================
+    /* =====================================================
        API FAILED
-    ================================================= */
+    ===================================================== */
 
     if (!data) {
 
@@ -491,10 +479,7 @@ async function loadConnections() {
         `;
 
         if (count) {
-
-            count.textContent =
-                "0";
-
+            count.textContent = "0";
         }
 
         return;
@@ -502,9 +487,9 @@ async function loadConnections() {
     }
 
 
-    /* =================================================
+    /* =====================================================
        RESPONSE ARRAY
-    ================================================= */
+    ===================================================== */
 
     let users = [];
 
@@ -547,10 +532,24 @@ function renderConnections(users) {
         return;
     }
 
+
+    /* =====================================================
+       SAVE CONNECTION DATA
+       Used for status ring refresh
+    ===================================================== */
+
+    connectedUsersData =
+        Array.isArray(users)
+            ? users
+            : [];
+
+
     if (count) {
 
         count.textContent =
-            String(users.length);
+            String(
+                connectedUsersData.length
+            );
 
     }
 
@@ -559,7 +558,7 @@ function renderConnections(users) {
        NO CONNECTIONS
     ===================================================== */
 
-    if (!users.length) {
+    if (!connectedUsersData.length) {
 
         list.innerHTML = `
 
@@ -591,97 +590,170 @@ function renderConnections(users) {
     ===================================================== */
 
     list.innerHTML =
-        users.map(function(user) {
+        connectedUsersData
+            .map(function(user) {
 
-            const userId =
-                escapeHtml(
-                    user.user_id || ""
-                );
+                const userId =
+                    escapeHtml(
+                        user.user_id || ""
+                    );
 
-            const name =
-                escapeHtml(
-                    user.name ||
-                    user.user_id ||
-                    "User"
-                );
+                const name =
+                    escapeHtml(
+                        user.name ||
+                        user.user_id ||
+                        "User"
+                    );
 
-            const photo =
-                user.profile_photo ||
-                user.profile_picture ||
-                "";
+                const photo =
+                    user.profile_photo ||
+                    user.profile_picture ||
+                    "";
 
-            const firstLetter =
-                (
-                    user.name ||
-                    user.user_id ||
-                    "U"
-                )
-                .charAt(0)
-                .toUpperCase();
+                const letter =
+                    (
+                        user.name ||
+                        user.user_id ||
+                        "U"
+                    )
+                    .charAt(0)
+                    .toUpperCase();
 
-            return `
 
-                <div
-                    class="user-card"
-                    data-user-id="${userId}"
-                >
+                /* =========================================
+                   CHECK ACTIVE STATUS
+                ========================================= */
+
+                const statusUser =
+                    activeStatusUsers.find(
+                        function(statusUser) {
+
+                            return (
+                                String(
+                                    statusUser.user_id
+                                ) ===
+                                String(
+                                    user.user_id
+                                )
+                            );
+
+                        }
+                    );
+
+
+                const hasActiveStatus =
+                    Boolean(
+                        statusUser
+                    );
+
+
+                const fullySeen =
+                    hasActiveStatus
+                        ? isUserFullySeen(
+                            statusUser
+                        )
+                        : false;
+
+
+                const statusClass =
+                    !hasActiveStatus
+                        ? ""
+                        : (
+                            fullySeen
+                                ? "connection-status-seen"
+                                : "connection-status-unseen"
+                        );
+
+
+                return `
 
                     <div
-                        class="profile-photo"
-                        data-photo="${escapeHtml(photo)}"
-                        data-name="${name}"
-                    >
-
-                        ${
-                            photo
-                            ?
-                            `
-                            <img
-                                src="${escapeHtml(photo)}"
-                                alt="${name}"
-                                loading="lazy"
-                            >
-                            `
-                            :
-                            `
-                            <span>
-                                ${firstLetter}
-                            </span>
-                            `
-                        }
-
-                    </div>
-
-
-                    <div class="user-info">
-
-                        <div class="user-name">
-                            ${name}
-                        </div>
-
-                        <div class="user-id">
-                            @${userId}
-                        </div>
-
-                    </div>
-
-
-                    <button
-                        type="button"
-                        class="connected-btn"
-                        data-action="chat"
+                        class="user-card"
                         data-user-id="${userId}"
                     >
-                        Chat
-                    </button>
 
-                </div>
+                        <div
+                            class="
+                                profile-photo
+                                ${statusClass}
+                            "
+                            data-photo="${escapeHtml(photo)}"
+                            data-name="${name}"
+                            data-user-id="${userId}"
+                            data-has-status="${hasActiveStatus ? "true" : "false"}"
+                        >
 
-            `;
+                            ${
+                                photo
+                                ?
+                                `
+                                <img
+                                    src="${escapeHtml(photo)}"
+                                    alt="${name}"
+                                    loading="lazy"
+                                >
+                                `
+                                :
+                                `
+                                <span>
+                                    ${letter}
+                                </span>
+                                `
+                            }
 
-        }).join("");
+                        </div>
+
+
+                        <div class="user-info">
+
+                            <div class="user-name">
+                                ${name}
+                            </div>
+
+                            <div class="user-id">
+                                @${userId}
+                            </div>
+
+                        </div>
+
+
+                        <button
+                            type="button"
+                            class="connected-btn"
+                            data-action="chat"
+                            data-user-id="${userId}"
+                        >
+                            Chat
+                        </button>
+
+                    </div>
+
+                `;
+
+            })
+            .join("");
+
 
     attachConnectionEvents();
+
+}
+
+
+/* =========================================================
+   REFRESH CONNECTION STATUS RINGS
+========================================================= */
+
+function refreshConnectionStatusRings() {
+
+    if (
+        !connectedUsersData.length
+    ) {
+        return;
+    }
+
+    renderConnections(
+        connectedUsersData
+    );
 
 }
 
@@ -729,7 +801,7 @@ function attachConnectionEvents() {
 
 
     /* =====================================================
-       PROFILE PHOTO
+       PROFILE / STATUS DP
     ===================================================== */
 
     list
@@ -743,6 +815,39 @@ function attachConnectionEvents() {
             function(event) {
 
                 event.stopPropagation();
+
+
+                const userId =
+                    this.dataset.userId;
+
+                const hasStatus =
+                    this.dataset.hasStatus ===
+                    "true";
+
+
+                /* =========================================
+                   ACTIVE STATUS
+                   DP CLICK -> STATUS
+                ========================================= */
+
+                if (
+                    hasStatus &&
+                    userId
+                ) {
+
+                    openUserStatus(
+                        userId
+                    );
+
+                    return;
+
+                }
+
+
+                /* =========================================
+                   NO STATUS
+                   DP CLICK -> NORMAL DP VIEWER
+                ========================================= */
 
                 const photo =
                     this.dataset.photo;
@@ -842,8 +947,6 @@ function openProfile(userId) {
 
 /* =========================================================
    SEARCH
-   Connected user stays on HOME.
-   Non-connected user goes to SEARCH PAGE.
 ========================================================= */
 
 async function performSearch(query) {
@@ -855,6 +958,7 @@ async function performSearch(query) {
     query =
         String(query || "")
         .trim();
+
 
     if (!query) {
 
@@ -870,10 +974,6 @@ async function performSearch(query) {
     }
 
 
-    /* =====================================================
-       Minimum 2 characters
-    ===================================================== */
-
     if (query.length < 2) {
 
         searchResults.innerHTML =
@@ -887,10 +987,6 @@ async function performSearch(query) {
 
     }
 
-
-    /* =====================================================
-       LOADING
-    ===================================================== */
 
     searchResults.innerHTML = `
 
@@ -907,10 +1003,6 @@ async function performSearch(query) {
 
     try {
 
-        /* =================================================
-           SEARCH API
-        ================================================= */
-
         const response =
             await fetch(
                 `/api/search?q=${encodeURIComponent(query)}`,
@@ -920,6 +1012,7 @@ async function performSearch(query) {
                 }
             );
 
+
         if (!response.ok) {
 
             throw new Error(
@@ -928,19 +1021,16 @@ async function performSearch(query) {
 
         }
 
+
         const data =
             await response.json();
+
 
         const users =
             Array.isArray(data.users)
                 ? data.users
                 : [];
 
-
-        /* =================================================
-           NO SEARCH RESULT
-           OPEN SEARCH PAGE
-        ================================================= */
 
         if (!users.length) {
 
@@ -952,11 +1042,8 @@ async function performSearch(query) {
         }
 
 
-        /* =================================================
-           LOAD CURRENT CONNECTIONS
-        ================================================= */
-
         let connectedUsers = [];
+
 
         if (
             currentUser &&
@@ -976,10 +1063,12 @@ async function performSearch(query) {
                         }
                     );
 
+
                 if (connectionResponse.ok) {
 
                     const connectionData =
                         await connectionResponse.json();
+
 
                     if (
                         Array.isArray(
@@ -1015,10 +1104,6 @@ async function performSearch(query) {
         }
 
 
-        /* =================================================
-           CONNECTED USER IDS
-        ================================================= */
-
         const connectedIds =
             connectedUsers.map(function(user) {
 
@@ -1030,10 +1115,6 @@ async function performSearch(query) {
 
             });
 
-
-        /* =================================================
-           FIND CONNECTED SEARCH RESULTS
-        ================================================= */
 
         const connectedResults =
             users.filter(function(user) {
@@ -1052,106 +1133,100 @@ async function performSearch(query) {
             });
 
 
-        /* =================================================
-           CONNECTED USER
-           SHOW ON HOME
-        ================================================= */
-
         if (connectedResults.length) {
 
             searchResults.innerHTML =
-                connectedResults.map(function(user) {
+                connectedResults
+                    .map(function(user) {
 
-                    const id =
-                        escapeHtml(
-                            user.user_id || ""
-                        );
+                        const id =
+                            escapeHtml(
+                                user.user_id || ""
+                            );
 
-                    const name =
-                        escapeHtml(
-                            user.name ||
-                            user.user_id ||
-                            "User"
-                        );
+                        const name =
+                            escapeHtml(
+                                user.name ||
+                                user.user_id ||
+                                "User"
+                            );
 
-                    const photo =
-                        user.profile_photo ||
-                        user.profile_picture ||
-                        "";
+                        const photo =
+                            user.profile_photo ||
+                            user.profile_picture ||
+                            "";
 
-                    const letter =
-                        (
-                            user.name ||
-                            user.user_id ||
-                            "U"
-                        )
-                        .charAt(0)
-                        .toUpperCase();
+                        const letter =
+                            (
+                                user.name ||
+                                user.user_id ||
+                                "U"
+                            )
+                            .charAt(0)
+                            .toUpperCase();
 
-                    return `
+                        return `
 
-                        <div
-                            class="search-result-card"
-                            data-user-id="${id}"
-                        >
-
-                            <div class="search-result-photo">
-
-                                ${
-                                    photo
-                                    ?
-                                    `
-                                    <img
-                                        src="${escapeHtml(photo)}"
-                                        alt="${name}"
-                                    >
-                                    `
-                                    :
-                                    `
-                                    <span>
-                                        ${letter}
-                                    </span>
-                                    `
-                                }
-
-                            </div>
-
-
-                            <div class="search-result-info">
-
-                                <div class="search-result-name">
-                                    ${name}
-                                </div>
-
-                                <div class="search-result-id">
-                                    @${id}
-                                </div>
-
-                            </div>
-
-
-                            <button
-                                type="button"
-                                class="search-follow-btn connected"
-                                disabled
+                            <div
+                                class="search-result-card"
+                                data-user-id="${id}"
                             >
-                                Connected
-                            </button>
 
-                        </div>
+                                <div class="search-result-photo">
 
-                    `;
+                                    ${
+                                        photo
+                                        ?
+                                        `
+                                        <img
+                                            src="${escapeHtml(photo)}"
+                                            alt="${name}"
+                                        >
+                                        `
+                                        :
+                                        `
+                                        <span>
+                                            ${letter}
+                                        </span>
+                                        `
+                                    }
 
-                }).join("");
+                                </div>
+
+
+                                <div class="search-result-info">
+
+                                    <div class="search-result-name">
+                                        ${name}
+                                    </div>
+
+                                    <div class="search-result-id">
+                                        @${id}
+                                    </div>
+
+                                </div>
+
+
+                                <button
+                                    type="button"
+                                    class="search-follow-btn connected"
+                                    disabled
+                                >
+                                    Connected
+                                </button>
+
+                            </div>
+
+                        `;
+
+                    })
+                    .join("");
+
 
             searchResults.classList.add(
                 "active"
             );
 
-
-            /* =================================================
-               CONNECTED USER CLICK
-            ================================================= */
 
             searchResults
             .querySelectorAll(
@@ -1168,9 +1243,7 @@ async function performSearch(query) {
                                 ".search-follow-btn"
                             )
                         ) {
-
                             return;
-
                         }
 
                         openProfile(
@@ -1182,15 +1255,11 @@ async function performSearch(query) {
 
             });
 
+
             return;
 
         }
 
-
-        /* =================================================
-           NOT CONNECTED
-           OPEN SEARCH PAGE AUTOMATICALLY
-        ================================================= */
 
         window.location.href =
             `/search.html?q=${encodeURIComponent(query)}`;
@@ -1202,6 +1271,7 @@ async function performSearch(query) {
             "SEARCH ERROR:",
             error
         );
+
 
         searchResults.innerHTML = `
 
@@ -1222,7 +1292,6 @@ async function performSearch(query) {
 
 /* =========================================================
    SEARCH INPUT
-   NO SUBMIT / ENTER REQUIRED
 ========================================================= */
 
 if (searchInput) {
@@ -1235,8 +1304,10 @@ if (searchInput) {
                 searchTimer
             );
 
+
             const value =
                 this.value.trim();
+
 
             if (!value) {
 
@@ -1250,6 +1321,7 @@ if (searchInput) {
                 return;
 
             }
+
 
             searchTimer =
                 setTimeout(
@@ -1291,9 +1363,11 @@ async function followUser(
 
     }
 
+
     if (!targetUserId) {
         return;
     }
+
 
     if (
         String(targetUserId) ===
@@ -1308,6 +1382,7 @@ async function followUser(
 
     }
 
+
     if (button) {
 
         button.disabled =
@@ -1317,6 +1392,7 @@ async function followUser(
             "Sending...";
 
     }
+
 
     try {
 
@@ -1328,10 +1404,8 @@ async function followUser(
                     method: "POST",
 
                     headers: {
-
                         "Content-Type":
                             "application/json"
-
                     },
 
                     body: JSON.stringify({
@@ -1347,8 +1421,10 @@ async function followUser(
                 }
             );
 
+
         const data =
             await response.json();
+
 
         if (
             !response.ok ||
@@ -1362,6 +1438,7 @@ async function followUser(
 
         }
 
+
         if (button) {
 
             button.textContent =
@@ -1372,6 +1449,7 @@ async function followUser(
             );
 
         }
+
 
         showToast(
             data.message ||
@@ -1386,6 +1464,7 @@ async function followUser(
             error
         );
 
+
         if (button) {
 
             button.disabled =
@@ -1395,6 +1474,7 @@ async function followUser(
                 "Follow";
 
         }
+
 
         showToast(
             error.message ||
@@ -1417,9 +1497,11 @@ async function loadNotificationCount() {
             "notificationBadge"
         );
 
+
     if (!badge) {
         return;
     }
+
 
     if (
         !currentUser ||
@@ -1436,6 +1518,7 @@ async function loadNotificationCount() {
 
     }
 
+
     try {
 
         const response =
@@ -1449,12 +1532,15 @@ async function loadNotificationCount() {
                 }
             );
 
+
         if (!response.ok) {
             return;
         }
 
+
         const data =
             await response.json();
+
 
         const notifications =
             Array.isArray(
@@ -1462,6 +1548,7 @@ async function loadNotificationCount() {
             )
             ? data.notifications
             : [];
+
 
         const unread =
             notifications.filter(
@@ -1474,6 +1561,7 @@ async function loadNotificationCount() {
 
                 }
             ).length;
+
 
         if (unread <= 0) {
 
@@ -1495,6 +1583,7 @@ async function loadNotificationCount() {
 
         }
 
+
     } catch (error) {
 
         console.error(
@@ -1508,7 +1597,7 @@ async function loadNotificationCount() {
 
 
 /* =========================================================
-   STATUS
+   STATUS STATE
 ========================================================= */
 
 let myStatuses = [];
@@ -1519,16 +1608,6 @@ let currentStatusIndex = 0;
 
 /* =========================================================
    STATUS SEEN STORAGE
-=========================================================
-
-   Important:
-   Storage current user ke according alag rahega.
-
-   Example:
-   usanex_seen_statuses_UX12345
-
-   Isse agar ek hi phone/browser par multiple users login
-   karein to unki seen state mix nahi hogi.
 ========================================================= */
 
 function getStatusSeenStorageKey() {
@@ -1541,6 +1620,7 @@ function getStatusSeenStorageKey() {
         return "usanex_seen_statuses_unknown";
 
     }
+
 
     return (
         "usanex_seen_statuses_" +
@@ -1568,14 +1648,15 @@ function getSeenStatusIds() {
                 key
             );
 
+
         if (!raw) {
-
             return {};
-
         }
+
 
         const parsed =
             JSON.parse(raw);
+
 
         if (
             !parsed ||
@@ -1587,7 +1668,9 @@ function getSeenStatusIds() {
 
         }
 
+
         return parsed;
+
 
     } catch (error) {
 
@@ -1619,6 +1702,7 @@ function saveSeenStatusIds(data) {
             JSON.stringify(data)
         );
 
+
     } catch (error) {
 
         console.error(
@@ -1646,8 +1730,10 @@ function isStatusSeen(statusId) {
 
     }
 
+
     const seen =
         getSeenStatusIds();
+
 
     return Boolean(
         seen[String(statusId)]
@@ -1657,7 +1743,7 @@ function isStatusSeen(statusId) {
 
 
 /* =========================================================
-   MARK ONE STATUS AS SEEN
+   MARK STATUS SEEN
 ========================================================= */
 
 function markStatusAsSeen(statusId) {
@@ -1671,11 +1757,14 @@ function markStatusAsSeen(statusId) {
 
     }
 
+
     const seen =
         getSeenStatusIds();
 
+
     seen[String(statusId)] =
         Date.now();
+
 
     saveSeenStatusIds(
         seen
@@ -1685,7 +1774,7 @@ function markStatusAsSeen(statusId) {
 
 
 /* =========================================================
-   GET ALL CURRENT ACTIVE STATUS IDS
+   GET CURRENT ACTIVE STATUS IDS
 ========================================================= */
 
 function getCurrentActiveStatusIds() {
@@ -1693,10 +1782,6 @@ function getCurrentActiveStatusIds() {
     const activeIds =
         new Set();
 
-
-    /* =====================================================
-       MY STATUS
-    ===================================================== */
 
     myStatuses.forEach(
         function(status) {
@@ -1717,10 +1802,6 @@ function getCurrentActiveStatusIds() {
     );
 
 
-    /* =====================================================
-       OTHER USERS
-    ===================================================== */
-
     activeStatusUsers.forEach(
         function(user) {
 
@@ -1734,6 +1815,7 @@ function getCurrentActiveStatusIds() {
                 return;
 
             }
+
 
             user.statuses.forEach(
                 function(status) {
@@ -1763,13 +1845,7 @@ function getCurrentActiveStatusIds() {
 
 
 /* =========================================================
-   CLEANUP EXPIRED / OLD SEEN STATUS IDS
-=========================================================
-
-   API se jo statuses ab active nahi hain unki IDs ko
-   localStorage se remove kar diya jayega.
-
-   Isse localStorage unnecessary grow nahi karega.
+   CLEANUP OLD SEEN IDS
 ========================================================= */
 
 function cleanupSeenStatusIds() {
@@ -1818,21 +1894,7 @@ function cleanupSeenStatusIds() {
 
 
 /* =========================================================
-   CHECK IF USER IS FULLY SEEN
-=========================================================
-
-   User tabhi fully seen hai jab uske saare CURRENT active
-   statuses seen ho chuke hon.
-
-   Agar user ke 3 statuses hain:
-   - 1 seen
-   - 2 unseen
-
-   to user BLUE rahega.
-
-   Jab 3/3 seen:
-   - GREY
-   - list ke end mein
+   CHECK USER FULLY SEEN
 ========================================================= */
 
 function isUserFullySeen(user) {
@@ -1869,7 +1931,7 @@ function isUserFullySeen(user) {
 
 
 /* =========================================================
-   LOAD ALL HOME STATUSES
+   LOAD HOME STATUSES
    ONE API REQUEST
 ========================================================= */
 
@@ -1883,6 +1945,7 @@ async function loadHomeStatuses() {
         return;
 
     }
+
 
     try {
 
@@ -1924,7 +1987,7 @@ async function loadHomeStatuses() {
 
 
         /* =================================================
-           OTHER USERS STATUS
+           OTHER USERS
         ================================================= */
 
         activeStatusUsers =
@@ -1936,19 +1999,28 @@ async function loadHomeStatuses() {
 
 
         /* =================================================
-           CLEANUP OLD SEEN STATUS IDS
+           CLEAN OLD STATUS IDs
         ================================================= */
 
         cleanupSeenStatusIds();
 
 
         /* =================================================
-           UPDATE UI
+           UPDATE STATUS UI
         ================================================= */
 
         updateMyStatusUI();
 
         renderActiveStatusUsers();
+
+
+        /* =================================================
+           IMPORTANT:
+
+           Connected People ke DP ko bhi update karo.
+        ================================================= */
+
+        refreshConnectionStatusRings();
 
 
     } catch (error) {
@@ -1958,13 +2030,17 @@ async function loadHomeStatuses() {
             error
         );
 
+
         myStatuses = [];
 
         activeStatusUsers = [];
 
+
         updateMyStatusUI();
 
         renderActiveStatusUsers();
+
+        refreshConnectionStatusRings();
 
     }
 
@@ -1973,7 +2049,6 @@ async function loadHomeStatuses() {
 
 /* =========================================================
    OLD STATUS API
-   KEPT FOR COMPATIBILITY
 ========================================================= */
 
 async function loadMyStatuses() {
@@ -1982,10 +2057,9 @@ async function loadMyStatuses() {
         !currentUser ||
         !currentUser.user_id
     ) {
-
         return;
-
     }
+
 
     try {
 
@@ -2032,6 +2106,7 @@ async function loadMyStatuses() {
             error
         );
 
+
         myStatuses = [];
 
         updateMyStatusUI();
@@ -2043,7 +2118,6 @@ async function loadMyStatuses() {
 
 /* =========================================================
    OLD ACTIVE STATUS API
-   KEPT FOR COMPATIBILITY
 ========================================================= */
 
 async function loadActiveStatuses() {
@@ -2052,10 +2126,9 @@ async function loadActiveStatuses() {
         !currentUser ||
         !currentUser.user_id
     ) {
-
         return;
-
     }
+
 
     try {
 
@@ -2096,6 +2169,8 @@ async function loadActiveStatuses() {
 
         renderActiveStatusUsers();
 
+        refreshConnectionStatusRings();
+
 
     } catch (error) {
 
@@ -2104,9 +2179,12 @@ async function loadActiveStatuses() {
             error
         );
 
+
         activeStatusUsers = [];
 
         renderActiveStatusUsers();
+
+        refreshConnectionStatusRings();
 
     }
 
@@ -2147,8 +2225,9 @@ function updateMyStatusUI() {
 
     /* =====================================================
        STATUS EXISTS
-       Main card = View status
-       Plus = Add another status
+
+       Main area -> View
+       Plus -> Add another
     ===================================================== */
 
     if (hasStatus) {
@@ -2165,6 +2244,7 @@ function updateMyStatusUI() {
                     return;
 
                 }
+
 
                 openMyStatus();
 
@@ -2183,7 +2263,8 @@ function updateMyStatusUI() {
 
     /* =====================================================
        NO STATUS
-       Entire card = Upload status
+
+       Entire card -> Upload
     ===================================================== */
 
     else {
@@ -2220,6 +2301,7 @@ function addAnotherStatus(event) {
         event.stopPropagation();
 
     }
+
 
     window.location.href =
         "/status";
@@ -2271,18 +2353,6 @@ function openMyStatus() {
 
 /* =========================================================
    RENDER OTHER ACTIVE STATUS USERS
-=========================================================
-
-   IMPORTANT ORDER:
-
-   1. UNSEEN USERS
-   2. SEEN USERS
-
-   Within each group latest data order maintained.
-
-   Isse:
-   BLUE users -> pehle
-   GREY users -> end
 ========================================================= */
 
 function renderActiveStatusUsers() {
@@ -2308,10 +2378,6 @@ function renderActiveStatusUsers() {
     }
 
 
-    /* =====================================================
-       REMOVE INVALID USERS
-    ===================================================== */
-
     const validUsers =
         activeStatusUsers.filter(
             function(user) {
@@ -2330,8 +2396,6 @@ function renderActiveStatusUsers() {
 
 
     /* =====================================================
-       SORT:
-
        UNSEEN FIRST
        SEEN LAST
     ===================================================== */
@@ -2466,7 +2530,7 @@ function renderActiveStatusUsers() {
 
 
     /* =====================================================
-       ATTACH CLICK EVENTS
+       CLICK EVENTS
     ===================================================== */
 
     container
@@ -2503,9 +2567,14 @@ function openUserStatus(userId) {
         activeStatusUsers.find(
             function(item) {
 
-                return String(
-                    item.user_id
-                ) === String(userId);
+                return (
+                    String(
+                        item.user_id
+                    ) ===
+                    String(
+                        userId
+                    )
+                );
 
             }
         );
@@ -2530,7 +2599,7 @@ function openUserStatus(userId) {
 
 
 /* =========================================================
-   MARK CURRENT VIEWED STATUS
+   MARK CURRENT STATUS AS SEEN
 ========================================================= */
 
 function markCurrentStatusAsSeen() {
@@ -2541,8 +2610,7 @@ function markCurrentStatusAsSeen() {
 
 
     /* =====================================================
-       CURRENT USER KI APNI STATUS KO "SEEN" TRACK NAHI
-       KARNA HAI
+       APNI STATUS KO SEEN TRACK NAHI KARNA
     ===================================================== */
 
     if (
@@ -2550,7 +2618,8 @@ function markCurrentStatusAsSeen() {
         currentStatusUser.user_id &&
         String(
             currentStatusUser.user_id
-        ) === String(
+        ) ===
+        String(
             currentUser.user_id
         )
     ) {
@@ -2592,62 +2661,27 @@ function markCurrentStatusAsSeen() {
     }
 
 
+    /* =====================================================
+       SAVE SEEN
+    ===================================================== */
+
     markStatusAsSeen(
         status.id
     );
 
 
     /* =====================================================
-       CHECK IF ALL CURRENT STATUSES ARE SEEN
+       REFRESH STATUS LIST
     ===================================================== */
 
-    const fullySeen =
-        isUserFullySeen(
-            currentStatusUser
-        );
+    renderActiveStatusUsers();
 
 
-    if (fullySeen) {
+    /* =====================================================
+       REFRESH CONNECTED PEOPLE DP
+    ===================================================== */
 
-        /*
-         * Viewer ke andar current user object same
-         * reference ho sakta hai, isliye main array se
-         * fresh user find karke UI render karenge.
-         */
-
-        const freshUser =
-            activeStatusUsers.find(
-                function(item) {
-
-                    return String(
-                        item.user_id
-                    ) === String(
-                        currentStatusUser.user_id
-                    );
-
-                }
-            );
-
-
-        if (freshUser) {
-
-            currentStatusUser =
-                freshUser;
-
-        }
-
-        renderActiveStatusUsers();
-
-    } else {
-
-        /*
-         * Agar abhi kuch statuses unseen hain,
-         * blue state maintain rahegi.
-         */
-
-        renderActiveStatusUsers();
-
-    }
+    refreshConnectionStatusRings();
 
 }
 
@@ -2708,10 +2742,7 @@ function showStatusViewer() {
 
 
     /* =====================================================
-       MARK CURRENT STATUS AS SEEN
-
-       Status ko actual viewer mein show karne ke baad
-       seen mark kiya ja raha hai.
+       MARK AS SEEN
     ===================================================== */
 
     markCurrentStatusAsSeen();
@@ -2833,15 +2864,6 @@ function nextStatus() {
 
         showStatusViewer();
 
-    } else {
-
-        /*
-         * Last status already viewed.
-         * User remains in viewer.
-         *
-         * Next button ko silently ignore karenge.
-         */
-
     }
 
 }
@@ -2911,11 +2933,6 @@ function closeStatusViewer() {
     }
 
 
-    /*
-     * Viewer close hone ke baad bhi seen state
-     * localStorage mein already saved hoti hai.
-     */
-
     currentStatusUser =
         null;
 
@@ -2935,12 +2952,6 @@ function showAllStatuses() {
         activeStatusUsers.length
     ) {
 
-        /*
-         * Render order mein first user unseen ko priority
-         * milegi because renderActiveStatusUsers()
-         * unseen users ko upar rakhta hai.
-         */
-
         const sortedUsers =
             [...activeStatusUsers].sort(
                 function(a, b) {
@@ -2951,6 +2962,7 @@ function showAllStatuses() {
                     const bSeen =
                         isUserFullySeen(b);
 
+
                     if (
                         aSeen === bSeen
                     ) {
@@ -2958,6 +2970,7 @@ function showAllStatuses() {
                         return 0;
 
                     }
+
 
                     return aSeen
                         ? 1
@@ -2988,7 +3001,7 @@ function showAllStatuses() {
 
 
 /* =========================================================
-   OLD FUNCTION COMPATIBILITY
+   OLD STATUS COMPATIBILITY
 ========================================================= */
 
 function addMyStatus() {
@@ -3090,7 +3103,6 @@ function openMenu() {
         return;
     }
 
-
     menuOverlay.classList.add(
         "active"
     );
@@ -3104,7 +3116,6 @@ function closeMenu() {
         return;
     }
 
-
     menuOverlay.classList.remove(
         "active"
     );
@@ -3117,7 +3128,6 @@ function toggleMenu() {
     if (!menuOverlay) {
         return;
     }
-
 
     menuOverlay.classList.toggle(
         "active"
@@ -3290,12 +3300,10 @@ function openDPViewer(
             "dpViewer"
         );
 
-
     const image =
         document.getElementById(
             "dpViewerImage"
         );
-
 
     const title =
         document.getElementById(
@@ -3461,7 +3469,6 @@ document.addEventListener(
 
 /* =========================================================
    GLOBAL FUNCTIONS
-   Required because home.html uses onclick=""
 ========================================================= */
 
 window.addMyStatus =
@@ -3611,21 +3618,21 @@ async function initializeHome() {
 
 
     /* =====================================================
-       LOAD CONNECTIONS
+       CONNECTIONS
     ===================================================== */
 
     await loadConnections();
 
 
     /* =====================================================
-       LOAD NOTIFICATION COUNT
+       NOTIFICATION COUNT
     ===================================================== */
 
     await loadNotificationCount();
 
 
     /* =====================================================
-       REFRESH NOTIFICATIONS
+       NOTIFICATION REFRESH
     ===================================================== */
 
     clearInterval(
@@ -3641,8 +3648,7 @@ async function initializeHome() {
 
 
     /* =====================================================
-       LOAD STATUSES
-       ONE API REQUEST
+       STATUS
     ===================================================== */
 
     await loadHomeStatuses();
