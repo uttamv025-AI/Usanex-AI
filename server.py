@@ -88,8 +88,6 @@ from database import (
     Connection,
     ChatMessage,
     Status,
-
-
 )
 
 
@@ -3259,22 +3257,200 @@ async def reels_page():
     return FileResponse(
         reels_file
     )
+
+
 # ============================================================
 # STATUS PAGE
 # ============================================================
 
 @app.get("/status")
 async def status_page():
+
     return FileResponse(
-        os.path.join(BASE_DIR, "status.html")
+        os.path.join(
+            BASE_DIR,
+            "status.html"
+        )
     )
 
 
 @app.get("/status.html")
 async def status_html_page():
+
     return FileResponse(
-        os.path.join(BASE_DIR, "status.html")
+        os.path.join(
+            BASE_DIR,
+            "status.html"
+        )
     )
+
+
+# ============================================================
+# STATUS UPLOAD - CLOUDINARY
+# ============================================================
+
+@app.post("/api/status/upload")
+async def upload_status(
+    user_id: str,
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db),
+):
+
+    user_id = user_id.strip()
+
+    if not user_id:
+
+        raise HTTPException(
+            status_code=400,
+            detail="User ID is required",
+        )
+
+    # --------------------------------------------------------
+    # CHECK USER
+    # --------------------------------------------------------
+
+    user = (
+        db.query(User)
+        .filter(
+            User.user_id == user_id
+        )
+        .first()
+    )
+
+    if not user:
+
+        raise HTTPException(
+            status_code=404,
+            detail="User not found",
+        )
+
+    # --------------------------------------------------------
+    # CHECK FILE TYPE
+    # --------------------------------------------------------
+
+    content_type = file.content_type or ""
+
+    if content_type.startswith("image/"):
+
+        media_type = "image"
+        resource_type = "image"
+
+    elif content_type.startswith("video/"):
+
+        media_type = "video"
+        resource_type = "video"
+
+    else:
+
+        raise HTTPException(
+            status_code=400,
+            detail=(
+                "Only image and video files are allowed."
+            ),
+        )
+
+    # --------------------------------------------------------
+    # CLOUDINARY UPLOAD
+    # --------------------------------------------------------
+
+    try:
+
+        result = cloudinary.uploader.upload(
+            file.file,
+            folder=f"usanex/status/{user_id}",
+            resource_type=resource_type,
+            secure=True,
+        )
+
+    except Exception as e:
+
+        print(
+            "Cloudinary status upload error:",
+            str(e),
+        )
+
+        raise HTTPException(
+            status_code=500,
+            detail="Cloudinary status upload failed",
+        )
+
+    media_url = result.get(
+        "secure_url"
+    )
+
+    if not media_url:
+
+        raise HTTPException(
+            status_code=500,
+            detail="Cloudinary URL not received",
+        )
+
+    # --------------------------------------------------------
+    # STATUS TIME
+    # --------------------------------------------------------
+
+    created_at = datetime.utcnow()
+
+    expires_at = (
+        created_at
+        + timedelta(hours=24)
+    )
+
+    # --------------------------------------------------------
+    # SAVE STATUS TO DATABASE
+    # --------------------------------------------------------
+
+    new_status = Status(
+        user_id=user_id,
+        media_url=media_url,
+        media_type=media_type,
+        created_at=created_at,
+        expires_at=expires_at,
+    )
+
+    try:
+
+        db.add(new_status)
+
+        db.commit()
+
+        db.refresh(new_status)
+
+    except Exception as e:
+
+        db.rollback()
+
+        print(
+            "Status database error:",
+            str(e),
+        )
+
+        raise HTTPException(
+            status_code=500,
+            detail="Status record could not be saved",
+        )
+
+    # --------------------------------------------------------
+    # RESPONSE
+    # --------------------------------------------------------
+
+    return {
+        "ok": True,
+        "message": "Status uploaded successfully",
+
+        "status": {
+            "id": new_status.id,
+            "user_id": new_status.user_id,
+            "media_url": new_status.media_url,
+            "media_type": new_status.media_type,
+            "created_at": (
+                new_status.created_at.isoformat()
+            ),
+            "expires_at": (
+                new_status.expires_at.isoformat()
+            ),
+        },
+    }
 
 
 # ============================================================
