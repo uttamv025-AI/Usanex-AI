@@ -7,7 +7,8 @@ from sqlalchemy import (
     DateTime,
     Boolean,
     Integer,
-    Text
+    Text,
+    Index
 )
 
 from sqlalchemy.orm import (
