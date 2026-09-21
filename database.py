@@ -8,7 +8,8 @@ from sqlalchemy import (
     Boolean,
     Integer,
     Text,
-    Index
+    Index,
+    UniqueConstraint
 )
 
 from sqlalchemy.orm import (
@@ -463,6 +464,49 @@ class Status(Base):
             "user_id",
             "expires_at",
             "created_at",
+        ),
+    )
+
+# ============================================================
+# STATUS VIEWS
+# ============================================================
+
+class StatusView(Base):
+    __tablename__ = "status_views"
+
+    id: Mapped[int] = mapped_column(
+        primary_key=True,
+        autoincrement=True
+    )
+
+    status_id: Mapped[int] = mapped_column(
+        Integer,
+        index=True,
+        nullable=False
+    )
+
+    viewer_user_id: Mapped[str] = mapped_column(
+        String(20),
+        index=True,
+        nullable=False
+    )
+
+    viewed_at: Mapped[datetime] = mapped_column(
+        DateTime,
+        default=datetime.utcnow,
+        nullable=False
+    )
+
+    __table_args__ = (
+        UniqueConstraint(
+            "status_id",
+            "viewer_user_id",
+            name="uq_status_viewer"
+        ),
+        Index(
+            "ix_status_views_status_viewer",
+            "status_id",
+            "viewer_user_id",
         ),
     )
 # ============================================================
