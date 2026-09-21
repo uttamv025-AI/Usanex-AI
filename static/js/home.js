@@ -2859,6 +2859,99 @@ await Promise.all([
     loadActiveStatuses()
 ]);
 
+/* =========================================================
+   LOAD ALL HOME STATUSES
+   ONE API REQUEST
+========================================================= */
+
+async function loadHomeStatuses() {
+
+    if (
+        !currentUser ||
+        !currentUser.user_id
+    ) {
+        return;
+    }
+
+    try {
+
+        const response =
+            await fetch(
+                `/api/status/home?user_id=${encodeURIComponent(
+                    currentUser.user_id
+                )}`,
+                {
+                    method: "GET",
+                    cache: "no-store"
+                }
+            );
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Unable to load home statuses"
+            );
+
+        }
+
+        const data =
+            await response.json();
+
+
+        /* =================================================
+           MY STATUS
+        ================================================= */
+
+        myStatuses =
+            Array.isArray(
+                data.my_statuses
+            )
+            ? data.my_statuses
+            : [];
+
+
+        /* =================================================
+           OTHER USERS STATUS
+        ================================================= */
+
+        activeStatusUsers =
+            Array.isArray(
+                data.users
+            )
+            ? data.users
+            : [];
+
+
+        /* =================================================
+           UPDATE UI
+        ================================================= */
+
+        updateMyStatusUI();
+
+        renderActiveStatusUsers();
+
+
+    } catch (error) {
+
+        console.error(
+            "HOME STATUS ERROR:",
+            error
+        );
+
+
+        myStatuses = [];
+
+        activeStatusUsers = [];
+
+
+        updateMyStatusUI();
+
+        renderActiveStatusUsers();
+
+    }
+
+}
+
 
 /* =====================================================
    STATUS HINT
