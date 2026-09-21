@@ -3512,6 +3512,7 @@ async def get_active_statuses(
             Status.expires_at > now,
         )
         .order_by(Status.created_at.desc())
+        .limit(500)
         .all()
     )
 
