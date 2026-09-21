@@ -1592,6 +1592,7 @@ async function loadNotificationCount() {
 
 }
 
+
 /* =========================================================
    STATUS
 ========================================================= */
@@ -1603,7 +1604,105 @@ let currentStatusIndex = 0;
 
 
 /* =========================================================
-   LOAD MY STATUS
+   LOAD ALL HOME STATUSES
+   ONE API REQUEST
+========================================================= */
+
+async function loadHomeStatuses() {
+
+    if (
+        !currentUser ||
+        !currentUser.user_id
+    ) {
+        return;
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                `/api/status/home?user_id=${encodeURIComponent(
+                    currentUser.user_id
+                )}`,
+                {
+                    method: "GET",
+                    cache: "no-store"
+                }
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Unable to load home statuses"
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        /* =================================================
+           MY STATUS
+        ================================================= */
+
+        myStatuses =
+            Array.isArray(
+                data.my_statuses
+            )
+            ? data.my_statuses
+            : [];
+
+
+        /* =================================================
+           OTHER USERS STATUS
+        ================================================= */
+
+        activeStatusUsers =
+            Array.isArray(
+                data.users
+            )
+            ? data.users
+            : [];
+
+
+        /* =================================================
+           UPDATE UI
+        ================================================= */
+
+        updateMyStatusUI();
+
+        renderActiveStatusUsers();
+
+
+    } catch (error) {
+
+        console.error(
+            "HOME STATUS ERROR:",
+            error
+        );
+
+
+        myStatuses = [];
+
+        activeStatusUsers = [];
+
+
+        updateMyStatusUI();
+
+        renderActiveStatusUsers();
+
+    }
+
+}
+
+
+/* =========================================================
+   OLD STATUS API
+   KEPT FOR COMPATIBILITY
 ========================================================= */
 
 async function loadMyStatuses() {
@@ -1614,6 +1713,7 @@ async function loadMyStatuses() {
     ) {
         return;
     }
+
 
     try {
 
@@ -1627,18 +1727,30 @@ async function loadMyStatuses() {
             }
         );
 
+
         if (!response.ok) {
-            throw new Error("Unable to load my status");
+
+            throw new Error(
+                "Unable to load my status"
+            );
+
         }
 
-        const data = await response.json();
+
+        const data =
+            await response.json();
+
 
         myStatuses =
-            Array.isArray(data.statuses)
-                ? data.statuses
-                : [];
+            Array.isArray(
+                data.statuses
+            )
+            ? data.statuses
+            : [];
+
 
         updateMyStatusUI();
+
 
     } catch (error) {
 
@@ -1647,15 +1759,19 @@ async function loadMyStatuses() {
             error
         );
 
+
         myStatuses = [];
 
         updateMyStatusUI();
+
     }
+
 }
 
 
 /* =========================================================
-   LOAD ACTIVE STATUS USERS
+   OLD ACTIVE STATUS API
+   KEPT FOR COMPATIBILITY
 ========================================================= */
 
 async function loadActiveStatuses() {
@@ -1666,6 +1782,7 @@ async function loadActiveStatuses() {
     ) {
         return;
     }
+
 
     try {
 
@@ -1679,21 +1796,30 @@ async function loadActiveStatuses() {
             }
         );
 
+
         if (!response.ok) {
+
             throw new Error(
                 "Unable to load active statuses"
             );
+
         }
+
 
         const data =
             await response.json();
 
+
         activeStatusUsers =
-            Array.isArray(data.users)
-                ? data.users
-                : [];
+            Array.isArray(
+                data.users
+            )
+            ? data.users
+            : [];
+
 
         renderActiveStatusUsers();
+
 
     } catch (error) {
 
@@ -1702,10 +1828,13 @@ async function loadActiveStatuses() {
             error
         );
 
+
         activeStatusUsers = [];
 
         renderActiveStatusUsers();
+
     }
+
 }
 
 
@@ -1720,17 +1849,21 @@ function updateMyStatusUI() {
             "myStatusItem"
         );
 
+
     const plus =
         document.getElementById(
             "myStatusPlus"
         );
 
+
     if (!item) {
         return;
     }
 
+
     const hasStatus =
         myStatuses.length > 0;
+
 
     item.classList.toggle(
         "has-status",
@@ -1738,11 +1871,11 @@ function updateMyStatusUI() {
     );
 
 
-    /*
+    /* =====================================================
        STATUS EXISTS
        Main card = View status
        Plus = Add another status
-    */
+    ===================================================== */
 
     if (hasStatus) {
 
@@ -1754,10 +1887,14 @@ function updateMyStatusUI() {
                         ".status-plus"
                     )
                 ) {
+
                     return;
+
                 }
 
+
                 openMyStatus();
+
             };
 
 
@@ -1771,10 +1908,10 @@ function updateMyStatusUI() {
     }
 
 
-    /*
+    /* =====================================================
        NO STATUS
        Entire card = Upload status
-    */
+    ===================================================== */
 
     else {
 
@@ -1795,6 +1932,7 @@ function updateMyStatusUI() {
         }
 
     }
+
 }
 
 
@@ -1810,8 +1948,10 @@ function addAnotherStatus(event) {
 
     }
 
+
     window.location.href =
         "/status";
+
 }
 
 
@@ -1827,19 +1967,33 @@ function openMyStatus() {
             "/status";
 
         return;
+
     }
 
+
     currentStatusUser = {
-        user_id: currentUser.user_id,
-        name: currentUser.name,
+
+        user_id:
+            currentUser.user_id,
+
+        name:
+            currentUser.name,
+
         profile_photo:
             currentUser.profile_photo,
-        statuses: myStatuses
+
+        statuses:
+            myStatuses
+
     };
 
-    currentStatusIndex = 0;
+
+    currentStatusIndex =
+        0;
+
 
     showStatusViewer();
+
 }
 
 
@@ -1854,6 +2008,7 @@ function renderActiveStatusUsers() {
             "otherStatusScroll"
         );
 
+
     if (!container) {
         return;
     }
@@ -1861,9 +2016,11 @@ function renderActiveStatusUsers() {
 
     if (!activeStatusUsers.length) {
 
-        container.innerHTML = "";
+        container.innerHTML =
+            "";
 
         return;
+
     }
 
 
@@ -1878,15 +2035,18 @@ function renderActiveStatusUsers() {
                         "User"
                     );
 
+
                 const userId =
                     escapeHtml(
                         user.user_id ||
                         ""
                     );
 
+
                 const photo =
                     user.profile_photo ||
                     "";
+
 
                 const letter =
                     (
@@ -1932,6 +2092,7 @@ function renderActiveStatusUsers() {
 
                         </div>
 
+
                         <div class="status-name">
                             ${name}
                         </div>
@@ -1942,6 +2103,7 @@ function renderActiveStatusUsers() {
 
             })
             .join("");
+
 }
 
 
@@ -1971,9 +2133,13 @@ function openUserStatus(userId) {
     currentStatusUser =
         user;
 
-    currentStatusIndex = 0;
+
+    currentStatusIndex =
+        0;
+
 
     showStatusViewer();
+
 }
 
 
@@ -1990,7 +2156,9 @@ function showStatusViewer() {
         ) ||
         !currentStatusUser.statuses.length
     ) {
+
         return;
+
     }
 
 
@@ -1999,11 +2167,6 @@ function showStatusViewer() {
             currentStatusIndex
         ];
 
-
-    /*
-       Agar home.html me viewer abhi nahi hai,
-       temporarily toast show hoga.
-    */
 
     const viewer =
         document.getElementById(
@@ -2018,6 +2181,7 @@ function showStatusViewer() {
         );
 
         return;
+
     }
 
 
@@ -2081,6 +2245,7 @@ function showStatusViewer() {
     viewer.classList.add(
         "active"
     );
+
 }
 
 
@@ -2094,7 +2259,9 @@ function nextStatus() {
         !currentStatusUser ||
         !currentStatusUser.statuses
     ) {
+
         return;
+
     }
 
 
@@ -2122,7 +2289,9 @@ function previousStatus() {
         !currentStatusUser ||
         !currentStatusUser.statuses
     ) {
+
         return;
+
     }
 
 
@@ -2150,6 +2319,7 @@ function closeStatusViewer() {
             "statusViewer"
         );
 
+
     if (viewer) {
 
         viewer.classList.remove(
@@ -2163,6 +2333,7 @@ function closeStatusViewer() {
         document.getElementById(
             "statusViewerMedia"
         );
+
 
     if (mediaContainer) {
 
@@ -2189,12 +2360,14 @@ function showAllStatuses() {
         );
 
         return;
+
     }
 
 
     showToast(
         "No active statuses"
     );
+
 }
 
 
@@ -2694,7 +2867,6 @@ window.previousStatus =
 window.closeStatusViewer =
     closeStatusViewer;
 
-
 window.showAllStatuses =
     showAllStatuses;
 
@@ -2850,115 +3022,22 @@ async function initializeHome() {
         );
 
 
-/* =====================================================
-   LOAD STATUSES
-===================================================== */
+    /* =====================================================
+       LOAD STATUSES
+       ONE API REQUEST
+    ===================================================== */
 
-await Promise.all([
-    loadMyStatuses(),
-    loadActiveStatuses()
-]);
-
-/* =========================================================
-   LOAD ALL HOME STATUSES
-   ONE API REQUEST
-========================================================= */
-
-async function loadHomeStatuses() {
-
-    if (
-        !currentUser ||
-        !currentUser.user_id
-    ) {
-        return;
-    }
-
-    try {
-
-        const response =
-            await fetch(
-                `/api/status/home?user_id=${encodeURIComponent(
-                    currentUser.user_id
-                )}`,
-                {
-                    method: "GET",
-                    cache: "no-store"
-                }
-            );
-
-        if (!response.ok) {
-
-            throw new Error(
-                "Unable to load home statuses"
-            );
-
-        }
-
-        const data =
-            await response.json();
+    await loadHomeStatuses();
 
 
-        /* =================================================
-           MY STATUS
-        ================================================= */
+    /* =====================================================
+       STATUS HINT
+    ===================================================== */
 
-        myStatuses =
-            Array.isArray(
-                data.my_statuses
-            )
-            ? data.my_statuses
-            : [];
-
-
-        /* =================================================
-           OTHER USERS STATUS
-        ================================================= */
-
-        activeStatusUsers =
-            Array.isArray(
-                data.users
-            )
-            ? data.users
-            : [];
-
-
-        /* =================================================
-           UPDATE UI
-        ================================================= */
-
-        updateMyStatusUI();
-
-        renderActiveStatusUsers();
-
-
-    } catch (error) {
-
-        console.error(
-            "HOME STATUS ERROR:",
-            error
-        );
-
-
-        myStatuses = [];
-
-        activeStatusUsers = [];
-
-
-        updateMyStatusUI();
-
-        renderActiveStatusUsers();
-
-    }
+    showStatusHint();
 
 }
 
-
-/* =====================================================
-   STATUS HINT
-===================================================== */
-
-showStatusHint();
-}
 
 /* =========================================================
    START
