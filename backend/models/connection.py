@@ -11,38 +11,38 @@ class ConnectionRequest(Base):
 
     id: Mapped[int] = mapped_column(
         primary_key=True,
-        index=True
+        index=True,
     )
 
     requester_user_id: Mapped[str] = mapped_column(
         String(50),
         index=True,
-        nullable=False
+        nullable=False,
     )
 
     target_user_id: Mapped[str] = mapped_column(
         String(50),
         index=True,
-        nullable=False
+        nullable=False,
     )
 
     status: Mapped[str] = mapped_column(
         String(20),
         default="pending",
-        nullable=False
+        nullable=False,
     )
 
     created_at: Mapped[datetime] = mapped_column(
         DateTime,
         default=datetime.utcnow,
-        nullable=False
+        nullable=False,
     )
 
     updated_at: Mapped[datetime] = mapped_column(
         DateTime,
         default=datetime.utcnow,
         onupdate=datetime.utcnow,
-        nullable=False
+        nullable=False,
     )
 
 
@@ -51,35 +51,66 @@ class ConnectionCode(Base):
 
     id: Mapped[int] = mapped_column(
         primary_key=True,
-        index=True
+        index=True,
     )
 
     requester_user_id: Mapped[str] = mapped_column(
         String(50),
         index=True,
-        nullable=False
+        nullable=False,
     )
 
     target_user_id: Mapped[str] = mapped_column(
         String(50),
         index=True,
-        nullable=False
+        nullable=False,
     )
 
     code: Mapped[str] = mapped_column(
         String(20),
-        nullable=False
+        nullable=False,
     )
 
     expires_at: Mapped[datetime] = mapped_column(
         DateTime,
-        nullable=False
+        nullable=False,
     )
 
     verified: Mapped[bool] = mapped_column(
         Boolean,
         default=False,
-        nullable=False
+        nullable=False,
     )
 
-    created_at: Mapped
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime,
+        default=datetime.utcnow,
+        nullable=False,
+    )
+
+
+class Connection(Base):
+    __tablename__ = "connections"
+
+    id: Mapped[int] = mapped_column(
+        primary_key=True,
+        index=True,
+    )
+
+    user_a_id: Mapped[str] = mapped_column(
+        String(50),
+        index=True,
+        nullable=False,
+    )
+
+    user_b_id: Mapped[str] = mapped_column(
+        String(50),
+        index=True,
+        nullable=False,
+    )
+
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime,
+        default=datetime.utcnow,
+        nullable=False,
+    )
